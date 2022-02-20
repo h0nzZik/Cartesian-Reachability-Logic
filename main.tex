@@ -114,10 +114,17 @@ $\mathcal{S}\oast{}\mathcal{S} = (\Sigma\oast{}\Sigma, \mathcal{M}\oast{}\mathca
     \begin{enumerate}
         \item $M\oast{}M = M \cup \{ \mathrm{\#prod} \} \cup (\{ \mathrm{\#prod} \} \times M) \cup (\{ \mathrm{\#prod} \} \times M \times M)$, where $\mathrm{\#prod}$ is a fresh element not occurring in $M$; 
         \item $\sigma_{\mathcal{M} \oast \mathcal{M}} = \sigma_M$ for any $\sigma \in \Sigma$;
-        \item $\sigma_{\mathit{prod}}$ = $\mathrm{\#prod}$;
-        \item 
+        \item $\sigma_{\mathit{prod}} = \{ \mathrm{\#prod} \}$;
+        \item $m_1 @_{M\oast{}M} m_2 = m_1 @_M m_2$ whenever $m_1,m_2 \in M$;
+        \item $\mathrm{\#prod} @_{M\oast{}M} m_1 = (\mathrm{\#prod}, m_1)$ whenever $m_1 \in M$;
+        \item $(\mathrm{\#prod}, m_1) @_{M\oast{}M} m_2 = (\mathrm{\#prod}, m_1, m_2)$ whenever $m_2 \in M$; and
+        \item $m_1 @_{M\oast{}M} m_2 = \emptyset$ otherwise.
     \end{enumerate}
-    \item 
+    \item
+    \begin{align*}
+        S \oast{} S &= \{ (\mathit{prod}\ \varphi_1\ \varphi_2) \Rightarrow^\exists (\mathit{prod}\ \psi\ \varphi_2) \mid \varphi_1 \Rightarrow^\exists \psi \in S \} \\
+                     & \cup \{ (\mathit{prod}\ \varphi_1\ \varphi_2) \Rightarrow^\exists (\mathit{prod}\ \varphi_1\ \psi) \mid \varphi_2 \Rightarrow^\exists \psi \in S \}  \, .
+    \end{align*}
 \end{enumerate}
 \end{definition}
 
