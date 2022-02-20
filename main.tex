@@ -1,0 +1,124 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{thmtools}
+\usepackage{hyperref}
+% `cleveref` has to be loaded after `hyperref`
+\usepackage{cleveref}
+\usepackage{stackengine}
+\usepackage{minted}
+\usepackage{tcolorbox}
+\usepackage{prftree}
+\usepackage{fancyvrb}
+\usepackage{csquotes}
+
+\title{Cartesian Reachability Logic}
+\author{Jan Tušil }
+\date{February 2022}
+
+\declaretheorem[]{example}
+\declaretheorem[]{definition}
+\declaretheorem[]{lemma}
+\declaretheorem[]{theorem}
+\declaretheorem[]{proof}
+\declaretheorem[]{remark}
+
+\newcommand{\CRL}{\mathsf{CRL}}
+
+\newcommand\oast{\stackMath\mathbin{\stackinset{c}{0ex}{c}{0ex}{\ast}{\bigcirc}}}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+An option would be to come up with a language-agnostic way of composing two programs in such a way
+that the composition is still executable.
+In particular, given a matching logic signature $\Sigma$ and a reachability logic theory $S$, one may
+want to construct a signature $\Sigma^\prime = \Sigma \cup \{ \mathit{prod} \}$
+(where $\mathit{prod}$ is a fresh symbol)
+and a theory $S^\prime$ such that for any $\mu$-free patterns $\varphi_1,\varphi_2,\psi_1,\psi_2$
+it holds that $S \vdash \varphi_1 \Rightarrow^\exists \psi_1$ and
+$S \vdash \varphi_2 \Rightarrow^\exists \psi_2$ if and only if
+\begin{equation*}
+S^\prime \vdash \mathit{prod}\ \varphi_1\ \varphi_2 \Rightarrow^\exists \mathit{prod}\ \psi_1\ \psi_2    \, .
+\end{equation*}
+%We may also want $S^\prime$ to be deterministic whenever $S$ is.
+
+Next, we need to find a generalization of Cartesian Hoare triples.
+Something like the following might suffice:
+\begin{definition}\label{def:CRLsemantics}
+A Cartesian reachability rule
+$(\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\exists} (\psi_1,\ldots,\psi_k) \land \psi$
+of arity $k$
+is \emph{valid},
+written
+$\vDash_\CRL (\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\exists}
+(\psi_1,\ldots,\psi_k) \land \psi$,
+iff for all configurations $\sigma_1,\ldots,\sigma_k$ and any valuation $\rho$,
+whenever $(\sigma_1, \ldots, \sigma_k) \in |(\varphi_1, \ldots, \varphi_k) \land \varphi|_\rho$,
+then there exist configurations $\sigma_1^\prime,\ldots,\sigma_k^\prime$ such that
+$(\sigma_1,\ldots,\sigma_k) \in |(\psi_1,\ldots,\psi_k) \land \psi|_\rho$ and for any $i \in \{ 1,\ldots,k \}$,
+$\sigma_i \Rightarrow^*_S \sigma_i^\prime$.
+\end{definition}
+The idea behind the above definition is that $\varphi,\psi$ are predicate patterns
+that constraints the relationship between the configurations.
+I would then want to come up with a (language-parametric) proof system
+for deriving claims of the shape
+$\vdash_\CRL (\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\exists}
+(\psi_1,\ldots,\psi_k) \land \psi$;
+similarly to CHL, the proof system should have a \emph{linearization} property,
+meaning that a claim could be derived if and only if
+a linearized claim (using the composition with $\textit{prod}$ described above) could be derived in reachability logic.
+
+Then I would need to overcome the following three challenges:
+\begin{enumerate}
+    \item to extend the above definition with axioms and circularities, as in reachability logic;
+    \item to create a rule (or set of rules) playing the role of the Fusion rule from CHL; and
+    \item to support non-deterministic operations and go all-path.
+\end{enumerate}
+
+\section{Questions}
+
+The CHL paper has a lemma saying that sequential composition commutes (assuming the two statements use non-overlapping sets of variables).
+We need something similar. What would be our equivalent? Basically, that
+$\mathit{prod} c_1 c_2$ satisfies the same set of reachability claims as $\mathit{prod} c_2 c_1$?
+Also, what is the relationship between the product program in product semantics and the original program? What is the semantics of the CRL claim - is it defined using only the semantics of the original program in original language? (I think so.) So we first need to define language independent product programs/semantics and prove properties about them.
+
+Can we verify some property of a heap manipulating program? Say, 'monotonicity' of sum with list append?
+
+
+\Cref{def:CRLsemantis} uses pairs inside matching logic. Maybe we should rephrase it so that it talks about valuations instead.
+
+\section{Product programs and their semantics}
+We represent a programming language semantics as a reachability system.
+\begin{definition}\label{def:RLsystem}
+A \emph{reachability system} $\mathcal{S}$ is a triple $(\Sigma, \mathcal{M}, S)$, where
+\begin{enumerate}
+    \item $\Sigma$ is a matching logic signature;
+    \item $\mathcal{M}$ is a matching logic $\Sigma$-model; and
+    \item $S$ is a set of \emph{reachability rules} of the shape
+    b$\varphi_1 \Rightarrow^\exists \varphi_2$, where $\varphi_1,\varphi_2$ are matching logic $\Sigma$-patterns.
+\end{enumerate}
+\end{definition}
+
+\begin{definition}\label{def:RLproduct}
+Given a reachability system $\mathcal{S} = (\Sigma, \mathcal{M}, S)$
+where $\mathcal{M} = (M, \{\sigma_M\}_{\sigma \in \Sigma}, @_M)$,
+we define a \emph{self-product system}
+$\mathcal{S}\oast{}\mathcal{S} = (\Sigma\oast{}\Sigma, \mathcal{M}\oast{}\mathcal{M}, S\oast{}S)$ as follows.
+\begin{enumerate}
+    \item $\Sigma\oast{}\Sigma = \Sigma \cup \{ \mathit{prod} \}$, where $\mathit{prod}$ is a fresh symbol not occurring in $\Sigma$;
+    \item $\mathcal{M}\oast{}\mathcal{M} = (M\oast{}M, \{\sigma_{M\oast{}M}\}_{\sigma \in \Sigma\oast{}\Sigma}, @_{M\oast{}M})$, where
+    \begin{enumerate}
+        \item $M\oast{}M = M \cup \{ \mathrm{\#prod} \} \cup (\{ \mathrm{\#prod} \} \times M) \cup (\{ \mathrm{\#prod} \} \times M \times M)$, where $\mathrm{\#prod}$ is a fresh element not occurring in $M$; 
+        \item $\sigma_{\mathcal{M} \oast \mathcal{M}} = \sigma_M$ for any $\sigma \in \Sigma$;
+        \item $\sigma_{\mathit{prod}}$ = $\mathrm{\#prod}$;
+        \item 
+    \end{enumerate}
+    \item 
+\end{enumerate}
+\end{definition}
+
+\end{document}
