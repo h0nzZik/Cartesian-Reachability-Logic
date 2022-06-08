@@ -11,6 +11,7 @@
 \usepackage{prftree}
 \usepackage{fancyvrb}
 \usepackage{csquotes}
+\usepackage{appendix}
 
 \title{Cartesian Reachability Logic}
 \author{Jan Tušil }
@@ -33,6 +34,28 @@
 
 \section{Introduction}
 
+We need to make the definition such that it works with reachability logic for the composite semantics.
+Here is one attempt:
+\begin{definition}\label{def:CRLsemantics}
+A Cartesian reachability rule
+$(\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\exists} (\psi_1,\ldots,\psi_k) \land \psi$
+of arity $k$
+is \emph{valid},
+written
+$\vDash_\CRL (\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\exists}
+(\psi_1,\ldots,\psi_k) \land \psi$,
+iff for all configurations $\sigma_1,\ldots,\sigma_k$ and any valuation $\rho$,
+whenever $\sigma_1 \in |\varphi_1|_\rho \land \ldots \land \sigma_k \in |\varphi_l|_\rho$,
+then for every complete (that is, finite terminating) executions $\pi_1, \ldots, \pi_k$ such that
+$\sigma_1 = \pi_1(0) \land \ldots \land \sigma_k = \pi_k(0)$ there exists $i_1,\ldots,i_k \in \mathbb{N}$
+such that
+$\pi_1(i_1) \in |\varphi_1 \land \psi|_\rho \land \ldots \land \pi_k(i_k) \in |\varphi_k \land \psi|_\rho$.
+\end{definition}
+
+\appendix
+
+\section{Some old thoughts}
+
 An option would be to come up with a language-agnostic way of composing two programs in such a way
 that the composition is still executable.
 In particular, given a matching logic signature $\Sigma$ and a reachability logic theory $S$, one may
@@ -48,20 +71,6 @@ S^\prime \vdash \mathit{prod}\ \varphi_1\ \varphi_2 \Rightarrow^\exists \mathit{
 
 Next, we need to find a generalization of Cartesian Hoare triples.
 Something like the following might suffice:
-\begin{definition}\label{def:CRLsemantics}
-A Cartesian reachability rule
-$(\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\exists} (\psi_1,\ldots,\psi_k) \land \psi$
-of arity $k$
-is \emph{valid},
-written
-$\vDash_\CRL (\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\exists}
-(\psi_1,\ldots,\psi_k) \land \psi$,
-iff for all configurations $\sigma_1,\ldots,\sigma_k$ and any valuation $\rho$,
-whenever $(\sigma_1, \ldots, \sigma_k) \in |(\varphi_1, \ldots, \varphi_k) \land \varphi|_\rho$,
-then there exist configurations $\sigma_1^\prime,\ldots,\sigma_k^\prime$ such that
-$(\sigma_1,\ldots,\sigma_k) \in |(\psi_1,\ldots,\psi_k) \land \psi|_\rho$ and for any $i \in \{ 1,\ldots,k \}$,
-$\sigma_i \Rightarrow^*_S \sigma_i^\prime$.
-\end{definition}
 The idea behind the above definition is that $\varphi,\psi$ are predicate patterns
 that constraints the relationship between the configurations.
 I would then want to come up with a (language-parametric) proof system
@@ -89,7 +98,7 @@ Also, what is the relationship between the product program in product semantics 
 Can we verify some property of a heap manipulating program? Say, 'monotonicity' of sum with list append?
 
 
-\Cref{def:CRLsemantis} uses pairs inside matching logic. Maybe we should rephrase it so that it talks about valuations instead.
+\Cref{def:CRLsemantics} uses pairs inside matching logic. Maybe we should rephrase it so that it talks about valuations instead.
 
 \section{Product programs and their semantics}
 We represent a programming language semantics as a reachability system.
@@ -99,7 +108,7 @@ A \emph{reachability system} $\mathcal{S}$ is a triple $(\Sigma, \mathcal{M}, S)
     \item $\Sigma$ is a matching logic signature;
     \item $\mathcal{M}$ is a matching logic $\Sigma$-model; and
     \item $S$ is a set of \emph{reachability rules} of the shape
-    b$\varphi_1 \Rightarrow^\exists \varphi_2$, where $\varphi_1,\varphi_2$ are matching logic $\Sigma$-patterns.
+    $\varphi_1 \Rightarrow^\exists \varphi_2$, where $\varphi_1,\varphi_2$ are matching logic $\Sigma$-patterns.
 \end{enumerate}
 \end{definition}
 
@@ -122,9 +131,24 @@ $\mathcal{S}\oast{}\mathcal{S} = (\Sigma\oast{}\Sigma, \mathcal{M}\oast{}\mathca
     \end{enumerate}
     \item
     \begin{align*}
-        S \oast{} S &= \{ (\mathit{prod}\ \varphi_1\ \varphi_2) \Rightarrow^\exists (\mathit{prod}\ \psi\ \varphi_2) \mid \varphi_1 \Rightarrow^\exists \psi \in S \} \\
-                     & \cup \{ (\mathit{prod}\ \varphi_1\ \varphi_2) \Rightarrow^\exists (\mathit{prod}\ \varphi_1\ \psi) \mid \varphi_2 \Rightarrow^\exists \psi \in S \}  \, .
+        S \oast{} S &= \{ (\mathit{prod}\ \mathit{lift}(\varphi)\ x) \Rightarrow^\exists (\mathit{prod}\ \mathit{lift}(\psi)\ x) \mid \varphi \Rightarrow^\exists \psi \in S \} \\
+                     & \cup \{ (\mathit{prod}\ x\ \mathit{lift}(\varphi)) \Rightarrow^\exists (\mathit{prod}\ x\ \mathit{lift}(\psi)) \mid \varphi \Rightarrow^\exists \psi \in S \}  \, .
     \end{align*}
+    where $x$ is some element variable not occurring in $S$ and $\mathit{lift(\varphi)}$ is defined recursively as follows:
+    \begin{itemize}
+        \item $\mathit{lift}(x) \equiv ((x \in \mathit{OLD}) \land x) \lor ((x \not\in \mathit{OLD}) \land s_0)$
+        \item $\mathit{lift}(\varphi_1 \rightarrow \varphi_2) \equiv (\mathit{lift}(\varphi_1) \rightarrow \mathit{lift}(\varphi_2)) \land \mathit{OLD}$
+        \item $\mathit{lift}(\exists x.\, \varphi) \equiv \exists x.\, x \in \mathit{OLD} \land \mathit{lift}(\varphi)$
+        \item $\mathit{lift}(\bot) \equiv \bot$
+        \item $\mathit{lift}(s) \equiv s$
+        \item $\mathit{lift}(\varphi_1 \ \varphi_2) \equiv \mathit{lift}(\varphi_1) \ \mathit{lift}(\varphi_2)$
+    \end{itemize}
+    where
+        \begin{equation*}
+            \mathit{OLD} \equiv \neg (\mathit{prod} \lor (\mathit{prod}\ \top) \lor (\mathit{prod}\ \top\ \top))
+        \end{equation*}
+    and the membership operator is the standard syntactic sugar on top of the definedness symbol $\mathit{def}$.
+    (We do not need to consider the $X$ and $\mu X.\, \varphi$ cases, because the patterns in question are $\mu$-free.)
 \end{enumerate}
 \end{definition}
 
