@@ -25,6 +25,8 @@
 \declaretheorem[]{remark}
 
 \newcommand{\CRL}{\mathsf{CRL}}
+\newcommand{\Var}{\mathit{Var}}
+\newcommand{\Tcfg}{\mathcal{T}_{\mathit{Cfg}}}
 
 \newcommand\oast{\stackMath\mathbin{\stackinset{c}{0ex}{c}{0ex}{\ast}{\bigcirc}}}
 
@@ -34,18 +36,49 @@
 
 \section{Introduction}
 
+\section{Preliminaries}
+
+\subsection{Matching Logic}
+
+\subsection{All-path Reachability Logic}
+
+\begin{definition}[\cite{StefanescuCMMSR19}]
+A (one-path) \emph{reachability rule} is a pair $\varphi \Rightarrow^\exists \varphi^\prime$,
+where $\varphi$ and $\varphi^\prime$
+are patterns (which can have free variables).
+Rule $\varphi \Rightarrow^\exists \varphi^\prime$ is \emph{weakly well-defined} iff
+for any $\gamma \in \Tcfg$ and $\rho : \Var \to \mathcal{T}$ with $(\gamma, \rho) \vDash \varphi$,
+there exists $\gamma^\prime \in \Tcfg$ with $(\gamma^\prime , \rho) \vDash \varphi^\prime$.
+A \emph{reachability system} is a set of reachability rules.
+Reachability system S is \emph{weakly well-defined} iff each rule is weakly well-defined.
+$\mathcal{S}$ induces a \emph{transition system}
+$(\mathcal{T} , \Rightarrow^{\mathcal{T}}_{\mathcal{S}})$
+on the configuration model:
+$\gamma \Rightarrow^{\mathcal{T}}_{\mathcal{S}} \gamma^\prime$ for $\gamma, \gamma^\prime \in \Tcfg$
+iff there is some rule $\varphi \Rightarrow^\exists \varphi^\prime \in \mathcal{S}$
+and some valuation $\rho : \Var \to \mathcal{T}$ with $(\gamma, \rho) \vDash \varphi$
+and $(\gamma^\prime , \rho) \vDash \varphi^\prime$.
+A \emph{$\Rightarrow^{\mathcal{T}}_{\mathcal{S}}$-path} is a finite
+sequence $\gamma_0 \Rightarrow^{\mathcal{T}}_{\mathcal{S}} \gamma_1 \Rightarrow^{\mathcal{T}}_{\mathcal{S}} \ldots \Rightarrow^{\mathcal{T}}_{\mathcal{S}} \gamma_n$
+with $\gamma_0,\ldots,\gamma_n in \Tcfg$.
+A $\Rightarrow^{\mathcal{T}}_{\mathcal{S}}$-path is \emph{complete} iff it is not a
+strict prefix of any other $\Rightarrow^{\mathcal{T}}_{\mathcal{S}}$-path.
+\end{definition}
+
+\section{Cartesian Reachability Logic}
+
 We need to make the definition such that it works with reachability logic for the composite semantics.
 Here is one attempt:
 \begin{definition}\label{def:CRLsemantics}
 A Cartesian reachability rule
-$(\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\exists} (\psi_1,\ldots,\psi_k) \land \psi$
+$(\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\forall} (\psi_1,\ldots,\psi_k) \land \psi$
 of arity $k$
 is \emph{valid},
 written
-$\vDash_\CRL (\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\exists}
+$\vDash_\CRL (\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\forall}
 (\psi_1,\ldots,\psi_k) \land \psi$,
 iff for all configurations $\sigma_1,\ldots,\sigma_k$ and any valuation $\rho$,
-whenever $\sigma_1 \in |\varphi_1|_\rho \land \ldots \land \sigma_k \in |\varphi_l|_\rho$,
+whenever $\sigma_1 \in |\varphi_1 \land \varphi|_\rho \land \ldots \land \sigma_k \in |\varphi_l \land \varphi|_\rho$,
 then for every complete (that is, finite terminating) executions $\pi_1, \ldots, \pi_k$ such that
 $\sigma_1 = \pi_1(0) \land \ldots \land \sigma_k = \pi_k(0)$ there exists $i_1,\ldots,i_k \in \mathbb{N}$
 such that
@@ -56,7 +89,14 @@ TODOs:
 \begin{itemize}
     \item Validate this definition against examples from the CHL paper.
     \item Have a "running example" - some programming language, like IMP?
+    \item Define the 'composite' semantics - list of configurations in one configuration.
+    \item Have an example how do we perform lockstep execution on ifs.
+    \item Why there are the pluses on both premises of the Circularity proof rule of the Equiv checking paper? Do we need it? Maybe we may lose/miss some synchronization point if we require both. We probably need to weaken the premises.
+    \item Conservativeness argument for the additional rules.
 \end{itemize}
+
+\bibliography{bibliography}
+\bibliographystyle{plain}
 
 \appendix
 
