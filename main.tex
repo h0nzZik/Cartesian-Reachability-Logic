@@ -38,31 +38,52 @@
 
 \section{Preliminaries}
 
-\subsection{Matching Logic}
+\subsection{(Topmost, $\mu$-free) Matching Logic}
 
 \subsection{All-path Reachability Logic}
 
+
+
 \begin{definition}[\cite{StefanescuCMMSR19}]
-A (one-path) \emph{reachability rule} is a pair $\varphi \Rightarrow^\exists \varphi^\prime$,
-where $\varphi$ and $\varphi^\prime$
-are patterns (which can have free variables).
-Rule $\varphi \Rightarrow^\exists \varphi^\prime$ is \emph{weakly well-defined} iff
-for any $\gamma \in \Tcfg$ and $\rho : \Var \to \mathcal{T}$ with $(\gamma, \rho) \vDash \varphi$,
-there exists $\gamma^\prime \in \Tcfg$ with $(\gamma^\prime , \rho) \vDash \varphi^\prime$.
-A \emph{reachability system} is a set of reachability rules.
-Reachability system S is \emph{weakly well-defined} iff each rule is weakly well-defined.
-$\mathcal{S}$ induces a \emph{transition system}
-$(\mathcal{T} , \Rightarrow^{\mathcal{T}}_{\mathcal{S}})$
-on the configuration model:
-$\gamma \Rightarrow^{\mathcal{T}}_{\mathcal{S}} \gamma^\prime$ for $\gamma, \gamma^\prime \in \Tcfg$
-iff there is some rule $\varphi \Rightarrow^\exists \varphi^\prime \in \mathcal{S}$
-and some valuation $\rho : \Var \to \mathcal{T}$ with $(\gamma, \rho) \vDash \varphi$
-and $(\gamma^\prime , \rho) \vDash \varphi^\prime$.
-A \emph{$\Rightarrow^{\mathcal{T}}_{\mathcal{S}}$-path} is a finite
-sequence $\gamma_0 \Rightarrow^{\mathcal{T}}_{\mathcal{S}} \gamma_1 \Rightarrow^{\mathcal{T}}_{\mathcal{S}} \ldots \Rightarrow^{\mathcal{T}}_{\mathcal{S}} \gamma_n$
-with $\gamma_0,\ldots,\gamma_n in \Tcfg$.
-A $\Rightarrow^{\mathcal{T}}_{\mathcal{S}}$-path is \emph{complete} iff it is not a
-strict prefix of any other $\Rightarrow^{\mathcal{T}}_{\mathcal{S}}$-path.
+We define reachability-logic signatures, rules, and systems as follows.
+\begin{enumerate}
+    \item A reachability-logic \emph{signature} is a pair $(\Sigma, \mathit{Cfg})$,
+          where $\Sigma$ is a matching logic signature and $\mathit{Cfg}$ is a sort.
+          
+    \item A \emph{one-path reachability rule} over reachability logic signature $(\Sigma, \mathit{Cfg})$        is a pair $\varphi \Rightarrow^\exists \varphi^\prime$,
+          where $\varphi$ and $\varphi^\prime$
+          are patterns (which can have free variables) of sort $\mathit{Cfg}$.
+          
+    \item A \emph{reachability system} over a reachability-logic signature $(\Sigma, \mathit{Cfg})$
+          is a set $\mathcal{S}$ of reachability rules over $(\Sigma, \mathit{Cfg})$.
+          
+    \item A rule $\varphi \Rightarrow^\exists \varphi^\prime$ over $(\Sigma, \mathit{Cfg})$
+          is \emph{weakly well-defined} iff
+          for any $\gamma \in \Tcfg$ and $\rho : \Var \to \mathcal{T}$
+          with $(\gamma, \rho) \vDash \varphi$,
+          there exists $\gamma^\prime \in \Tcfg$ with $(\gamma^\prime , \rho) \vDash \varphi^\prime$.
+          
+    \item A reachability system $\mathcal{S}$ is \emph{weakly well-defined} iff each rule is weakly     
+          well-defined.
+          
+    \item A reachability system $\mathcal{S}$ over $(\Sigma, \mathit{Cfg})$ induces
+          a \emph{transition system} \\
+          $(\Tcfg , \Rightarrow^{\mathcal{T}}_{\mathcal{S}})$,
+          where $\gamma \Rightarrow^{\mathcal{T}}_{\mathcal{S}} \gamma^\prime$
+          for $\gamma, \gamma^\prime \in \Tcfg$
+          iff there is some rule \\ $\varphi \Rightarrow^\exists \varphi^\prime \in \mathcal{S}$
+          and some valuation $\rho : \Var \to \mathcal{T}$ with $(\gamma, \rho) \vDash \varphi$
+          and $(\gamma^\prime , \rho) \vDash \varphi^\prime$.
+          
+    \item A \emph{$\Rightarrow^{\Tcfg}_{\mathcal{S}}$-path} is a finite
+          sequence $\gamma_0 \Rightarrow^{\Tcfg}_{\mathcal{S}} \gamma_1 \Rightarrow^{\Tcfg}_{\mathcal{S}} \ldots \Rightarrow^{\Tcfg}_{\mathcal{S}} \gamma_n$
+          with $\gamma_0,\ldots,\gamma_n \in \Tcfg$.
+          
+    \item A $\Rightarrow^{\Tcfg}_{\mathcal{S}}$-path is \emph{complete}
+          iff it is not a strict prefix of any
+          other $\Rightarrow^{\Tcfg}_{\mathcal{S}}$-path.
+\end{enumerate}
+
 \end{definition}
 
 \section{Cartesian Reachability Logic}
@@ -94,6 +115,8 @@ TODOs:
     \item Why there are the pluses on both premises of the Circularity proof rule of the Equiv checking paper? Do we need it? Maybe we may lose/miss some synchronization point if we require both. We probably need to weaken the premises.
     \item Conservativeness argument for the additional rules.
 \end{itemize}
+
+\section{Implementation}
 
 \bibliography{bibliography}
 \bibliographystyle{plain}
