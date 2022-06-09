@@ -116,6 +116,33 @@ TODOs:
     \item Conservativeness argument for the additional rules.
 \end{itemize}
 
+\begin{definition}
+We translate a language semantics into a semantics for lists of configurations as follows.
+\begin{enumerate}
+    \item Let $(\Sigma, \mathit{Cfg})$ be a reachability-logic signature.
+          Then $(\Sigma, \mathit{Cfg})^*$ = $(\Sigma^*, \mathit{Cfg}^*)$,
+          where
+          \begin{enumerate}
+              \item $\Sigma^* = \Sigma \cup \{ \mathit{cfgitem}, \mathit{cfgconcat},
+          \mathit{cfgdummy}, \mathit{cfgheat} \}$
+              \item $\mathit{Cfg}^*$ is a fresh sort (representing the sort of lists of configurations);
+              \item $\mathit{cfgdummy}$ is a fresh symbol of sort $\mathit{Cfg}$;
+              \item $\mathit{cfgitem}$ a fresh symbol of sort $\mathit{Cfg} \to \mathit{Cfg}^*$;
+              \item $\mathit{cfgconcat}$ a fresh symbol of sort $\mathit{Cfg}^* \times \mathit{Cfg}^* \to \mathit{Cfg}^*$; and
+              \item $\mathit{cfgheat}$ is a fresh symbol of sort $\mathit{Cfg} \times \mathit{Cfg}^* \to \mathit{Cfg}^*$.
+          \end{enumerate}
+    \item Let $\mathcal{S}$ be a reachability system over $(\Sigma, \mathit{Cfg})$.
+          We generate a reachability system $\mathcal{S}^*$ over $(\Sigma, \mathit{Cfg})^*$
+          by setting
+          \begin{equation*}
+              \mathcal{S}^* = \{ \mathit{cfgheat}(\varphi_1, R) \land P \Rightarrow^\exists \mathit{cfgheat}(\varphi_2, R) \land P^\prime \mid (\varphi_1 \land P \Rightarrow^\exists \varphi_2 \land P^\prime) \in S \} \, ,
+          \end{equation*}
+          where $R$ is a fresh variable (not occurring in any rule in $\mathcal{S}$).
+    \item Let $\mathcal{T}$ be a configuration model; that is, a $\Sigma$-algebra.
+          We generate a $\Sigma^*$-algebra TODO.
+\end{enumerate}
+\end{definition}
+
 \section{Implementation}
 
 \bibliography{bibliography}
