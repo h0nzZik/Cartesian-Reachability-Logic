@@ -25,6 +25,8 @@
 \declaretheorem[]{theorem}
 \declaretheorem[]{remark}
 
+\newcommand{\RL}{\mathsf{RL}}
+\newcommand{\ML}{\mathsf{ML}}
 \newcommand{\CRL}{\mathsf{CRL}}
 \newcommand{\Var}{\mathit{Var}}
 \newcommand{\Tcfg}{\mathcal{T}_{\mathit{Cfg}}}
@@ -188,18 +190,35 @@ That way we can feed the $(\varphi_i, P_i)$ component to RL without some unexpec
 The idea is that $P$ is the part of the claim that relates variables from different components.
 Therefore, we also probably need the Consequence rule to work with $P$, too.
 
-\begin{figure}[h]
+\begin{figure}
     \centering
     \begin{align*}
     & \prftree[l]{Axiom}{\varphi \in E}{\vdash_\CRL \varphi \Downarrow_{C} E}   \\
+    \end{align*}
+    \begin{align*}
     %& \prftree[l]{Axiom}{\varphi \in E}{\varphi \Downarrow_{C} E}  \\
     & \prftree[l]{Step}
-    {\vDash \varphi_i \Rightarrow^\forall \varphi_i^\prime}
+    {\vDash_\RL \varphi_i \Rightarrow^\forall \varphi_i^\prime}
     { \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i^\prime, \varphi_{i+1}, \ldots, \varphi_k)
       \land P
       \Downarrow_{\emptyset} (C \cup E)
     }
-    {\vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P \Downarrow_{C} E}  
+    {\vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P \Downarrow_{C} E}
+    \end{align*}
+    \begin{align*}
+    & \prftree[l]{Circularity}
+      { \vdash_\CRL (\varphi_1, \ldots, \varphi_k) \land P \Downarrow_{C \cup \{ (\varphi_1, \ldots, \varphi_k) \land P \} } E}
+      { \vdash_\CRL (\varphi_1, \ldots, \varphi_k) \land P \Downarrow_{C} E}
+      \\
+    \end{align*}
+    \begin{align*}
+    & \prftree[l]{Conseq}
+      { \prfStackPremises
+        { \vdash_\CRL (\varphi_1 \land P_1, \ldots, \varphi_k \land P_k) \land P \Downarrow_{C} E}
+        { \vDash_\ML \varphi_1 = \varphi_1^\prime \land \ldots \land \varphi_k = \varphi_k^\prime
+        \land (P_1 \land \ldots \land P_k \land P \leftrightarrow P_1 \land \ldots \land P_k \land P) }
+      }
+      { \vdash_\CRL (\varphi_1^\prime \land P_1^\prime, \ldots, \varphi_k^\prime \land P_k^\prime) \land P^\prime \Downarrow_{C} E}
     \end{align*}
     \caption{Proof System}
     \label{fig:my_label}
