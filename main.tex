@@ -190,6 +190,18 @@ That way we can feed the $(\varphi_i, P_i)$ component to RL without some unexpec
 The idea is that $P$ is the part of the claim that relates variables from different components.
 Therefore, we also probably need the Consequence rule to work with $P$, too.
 
+\begin{definition}
+We define $\mathit{mergePatterns}$ and $\mathit{flatten}$ as follows:
+\begin{enumerate}
+    \item $\mathit{mergePatterns}(\varphi) = \mathit{cfgitem}(\varphi)$;
+    \item $\mathit{mergePatterns}(\varphi_1, \varphi_2, \ldots, \varphi_n)
+        = \mathit{cfgconcat}(\mathit{cfgitem}(\varphi_1), \mathit{mergePatterns}(\varphi_2, \ldots, \varphi_n))$ for $n \geq 2$; and
+    \item $\mathit{flatten}((\varphi_1 \land P_1, \ldots, \varphi_k \land P_k) \land P)
+           = \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_k) \land (P_1 \land \ldots \land P_k \land P)$.
+\end{enumerate}
+We pointwise extend $\mathit{mergePatterns}$ to sets.
+\end{definition}
+
 \begin{figure}
     \centering
     \begin{align*}
@@ -197,8 +209,8 @@ Therefore, we also probably need the Consequence rule to work with $P$, too.
     \end{align*}
     \begin{align*}
     & \prftree[l]{Reduce}
-      { \mathcal{S}^* \vDash_\RL (\mathit{cfgconcat}(\ldots \mathit{cfgconcat}(\mathit{cfgitem}(\varphi_1), \mathit{cfgitem}(\varphi_2) )\ldots \mathit{cfgitem(\varphi_k)}) ) \Rightarrow^\forall \bigvee E}
-      {\vdash_\CRL (\varphi_1 \land P_1, \ldots, \varphi_k \land P_k) \land P \Downarrow_{C} E}
+      {\vDash_\RL \mathit{flatten}(\psi) \Rightarrow^\forall \bigvee  \mathit{flatten}(E)}
+      {\vdash_\CRL \psi \Downarrow_{C} E}
     \end{align*}
     \begin{align*}
     & \prftree[l]{Case}
@@ -234,6 +246,16 @@ Therefore, we also probably need the Consequence rule to work with $P$, too.
     \caption{Proof System}
     \label{fig:my_label}
 \end{figure}
+
+
+
+\begin{lemma}
+    \begin{equation*}
+        \vdash_\CRL \psi \Downarrow_{C} E
+        \implies
+        \vdash_\RL \mathit{flatten}(\psi) \Rightarrow^\forall \bigvee  \mathit{flatten}(E)
+    \end{equation*}
+\end{lemma}
 
 \section{Implementation}
 
