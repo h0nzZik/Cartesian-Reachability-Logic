@@ -9,6 +9,7 @@
 \usepackage{stackengine}
 \usepackage{minted}
 \usepackage{tcolorbox}
+\usepackage{multicol}
 \usepackage{prftree}
 \usepackage{fancyvrb}
 \usepackage{csquotes}
@@ -175,6 +176,34 @@ We translate a language semantics into a semantics for lists of configurations a
 \begin{proof}
 Admitted.
 \end{proof}
+
+
+\section{Proof System}
+
+The proof system derives claims of the shape
+$\vdash_\CRL (\varphi_1 \land P_1, \ldots, \varphi_k \land P_k) \land P \Downarrow_C E$,
+where $\varphi_i$ are structural patterns, and $P_i$ and $P$ are predicate patterns.
+Maybe we need a constraint that $\mathit{FV}(P_i) \subseteq \mathit{FV}(\varphi_i)$.
+That way we can feed the $(\varphi_i, P_i)$ component to RL without some unexpected behavior.
+The idea is that $P$ is the part of the claim that relates variables from different components.
+Therefore, we also probably need the Consequence rule to work with $P$, too.
+
+\begin{figure}[h]
+    \centering
+    \begin{align*}
+    & \prftree[l]{Axiom}{\varphi \in E}{\vdash_\CRL \varphi \Downarrow_{C} E}   \\
+    %& \prftree[l]{Axiom}{\varphi \in E}{\varphi \Downarrow_{C} E}  \\
+    & \prftree[l]{Step}
+    {\vDash \varphi_i \Rightarrow^\forall \varphi_i^\prime}
+    { \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i^\prime, \varphi_{i+1}, \ldots, \varphi_k)
+      \land P
+      \Downarrow_{\emptyset} (C \cup E)
+    }
+    {\vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P \Downarrow_{C} E}  
+    \end{align*}
+    \caption{Proof System}
+    \label{fig:my_label}
+\end{figure}
 
 \section{Implementation}
 
