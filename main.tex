@@ -55,33 +55,36 @@ We define reachability-logic signatures, rules, and systems as follows.
           are patterns (which can have free variables) of sort $\mathit{Cfg}$.
           
     \item A \emph{reachability system} over a reachability-logic signature $(\Sigma, \mathit{Cfg})$
-          is a set $\mathcal{S}$ of reachability rules over $(\Sigma, \mathit{Cfg})$.
+          is a pair $\mathcal{S} = (\mathcal{T}, S)$, where $\mathcal{T}$ is a $\Sigma$-algebra
+          and $S$ is a set of reachability rules over $(\Sigma, \mathit{Cfg})$.
           
     \item A rule $\varphi \Rightarrow^\exists \varphi^\prime$ over $(\Sigma, \mathit{Cfg})$
-          is \emph{weakly well-defined} iff
+          is \emph{weakly well-defined}
+          with respect to $\Sigma$-algebra $\mathcal{T}$
+          iff
           for any $\gamma \in \Tcfg$ and $\rho : \Var \to \mathcal{T}$
           with $(\gamma, \rho) \vDash \varphi$,
           there exists $\gamma^\prime \in \Tcfg$ with $(\gamma^\prime , \rho) \vDash \varphi^\prime$.
           
-    \item A reachability system $\mathcal{S}$ is \emph{weakly well-defined} iff each rule is weakly     
+    \item A reachability system $\mathcal{S}$ is \emph{weakly well-defined} iff each its rule is weakly     
           well-defined.
           
-    \item A reachability system $\mathcal{S}$ over $(\Sigma, \mathit{Cfg})$ induces
+    \item A reachability system $\mathcal{S} = (\mathcal{T}, S)$ over $(\Sigma, \mathit{Cfg})$ induces
           a \emph{transition system} \\
-          $(\Tcfg , \Rightarrow^{\mathcal{T}}_{\mathcal{S}})$,
-          where $\gamma \Rightarrow^{\mathcal{T}}_{\mathcal{S}} \gamma^\prime$
+          $(\Tcfg , \Rightarrow_{\mathcal{S}})$,
+          where $\gamma \Rightarrow_{\mathcal{S}} \gamma^\prime$
           for $\gamma, \gamma^\prime \in \Tcfg$
-          iff there is some rule \\ $\varphi \Rightarrow^\exists \varphi^\prime \in \mathcal{S}$
+          iff there is some rule \\ $\varphi \Rightarrow^\exists \varphi^\prime \in S$
           and some valuation $\rho : \Var \to \mathcal{T}$ with $(\gamma, \rho) \vDash \varphi$
           and $(\gamma^\prime , \rho) \vDash \varphi^\prime$.
           
-    \item A \emph{$\Rightarrow^{\Tcfg}_{\mathcal{S}}$-path} is a finite
-          sequence $\gamma_0 \Rightarrow^{\Tcfg}_{\mathcal{S}} \gamma_1 \Rightarrow^{\Tcfg}_{\mathcal{S}} \ldots \Rightarrow^{\Tcfg}_{\mathcal{S}} \gamma_n$
+    \item A \emph{$\Rightarrow_{\mathcal{S}}$-path} is a finite
+          sequence $\gamma_0 \Rightarrow_{\mathcal{S}} \gamma_1 \Rightarrow_{\mathcal{S}} \ldots \Rightarrow_{\mathcal{S}} \gamma_n$
           with $\gamma_0,\ldots,\gamma_n \in \Tcfg$.
           
-    \item A $\Rightarrow^{\Tcfg}_{\mathcal{S}}$-path is \emph{complete}
+    \item A $\Rightarrow_{\mathcal{S}}$-path is \emph{complete}
           iff it is not a strict prefix of any
-          other $\Rightarrow^{\Tcfg}_{\mathcal{S}}$-path.
+          other $\Rightarrow_{\mathcal{S}}$-path.
 \end{enumerate}
 
 \end{definition}
@@ -124,22 +127,23 @@ We translate a language semantics into a semantics for lists of configurations a
           where
           \begin{enumerate}
               \item $\Sigma^* = \Sigma \cup \{ \mathit{cfgitem}, \mathit{cfgconcat},
-          \mathit{cfgdummy}, \mathit{cfgheat} \}$
+          %\mathit{cfgdummy},
+          \mathit{cfgheat} \}$
               \item $\mathit{Cfg}^*$ is a fresh sort (representing the sort of lists of configurations);
               %\item $\mathit{cfgdummy}$ is a fresh symbol of sort $\mathit{Cfg}$;
               \item $\mathit{cfgitem}$ a fresh symbol of sort $\mathit{Cfg} \to \mathit{Cfg}^*$;
               \item $\mathit{cfgconcat}$ a fresh symbol of sort $\mathit{Cfg}^* \times \mathit{Cfg}^* \to \mathit{Cfg}^*$; and
               \item $\mathit{cfgheat}$ is a fresh symbol of sort $\mathit{Cfg}^* \times \mathit{Cfg} \times \mathit{Cfg}^* \to \mathit{Cfg}^*$.
           \end{enumerate}
-    \item Let $\mathcal{S}$ be a reachability system over $(\Sigma, \mathit{Cfg})$.
-          We generate a reachability system $\mathcal{S}^*$ over $(\Sigma, \mathit{Cfg})^*$
+    \item Let $S$ be a set of reachability rules over $(\Sigma, \mathit{Cfg})$.
+          We generate a set of reachability rules $S^*$ over $(\Sigma, \mathit{Cfg})^*$
           by setting
           \begin{equation*}
-              \mathcal{S}^* = \{ \mathit{cfgheat}(L, \varphi_1, R) \land P \Rightarrow^\exists \mathit{cfgheat}(L, \varphi_2, R) \land P^\prime \mid (\varphi_1 \land P \Rightarrow^\exists \varphi_2 \land P^\prime) \in S \} \, ,
+              S^* = \{ \mathit{cfgheat}(L, \varphi_1, R) \land P \Rightarrow^\exists \mathit{cfgheat}(L, \varphi_2, R) \land P^\prime \mid (\varphi_1 \land P \Rightarrow^\exists \varphi_2 \land P^\prime) \in S \} \, ,
           \end{equation*}
-          where $L,R$ are distinct fresh variables (not occurring in any rule in $\mathcal{S}$).
+          where $L,R$ are distinct fresh variables (not occurring in any rule in $S$).
     \item Let $\mathcal{T}$ be a configuration model; that is, a $\Sigma$-algebra.
-          We generate a $\Sigma^*$-algebra $\mathcal{T}*$, which interprets all symbols from
+          We generate a $\Sigma^*$-algebra $\mathcal{T}*$, which interprets all sorts and symbols from
           $\Sigma$ as in $\mathcal{T}$, and in addition interprets
           \begin{enumerate}
               \item the sort $\mathit{Cfg}*$ as the set of all finite lists
@@ -151,8 +155,17 @@ We translate a language semantics into a semantics for lists of configurations a
               \item the symbol $\mathit{cfgheat}$ as the function
                 $\lambda l_1, c, l_2.\, l_1 \texttt{++} [c] \texttt{++} l_2$.
           \end{enumerate}
+          
+    \item Let $\mathcal{S} = (\mathcal{T}, S)$ be a reachability system over $(\Sigma, \mathit{Cfg})$.
+          We generate a reachability system $\mathcal{S}^*$ over $(\Sigma, \mathit{Cfg})^*$
+          by setting $\mathcal{S}^* = (\mathcal{T}^*, S^*)$.
 \end{enumerate}
 \end{definition}
+
+\begin{lemma}
+    Let $\mathcal{S} = (\mathcal{T}, S)$ be a reachability-logic system over $(\Sigma, \mathit{Cfg})$.
+    For any $k \geq 1$, any configurations $c_1,\ldots,c_k$
+\end{lemma}
 
 \section{Implementation}
 
