@@ -126,20 +126,31 @@ We translate a language semantics into a semantics for lists of configurations a
               \item $\Sigma^* = \Sigma \cup \{ \mathit{cfgitem}, \mathit{cfgconcat},
           \mathit{cfgdummy}, \mathit{cfgheat} \}$
               \item $\mathit{Cfg}^*$ is a fresh sort (representing the sort of lists of configurations);
-              \item $\mathit{cfgdummy}$ is a fresh symbol of sort $\mathit{Cfg}$;
+              %\item $\mathit{cfgdummy}$ is a fresh symbol of sort $\mathit{Cfg}$;
               \item $\mathit{cfgitem}$ a fresh symbol of sort $\mathit{Cfg} \to \mathit{Cfg}^*$;
               \item $\mathit{cfgconcat}$ a fresh symbol of sort $\mathit{Cfg}^* \times \mathit{Cfg}^* \to \mathit{Cfg}^*$; and
-              \item $\mathit{cfgheat}$ is a fresh symbol of sort $\mathit{Cfg} \times \mathit{Cfg}^* \to \mathit{Cfg}^*$.
+              \item $\mathit{cfgheat}$ is a fresh symbol of sort $\mathit{Cfg}^* \times \mathit{Cfg} \times \mathit{Cfg}^* \to \mathit{Cfg}^*$.
           \end{enumerate}
     \item Let $\mathcal{S}$ be a reachability system over $(\Sigma, \mathit{Cfg})$.
           We generate a reachability system $\mathcal{S}^*$ over $(\Sigma, \mathit{Cfg})^*$
           by setting
           \begin{equation*}
-              \mathcal{S}^* = \{ \mathit{cfgheat}(\varphi_1, R) \land P \Rightarrow^\exists \mathit{cfgheat}(\varphi_2, R) \land P^\prime \mid (\varphi_1 \land P \Rightarrow^\exists \varphi_2 \land P^\prime) \in S \} \, ,
+              \mathcal{S}^* = \{ \mathit{cfgheat}(L, \varphi_1, R) \land P \Rightarrow^\exists \mathit{cfgheat}(L, \varphi_2, R) \land P^\prime \mid (\varphi_1 \land P \Rightarrow^\exists \varphi_2 \land P^\prime) \in S \} \, ,
           \end{equation*}
-          where $R$ is a fresh variable (not occurring in any rule in $\mathcal{S}$).
+          where $L,R$ are distinct fresh variables (not occurring in any rule in $\mathcal{S}$).
     \item Let $\mathcal{T}$ be a configuration model; that is, a $\Sigma$-algebra.
-          We generate a $\Sigma^*$-algebra TODO.
+          We generate a $\Sigma^*$-algebra $\mathcal{T}*$, which interprets all symbols from
+          $\Sigma$ as in $\mathcal{T}$, and in addition interprets
+          \begin{enumerate}
+              \item the sort $\mathit{Cfg}*$ as the set of all finite lists
+              $[c_1;\ldots;c_n]$ for $n \in \mathbb{N}$, where $c_i$ is an element of sort $\mathit{Cfg}$
+              for any $0 \leq i \leq n$;
+              \item the symbol $\mathit{cfgitem}$ as the function $\lambda c.\, [c]$;
+              \item the symbol $\mathit{cfgconcat}$ as the function $\lambda l_1,l_2.\, l_1 \texttt{++} l_2$,
+                where $\texttt{++}$ is list concatenation; and
+              \item the symbol $\mathit{cfgheat}$ as the function
+                $\lambda l_1, c, l_2.\, l_1 \texttt{++} [c] \texttt{++} l_2$.
+          \end{enumerate}
 \end{enumerate}
 \end{definition}
 
