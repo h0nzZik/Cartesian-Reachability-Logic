@@ -196,6 +196,11 @@ Therefore, we also probably need the Consequence rule to work with $P$, too.
     & \prftree[l]{Axiom}{\varphi \in E}{\vdash_\CRL \varphi \Downarrow_{C} E}
     \end{align*}
     \begin{align*}
+    & \prftree[l]{Reduce}
+      { \mathcal{S}^* \vDash_\RL (\mathit{cfgconcat}(\ldots \mathit{cfgconcat}(\mathit{cfgitem}(\varphi_1), \mathit{cfgitem}(\varphi_2) )\ldots \mathit{cfgitem(\varphi_k)}) ) \Rightarrow^\forall \bigvee E}
+      {\vdash_\CRL (\varphi_1 \land P_1, \ldots, \varphi_k \land P_k) \land P \Downarrow_{C} E}
+    \end{align*}
+    \begin{align*}
     & \prftree[l]{Case}
     { \prfStackPremises
       {\vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i \land P, \varphi_{i+1}, \ldots, \varphi_k) \land P }
@@ -205,7 +210,7 @@ Therefore, we also probably need the Consequence rule to work with $P$, too.
     \end{align*}
     \begin{align*}
     & \prftree[l]{Step}
-    {\vDash_\RL \varphi_i \Rightarrow^\forall \varphi_i^\prime}
+    {\vDash_\RL \varphi_i \Rightarrow^{\forall+} \varphi_i^\prime}
     { \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i^\prime, \varphi_{i+1}, \ldots, \varphi_k)
       \land P
       \Downarrow_{\emptyset} (C \cup E)
