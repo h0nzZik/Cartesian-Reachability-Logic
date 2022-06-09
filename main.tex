@@ -1,6 +1,7 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath,amssymb,mathtools}
+\usepackage{amsthm}
 \usepackage{thmtools}
 \usepackage{hyperref}
 % `cleveref` has to be loaded after `hyperref`
@@ -21,7 +22,6 @@
 \declaretheorem[]{definition}
 \declaretheorem[]{lemma}
 \declaretheorem[]{theorem}
-\declaretheorem[]{proof}
 \declaretheorem[]{remark}
 
 \newcommand{\CRL}{\mathsf{CRL}}
@@ -164,8 +164,17 @@ We translate a language semantics into a semantics for lists of configurations a
 
 \begin{lemma}
     Let $\mathcal{S} = (\mathcal{T}, S)$ be a reachability-logic system over $(\Sigma, \mathit{Cfg})$.
-    For any $k \geq 1$, any configurations $c_1,\ldots,c_k$
+    For any $k \geq 1$, any configurations $c_1,\ldots,c_k, c^\prime \in \Tcfg$, and any $1 \leq i \leq k$,
+    we have
+    \begin{equation*}
+        c_i \Rightarrow_{\mathcal{S}} c^\prime
+                    \iff
+        [c_1,\ldots,c_k] \Rightarrow_{\mathcal{S}^*} [c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k]
+    \end{equation*}
 \end{lemma}
+\begin{proof}
+Admitted.
+\end{proof}
 
 \section{Implementation}
 
