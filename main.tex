@@ -193,10 +193,17 @@ Therefore, we also probably need the Consequence rule to work with $P$, too.
 \begin{figure}
     \centering
     \begin{align*}
-    & \prftree[l]{Axiom}{\varphi \in E}{\vdash_\CRL \varphi \Downarrow_{C} E}   \\
+    & \prftree[l]{Axiom}{\varphi \in E}{\vdash_\CRL \varphi \Downarrow_{C} E}
     \end{align*}
     \begin{align*}
-    %& \prftree[l]{Axiom}{\varphi \in E}{\varphi \Downarrow_{C} E}  \\
+    & \prftree[l]{Case}
+    { \prfStackPremises
+      {\vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i \land P, \varphi_{i+1}, \ldots, \varphi_k) \land P }
+      {\vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i \land Q, \varphi_{i+1}, \ldots, \varphi_k) \land P }
+    }
+    {\vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i \land (P \lor Q), \varphi_{i+1}, \ldots, \varphi_k) \land P \Downarrow_{C} E}
+    \end{align*}
+    \begin{align*}
     & \prftree[l]{Step}
     {\vDash_\RL \varphi_i \Rightarrow^\forall \varphi_i^\prime}
     { \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i^\prime, \varphi_{i+1}, \ldots, \varphi_k)
@@ -209,7 +216,6 @@ Therefore, we also probably need the Consequence rule to work with $P$, too.
     & \prftree[l]{Circularity}
       { \vdash_\CRL (\varphi_1, \ldots, \varphi_k) \land P \Downarrow_{C \cup \{ (\varphi_1, \ldots, \varphi_k) \land P \} } E}
       { \vdash_\CRL (\varphi_1, \ldots, \varphi_k) \land P \Downarrow_{C} E}
-      \\
     \end{align*}
     \begin{align*}
     & \prftree[l]{Conseq}
