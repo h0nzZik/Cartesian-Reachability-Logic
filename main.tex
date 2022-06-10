@@ -242,10 +242,10 @@ We define $\mathit{mergePatterns}$ and $\mathit{flatten}$ as follows:
     \begin{align*}
     & \prftree[l]{Case}
     { \prfStackPremises
-      {\mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i \land P, \varphi_{i+1}, \ldots, \varphi_k) \land P \Downarrow_{C, E} \psi^\prime }
-      {\mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i \land Q, \varphi_{i+1}, \ldots, \varphi_k) \land P \Downarrow_{C, E} \psi^\prime }
+      {\mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i \land P, \varphi_{i+1}, \ldots, \varphi_k) \land P^\prime \Downarrow_{C, E} \psi^\prime }
+      {\mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i \land Q, \varphi_{i+1}, \ldots, \varphi_k) \land P^\prime \Downarrow_{C, E} \psi^\prime }
     }
-    {\mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i \land (P \lor Q), \varphi_{i+1}, \ldots, \varphi_k) \land P \Downarrow_{C, E} \psi^\prime}
+    {\mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i \land (P \lor Q), \varphi_{i+1}, \ldots, \varphi_k) \land P^\prime \Downarrow_{C, E} \psi^\prime}
     \end{align*}
     \begin{align*}
     & \prftree[l]{Step}
@@ -310,19 +310,61 @@ By induction on the structure of the CRL proof. TODO
           
     \item If the proof ends with \emph{Case}, then we have
         \begin{equation*}
-            \mathcal{S}^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime) \vdash_\RL
-            \mathit{flatten}^\prime((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i \land P, \varphi_{i+1}, \ldots, \varphi_k) \land P, \psi^\prime)
+            \mathcal{S}^*, \Bar{E}, \Bar{C} \vdash_\RL
+            \mathit{flatten}^\prime((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i \land P, \varphi_{i+1}, \ldots, \varphi_k) \land P^\prime, \psi^\prime)
         \end{equation*}
         and
         \begin{equation*}
-            \mathcal{S}^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime) \vdash_\RL
-            \mathit{flatten}^\prime((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i \land Q, \varphi_{i+1}, \ldots, \varphi_k) \land P, \psi^\prime) 
+            \mathcal{S}^*, \Bar{E}, \Bar{C} \vdash_\RL
+            \mathit{flatten}^\prime((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i \land Q, \varphi_{i+1}, \ldots, \varphi_k) \land P^\prime, \psi^\prime) 
         \end{equation*}
         as hypotheses, and we have to prove
         \begin{equation*}
-            \mathcal{S}^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime) \vdash_\RL
-            \mathit{flatten}^\prime((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i \land (P \lor Q), \varphi_{i+1}, \ldots, \varphi_k) \land P, \psi^\prime)               \, .
+            \mathcal{S}^*, \Bar{E}, \Bar{C} \vdash_\RL
+            \mathit{flatten}^\prime((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i \land (P \lor Q), \varphi_{i+1}, \ldots, \varphi_k) \land P^\prime, \psi^\prime)               \, .
         \end{equation*}
+        (where $\Bar{E} = \mathit{flatten}^\prime(E, \psi^\prime)$
+         and $\Bar{C} = \mathit{flatten}^\prime(C, \psi^\prime)$
+        )
+        We split every $\varphi_j$ into its structural part $\phi_j$ and a predicate part $P_j$,
+        which allows us to simplify the instances of $\mathit{flatten}^\prime$.
+        This gives us the hypotheses
+         \begin{align*}
+            \mathcal{S}^*, \Bar{E}, \Bar{C}
+            \vdash_\RL
+            & \mathit{mergePatterns}(\phi_1, \ldots, \phi_k)
+            \\ & \land (P_1 \land \ldots \land P_{i-1} \land P \land P_{i+1} \land \ldots \land P_k \land P^\prime) 
+            \\ & \Rightarrow^\forall \mathit{flatten}(\psi^\prime) 
+        \end{align*}
+        and
+        \begin{align*}
+            \mathcal{S}^*, \Bar{E}, \Bar{C}
+            \vdash_\RL
+            & \mathit{mergePatterns}(\phi_1, \ldots, \phi_k)
+            \\ & \land (P_1 \land \ldots \land P_{i-1} \land Q \land P_{i+1} \land \ldots \land P_k \land P^\prime) 
+            \\ & \Rightarrow^\forall \mathit{flatten}(\psi^\prime) \, ,
+        \end{align*}
+        and the goal to prove will be
+        \begin{align*}
+            \mathcal{S}^*, \Bar{E}, \Bar{C}
+            \vdash_\RL
+            & \mathit{mergePatterns}(\phi_1, \ldots, \phi_k)
+            \\ & \land (P_1 \land \ldots \land P_{i-1} \land (P \lor Q) \land P_{i+1} \land \ldots \land P_k \land P^\prime) 
+            \\ & \Rightarrow^\forall \mathit{flatten}(\psi^\prime) \, .
+        \end{align*}
+        Now we apply the Consequence RL rule on the goal, changing it to
+        \begin{align*}
+            \mathcal{S}^*, \Bar{E}, \Bar{C}
+            \vdash_\RL
+            & (\mathit{mergePatterns}(\phi_1, \ldots, \phi_k)
+            \\ & \quad \land (P_1 \land \ldots \land P_{i-1} \land P \land P_{i+1} \land \ldots \land P_k
+            \land P^\prime))
+            \\ & \lor (\mathit{mergePatterns}(\phi_1, \ldots, \phi_k)
+            \\ & \quad \land (P_1 \land \ldots \land P_{i-1} \land Q \land P_{i+1} \land \ldots \land P_k
+            \land P^\prime))
+            \\ & \Rightarrow^\forall \mathit{flatten}(\psi^\prime) \, .
+        \end{align*}
+        Now we apply the Case analysis RL rule and the hypotheses and we are done.
 \end{enumerate}
 \end{proof}
 
