@@ -373,7 +373,7 @@ By induction on the structure of the CRL proof. TODO
     \item If the proof ends with \emph{Step},
       we can assume
       \begin{align*}
-          & (\mathcal{T}, S)^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime) \vdash_\RL
+          & (\mathcal{T}, S)^*, \mathit{flatten}^\prime(C \cup E, \psi^\prime), \mathit{flatten}^\prime(\emptyset, \psi^\prime) \vdash_\RL
           \\&
           \mathit{flatten}^\prime((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i^\prime, \varphi_{i+1}, \ldots,                          \varphi_k) \land P, \psi^\prime)
       \end{align*}
@@ -390,6 +390,14 @@ By induction on the structure of the CRL proof. TODO
         & \mathcal{S}^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime)
         \\& \vdash_\RL
           \mathit{flatten}^\prime((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P, \psi^\prime)  \, .
+    \end{align*}
+    We apply the Transitivity rule with the second premise being our first assumption, and it remains to prove the second premise, which is
+    \begin{align*}
+        & \mathcal{S}^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime)
+        \\& \vdash_\RL
+        \mathit{flatten}^\prime((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i^\prime, \varphi_{i+1}, \ldots,                          \varphi_k) \land P, \psi^\prime)
+        \\&\quad \Rightarrow^\forall
+        \mathit{flatten}^\prime((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P, \psi^\prime) \, .
     \end{align*}
 \end{enumerate}
 \end{proof}
