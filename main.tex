@@ -278,19 +278,52 @@ We define $\mathit{mergePatterns}$ and $\mathit{flatten}$ as follows:
 
 \begin{lemma}
     \begin{equation*}
-        \mathcal{S} \vdash_\CRL \psi \Downarrow_{C} E
+        \mathcal{S} \vdash_\CRL \psi \Downarrow_{C,E} \psi^\prime
         \implies
-        \mathcal{S}^* \vdash_\RL \mathit{flatten}(\psi) \Rightarrow^\forall \bigvee  \mathit{flatten}(E)
+        \mathcal{S}^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime) \vdash_\RL
+          \mathit{flatten}^\prime(\psi, \psi^\prime) 
     \end{equation*}
 \end{lemma}
 \begin{proof}
 By induction on the structure of the CRL proof. TODO
-%\begin{enumerate}
-    %\item If the proof ends with \emph{Reduce}, then we use its premise and apply the completeness of all-path reacability logic.
-    %\item If the proof ends with \emph{Axiom}, then $\psi \in E$,
-    %      and we need to prove $\vdash_\RL \mathit{flatten}(\psi) \Rightarrow^\forall \bigvee  \mathit{flatten}(E)$.
-    %      We know that $\mathit{flatten}(\psi) \in \mathit{flatten}(E)$.
-%\end{enumerate}
+\begin{enumerate}
+    \item If the proof ends with \emph{Reduce}, then we are done, since $\mathit{flatten}^\prime(\emptyset, \psi^\prime) = \emptyset$.
+    
+    \item If the proof ends with \emph{Reflexivity}, then we need to prove
+    \begin{equation*}
+        \mathcal{S}^*, \mathit{flatten}^\prime(E, \psi), \emptyset \vdash_\RL
+          \mathit{flatten}^\prime(\psi, \psi) 
+    \end{equation*}
+    which we do by applying the Reflexivity proof rule.
+    
+    \item If the proof ends with \emph{Axiom}, then $\psi \in E$,
+          and we have to prove that
+          \begin{equation*}
+            \mathcal{S}^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime) \vdash_\RL
+            \mathit{flatten}^\prime(\psi, \psi^\prime)               \, .
+          \end{equation*}
+          By applying the Axiom proof rule of RL, it is enough to show that
+          \begin{equation*}
+              \mathit{flatten}^\prime(\psi, \psi^\prime) \in \mathit{flatten^\prime}(E, \psi^\prime) \, ,
+          \end{equation*}
+          which follows from $\psi \in E$.
+          
+    \item If the proof ends with \emph{Case}, then we have
+        \begin{equation*}
+            \mathcal{S}^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime) \vdash_\RL
+            \mathit{flatten}^\prime((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i \land P, \varphi_{i+1}, \ldots, \varphi_k) \land P, \psi^\prime)
+        \end{equation*}
+        and
+        \begin{equation*}
+            \mathcal{S}^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime) \vdash_\RL
+            \mathit{flatten}^\prime((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i \land Q, \varphi_{i+1}, \ldots, \varphi_k) \land P, \psi^\prime) 
+        \end{equation*}
+        as hypotheses, and we have to prove
+        \begin{equation*}
+            \mathcal{S}^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime) \vdash_\RL
+            \mathit{flatten}^\prime((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i \land (P \lor Q), \varphi_{i+1}, \ldots, \varphi_k) \land P, \psi^\prime)               \, .
+        \end{equation*}
+\end{enumerate}
 \end{proof}
 
 \section{Implementation}
