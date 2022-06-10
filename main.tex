@@ -88,7 +88,29 @@ We define reachability-logic signatures, rules, and systems as follows.
     \item A $\Rightarrow_{\mathcal{S}}$-path is \emph{complete}
           iff it is not a strict prefix of any
           other $\Rightarrow_{\mathcal{S}}$-path.
+
+    \item An \emph{all-path reachability rule}
+          is a pair $\varphi \Rightarrow^\forall \varphi^\prime$ of patterns $\varphi$ and $\varphi^\prime$.
+    
+    \item An all-path reachability rule $\varphi \Rightarrow^\forall$ is \emph{satisfied},
+          written $\mathcal{S} \vDash_\RL \varphi \Rightarrow^\forall \varphi^\prime$,
+          iff for all complete $\Rightarrow_{\mathcal{S}}$-paths $\tau$
+          starting with $\gamma \in \Tcfg$ and for all $\rho : \Var \to \mathcal{T}$
+          such that $(\gamma, \rho) \vDash \varphi$,
+          there exists some $\gamma^\prime \in \tau$
+          such that $(\gamma^\prime, \rho) \vDash \varphi^\prime$.
 \end{enumerate}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{img/rl-proofsystem.png}
+    \caption{All-path reachability-logic proof system. TODO retypeset}
+    \label{fig:RLproofsystem}
+\end{figure}
+
+TODO proof system
+
+We have RL sequents of the shape $\mathcal{S}, A, C \vdash_\RL \varphi \Rightarrow^\forall \varphi^\prime$.
 
 \end{definition}
 
@@ -198,50 +220,55 @@ We define $\mathit{mergePatterns}$ and $\mathit{flatten}$ as follows:
         = \mathit{cfgconcat}(\mathit{cfgitem}(\varphi_1), \mathit{mergePatterns}(\varphi_2, \ldots, \varphi_n))$ for $n \geq 2$; and
     \item $\mathit{flatten}((\varphi_1 \land P_1, \ldots, \varphi_k \land P_k) \land P)
            = \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_k) \land (P_1 \land \ldots \land P_k \land P)$.
+    \item $\mathit{flatten}^\prime(\psi, \psi^\prime) = \mathit{flatten}(\psi) \Rightarrow^\forall \mathit{flatten}(\psi^\prime)$
+    \item $\mathit{flatten}^\prime(A, \psi^\prime) = \{ \mathit{flatten}^\prime(\psi, \psi^\prime) \mid \psi \in A \}$, where $A$ is a set.
 \end{enumerate}
-We pointwise extend $\mathit{mergePatterns}$ to sets.
 \end{definition}
 
 \begin{figure}
     \centering
     \begin{align*}
-    & \prftree[l]{Axiom}{\varphi \in E}{\vdash_\CRL \varphi \Downarrow_{C} E}
+    & \prftree[l]{Reflexivity}{\mathcal{S} \vdash_\CRL \psi \Downarrow_{\emptyset,E} \psi}
+    \end{align*}
+    \begin{align*}
+    & \prftree[l]{Axiom}{\psi \in E}{\mathcal{S} \vdash_\CRL \psi \Downarrow_{C,E} \psi^\prime}
     \end{align*}
     \begin{align*}
     & \prftree[l]{Reduce}
-      {\vDash_\RL \mathit{flatten}(\psi) \Rightarrow^\forall \bigvee  \mathit{flatten}(E)}
-      {\vdash_\CRL \psi \Downarrow_{C} E}
+      {\mathcal{S}^*, \mathit{flatten}^\prime(E, \psi^\prime), \emptyset \vdash_\RL
+        \mathit{flatten}^\prime(\psi, \psi^\prime) }
+      {\mathcal{S} \vdash_\CRL \psi \Downarrow_{C,E} \psi^\prime}
     \end{align*}
     \begin{align*}
     & \prftree[l]{Case}
     { \prfStackPremises
-      {\vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i \land P, \varphi_{i+1}, \ldots, \varphi_k) \land P }
-      {\vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i \land Q, \varphi_{i+1}, \ldots, \varphi_k) \land P }
+      {\mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i \land P, \varphi_{i+1}, \ldots, \varphi_k) \land P \Downarrow_{C, E} \psi^\prime }
+      {\mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i \land Q, \varphi_{i+1}, \ldots, \varphi_k) \land P \Downarrow_{C, E} \psi^\prime }
     }
-    {\vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i \land (P \lor Q), \varphi_{i+1}, \ldots, \varphi_k) \land P \Downarrow_{C} E}
+    {\mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i \land (P \lor Q), \varphi_{i+1}, \ldots, \varphi_k) \land P \Downarrow_{C, E} \psi^\prime}
     \end{align*}
     \begin{align*}
     & \prftree[l]{Step}
-    {\vDash_\RL \varphi_i \Rightarrow^{\forall+} \varphi_i^\prime}
-    { \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i^\prime, \varphi_{i+1}, \ldots, \varphi_k)
+    { \mathcal{S}^* \vDash_\RL \varphi_i \Rightarrow^{\forall+} \varphi_i^\prime}
+    { \mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i^\prime, \varphi_{i+1}, \ldots, \varphi_k)
       \land P
-      \Downarrow_{\emptyset} (C \cup E)
+      \Downarrow_{\emptyset, (C \cup E)} \psi^\prime
     }
-    {\vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P \Downarrow_{C} E}
+    {\mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P \Downarrow_{C, E} \psi^\prime}
     \end{align*}
     \begin{align*}
     & \prftree[l]{Circularity}
-      { \vdash_\CRL (\varphi_1, \ldots, \varphi_k) \land P \Downarrow_{C \cup \{ (\varphi_1, \ldots, \varphi_k) \land P \} } E}
-      { \vdash_\CRL (\varphi_1, \ldots, \varphi_k) \land P \Downarrow_{C} E}
+      { \mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_k) \land P \Downarrow_{C \cup \{ (\varphi_1, \ldots, \varphi_k) \land P \} , E} \psi^\prime}
+      { \mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_k) \land P \Downarrow_{C, E} \psi^\prime}
     \end{align*}
     \begin{align*}
     & \prftree[l]{Conseq}
       { \prfStackPremises
-        { \vdash_\CRL (\varphi_1 \land P_1, \ldots, \varphi_k \land P_k) \land P \Downarrow_{C} E}
-        { \vDash_\ML \varphi_1 = \varphi_1^\prime \land \ldots \land \varphi_k = \varphi_k^\prime
+        { (\mathcal{T}, S) \vdash_\CRL (\varphi_1 \land P_1, \ldots, \varphi_k \land P_k) \land P \Downarrow_{C, E} \psi^\prime}
+        { \mathcal{T} \vDash_\ML \varphi_1 = \varphi_1^\prime \land \ldots \land \varphi_k = \varphi_k^\prime
         \land (P_1 \land \ldots \land P_k \land P \leftrightarrow P_1 \land \ldots \land P_k \land P) }
       }
-      { \vdash_\CRL (\varphi_1^\prime \land P_1^\prime, \ldots, \varphi_k^\prime \land P_k^\prime) \land P^\prime \Downarrow_{C} E}
+      { (\mathcal{T}, S) \vdash_\CRL (\varphi_1^\prime \land P_1^\prime, \ldots, \varphi_k^\prime \land P_k^\prime) \land P^\prime \Downarrow_{C, E} \psi^\prime}
     \end{align*}
     \caption{Proof System}
     \label{fig:my_label}
@@ -251,11 +278,20 @@ We pointwise extend $\mathit{mergePatterns}$ to sets.
 
 \begin{lemma}
     \begin{equation*}
-        \vdash_\CRL \psi \Downarrow_{C} E
+        \mathcal{S} \vdash_\CRL \psi \Downarrow_{C} E
         \implies
-        \vdash_\RL \mathit{flatten}(\psi) \Rightarrow^\forall \bigvee  \mathit{flatten}(E)
+        \mathcal{S}^* \vdash_\RL \mathit{flatten}(\psi) \Rightarrow^\forall \bigvee  \mathit{flatten}(E)
     \end{equation*}
 \end{lemma}
+\begin{proof}
+By induction on the structure of the CRL proof. TODO
+%\begin{enumerate}
+    %\item If the proof ends with \emph{Reduce}, then we use its premise and apply the completeness of all-path reacability logic.
+    %\item If the proof ends with \emph{Axiom}, then $\psi \in E$,
+    %      and we need to prove $\vdash_\RL \mathit{flatten}(\psi) \Rightarrow^\forall \bigvee  \mathit{flatten}(E)$.
+    %      We know that $\mathit{flatten}(\psi) \in \mathit{flatten}(E)$.
+%\end{enumerate}
+\end{proof}
 
 \section{Implementation}
 
