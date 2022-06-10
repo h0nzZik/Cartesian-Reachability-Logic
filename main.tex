@@ -256,7 +256,7 @@ We define $\mathit{mergePatterns}$ and $\mathit{flatten}$ as follows:
           \Downarrow_{\emptyset, (C \cup E)} \psi^\prime
       }
       { \mathcal{T} \vDash_{\ML} \varphi_i \rightarrow \bigvee \{ \exists \mathit{FV}(\varphi_l).\, \varphi_l \mid \varphi_l \Rightarrow^\exists \varphi_r \in S \} }
-      { \mathcal{T} \vDash_\ML ((\exists c.\, \varphi_i[c/\square] \land \varphi_l[c/\square]) \land \varphi_r) \rightarrow \varphi_i^\prime  \mbox{ for each } \varphi_l \Rightarrow^\forall \varphi_r \in S }
+      { (\mathcal{T}, S) \vDash_\ML ((\exists c.\, \varphi_i[c/\square] \land \varphi_l[c/\square]) \land \varphi_r) \rightarrow \varphi_i^\prime  \mbox{ for each } \varphi_l \Rightarrow^\forall \varphi_r \in S }
     }
     {\mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P \Downarrow_{C, E} \psi^\prime}
     \end{align*}
@@ -369,6 +369,28 @@ By induction on the structure of the CRL proof. TODO
             \\ & \Rightarrow^\forall \mathit{flatten}(\psi^\prime) \, .
         \end{align*}
         Now we apply the Case analysis RL rule and the hypotheses and we are done.
+    
+    \item If the proof ends with \emph{Step},
+      we can assume
+      \begin{align*}
+          & (\mathcal{T}, S)^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime) \vdash_\RL
+          \\&
+          \mathit{flatten}^\prime((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i^\prime, \varphi_{i+1}, \ldots,                          \varphi_k) \land P, \psi^\prime)
+      \end{align*}
+      and
+      \begin{align*}
+        \mathcal{T} \vDash_{\ML} \varphi_i \rightarrow \bigvee \{ \exists \mathit{FV}(\varphi_l).\, \varphi_l \mid \varphi_l \Rightarrow^\exists \varphi_r \in S \}   
+      \end{align*}
+      and
+      \begin{align}
+        (\mathcal{T}, S) \vDash_\ML ((\exists c.\, \varphi_i[c/\square] \land \varphi_l[c/\square]) \land \varphi_r) \rightarrow \varphi_i^\prime  \mbox{ for each } \varphi_l \Rightarrow^\forall \varphi_r \in S    
+      \end{align}
+      and have to show
+    \begin{align*}
+        & \mathcal{S}^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime)
+        \\& \vdash_\RL
+          \mathit{flatten}^\prime((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P, \psi^\prime)  \, .
+    \end{align*}
 \end{enumerate}
 \end{proof}
 
