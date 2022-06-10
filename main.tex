@@ -249,10 +249,14 @@ We define $\mathit{mergePatterns}$ and $\mathit{flatten}$ as follows:
     \end{align*}
     \begin{align*}
     & \prftree[l]{Step}
-    { \mathcal{S}^* \vDash_\RL \varphi_i \Rightarrow^{\forall+} \varphi_i^\prime}
-    { \mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i^\prime, \varphi_{i+1}, \ldots, \varphi_k)
-      \land P
-      \Downarrow_{\emptyset, (C \cup E)} \psi^\prime
+    { \prfStackPremises
+       %{ \mathcal{S}^* \vDash_\RL \varphi_i \Rightarrow^{\forall+} \varphi_i^\prime }
+       {  (\mathcal{T}, S) \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i^\prime, \varphi_{i+1}, \ldots,    \varphi_k)
+          \land P
+          \Downarrow_{\emptyset, (C \cup E)} \psi^\prime
+      }
+      { \mathcal{T} \vDash_{\ML} \varphi_i \rightarrow \bigvee \{ \exists \mathit{FV}(\varphi_l).\, \varphi_l \mid \varphi_l \Rightarrow^\exists \varphi_r \in S \} }
+      { \mathcal{T} \vDash_\ML ((\exists c.\, \varphi_i[c/\square] \land \varphi_l[c/\square]) \land \varphi_r) \rightarrow \varphi_i^\prime  \mbox{ for each } \varphi_l \Rightarrow^\forall \varphi_r \in S }
     }
     {\mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P \Downarrow_{C, E} \psi^\prime}
     \end{align*}
