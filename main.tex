@@ -259,15 +259,29 @@ We define $\mathit{mergePatterns}$ and $\mathit{flatten}$ as follows:
     for $n \geq 2$; and
     \item
         \begin{align*}
+            & \mathit{insert}(P. \exists x^\prime_1,\ldots,x^\prime_{n^\prime}.\, (\phi^\prime_1 \land P^\prime_1) \lor \ldots (\phi^\prime_m \land P^\prime_{m^\prime}))
+            \\& = (\exists x^\prime_1,\ldots,x^\prime_{n^\prime}. (\phi^\prime_1 \land (P^\prime_1 \land P)) \lor \ldots (\phi^\prime_m \land (P^\prime_{m^\prime} \land P)))
+    \end{align*}    
+    \item
+        \begin{align*}
             & \mathit{flatten}((\varphi_1, \ldots, \varphi_k) \land P)
-            = (\exists x^\prime_1,\ldots,x^\prime_{n^\prime}. (\phi^\prime_1 \land (P^\prime_1 \land P)) \lor \ldots (\phi^\prime_m \land (P^\prime_{m^\prime} \land P)))
-             \\ & \mbox{where } (\exists x^\prime_1,\ldots,x^\prime_{n^\prime}.\, (\phi^\prime_1 \land P^\prime_1) \lor \ldots (\phi^\prime_m \land P^\prime_{m^\prime}))
-          = \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_k)
+            = \mathit{insert}(P, \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_k))
     \end{align*}
     \item $\mathit{flatten}^\exists(\Psi, \Psi^\prime) = \mathit{flatten}(\Psi) \Rightarrow^\exists \mathit{flatten}(\Psi^\prime)$
     \item $\mathit{flatten}^\exists(A, \Psi^\prime) = \{ \mathit{flatten}^\exists(\Psi, \Psi^\prime) \mid \Psi \in A \}$, where $A$ is a set.
 \end{enumerate}
 \end{definition}
+
+\begin{lemma}
+    \begin{align*}
+        \vDash_\ML & \mathit{insert}(P \lor Q, \exists x_1,\ldots,x_{n}.\, (\phi_1 \land P_1) \lor \ldots (\phi_m \land P_{m})) \leftrightarrow
+        \\ & ( \mathit{insert}(P, \exists x_1,\ldots,x_{n}.\, (\phi_1 \land P_1) \lor \ldots (\phi_m \land P_{m}))
+        \\ & \ \mathit{insert}(Q, \exists x_1,\ldots,x_{n}.\, (\phi_1 \land P_1) \lor \ldots (\phi_m \land P_{m})) )
+    \end{align*}
+\end{lemma}
+\begin{proof}
+Admitted.
+\end{proof}
 
 \begin{figure}
     \centering
