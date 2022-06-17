@@ -41,9 +41,9 @@
 
 \section{Preliminaries}
 
-\subsection{(Topmost, $\mu$-free) Matching Logic}
+\subsection{($\mu$-free) Matching Logic}
 
-\subsection{All-path Reachability Logic}
+\subsection{One-path Reachability Logic}
 
 
 
@@ -80,37 +80,55 @@ We define reachability-logic signatures, rules, and systems as follows.
           iff there is some rule \\ $\varphi \Rightarrow^\exists \varphi^\prime \in S$
           and some valuation $\rho : \Var \to \mathcal{T}$ with $(\gamma, \rho) \vDash \varphi$
           and $(\gamma^\prime , \rho) \vDash \varphi^\prime$.
+
+    \item A reachability system $(\mathcal{T}, S)$ is \emph{deterministic} iff the induced transition system
+          is deterministic.
+
+    \item A configuration $\gamma \in \Tcfg$ \emph{terminates} in $(\Tcfg , \Rightarrow_{\mathcal{S}})$
+          iff there is no infinite $\Rightarrow_{\mathcal{S}})$-sequence starting with $\gamma$.
           
     \item A \emph{$\Rightarrow_{\mathcal{S}}$-path} is a finite
-          sequence $\gamma_0 \Rightarrow_{\mathcal{S}} \gamma_1 \Rightarrow_{\mathcal{S}} \ldots \Rightarrow_{\mathcal{S}} \gamma_n$
+          sequence $\gamma_0 \Rightarrow_{\mathcal{S}} \gamma_1 \Rightarrow_{\mathcal{S}} \ldots
+          \Rightarrow_{\mathcal{S}} \gamma_n$
           with $\gamma_0,\ldots,\gamma_n \in \Tcfg$.
           
     \item A $\Rightarrow_{\mathcal{S}}$-path is \emph{complete}
           iff it is not a strict prefix of any
           other $\Rightarrow_{\mathcal{S}}$-path.
 
-    \item An \emph{all-path reachability rule}
-          is a pair $\varphi \Rightarrow^\forall \varphi^\prime$ of patterns $\varphi$ and $\varphi^\prime$.
-    
-    \item An all-path reachability rule $\varphi \Rightarrow^\forall$ is \emph{satisfied},
-          written $\mathcal{S} \vDash_\RL \varphi \Rightarrow^\forall \varphi^\prime$,
-          iff for all complete $\Rightarrow_{\mathcal{S}}$-paths $\tau$
-          starting with $\gamma \in \Tcfg$ and for all $\rho : \Var \to \mathcal{T}$
+    \item A \emph{one-path reachability rule}
+          is a pair $\varphi \Rightarrow^\exists \varphi^\prime$ of patterns $\varphi$ and $\varphi^\prime$.
+
+    \item A one-path reachability rule $\varphi \Rightarrow^\exists$ is \emph{satisfied}
+          in a reachability system $\mathcal{S}$,
+          written $\mathcal{S} \vDash_\RL \varphi \Rightarrow^\exists \varphi^\prime$,
+          iff for every $\gamma \in \Tcfg$
+          such that $\gamma$ terminates in $(\Tcfg, \Rightarrow_{\mathcal{S}})$
+          and for any valuation $\rho : \Var \to \mathcal{T}$
           such that $(\gamma, \rho) \vDash \varphi$,
-          there exists some $\gamma^\prime \in \tau$
-          such that $(\gamma^\prime, \rho) \vDash \varphi^\prime$.
+          there exists some $\gamma^\prime \in \Tcfg$
+          such that
+          and $(\gamma^\prime, \rho) \vDash \varphi^\prime$
+
+%    \item An all-path reachability rule $\varphi \Rightarrow^\forall$ is \emph{satisfied},
+%          written $\mathcal{S} \vDash_\RL \varphi \Rightarrow^\forall \varphi^\prime$,
+%          iff for all complete $\Rightarrow_{\mathcal{S}}$-paths $\tau$
+%          starting with $\gamma \in \Tcfg$ and for all $\rho : \Var \to \mathcal{T}$
+%          such that $(\gamma, \rho) \vDash \varphi$,
+%          there exists some $\gamma^\prime \in \tau$
+%          such that $(\gamma^\prime, \rho) \vDash \varphi^\prime$.
 \end{enumerate}
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.9\textwidth]{img/rl-proofsystem.png}
-    \caption{All-path reachability-logic proof system. TODO retypeset}
+    \includegraphics[width=0.5\textwidth]{img/onepath-rl.png}
+    \caption{One-path reachability-logic proof system.
+    The use of $\Rightarrow^+$ in sequent means that it was derived without Reflexivity.
+    TODO retypeset}
     \label{fig:RLproofsystem}
 \end{figure}
 
-TODO proof system
-
-We have RL sequents of the shape $\mathcal{S}, A, C \vdash_\RL \varphi \Rightarrow^\forall \varphi^\prime$.
+We have RL sequents of the shape $\mathcal{T}, A, C \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime$.
 
 \end{definition}
 
@@ -120,28 +138,28 @@ We need to make the definition such that it works with reachability logic for th
 Here is one attempt:
 \begin{definition}\label{def:CRLsemantics}
 A Cartesian reachability rule
-$(\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\forall} (\psi_1,\ldots,\psi_k) \land \psi$
+$(\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\exists} (\psi_1,\ldots,\psi_k) \land \psi$
 of arity $k$
-is \emph{valid},
+is \emph{valid} in a reachability system $(\mathcal{T}, S)$,
 written
-$\vDash_\CRL (\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\forall}
+$(\mathcal{T}, S) \vDash_\CRL (\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\exists}
 (\psi_1,\ldots,\psi_k) \land \psi$,
-iff for all configurations $\sigma_1,\ldots,\sigma_k$ and any valuation $\rho$,
+iff for all configurations $\sigma_1,\ldots,\sigma_k \in \Tcfg$ and any $\mathcal{T}$-valuation $\rho$,
 whenever $\sigma_1 \in |\varphi_1 \land \varphi|_\rho \land \ldots \land \sigma_k \in |\varphi_l \land \varphi|_\rho$,
-then for every complete (that is, finite terminating) executions $\pi_1, \ldots, \pi_k$ such that
-$\sigma_1 = \pi_1(0) \land \ldots \land \sigma_k = \pi_k(0)$ there exists $i_1,\ldots,i_k \in \mathbb{N}$
+then for every $k$-tuple complete paths $(\pi_1, \ldots, \pi_k)$
+of respective lengths $l_1, \ldots, l_k$
 such that
-$\pi_1(i_1) \in |\varphi_1 \land \psi|_\rho \land \ldots \land \pi_k(i_k) \in |\varphi_k \land \psi|_\rho$.
+$\sigma_1 = \pi_1(0) \land \ldots \land \sigma_k = \pi_k(0)$,
+it holds that 
+$\pi_1(l_1-1) \in |\varphi_1 \land \psi|_\rho \land \ldots \land \pi_k(l_k-1) \in |\varphi_k \land \psi|_\rho$.
 \end{definition}
 
 TODOs:
 \begin{itemize}
     \item Validate this definition against examples from the CHL paper.
     \item Have a "running example" - some programming language, like IMP?
-    \item Define the 'composite' semantics - list of configurations in one configuration.
     \item Have an example how do we perform lockstep execution on ifs.
-    \item Why there are the pluses on both premises of the Circularity proof rule of the Equiv checking paper? Do we need it? Maybe we may lose/miss some synchronization point if we require both. We probably need to weaken the premises.
-    \item Conservativeness argument for the additional rules.
+    \item Conservativeness argument for the additional rules?
 \end{itemize}
 
 \begin{definition}
@@ -205,12 +223,11 @@ Admitted.
 \section{Proof System}
 
 The proof system derives claims of the shape
-$\vdash_\CRL (\varphi_1 \land P_1, \ldots, \varphi_k \land P_k) \land P \Downarrow_C E$,
-where $\varphi_i$ are structural patterns, and $P_i$ and $P$ are predicate patterns.
-Maybe we need a constraint that $\mathit{FV}(P_i) \subseteq \mathit{FV}(\varphi_i)$.
-That way we can feed the $(\varphi_i, P_i)$ component to RL without some unexpected behavior.
+$\mathcal{S}, \vdash_\CRL (\varphi_1, \ldots, \varphi_k) \land P \Downarrow_{C,E} \Psi$.
 The idea is that $P$ is the part of the claim that relates variables from different components.
 Therefore, we also probably need the Consequence rule to work with $P$, too.
+Initially, the proof starts with the claim
+$\mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_k) \land P \Downarrow_{\emptyset, \emptyset} \Psi$.
 
 \begin{definition}
 We define $\mathit{mergePatterns}$ and $\mathit{flatten}$ as follows:
@@ -218,62 +235,70 @@ We define $\mathit{mergePatterns}$ and $\mathit{flatten}$ as follows:
     \item $\mathit{mergePatterns}(\varphi) = \mathit{cfgitem}(\varphi)$;
     \item $\mathit{mergePatterns}(\varphi_1, \varphi_2, \ldots, \varphi_n)
         = \mathit{cfgconcat}(\mathit{cfgitem}(\varphi_1), \mathit{mergePatterns}(\varphi_2, \ldots, \varphi_n))$ for $n \geq 2$; and
-    \item $\mathit{flatten}((\varphi_1 \land P_1, \ldots, \varphi_k \land P_k) \land P)
-           = \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_k) \land (P_1 \land \ldots \land P_k \land P)$.
-    \item $\mathit{flatten}^\prime(\psi, \psi^\prime) = \mathit{flatten}(\psi) \Rightarrow^\forall \mathit{flatten}(\psi^\prime)$
-    \item $\mathit{flatten}^\prime(A, \psi^\prime) = \{ \mathit{flatten}^\prime(\psi, \psi^\prime) \mid \psi \in A \}$, where $A$ is a set.
+    \item $\mathit{flatten}((\varphi_1, \ldots, \varphi_k) \land P)
+        = \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_k) \land P$.
+    \item $\mathit{flatten}^\exists(\Psi, \Psi^\prime) = \mathit{flatten}(\Psi) \Rightarrow^\exists \mathit{flatten}(\Psi^\prime)$
+    \item $\mathit{flatten}^\exists(A, \Psi^\prime) = \{ \mathit{flatten}^\exists(\Psi, \Psi^\prime) \mid \Psi \in A \}$, where $A$ is a set.
 \end{enumerate}
 \end{definition}
 
 \begin{figure}
     \centering
     \begin{align*}
-    & \prftree[l]{Reflexivity}{\mathcal{S} \vdash_\CRL \psi \Downarrow_{\emptyset,E} \psi}
+    & \prftree[l]{Reflexivity}{\mathcal{S} \vdash_\CRL \Psi \Downarrow_{\emptyset,E} \Psi}
     \end{align*}
     \begin{align*}
-    & \prftree[l]{Axiom}{\psi \in E}{\mathcal{S} \vdash_\CRL \psi \Downarrow_{C,E} \psi^\prime}
+    & \prftree[l]{Axiom}{\Psi \in E}{\mathcal{S} \vdash_\CRL \Psi \Downarrow_{C,E} \Psi^\prime}
     \end{align*}
     \begin{align*}
     & \prftree[l]{Reduce}
-      {\mathcal{S}^*, \mathit{flatten}^\prime(E, \psi^\prime), \emptyset \vdash_\RL
-        \mathit{flatten}^\prime(\psi, \psi^\prime) }
-      {\mathcal{S} \vdash_\CRL \psi \Downarrow_{C,E} \psi^\prime}
+      {(\mathcal{T}^*, S^* \cup \mathit{flatten}^\prime(E, \Psi^\prime)), \emptyset \vdash_\RL
+        \mathit{flatten}^\prime(\Psi, \Psi^\prime) }
+      {(\mathcal{T}, S) \vdash_\CRL \Psi \Downarrow_{C,E} \Psi^\prime}
     \end{align*}
     \begin{align*}
     & \prftree[l]{Case}
     { \prfStackPremises
-      {\mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i \land P, \varphi_{i+1}, \ldots, \varphi_k) \land P^\prime \Downarrow_{C, E} \psi^\prime }
-      {\mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i \land Q, \varphi_{i+1}, \ldots, \varphi_k) \land P^\prime \Downarrow_{C, E} \psi^\prime }
+      {\mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P^\prime \Downarrow_{C, E} \Psi^\prime }
+      {\mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \psi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P^\prime \Downarrow_{C, E} \Psi^\prime }
     }
-    {\mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i \land (P \lor Q), \varphi_{i+1}, \ldots, \varphi_k) \land P^\prime \Downarrow_{C, E} \psi^\prime}
+    {\mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, (\varphi_i \lor \psi_i), \varphi_{i+1}, \ldots, \varphi_k) \land P^\prime \Downarrow_{C, E} \Psi^\prime}
     \end{align*}
     \begin{align*}
     & \prftree[l]{Step}
     { \prfStackPremises
+       {\varphi \Rightarrow^\exists \varphi^\prime \in S}
+       {\mathcal{T} \vDash_\ML \varphi_i \leftrightarrow (\varphi \land \psi)}
+       {\psi \mbox{ is a patternless FOL formula}}
        %{ \mathcal{S}^* \vDash_\RL \varphi_i \Rightarrow^{\forall+} \varphi_i^\prime }
-       {  (\mathcal{T}, S) \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i^\prime, \varphi_{i+1}, \ldots,    \varphi_k)
+       {  (\mathcal{T}, S) \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi^\prime \land \psi, \varphi_{i+1}, \ldots,    \varphi_k)
           \land P
-          \Downarrow_{\emptyset, (C \cup E)} \psi^\prime
+          \Downarrow_{\emptyset, (C \cup E)} \Psi^\prime
       }
-      { \mathcal{T} \vDash_{\ML} \varphi_i \rightarrow \bigvee \{ \exists \mathit{FV}(\varphi_l).\, \varphi_l \mid \varphi_l \Rightarrow^\exists \varphi_r \in S \} }
-      { (\mathcal{T}, S) \vDash_\ML ((\exists c.\, \varphi_i[c/\square] \land \varphi_l[c/\square]) \land \varphi_r) \rightarrow \varphi_i^\prime  \mbox{ for each } \varphi_l \Rightarrow^\forall \varphi_r \in S }
     }
-    {\mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P \Downarrow_{C, E} \psi^\prime}
+    {(\mathcal{T}, S) \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P \Downarrow_{C, E} \Psi^\prime}
     \end{align*}
     \begin{align*}
     & \prftree[l]{Circularity}
-      { \mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_k) \land P \Downarrow_{C \cup \{ (\varphi_1, \ldots, \varphi_k) \land P \} , E} \psi^\prime}
-      { \mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_k) \land P \Downarrow_{C, E} \psi^\prime}
+      { \mathcal{S} \vdash_\CRL \Psi \Downarrow_{C \cup \{ \Psi \} , E} \Psi^\prime}
+      { \mathcal{S} \vdash_\CRL \Psi \Downarrow_{C, E} \Psi^\prime}
     \end{align*}
     \begin{align*}
     & \prftree[l]{Conseq}
       { \prfStackPremises
-        { (\mathcal{T}, S) \vdash_\CRL (\varphi_1 \land P_1, \ldots, \varphi_k \land P_k) \land P \Downarrow_{C, E} \psi^\prime}
-        { \mathcal{T} \vDash_\ML \varphi_1 = \varphi_1^\prime \land \ldots \land \varphi_k = \varphi_k^\prime
-        \land (P_1 \land \ldots \land P_k \land P \leftrightarrow P_1 \land \ldots \land P_k \land P) }
+        { (\mathcal{T}, S) \vdash_\CRL \Phi^\prime \Downarrow_{C, E} \Psi^\prime}
+        { \mathcal{T}^* \vDash_\ML \mathit{flatten}(\Phi) \leftrightarrow \mathit{flatten}(\Phi^\prime) }
       }
-      { (\mathcal{T}, S) \vdash_\CRL (\varphi_1^\prime \land P_1^\prime, \ldots, \varphi_k^\prime \land P_k^\prime) \land P^\prime \Downarrow_{C, E} \psi^\prime}
+      { (\mathcal{T}, S) \vdash_\CRL \Phi \Downarrow_{C, E} \Psi^\prime}
     \end{align*}
+%    \begin{align*}
+%    & \prftree[l]{Conseq2}
+%      { \prfStackPremises
+%        { (\mathcal{T}, S) \vdash_\CRL (\varphi_1, \ldots, \varphi_k) \land P \Downarrow_{C, E} \Psi^\prime}
+%        { \mathcal{T} \vDash_\ML \varphi_i \leftrightarrow \psi_i }
+%      }
+%      { (\mathcal{T}, S) \vdash_\CRL (\varphi_1^\prime, \ldots, \varphi_{i-1}, \varphi_{i}, \varphi_{i+1}, \ldots, \varphi_k^\prime) \land P^\prime \Downarrow_{C, E} \Psi^\prime}
+%    \end{align*}
     \caption{Proof System}
     \label{fig:my_label}
 \end{figure}
@@ -282,9 +307,9 @@ We define $\mathit{mergePatterns}$ and $\mathit{flatten}$ as follows:
 
 \begin{lemma}
     \begin{equation*}
-        \mathcal{S} \vdash_\CRL \psi \Downarrow_{C,E} \psi^\prime
+        (\mathcal{T}, S) \vdash_\CRL \Psi \Downarrow_{C,E} \Psi^\prime
         \implies
-        \mathcal{S}^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime) \vdash_\RL
+        (\mathcal{T}^*, S^* \cup \mathit{flatten}^\prime(E, \Psi^\prime)), \mathit{flatten}^\prime(C, \Psi^\prime) \vdash_\RL
           \mathit{flatten}^\prime(\psi, \psi^\prime) 
     \end{equation*}
 \end{lemma}
@@ -383,7 +408,7 @@ By induction on the structure of the CRL proof. TODO
       \end{align*}
       and
       \begin{align}
-        (\mathcal{T}, S) \vDash_\ML ((\exists c.\, \varphi_i[c/\square] \land \varphi_l[c/\square]) \land \varphi_r) \rightarrow \varphi_i^\prime  \mbox{ for each } \varphi_l \Rightarrow^\forall \varphi_r \in S    
+        \mathcal{T} \vDash_\ML ((\exists c.\, \varphi_i[c/\square] \land \varphi_l[c/\square]) \land \varphi_r) \rightarrow \varphi_i^\prime  \mbox{ for each } \varphi_l \Rightarrow^\forall \varphi_r \in S    
       \end{align}
       and have to show
     \begin{align*}
@@ -393,12 +418,13 @@ By induction on the structure of the CRL proof. TODO
     \end{align*}
     We apply the Transitivity rule with the second premise being our first assumption, and it remains to prove the second premise, which is
     \begin{align*}
-        & \mathcal{S}^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime)
+        & (\mathcal{T}, S)^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime)
         \\& \vdash_\RL
         \mathit{flatten}^\prime((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i^\prime, \varphi_{i+1}, \ldots,                          \varphi_k) \land P, \psi^\prime)
         \\&\quad \Rightarrow^\forall
         \mathit{flatten}^\prime((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P, \psi^\prime) \, .
     \end{align*}
+    Now we apply the Step rule of RL. TODO.
 \end{enumerate}
 \end{proof}
 
