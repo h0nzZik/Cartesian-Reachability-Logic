@@ -232,6 +232,8 @@ Admitted.
 The proof system derives claims of the shape
 $\mathcal{S}, \vdash_\CRL (\varphi_1, \ldots, \varphi_k) \land P \Downarrow_{C,E} \Psi$,
 where $P$ is a patternless FOL formula.
+Also, every $\varphi_i$ has the structure of
+$\exists x_1,\ldots,x_n. (\phi_1 \land P_1) \lor \ldots (\phi_m \land P_m)$.
 The idea is that $P$ is the part of the claim that relates variables from different components.
 Initially, the proof starts with the claim
 $\mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_k) \land P \Downarrow_{\emptyset, \emptyset} \Psi$.
@@ -239,9 +241,22 @@ $\mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_k) \land P \Downarrow_{\emp
 \begin{definition}
 We define $\mathit{mergePatterns}$ and $\mathit{flatten}$ as follows:
 \begin{enumerate}
-    \item $\mathit{mergePatterns}(\varphi) = \mathit{cfgitem}(\varphi)$;
-    \item $\mathit{mergePatterns}(\varphi_1, \varphi_2, \ldots, \varphi_n)
-        = \mathit{cfgconcat}(\mathit{cfgitem}(\varphi_1), \mathit{mergePatterns}(\varphi_2, \ldots, \varphi_n))$ for $n \geq 2$; and
+    \item
+    \begin{align*}
+     & \mathit{mergePatterns}(\exists x_1,\ldots,x_n. (\phi_1 \land P_1) \lor \ldots \lor (\phi_m \land P_m)) =
+     \\ & \exists x_1,\ldots,x_n. (\mathit{cfgitem}(\phi_1) \land P_1) \lor \ldots \lor (\mathit{cfgitem}(\phi_m) \land P_m)
+    \end{align*}
+    \item
+    \begin{align*}
+     & \mathit{mergePatterns}(\exists x_1,\ldots,x_n. (\phi_1 \land P_1) \lor \ldots \lor (\phi_m \land P_m), \varphi_2, \ldots, \varphi_n) =
+     \\ & \exists \bar{x}_1,\ldots,\bar{x}_n,x_1^\prime,\ldots,x_{n^\prime}^\prime.\,
+          \bigvee_{\substack{1 \leq i \leq m\\ 1 \leq j \leq m^\prime}} (\mathit{cfgconcat}(\mathit{cfgitem}(\phi_i), \phi^\prime_j[F]) \land (P_i \land P_j[F]))
+     \\ & \mbox{where } F = \bar{x}_1/x^\prime_1,\ldots,\bar{x}_{n^\prime}/x^\prime_{n^\prime}
+          \mbox{ and } \bar{x}_j \mbox{ fresh }
+     \\ & \mbox{where } (\exists x^\prime_1,\ldots,x^\prime_{n^\prime}. (\phi^\prime_1 \land P^\prime_1) \lor \ldots (\phi^\prime_m \land P^\prime_{m^\prime}))
+          = \mathit{mergePatterns}(\varphi_2, \ldots, \varphi_n)
+    \end{align*}
+    for $n \geq 2$; and
     \item $\mathit{flatten}((\varphi_1, \ldots, \varphi_k) \land P)
         = \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_k) \land P$.
     \item $\mathit{flatten}^\exists(\Psi, \Psi^\prime) = \mathit{flatten}(\Psi) \Rightarrow^\exists \mathit{flatten}(\Psi^\prime)$
