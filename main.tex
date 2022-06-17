@@ -272,11 +272,13 @@ We define $\mathit{mergePatterns}$ and $\mathit{flatten}$ as follows:
 \end{enumerate}
 \end{definition}
 
-\begin{lemma}
+\begin{lemma}\label{lem:insert}
+  For any structureless pattens $P, Q, P_1, \ldots, P_m$
+  and any basic patterns $\phi_1, \ldots, \phi_m$,
     \begin{align*}
         \vDash_\ML & \mathit{insert}(P \lor Q, \exists x_1,\ldots,x_{n}.\, (\phi_1 \land P_1) \lor \ldots (\phi_m \land P_{m})) \leftrightarrow
         \\ & ( \mathit{insert}(P, \exists x_1,\ldots,x_{n}.\, (\phi_1 \land P_1) \lor \ldots (\phi_m \land P_{m}))
-        \\ & \ \mathit{insert}(Q, \exists x_1,\ldots,x_{n}.\, (\phi_1 \land P_1) \lor \ldots (\phi_m \land P_{m})) )
+        \\ & \ \mathit{insert}(Q, \exists x_1,\ldots,x_{n}.\, (\phi_1 \land P_1) \lor \ldots (\phi_m \land P_{m})) ) \, .
     \end{align*}
 \end{lemma}
 \begin{proof}
@@ -410,7 +412,7 @@ By induction on the structure of the CRL proof. TODO
         \begin{align*}
             \mathcal{S}^*, \Bar{E}, \Bar{C} \vdash_\RL
             &
-            \mathit{mergePatterns}((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k)) \land P^\prime
+            \mathit{insert}(P^\prime, \mathit{mergePatterns}((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k)))
             \\ & \Rightarrow^\exists
             \mathit{flatten}(\Psi^\prime)
         \end{align*}
@@ -418,7 +420,7 @@ By induction on the structure of the CRL proof. TODO
         \begin{align*}
             \mathcal{S}^*, \Bar{E}, \Bar{C} \vdash_\RL
             &
-            \mathit{mergePatterns}((\varphi_1, \ldots, \varphi_{i-1}, \psi_i, \varphi_{i+1}, \ldots, \varphi_k)) \land P^\prime
+            \mathit{insert}(P^\prime, \mathit{mergePatterns}((\varphi_1, \ldots, \varphi_{i-1}, \psi_i, \varphi_{i+1}, \ldots, \varphi_k)))
             \\ & \Rightarrow^\exists
             \mathit{flatten}(\Psi^\prime)
         \end{align*}
@@ -427,15 +429,15 @@ By induction on the structure of the CRL proof. TODO
         \begin{align*}
             \mathcal{S}^*, \Bar{E}, \Bar{C} \vdash_\RL
             &
-            \mathit{mergePatterns}((\varphi_1, \ldots, \varphi_{i-1}, (\varphi_i \lor \psi_i), \varphi_{i+1}, \ldots, \varphi_k)) \land P^\prime
+            \mathit{insert}(P^\prime, \mathit{mergePatterns}((\varphi_1, \ldots, \varphi_{i-1}, (\varphi_i \lor \psi_i), \varphi_{i+1}, \ldots, \varphi_k)))
             \\ & \Rightarrow^\exists
             \mathit{flatten}(\Psi^\prime)
         \end{align*}
         Since
         \begin{align*}
-            \mathcal{T}^* \vDash_\ML & \mathit{mergePatterns}((\varphi_1, \ldots, \varphi_{i-1}, (\varphi_i \lor \psi_i), \varphi_{i+1}, \ldots, \varphi_k)) \land P^\prime \leftrightarrow \\
-            & (\mathit{mergePatterns}((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k)) \land P^\prime \\
-            & \lor \mathit{mergePatterns}((\varphi_1, \ldots, \varphi_{i-1}, \psi_i, \varphi_{i+1}, \ldots, \varphi_k)) \land P^\prime)
+            \mathcal{T}^* \vDash_\ML & \mathit{insert}(P^\prime, \mathit{mergePatterns}((\varphi_1, \ldots, \varphi_{i-1}, (\varphi_i \lor \psi_i), \varphi_{i+1}, \ldots, \varphi_k))) \leftrightarrow \\
+            & (\mathit{insert}(P^\prime, \mathit{mergePatterns}((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k))) \\
+            & \lor \mathit{insert}(P^\prime, \mathit{mergePatterns}((\varphi_1, \ldots, \varphi_{i-1}, \psi_i, \varphi_{i+1}, \ldots, \varphi_k))))
         \end{align*}
         (where $\mathcal{S}^* = (\mathcal{T}^*, S)$),
         we can apply the Consequence RL rule on the goal, followed by a Case Analysis rule applied to the two hypotheses, and we are done.
@@ -457,29 +459,28 @@ By induction on the structure of the CRL proof. TODO
       
     We apply the Transitivity rule with the second premise being our first inductive hypothesis, and it remains to prove the second premise, which is (after simplification)
     \begin{align*}
-        & (\mathcal{T}, S)^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime)
+        & (\mathcal{T}, S)^*, \mathit{flatten}^\exists(E, \psi^\prime), \mathit{flatten}^\exists(C, \psi^\prime)
         \\& \vdash_\RL
-        (\mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots,                          \varphi_k) \land P)
+        \mathit{insert}(P, \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots,                          \varphi_k))
         \\&\quad \Rightarrow^\exists
-        (\mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, (\varphi^\prime \land \psi), \varphi_{i+1}, \ldots, \varphi_k) \land P) \, .
+        \mathit{insert}(P, \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, (\varphi^\prime \land \psi), \varphi_{i+1}, \ldots, \varphi_k) ) \, .
     \end{align*}
     By Congruence lemma and our assumption $\mathcal{T} \vDash_\ML \varphi_i \leftrightarrow (\varphi \land \psi)$ (adding the star does not break anything, by conservativeness), we have
     \begin{align*}
         \mathcal{T}^* \vDash_\ML &
-        (\mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots,                          \varphi_k) \land P)
+        \mathit{insert}(P, \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots,                          \varphi_k))
         \\ & \leftrightarrow
-        (\mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, (\varphi \land \psi), \varphi_{i+1}, \ldots, \varphi_k) \land P) \, ,
+        \mathit{insert}(P, \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, (\varphi \land \psi), \varphi_{i+1}, \ldots, \varphi_k)) \, ,
     \end{align*}
     and therefore we can apply the Consequence rule on the goal, changing it into
     \begin{align*}
         & (\mathcal{T}, S)^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime)
         \\& \vdash_\RL
-        (\mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, (\varphi \land \psi), \varphi_{i+1}, \ldots,                          \varphi_k) \land P)
+        \mathit{insert}(P, \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, (\varphi \land \psi), \varphi_{i+1}, \ldots,                          \varphi_k))
         \\&\quad \Rightarrow^\exists
-        (\mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, (\varphi^\prime \land \psi), \varphi_{i+1}, \ldots, \varphi_k) \land P) \, .
+        \mathit{insert}(P, \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, (\varphi^\prime \land \psi), \varphi_{i+1}, \ldots, \varphi_k)) \, .
     \end{align*}
-    Since in matching logic we can propagate any structureless formula from symbol contexts outside,
-    we apply the Consequence rule again, changing the goal into
+    Now we apply Consequence again using \Cref{lem:insert}, changing the goal into
     \begin{align*}
         & (\mathcal{T}, S)^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime)
         \\& \vdash_\RL
