@@ -182,7 +182,7 @@ We translate a language semantics into a semantics for lists of configurations a
           We generate a set of reachability rules $S^*$ over $(\Sigma, \mathit{Cfg})^*$
           by setting
           \begin{equation*}
-              S^* = \{ \mathit{cfgheat}(L, \varphi_1, R) \land P \Rightarrow^\exists \mathit{cfgheat}(L, \varphi_2, R) \land P^\prime \mid (\varphi_1 \land P \Rightarrow^\exists \varphi_2 \land P^\prime) \in S \} \, ,
+              S^* = \{ \mathit{cfgheat}(L, \varphi_1, R) \Rightarrow^\exists \mathit{cfgheat}(L, \varphi_2, R) \mid (\varphi_1 \Rightarrow^\exists \varphi_2) \in S \} \, ,
           \end{equation*}
           where $L,R$ are distinct fresh variables (not occurring in any rule in $S$).
     \item Let $\mathcal{T}$ be a configuration model; that is, a $\Sigma$-algebra.
@@ -206,6 +206,13 @@ We translate a language semantics into a semantics for lists of configurations a
 \end{definition}
 
 \begin{lemma}
+    The star extension on matching logic models is conservative.
+\end{lemma}
+\begin{proof}
+Admitted.
+\end{proof}
+
+\begin{lemma}
     Let $\mathcal{S} = (\mathcal{T}, S)$ be a reachability-logic system over $(\Sigma, \mathit{Cfg})$.
     For any $k \geq 1$, any configurations $c_1,\ldots,c_k, c^\prime \in \Tcfg$, and any $1 \leq i \leq k$,
     we have
@@ -223,9 +230,9 @@ Admitted.
 \section{Proof System}
 
 The proof system derives claims of the shape
-$\mathcal{S}, \vdash_\CRL (\varphi_1, \ldots, \varphi_k) \land P \Downarrow_{C,E} \Psi$.
+$\mathcal{S}, \vdash_\CRL (\varphi_1, \ldots, \varphi_k) \land P \Downarrow_{C,E} \Psi$,
+where $P$ is a patternless FOL formula.
 The idea is that $P$ is the part of the claim that relates variables from different components.
-Therefore, we also probably need the Consequence rule to work with $P$, too.
 Initially, the proof starts with the claim
 $\mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_k) \land P \Downarrow_{\emptyset, \emptyset} \Psi$.
 
@@ -252,8 +259,8 @@ We define $\mathit{mergePatterns}$ and $\mathit{flatten}$ as follows:
     \end{align*}
     \begin{align*}
     & \prftree[l]{Reduce}
-      {(\mathcal{T}^*, S^* \cup \mathit{flatten}^\prime(E, \Psi^\prime)), \emptyset \vdash_\RL
-        \mathit{flatten}^\prime(\Psi, \Psi^\prime) }
+      {(\mathcal{T}^*, S^* \cup \mathit{flatten}^\exists(E, \Psi^\prime)), \emptyset \vdash_\RL
+        \mathit{flatten}^\exists(\Psi, \Psi^\prime) }
       {(\mathcal{T}, S) \vdash_\CRL \Psi \Downarrow_{C,E} \Psi^\prime}
     \end{align*}
     \begin{align*}
@@ -271,7 +278,7 @@ We define $\mathit{mergePatterns}$ and $\mathit{flatten}$ as follows:
        {\mathcal{T} \vDash_\ML \varphi_i \leftrightarrow (\varphi \land \psi)}
        {\psi \mbox{ is a patternless FOL formula}}
        %{ \mathcal{S}^* \vDash_\RL \varphi_i \Rightarrow^{\forall+} \varphi_i^\prime }
-       {  (\mathcal{T}, S) \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi^\prime \land \psi, \varphi_{i+1}, \ldots,    \varphi_k)
+       {  (\mathcal{T}, S) \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi^\prime \land \psi, \varphi_{i+1}, \ldots, \varphi_k)
           \land P
           \Downarrow_{\emptyset, (C \cup E)} \Psi^\prime
       }
@@ -309,19 +316,19 @@ We define $\mathit{mergePatterns}$ and $\mathit{flatten}$ as follows:
     \begin{equation*}
         (\mathcal{T}, S) \vdash_\CRL \Psi \Downarrow_{C,E} \Psi^\prime
         \implies
-        (\mathcal{T}^*, S^* \cup \mathit{flatten}^\prime(E, \Psi^\prime)), \mathit{flatten}^\prime(C, \Psi^\prime) \vdash_\RL
-          \mathit{flatten}^\prime(\psi, \psi^\prime) 
+        (\mathcal{T}^*, S^* \cup \mathit{flatten}^\exists(E, \Psi^\prime)), \mathit{flatten}^\exists(C, \Psi^\prime) \vdash_\RL
+          \mathit{flatten}^\exists(\Psi, \Psi^\prime) 
     \end{equation*}
 \end{lemma}
 \begin{proof}
 By induction on the structure of the CRL proof. TODO
 \begin{enumerate}
-    \item If the proof ends with \emph{Reduce}, then we are done, since $\mathit{flatten}^\prime(\emptyset, \psi^\prime) = \emptyset$.
+    \item If the proof ends with \emph{Reduce}, then we are done, since $\mathit{flatten}^\exists(\emptyset, \psi^\prime) = \emptyset$.
     
     \item If the proof ends with \emph{Reflexivity}, then we need to prove
     \begin{equation*}
-        \mathcal{S}^*, \mathit{flatten}^\prime(E, \psi), \emptyset \vdash_\RL
-          \mathit{flatten}^\prime(\psi, \psi) 
+        \mathcal{S}^*, \mathit{flatten}^\exists(E, \psi), \emptyset \vdash_\RL
+          \mathit{flatten}^\exists(\psi, \psi) 
     \end{equation*}
     which we do by applying the Reflexivity proof rule.
     
@@ -340,91 +347,131 @@ By induction on the structure of the CRL proof. TODO
     \item If the proof ends with \emph{Case}, then we have
         \begin{equation*}
             \mathcal{S}^*, \Bar{E}, \Bar{C} \vdash_\RL
-            \mathit{flatten}^\prime((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i \land P, \varphi_{i+1}, \ldots, \varphi_k) \land P^\prime, \psi^\prime)
+            \mathit{flatten}^\exists((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P^\prime, \Psi^\prime)
         \end{equation*}
         and
         \begin{equation*}
             \mathcal{S}^*, \Bar{E}, \Bar{C} \vdash_\RL
-            \mathit{flatten}^\prime((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i \land Q, \varphi_{i+1}, \ldots, \varphi_k) \land P^\prime, \psi^\prime) 
+            \mathit{flatten}^\exists((\varphi_1, \ldots, \varphi_{i-1}, \psi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P^\prime, \Psi^\prime) 
         \end{equation*}
         as hypotheses, and we have to prove
         \begin{equation*}
             \mathcal{S}^*, \Bar{E}, \Bar{C} \vdash_\RL
-            \mathit{flatten}^\prime((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i \land (P \lor Q), \varphi_{i+1}, \ldots, \varphi_k) \land P^\prime, \psi^\prime)               \, .
+            \mathit{flatten}^\exists((\varphi_1, \ldots, \varphi_{i-1}, (\varphi_i \lor \psi_i), \varphi_{i+1}, \ldots, \varphi_k) \land P^\prime, \Psi^\prime)               \, .
         \end{equation*}
-        (where $\Bar{E} = \mathit{flatten}^\prime(E, \psi^\prime)$
-         and $\Bar{C} = \mathit{flatten}^\prime(C, \psi^\prime)$
-        )
-        We split every $\varphi_j$ into its structural part $\phi_j$ and a predicate part $P_j$,
-        which allows us to simplify the instances of $\mathit{flatten}^\prime$.
-        This gives us the hypotheses
-         \begin{align*}
-            \mathcal{S}^*, \Bar{E}, \Bar{C}
-            \vdash_\RL
-            & \mathit{mergePatterns}(\phi_1, \ldots, \phi_k)
-            \\ & \land (P_1 \land \ldots \land P_{i-1} \land P \land P_{i+1} \land \ldots \land P_k \land P^\prime) 
-            \\ & \Rightarrow^\forall \mathit{flatten}(\psi^\prime) 
+        (where $\Bar{E} = \mathit{flatten}^\exists(E, \psi^\prime)$
+         and $\Bar{C} = \mathit{flatten}^\exists(C, \psi^\prime)$
+        ).
+        After simplifications, we get
+        \begin{align*}
+            \mathcal{S}^*, \Bar{E}, \Bar{C} \vdash_\RL
+            &
+            \mathit{mergePatterns}((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k)) \land P^\prime
+            \\ & \Rightarrow^\exists
+            \mathit{flatten}(\Psi^\prime)
         \end{align*}
         and
         \begin{align*}
-            \mathcal{S}^*, \Bar{E}, \Bar{C}
-            \vdash_\RL
-            & \mathit{mergePatterns}(\phi_1, \ldots, \phi_k)
-            \\ & \land (P_1 \land \ldots \land P_{i-1} \land Q \land P_{i+1} \land \ldots \land P_k \land P^\prime) 
-            \\ & \Rightarrow^\forall \mathit{flatten}(\psi^\prime) \, ,
+            \mathcal{S}^*, \Bar{E}, \Bar{C} \vdash_\RL
+            &
+            \mathit{mergePatterns}((\varphi_1, \ldots, \varphi_{i-1}, \psi_i, \varphi_{i+1}, \ldots, \varphi_k)) \land P^\prime
+            \\ & \Rightarrow^\exists
+            \mathit{flatten}(\Psi^\prime)
         \end{align*}
-        and the goal to prove will be
+        as hypotheses,
+        and have to prove
         \begin{align*}
-            \mathcal{S}^*, \Bar{E}, \Bar{C}
-            \vdash_\RL
-            & \mathit{mergePatterns}(\phi_1, \ldots, \phi_k)
-            \\ & \land (P_1 \land \ldots \land P_{i-1} \land (P \lor Q) \land P_{i+1} \land \ldots \land P_k \land P^\prime) 
-            \\ & \Rightarrow^\forall \mathit{flatten}(\psi^\prime) \, .
+            \mathcal{S}^*, \Bar{E}, \Bar{C} \vdash_\RL
+            &
+            \mathit{mergePatterns}((\varphi_1, \ldots, \varphi_{i-1}, (\varphi_i \lor \psi_i), \varphi_{i+1}, \ldots, \varphi_k)) \land P^\prime
+            \\ & \Rightarrow^\exists
+            \mathit{flatten}(\Psi^\prime)
         \end{align*}
-        Now we apply the Consequence RL rule on the goal, changing it to
+        Since
         \begin{align*}
-            \mathcal{S}^*, \Bar{E}, \Bar{C}
-            \vdash_\RL
-            & (\mathit{mergePatterns}(\phi_1, \ldots, \phi_k)
-            \\ & \quad \land (P_1 \land \ldots \land P_{i-1} \land P \land P_{i+1} \land \ldots \land P_k
-            \land P^\prime))
-            \\ & \lor (\mathit{mergePatterns}(\phi_1, \ldots, \phi_k)
-            \\ & \quad \land (P_1 \land \ldots \land P_{i-1} \land Q \land P_{i+1} \land \ldots \land P_k
-            \land P^\prime))
-            \\ & \Rightarrow^\forall \mathit{flatten}(\psi^\prime) \, .
+            \mathcal{T}^* \vDash_\ML & \mathit{mergePatterns}((\varphi_1, \ldots, \varphi_{i-1}, (\varphi_i \lor \psi_i), \varphi_{i+1}, \ldots, \varphi_k)) \land P^\prime \leftrightarrow \\
+            & (\mathit{mergePatterns}((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k)) \land P^\prime \\
+            & \lor \mathit{mergePatterns}((\varphi_1, \ldots, \varphi_{i-1}, \psi_i, \varphi_{i+1}, \ldots, \varphi_k)) \land P^\prime)
         \end{align*}
-        Now we apply the Case analysis RL rule and the hypotheses and we are done.
-    
+        (where $\mathcal{S}^* = (\mathcal{T}^*, S)$),
+        we can apply the Consequence RL rule on the goal, followed by a Case Analysis rule applied to the two hypotheses, and we are done.
+        
     \item If the proof ends with \emph{Step},
-      we can assume
+      we can assume a patternless FOL formula $\psi$, a rule $\varphi \Rightarrow^\exists \varphi^\prime \in S$ such that
+      $\mathcal{T} \vDash_\ML \varphi_i \leftrightarrow (\varphi \land \psi)$,
+      and an induction hypothesis
       \begin{align*}
-          & (\mathcal{T}, S)^*, \mathit{flatten}^\prime(C \cup E, \psi^\prime), \mathit{flatten}^\prime(\emptyset, \psi^\prime) \vdash_\RL
-          \\&
-          \mathit{flatten}^\prime((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i^\prime, \varphi_{i+1}, \ldots,                          \varphi_k) \land P, \psi^\prime)
+        (&\mathcal{T}^*, S^* \cup \mathit{flatten}^\exists(C \cup E, \Psi^\prime)), \emptyset \vdash_\RL
+          \\ &
+          \mathit{flatten}((\varphi_1, \ldots, \varphi_{i-1}, \varphi^\prime \land \psi, \varphi_{i+1}, \ldots, \varphi_k) \land P) \Rightarrow^\exists \mathit{flatten}(\Psi^\prime)     
       \end{align*}
-      and
+      and have to construct
       \begin{align*}
-        \mathcal{T} \vDash_{\ML} \varphi_i \rightarrow \bigvee \{ \exists \mathit{FV}(\varphi_l).\, \varphi_l \mid \varphi_l \Rightarrow^\exists \varphi_r \in S \}   
+      & (\mathcal{T}^*, S^* \cup \mathit{flatten}^\exists(E, \Psi^\prime)), \mathit{flatten}^\exists(C, \Psi^\prime) \vdash_\RL \\
+          & \mathit{flatten}((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P) \Rightarrow^\exists \mathit{flatten}(\Psi^\prime)    \, .
       \end{align*}
-      and
-      \begin{align}
-        \mathcal{T} \vDash_\ML ((\exists c.\, \varphi_i[c/\square] \land \varphi_l[c/\square]) \land \varphi_r) \rightarrow \varphi_i^\prime  \mbox{ for each } \varphi_l \Rightarrow^\forall \varphi_r \in S    
-      \end{align}
-      and have to show
-    \begin{align*}
-        & \mathcal{S}^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime)
-        \\& \vdash_\RL
-          \mathit{flatten}^\prime((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P, \psi^\prime)  \, .
-    \end{align*}
-    We apply the Transitivity rule with the second premise being our first assumption, and it remains to prove the second premise, which is
+      
+    We apply the Transitivity rule with the second premise being our first inductive hypothesis, and it remains to prove the second premise, which is (after simplification)
     \begin{align*}
         & (\mathcal{T}, S)^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime)
         \\& \vdash_\RL
-        \mathit{flatten}^\prime((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i^\prime, \varphi_{i+1}, \ldots,                          \varphi_k) \land P, \psi^\prime)
-        \\&\quad \Rightarrow^\forall
-        \mathit{flatten}^\prime((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P, \psi^\prime) \, .
+        (\mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots,                          \varphi_k) \land P)
+        \\&\quad \Rightarrow^\exists
+        (\mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, (\varphi^\prime \land \psi), \varphi_{i+1}, \ldots, \varphi_k) \land P) \, .
     \end{align*}
-    Now we apply the Step rule of RL. TODO.
+    By Congruence lemma and our assumption $\mathcal{T} \vDash_\ML \varphi_i \leftrightarrow (\varphi \land \psi)$ (adding the star does not break anything, by conservativeness), we have
+    \begin{align*}
+        \mathcal{T}^* \vDash_\ML &
+        (\mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots,                          \varphi_k) \land P)
+        \\ & \leftrightarrow
+        (\mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, (\varphi \land \psi), \varphi_{i+1}, \ldots, \varphi_k) \land P) \, ,
+    \end{align*}
+    and therefore we can apply the Consequence rule on the goal, changing it into
+    \begin{align*}
+        & (\mathcal{T}, S)^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime)
+        \\& \vdash_\RL
+        (\mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, (\varphi \land \psi), \varphi_{i+1}, \ldots,                          \varphi_k) \land P)
+        \\&\quad \Rightarrow^\exists
+        (\mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, (\varphi^\prime \land \psi), \varphi_{i+1}, \ldots, \varphi_k) \land P) \, .
+    \end{align*}
+    Since in matching logic we can propagate any structureless formula from symbol contexts outside,
+    we apply the Consequence rule again, changing the goal into
+    \begin{align*}
+        & (\mathcal{T}, S)^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime)
+        \\& \vdash_\RL
+        (\mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \varphi, \varphi_{i+1}, \ldots,                          \varphi_k) \land (P \land \psi))
+        \\&\quad \Rightarrow^\exists
+        (\mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \varphi^\prime, \varphi_{i+1}, \ldots, \varphi_k) \land (P \land \psi)) \, .
+    \end{align*}
+    Now we strip $P \land \psi$ by applying Logic Framing, resulting in the goal
+    \begin{align*}
+        & (\mathcal{T}, S)^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime)
+        \\& \vdash_\RL
+        \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \varphi, \varphi_{i+1}, \ldots, \varphi_k)
+        \\&\quad \Rightarrow^\exists
+        \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \varphi^\prime, \varphi_{i+1}, \ldots, \varphi_k) \, .
+    \end{align*}
+    Now we \emph{heat} both sides of the $\Rightarrow^\exists$ symbol,
+    by noticing that
+    \begin{align*}
+        & \mathcal{T}^* \vDash_\ML (\mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \varphi, \varphi_{i+1}, \ldots, \varphi_k)) \\
+        & \leftrightarrow \mathit{cfgheat}(\mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}), \varphi, \mathit{mergePatterns}(\varphi_{i+1}, \ldots, \varphi_k))
+    \end{align*}
+    and
+    \begin{align*}
+        & \mathcal{T}^* \vDash_\ML (\mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \varphi^\prime, \varphi_{i+1}, \ldots, \varphi_k)) \\
+        & \leftrightarrow \mathit{cfgheat}(\mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}), \varphi^\prime, \mathit{mergePatterns}(\varphi_{i+1}, \ldots, \varphi_k))
+    \end{align*}
+    and applying the Consequence rule.
+    Now the goal is
+    \begin{align*}
+        & (\mathcal{T}, S)^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime)
+        \\& \vdash_\RL
+        \mathit{cfgheat}(\mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}), \varphi, \mathit{mergePatterns}(\varphi_{i+1}, \ldots, \varphi_k))
+        \\&\quad \Rightarrow^\exists
+        \mathit{cfgheat}(\mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}), \varphi^\prime, \mathit{mergePatterns}(\varphi_{i+1}, \ldots, \varphi_k)) \, .
+    \end{align*}
+
 \end{enumerate}
 \end{proof}
 
