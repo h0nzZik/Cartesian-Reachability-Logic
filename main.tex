@@ -257,8 +257,13 @@ We define $\mathit{mergePatterns}$ and $\mathit{flatten}$ as follows:
           = \mathit{mergePatterns}(\varphi_2, \ldots, \varphi_n)
     \end{align*}
     for $n \geq 2$; and
-    \item $\mathit{flatten}((\varphi_1, \ldots, \varphi_k) \land P)
-        = \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_k) \land P$.
+    \item
+        \begin{align*}
+            & \mathit{flatten}((\varphi_1, \ldots, \varphi_k) \land P)
+            = (\exists x^\prime_1,\ldots,x^\prime_{n^\prime}. (\phi^\prime_1 \land (P^\prime_1 \land P)) \lor \ldots (\phi^\prime_m \land (P^\prime_{m^\prime} \land P)))
+             \\ & \mbox{where } (\exists x^\prime_1,\ldots,x^\prime_{n^\prime}.\, (\phi^\prime_1 \land P^\prime_1) \lor \ldots (\phi^\prime_m \land P^\prime_{m^\prime}))
+          = \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_k)
+    \end{align*}
     \item $\mathit{flatten}^\exists(\Psi, \Psi^\prime) = \mathit{flatten}(\Psi) \Rightarrow^\exists \mathit{flatten}(\Psi^\prime)$
     \item $\mathit{flatten}^\exists(A, \Psi^\prime) = \{ \mathit{flatten}^\exists(\Psi, \Psi^\prime) \mid \Psi \in A \}$, where $A$ is a set.
 \end{enumerate}
@@ -321,6 +326,16 @@ We define $\mathit{mergePatterns}$ and $\mathit{flatten}$ as follows:
 %      }
 %      { (\mathcal{T}, S) \vdash_\CRL (\varphi_1^\prime, \ldots, \varphi_{i-1}, \varphi_{i}, \varphi_{i+1}, \ldots, \varphi_k^\prime) \land P^\prime \Downarrow_{C, E} \Psi^\prime}
 %    \end{align*}
+
+    \begin{align*}
+    & \prftree[l]{Abstract}
+      { \prfStackPremises
+        { X \not\in \mathit{FV}(\Psi^\prime, \varphi_1, \ldots, \varphi_{i-1}, \varphi_{i+1}, \ldots,\varphi_k)
+        }
+        {(\mathcal{T}, S) \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P \Downarrow_{C, E} \Psi^\prime}
+      }
+      {(\mathcal{T}, S) \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \exists X.\, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P \Downarrow_{C, E} \Psi^\prime}
+    \end{align*}
     \caption{Proof System}
     \label{fig:my_label}
 \end{figure}
