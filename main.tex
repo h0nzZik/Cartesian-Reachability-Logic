@@ -384,12 +384,12 @@ Admitted.
 
 
 \begin{lemma}
-    \begin{equation*}
-        (\mathcal{T}, S) \vdash_\CRL \Psi \Downarrow_{C,E} \Psi^\prime
-        \implies
+    \begin{align*}
+        & (\mathcal{T}, S) \vdash_\CRL \Psi \Downarrow_{C,E} \Psi^\prime \implies \\
+        &
         (\mathcal{T}^*, S^* \cup \mathit{flatten}^\exists(E, \Psi^\prime)), \mathit{flatten}^\exists(C, \Psi^\prime) \vdash_\RL
           \mathit{flatten}^\exists(\Psi, \Psi^\prime) 
-    \end{equation*}
+    \end{align*}
 \end{lemma}
 \begin{proof}
 By induction on the structure of the CRL proof. TODO
@@ -615,7 +615,30 @@ By induction on the structure of the CRL proof. TODO
         \\&\land (P_{1, i_1} \land \ldots \land P_{j-1, i_{j-1}} \land P_{j+1, i_{j+1}} \land \ldots \land P_{n, i_n}) \, .
     \end{align*}
     We conclude this case by applying Framing and Axiom.
-\end{enumerate}
+    
+    \item If the proof ends with \emph{Circularity}, we can assume
+        \begin{align*}
+            (\mathcal{T}^*, S^* \cup \mathit{flatten}^\exists(E, \Psi^\prime)),
+            \mathit{flatten}^\exists(C \cup \{ \Psi \}, \Psi^\prime) \vdash_\RL
+            \mathit{flatten}^\exists(\Psi, \Psi^\prime)
+        \end{align*}
+        which simplifies to
+        \begin{align*}
+            (\mathcal{T}^*, S^* \cup \mathit{flatten}^\exists(E, \Psi^\prime)),
+            \mathit{flatten}^\exists(C, \Psi^\prime) \cup \mathit{flatten}^\exists(\{ \Psi \}, \Psi^\prime) \vdash_\RL
+            \mathit{flatten}^\exists(\Psi, \Psi^\prime)
+        \end{align*}
+        and have to prove
+        \begin{align*}
+            (\mathcal{T}^*, S^* \cup \mathit{flatten}^\exists(E, \Psi^\prime)),
+            \mathit{flatten}^\exists(C, \Psi^\prime) \vdash_\RL
+            \mathit{flatten}^\exists(\Psi, \Psi^\prime)
+        \end{align*}
+        which follows from the assumption by Circularity.
+        
+    \item a
+        
+    \end{enumerate}
 \end{proof}
 
 \section{Implementation}
