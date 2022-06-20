@@ -483,7 +483,7 @@ By induction on the structure of the CRL proof. TODO
       \end{align*}
         By definition of $S^*$, we also have
         \begin{align*}
-            \mathit{heat}(L, \varphi, R) \Rightarrow^\exists \mathit{heat}(L, \varphi^\prime, R) \, .
+            (\mathit{heat}(L, \varphi, R) \Rightarrow^\exists \mathit{heat}(L, \varphi^\prime, R)) \in S^* \, .
         \end{align*}
       
     We apply the Transitivity rule with the second premise being our first inductive hypothesis, and it remains to prove the second premise, which is (after simplification)
@@ -544,27 +544,77 @@ By induction on the structure of the CRL proof. TODO
         \\&\quad \Rightarrow^\exists
         \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \varphi^\prime, \varphi_{i+1}, \ldots, \varphi_k) \, .
     \end{align*}
-    Now we \emph{heat} both sides of the $\Rightarrow^\exists$ symbol,
-    by noticing that
-    \begin{align*}
-        & \mathcal{T}^* \vDash_\ML (\mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \varphi, \varphi_{i+1}, \ldots, \varphi_k)) \\
-        & \leftrightarrow \mathit{cfgheat}(\mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}), \varphi, \mathit{mergePatterns}(\varphi_{i+1}, \ldots, \varphi_k))
-    \end{align*}
-    and
-    \begin{align*}
-        & \mathcal{T}^* \vDash_\ML (\mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \varphi^\prime, \varphi_{i+1}, \ldots, \varphi_k)) \\
-        & \leftrightarrow \mathit{cfgheat}(\mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}), \varphi^\prime, \mathit{mergePatterns}(\varphi_{i+1}, \ldots, \varphi_k))
-    \end{align*}
-    and applying the Consequence rule.
-    Now the goal is
+    We apply Consequence again, changing the goal to
     \begin{align*}
         & (\mathcal{T}, S)^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime)
-        \\& \vdash_\RL
-        \mathit{cfgheat}(\mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}), \varphi, \mathit{mergePatterns}(\varphi_{i+1}, \ldots, \varphi_k))
-        \\&\quad \Rightarrow^\exists
-        \mathit{cfgheat}(\mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}), \varphi^\prime, \mathit{mergePatterns}(\varphi_{i+1}, \ldots, \varphi_k)) \, .
+        \\ \vdash_\RL &
+        \bigvee_{i_1=1}^{m_1} \ldots \bigvee_{i_{j-1}=1}^{m_{j-1}}
+        \bigvee_{i_{j+1}=1}^{m_{j+1}} \ldots \bigvee_{i_n=1}^{m_n}
+        \exists \vec{X_1} \ldots \vec{X_{j-1}} \vec{X_{j+1}} \ldots \vec{X_n}
+        \\& \exists \vec{X_j} \bigvee_{i_j=1}^{m_j} (\mathit{cfgheat}(L, \phi_{j, i_j}, R) \land P_{j, i_j}
+        \\&\quad \land (L = \mathit{mkList}(\phi_{1, i_1}, \ldots, \phi_{j-1, i_{j-1}}))
+        \\&\quad \land R = \mathit{mkList}(\phi_{j+1, i_{j+1}}, \ldots, \phi_{n, i_{n}})
+        \\&\quad \land (P_{1, i_1} \land \ldots \land P_{j-1, i_{j-1}} \land P_{j+1, i_{j+1}} \land \ldots \land P_{n, i_n}))
+        \\ \Rightarrow^\exists &
+        \bigvee_{i_1=1}^{m_1} \ldots \bigvee_{i_{j-1}=1}^{m_{j-1}}
+        \bigvee_{i_{j+1}=1}^{m_{j+1}} \ldots \bigvee_{i_n=1}^{m_n}
+        \exists \vec{X_1} \ldots \vec{X_{j-1}} \vec{X_{j+1}} \ldots \vec{X_n}
+        \\& \exists \vec{X^\prime_j} \bigvee_{i^\prime_j=1}^{m^\prime_j} (\mathit{cfgheat}(L, \phi^\prime_{j, i^\prime_j}, R) \land P^\prime_{j, i^\prime_j}
+        \\&\quad \land (L = \mathit{mkList}(\phi_{1, i_1}, \ldots, \phi_{j-1, i_{j-1}}))
+        \\&\quad \land R = \mathit{mkList}(\phi_{j+1, i_{j+1}}, \ldots, \phi_{n, i_{n}})
+        \\&\quad \land (P_{1, i_1} \land \ldots \land P_{j-1, i_{j-1}} \land P_{j+1, i_{j+1}} \land \ldots \land P_{n, i_n}))
     \end{align*}
-
+    where $\exists \vec{X_j}.\, \bigvee_{i_j = 1}^{m_j} (\phi_{i_j} \land P_{i_j}) = \varphi $
+    and $\exists \vec{X_j^\prime}.\, \bigvee_{i_j^\prime = 1}^{m_j^\prime} (\phi_{i_j^\prime} \land P_{i_j}^\prime) = \varphi^\prime$.
+    Now we iteratively apply Case Analysis, followed by Consequence where on the RHS of $\Rightarrow^\exists$ we select the disjunct corresponding to the LHS.
+    We end up with a bunch of goals of the shape
+    \begin{align*}
+        & (\mathcal{T}, S)^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime)
+        \\ \vdash_\RL &
+        \exists \vec{X_1} \ldots \vec{X_{j-1}} \vec{X_{j+1}} \ldots \vec{X_n}
+        \\& \exists \vec{X_j} \bigvee_{i_j=1}^{m_j} (\mathit{cfgheat}(L, \phi_{j, i_j}, R) \land P_{j, i_j}
+        \\&\quad \land (L = \mathit{mkList}(\phi_{1, i_1}, \ldots, \phi_{j-1, i_{j-1}}))
+        \\&\quad \land R = \mathit{mkList}(\phi_{j+1, i_{j+1}}, \ldots, \phi_{n, i_{n}})
+        \\&\quad \land (P_{1, i_1} \land \ldots \land P_{j-1, i_{j-1}} \land P_{j+1, i_{j+1}} \land \ldots \land P_{n, i_n}))
+        \\ \Rightarrow^\exists &
+        \exists \vec{X_1} \ldots \vec{X_{j-1}} \vec{X_{j+1}} \ldots \vec{X_n}
+        \\& \exists \vec{X^\prime_j} \bigvee_{i^\prime_j=1}^{m^\prime_j} (\mathit{cfgheat}(L, \phi^\prime_{j, i^\prime_j}, R) \land P^\prime_{j, i^\prime_j}
+        \\&\quad \land (L = \mathit{mkList}(\phi_{1, i_1}, \ldots, \phi_{j-1, i_{j-1}}))
+        \\&\quad \land R = \mathit{mkList}(\phi_{j+1, i_{j+1}}, \ldots, \phi_{n, i_{n}})
+        \\&\quad \land (P_{1, i_1} \land \ldots \land P_{j-1, i_{j-1}} \land P_{j+1, i_{j+1}} \land \ldots \land P_{n, i_n})) \, .
+    \end{align*}
+    Now we strip the quantifiers using Abstraction followed by Consequence,
+    leading to goals of the shape
+    \begin{align*}
+        & (\mathcal{T}, S)^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime)
+        \\ \vdash_\RL &
+        \exists \vec{X_j} \bigvee_{i_j=1}^{m_j} (\mathit{cfgheat}(L, \phi_{j, i_j}, R) \land P_{j, i_j}
+        \\&\quad \land (L = \mathit{mkList}(\phi_{1, i_1}, \ldots, \phi_{j-1, i_{j-1}}))
+        \\&\quad \land R = \mathit{mkList}(\phi_{j+1, i_{j+1}}, \ldots, \phi_{n, i_{n}})
+        \\&\quad \land (P_{1, i_1} \land \ldots \land P_{j-1, i_{j-1}} \land P_{j+1, i_{j+1}} \land \ldots \land P_{n, i_n}))
+        \\ \Rightarrow^\exists &
+        \exists \vec{X^\prime_j} \bigvee_{i^\prime_j=1}^{m^\prime_j} (\mathit{cfgheat}(L, \phi^\prime_{j, i^\prime_j}, R) \land P^\prime_{j, i^\prime_j}
+        \\&\quad \land (L = \mathit{mkList}(\phi_{1, i_1}, \ldots, \phi_{j-1, i_{j-1}}))
+        \\&\quad \land R = \mathit{mkList}(\phi_{j+1, i_{j+1}}, \ldots, \phi_{n, i_{n}})
+        \\&\quad \land (P_{1, i_1} \land \ldots \land P_{j-1, i_{j-1}} \land P_{j+1, i_{j+1}} \land \ldots \land P_{n, i_n})) \, .
+    \end{align*}
+    Since variables from $\vec{X_j}$ and $\vec{X_j^\prime}$ can occur only in $\phi_{j, i_j}$,
+    $\phi^\prime_{j, i_j}$, $P_{j, i_j}$ and $P^\prime_{j, i_j}$, we can change the goals
+    (using Consequence) into
+    \begin{align*}
+        & (\mathcal{T}, S)^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime)
+        \\ \vdash_\RL &
+        (\exists \vec{X_j} \bigvee_{i_j=1}^{m_j} \mathit{cfgheat}(L, \phi_{j, i_j}, R) \land P_{j, i_j})
+        \\&\land L = \mathit{mkList}(\phi_{1, i_1}, \ldots, \phi_{j-1, i_{j-1}})
+        \\&\land R = \mathit{mkList}(\phi_{j+1, i_{j+1}}, \ldots, \phi_{n, i_{n}})
+        \\&\land (P_{1, i_1} \land \ldots \land P_{j-1, i_{j-1}} \land P_{j+1, i_{j+1}} \land \ldots \land P_{n, i_n})
+        \\ \Rightarrow^\exists &
+        (\exists \vec{X^\prime_j} \bigvee_{i^\prime_j=1}^{m^\prime_j} \mathit{cfgheat}(L, \phi^\prime_{j, i^\prime_j}, R) \land P^\prime_{j, i^\prime_j})
+        \\&\land L = \mathit{mkList}(\phi_{1, i_1}, \ldots, \phi_{j-1, i_{j-1}})
+        \\&\land R = \mathit{mkList}(\phi_{j+1, i_{j+1}}, \ldots, \phi_{n, i_{n}})
+        \\&\land (P_{1, i_1} \land \ldots \land P_{j-1, i_{j-1}} \land P_{j+1, i_{j+1}} \land \ldots \land P_{n, i_n}) \, .
+    \end{align*}
+    We conclude this case by applying Framing and Axiom.
 \end{enumerate}
 \end{proof}
 
