@@ -636,7 +636,31 @@ By induction on the structure of the CRL proof. TODO
         \end{align*}
         which follows from the assumption by Circularity.
         
-    \item a
+    \item If the proof ends with \emph{Conseq}, we can assume
+    \begin{align*}
+        \mathcal{T}^* \vDash_\ML \mathit{flatten}(\Phi) \leftrightarrow \mathit{flatten}(\Phi^\prime)
+    \end{align*}
+    and
+    \begin{align*}
+        (\mathcal{T}^*, S^* \cup \mathit{flatten}^\exists(E, \Psi^\prime)), \mathit{flatten}^\exists(C, \Psi^\prime) \vdash_\RL
+          \mathit{flatten}^\exists(\Phi^\prime, \Psi^\prime) \, ,
+    \end{align*}
+    and have to prove
+    \begin{align*}
+        (\mathcal{T}^*, S^* \cup \mathit{flatten}^\exists(E, \Psi^\prime)), \mathit{flatten}^\exists(C, \Psi^\prime) \vdash_\RL
+          \mathit{flatten}^\exists(\Phi, \Psi^\prime)  \, .
+    \end{align*}
+    The second assumption simplifies to
+    \begin{align*}
+        (\mathcal{T}^*, S^* \cup \mathit{flatten}^\exists(E, \Psi^\prime)), \mathit{flatten}^\exists(C, \Psi^\prime) \vdash_\RL
+          \mathit{flatten}(\Phi^\prime) \Rightarrow^\exists \mathit{flatten}(\Psi^\prime) \, ,
+    \end{align*}
+    while the goal to
+    \begin{align*}
+        (\mathcal{T}^*, S^* \cup \mathit{flatten}^\exists(E, \Psi^\prime)), \mathit{flatten}^\exists(C, \Psi^\prime) \vdash_\RL
+          \mathit{flatten}(\Phi) \Rightarrow^\exists \mathit{flatten}(\Psi^\prime) \, ;
+    \end{align*}
+    therefore, we can apply the \emph{Consequence} rule.        
         
     \end{enumerate}
 \end{proof}
