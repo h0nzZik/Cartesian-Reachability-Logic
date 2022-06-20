@@ -175,19 +175,26 @@ We translate a language semantics into a semantics for lists of configurations a
               \item $\mathit{Cfg}^*$ is a fresh sort (representing the sort of lists of configurations);
               %\item $\mathit{cfgdummy}$ is a fresh symbol of sort $\mathit{Cfg}$;
               \item $\mathit{cfgitem}$ a fresh symbol of sort $\mathit{Cfg} \to \mathit{Cfg}^*$;
+              \item $\mathit{cfgnil}$ a fresh symbol of sort $\mathit{Cfg}^*$;
               \item $\mathit{cfgconcat}$ a fresh symbol of sort $\mathit{Cfg}^* \times \mathit{Cfg}^* \to \mathit{Cfg}^*$; and
               \item $\mathit{cfgheat}$ is a fresh symbol of sort $\mathit{Cfg}^* \times \mathit{Cfg} \times \mathit{Cfg}^* \to \mathit{Cfg}^*$.
           \end{enumerate}
     \item Let $S$ be a set of reachability rules over $(\Sigma, \mathit{Cfg})$.
           We generate a set of reachability rules $S^*$ over $(\Sigma, \mathit{Cfg})^*$
-          by setting
-          \begin{align*}
-              &S^* = \{ ( \exists \vec{X}.\, (\mathit{cfgheat}(L, \phi_1, R) \land P_1) \lor \ldots \lor (\mathit{cfgheat}(L, \phi_n, R) \land P_n)
-              \\ & \Rightarrow^\exists \exists \vec{X}.\, (\mathit{cfgheat}(L, \phi^\prime_{1}, R) \land P^\prime_1) \lor \ldots \lor ( \mathit{cfgheat}(L, \phi^\prime_{n^\prime}, R) \land P^\prime_{n^\prime}))
-              \mid \\
-              & ( \exists \vec{X}.\, (\phi_1 \land P_1) \lor \ldots \lor (\phi_{n} \land P_n) \Rightarrow^\exists \exists \vec{X}.\, (\phi^\prime_1 \land P^\prime_1) \lor \ldots \lor (\phi^\prime_{n^\prime} \land P^\prime_{n^\prime})) \in S \} \, ,
-          \end{align*}
-          where $L,R$ are distinct fresh variables (not occurring in any rule in $S$).
+          by
+          \begin{enumerate}
+              \item defining a function $\mathit{heat}$ by
+              \begin{align*}
+                  \mathit{heat}(L, \exists \vec{X}.\, \bigvee_{i=1}^{m} (\phi_i \land P_i), R)
+                  = \exists \vec{X}.\, \bigvee_{i=1}^{m} ( \mathit{cfgheat(L, \phi_i, R)} \land P_i)
+              \end{align*}
+              \item setting
+              \begin{align*}
+              S^* = \{ \mathit{heat}(L, \varphi, R) \Rightarrow^\exists \mathit{heat}(L, \varphi^\prime, R)
+              \mid  ( \varphi \Rightarrow^\exists \varphi^\prime ) \in S \} \, ,
+            \end{align*}
+                          where $L,R$ are distinct fresh variables (not occurring in any rule in $S$).
+          \end{enumerate}
     \item Let $\mathcal{T}$ be a configuration model; that is, a $\Sigma$-algebra.
           We generate a $\Sigma^*$-algebra $\mathcal{T}*$, which interprets all sorts and symbols from
           $\Sigma$ as in $\mathcal{T}$, and in addition interprets
@@ -196,6 +203,7 @@ We translate a language semantics into a semantics for lists of configurations a
               $[c_1;\ldots;c_n]$ for $n \in \mathbb{N}$, where $c_i$ is an element of sort $\mathit{Cfg}$
               for any $0 \leq i \leq n$;
               \item the symbol $\mathit{cfgitem}$ as the function $\lambda c.\, [c]$;
+              \item the symbol $\mathit{cfgnil}$ as the empty list ($[]$);
               \item the symbol $\mathit{cfgconcat}$ as the function $\lambda l_1,l_2.\, l_1 \texttt{++} l_2$,
                 where $\texttt{++}$ is list concatenation; and
               \item the symbol $\mathit{cfgheat}$ as the function
@@ -246,20 +254,11 @@ We define $\mathit{mergePatterns}$ and $\mathit{flatten}$ as follows:
 \begin{enumerate}
     \item
     \begin{align*}
-     & \mathit{mergePatterns}(\exists x_1,\ldots,x_n. (\phi_1 \land P_1) \lor \ldots \lor (\phi_m \land P_m)) =
-     \\ & \exists x_1,\ldots,x_n. (\mathit{cfgitem}(\phi_1) \land P_1) \lor \ldots \lor (\mathit{cfgitem}(\phi_m) \land P_m)
+     & \mathit{mergePatterns}(\exists \vec{X_1}.\, \bigvee_{i_{1}=1}^{m_1} (\phi_{i_1} \land P_{i_1}),
+     \ldots, \exists \vec{X_n}.\, \bigvee_{i_{n}=1}^{m_n} (\phi_{i_n} \land P_{i_n}))
+     \\ & = \exists \vec{X_1}\ldots\vec{X_n}.\, \bigvee_{i_{1}=1}^{m_1} \ldots \bigvee_{i_{n}=1}^{m_n}
+       (\mathit{mkList}(\phi_{1, i_1}, \ldots, \phi_{n, i_n}) \land (P_{1, i_1} \land \ldots \land P_{n, i_n}))
     \end{align*}
-    \item
-    \begin{align*}
-     & \mathit{mergePatterns}(\exists x_1,\ldots,x_n. (\phi_1 \land P_1) \lor \ldots \lor (\phi_m \land P_m), \varphi_2, \ldots, \varphi_n) =
-     \\ & \exists \bar{x}_1,\ldots,\bar{x}_n,x_1^\prime,\ldots,x_{n^\prime}^\prime.\,
-          \bigvee_{\substack{1 \leq i \leq m\\ 1 \leq j \leq m^\prime}} (\mathit{cfgconcat}(\mathit{cfgitem}(\phi_i), \phi^\prime_j[F]) \land (P_i \land P_j[F]))
-     \\ & \mbox{where } F = \bar{x}_1/x^\prime_1,\ldots,\bar{x}_{n^\prime}/x^\prime_{n^\prime}
-          \mbox{ and } \bar{x}_j \mbox{ fresh }
-     \\ & \mbox{where } (\exists x^\prime_1,\ldots,x^\prime_{n^\prime}. (\phi^\prime_1 \land P^\prime_1) \lor \ldots (\phi^\prime_m \land P^\prime_{m^\prime}))
-          = \mathit{mergePatterns}(\varphi_2, \ldots, \varphi_n)
-    \end{align*}
-    for $n \geq 2$;
     \item
         \begin{align*}
             & \mathit{constrain}(P, \exists x^\prime_1,\ldots,x^\prime_{n^\prime}.\, (\phi^\prime_1 \land P^\prime_1) \lor \ldots (\phi^\prime_m \land P^\prime_{m^\prime}))
@@ -482,13 +481,10 @@ By induction on the structure of the CRL proof. TODO
       & (\mathcal{T}^*, S^* \cup \mathit{flatten}^\exists(E, \Psi^\prime)), \mathit{flatten}^\exists(C, \Psi^\prime) \vdash_\RL \\
           & \mathit{flatten}((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P) \Rightarrow^\exists \mathit{flatten}(\Psi^\prime)    \, .
       \end{align*}
-        By definition, we have
+        By definition of $S^*$, we also have
         \begin{align*}
-            ( & \exists \vec{X}.\, \bigvee_{i=1}^{n}(\mathit{cfgheat}(L, \phi_i, R) \land P_i)
-              \\ & \Rightarrow^\exists \exists \vec{Y}.\, \bigvee_{i=1}^{n^\prime}(\mathit{cfgheat}(L, \phi^\prime_{i}, R) \land P^\prime_i)) \in S^* \, .
+            \mathit{heat}(L, \varphi, R) \Rightarrow^\exists \mathit{heat}(L, \varphi^\prime, R) \, .
         \end{align*}
-        where $\varphi = \exists \vec{X}.\, \bigvee_{i=i}^n (\phi_i \land P_i)$
-        and $\varphi^\prime = \exists \vec{Y}.\, \bigvee_{i=i}^{n^\prime} (\phi^\prime_i \land P^\prime_i)$.
       
     We apply the Transitivity rule with the second premise being our first inductive hypothesis, and it remains to prove the second premise, which is (after simplification)
     \begin{align*}
