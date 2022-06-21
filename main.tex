@@ -386,9 +386,9 @@ Admitted.
       { \prfStackPremises
         { X \not\in \mathit{FV}(\Psi^\prime)
         }
-        {(\mathcal{T}, S) \vdash_\CRL \exists \vec{Y}.\, \Phi \Downarrow_{C, E} \Psi^\prime}
+        {(\mathcal{T}, S) \vdash_\CRL \exists \vec{Y}.\, (\varphi_1, \ldots, \varphi_k) \land P \Downarrow_{C, E} \Psi^\prime}
       }
-      {(\mathcal{T}, S) \vdash_\CRL \exists X, \vec{Y}.\, \Phi \Downarrow_{C, E} \Psi^\prime}
+      {(\mathcal{T}, S) \vdash_\CRL \exists X, \vec{Y}.\, (\varphi_1, \ldots, \varphi_k) \land P \Downarrow_{C, E} \Psi^\prime}
     \end{align*}
     \caption{Proof System}
     \label{fig:my_label}
@@ -676,7 +676,36 @@ By induction on the structure of the CRL proof. TODO
     therefore, we can apply the \emph{Consequence} rule.        
         
         
-    \item If the proof ends with \emph{Abstract}, TODO.
+    \item If the proof ends with \emph{Abstract},
+    we assume
+    \begin{align*}
+        X \not\in \mathit{FV}(\Psi^\prime)
+    \end{align*}
+    and
+    \begin{align*}
+                (\mathcal{T}^*, S^* \cup \mathit{flatten}^\exists(E, \Psi^\prime)), \mathit{flatten}^\exists(C, \Psi^\prime) \vdash_\RL
+          \mathit{flatten}^\exists(\exists \vec{Y}.\, (\varphi_1, \ldots, \varphi_k) \land P, \Psi^\prime)
+    \end{align*}
+    and have to prove that
+    \begin{align*}
+                (\mathcal{T}^*, S^* \cup \mathit{flatten}^\exists(E, \Psi^\prime)), \mathit{flatten}^\exists(C, \Psi^\prime) \vdash_\RL
+          \mathit{flatten}^\exists(\exists X,\vec{Y}.\, (\varphi_1, \ldots, \varphi_k) \land P, \Psi^\prime) \, .
+    \end{align*}
+    After simplifications, the second premise becomes
+    \begin{align*}
+            &(\mathcal{T}^*, S^* \cup \mathit{flatten}^\exists(E, \Psi^\prime)), \mathit{flatten}^\exists(C, \Psi^\prime) \vdash_\RL
+          \\& \exists \vec{Y}.\, \mathit{constrain}(P, \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_k))
+          \Rightarrow^\exists \mathit{flatten}(\Psi^\prime) \, ,
+    \end{align*}
+    while the goal becomes
+    \begin{align*}
+          &(\mathcal{T}^*, S^* \cup \mathit{flatten}^\exists(E, \Psi^\prime)), \mathit{flatten}^\exists(C, \Psi^\prime) \vdash_\RL
+          \\&\exists X,\vec{Y}.\, \mathit{constrain}(P, \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_k))
+          \Rightarrow^\exists \mathit{flatten}(\Psi^\prime) \, .
+    \end{align*}
+    We prove the goal using the Abstraction rule
+    (note that $X \not\in \mathit{FV}(\Psi^\prime)$ implies $X \not\in \mathit{FV}(\mathit{flatten}(\Psi^\prime))$).
+    
     \end{enumerate}
 \end{proof}
 
