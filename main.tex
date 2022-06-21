@@ -358,7 +358,7 @@ Admitted.
     & \prftree[l]{Conseq}
       { \prfStackPremises
         { (\mathcal{T}, S) \vdash_\CRL \Phi^\prime \Downarrow_{C, E} \Psi^\prime}
-        { \mathcal{T}^* \vDash_\ML \mathit{flatten}(\Phi) \leftrightarrow \mathit{flatten}(\Phi^\prime) }
+        { \mathcal{T}^* \vDash_\ML \mathit{flatten}(\Phi) \rightarrow \mathit{flatten}(\Phi^\prime) }
       }
       { (\mathcal{T}, S) \vdash_\CRL \Phi \Downarrow_{C, E} \Psi^\prime}
     \end{align*}
@@ -651,7 +651,7 @@ By induction on the structure of the CRL proof. TODO
         
     \item If the proof ends with \emph{Conseq}, we can assume
     \begin{align*}
-        \mathcal{T}^* \vDash_\ML \mathit{flatten}(\Phi) \leftrightarrow \mathit{flatten}(\Phi^\prime)
+        \mathcal{T}^* \vDash_\ML \mathit{flatten}(\Phi) \rightarrow \mathit{flatten}(\Phi^\prime)
     \end{align*}
     and
     \begin{align*}
