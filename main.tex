@@ -109,7 +109,8 @@ We define reachability-logic signatures, rules, and systems as follows.
           such that $(\gamma, \rho) \vDash \varphi$,
           there exists some $\gamma^\prime \in \Tcfg$
           such that
-          and $(\gamma^\prime, \rho) \vDash \varphi^\prime$
+          $\gamma \Rightarrow^{*}_{\mathcal{S}} \gamma^\prime$
+          and $(\gamma^\prime, \rho) \vDash \varphi^\prime$.
 
 %    \item An all-path reachability rule $\varphi \Rightarrow^\forall$ is \emph{satisfied},
 %          written $\mathcal{S} \vDash_\RL \varphi \Rightarrow^\forall \varphi^\prime$,
@@ -135,7 +136,7 @@ We have RL sequents of the shape $\mathcal{T}, A, C \vdash_\RL \varphi \Rightarr
 
 \section{Cartesian Reachability Logic}
 
-\begin{definition}[One-Path Cartesian Reachability rule]\label{def:opCRLsemantics}
+\begin{definition}[One-Path Cartesian Reachability Rule]\label{def:opCRLsemantics}
 A One-Path Cartesian reachability rule
 $(\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\exists} (\psi_1,\ldots,\psi_k) \land \psi$
 of arity $k$
@@ -147,13 +148,12 @@ iff for all configurations $\gamma_1,\ldots,\gamma_k \in \Tcfg$
 which terminate in $(\Tcfg, \Rightarrow_{\mathcal{S}})$
 and any $\mathcal{T}$-valuation $\rho$,
 whenever $(\gamma_1,\rho) \vDash \varphi_1 \land \varphi$ and \ldots
-and $(\gamma_k,\rho) \vDash \varphi_l \land \varphi$,
-then there exists a $k$-tuple of paths $(\pi_1, \ldots, \pi_k)$
-and a $k$-tuple of indices $(i_i, \ldots, i_k)$
-such that
-$\gamma_1 = \pi_1(0)$ and \ldots and $\gamma_k = \pi_k(0)$,
+and $(\gamma_k,\rho) \vDash \varphi_k \land \varphi$,
+then there exist configurations $\gamma_1^\prime,\ldots,\gamma_k^\prime \in \Tcfg$
+such that $\gamma_1 \Rightarrow^{*}_{\mathcal{S}} \gamma_1^\prime$
+and \ldots and $\gamma_k \Rightarrow^{*}_{\mathcal{S}} \gamma_k^\prime$,
 and
-$(\pi_1(i_1),\rho) \vDash \varphi_1 \land \psi$ and \ldots and $(\pi_k(i_k), \rho) \vDash \varphi_k \land \psi$.
+$(\gamma_1^\prime,\rho) \vDash \psi_1 \land \psi$ and \ldots and $(\gamma_k^\prime, \rho) \vDash \psi_k \land \psi$.
 \end{definition}
 
 \begin{remark}
