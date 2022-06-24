@@ -111,14 +111,18 @@ We define reachability-logic signatures, rules, and systems as follows.
           such that
           $\gamma \Rightarrow^{*}_{\mathcal{S}} \gamma^\prime$
           and $(\gamma^\prime, \rho) \vDash \varphi^\prime$.
-
-%    \item An all-path reachability rule $\varphi \Rightarrow^\forall$ is \emph{satisfied},
-%          written $\mathcal{S} \vDash_\RL \varphi \Rightarrow^\forall \varphi^\prime$,
-%          iff for all complete $\Rightarrow_{\mathcal{S}}$-paths $\tau$
-%          starting with $\gamma \in \Tcfg$ and for all $\rho : \Var \to \mathcal{T}$
-%          such that $(\gamma, \rho) \vDash \varphi$,
-%          there exists some $\gamma^\prime \in \tau$
-%          such that $(\gamma^\prime, \rho) \vDash \varphi^\prime$.
+          
+    \item An \emph{all-path reachability rule} is a pair
+        $\varphi \Rightarrow^\forall \varphi^\prime$ of patterns $\varphi$ and $\varphi^\prime$.
+    
+    \item \label{def:aprlSemantics}
+          An all-path reachability rule $\varphi \Rightarrow^\forall \varphi^\prime$ is \emph{satisfied},
+          written $\mathcal{S} \vDash_\RL \varphi \Rightarrow^\forall \varphi^\prime$,
+          iff for all complete $\Rightarrow_{\mathcal{S}}$-paths $\tau$
+          starting with $\gamma \in \Tcfg$ and for all $\rho : \Var \to \mathcal{T}$
+          such that $(\gamma, \rho) \vDash \varphi$,
+          there exists some $\gamma^\prime \in \tau$
+          such that $(\gamma^\prime, \rho) \vDash \varphi^\prime$.
 \end{enumerate}
 
 \begin{figure}
@@ -130,7 +134,8 @@ We define reachability-logic signatures, rules, and systems as follows.
     \label{fig:RLproofsystem}
 \end{figure}
 
-We have RL sequents of the shape $\mathcal{T}, A, C \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime$.
+We have RL sequents of the shape
+$\mathcal{T}, A, C \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime$.
 
 \end{definition}
 
@@ -168,23 +173,23 @@ if we fix $k=1$, then
 \end{align*}
 \end{remark}
 
-%\begin{definition}\label{def:CRLsemantics}
-%A Cartesian reachability rule
-%$(\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\exists} (\psi_1,\ldots,\psi_k) \land \psi$
-%of arity $k$
-%is \emph{valid} in a reachability system $(\mathcal{T}, S)$,
-%written
-%$(\mathcal{T}, S) \vDash_\CRL (\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\exists}
-%(\psi_1,\ldots,\psi_k) \land \psi$,
-%iff for all configurations $\sigma_1,\ldots,\sigma_k \in \Tcfg$ and any $\mathcal{T}$-valuation $\rho$,
-%whenever $\sigma_1 \in |\varphi_1 \land \varphi|_\rho \land \ldots \land \sigma_k \in |\varphi_l \land %\varphi|_\rho$,
-%then for every $k$-tuple complete paths $(\pi_1, \ldots, \pi_k)$
-%of respective lengths $l_1, \ldots, l_k$
-%such that
-%$\sigma_1 = \pi_1(0) \land \ldots \land \sigma_k = \pi_k(0)$,
-%it holds that 
-%$\pi_1(l_1-1) \in |\varphi_1 \land \psi|_\rho \land \ldots \land \pi_k(l_k-1) \in |\varphi_k \land %\psi|_\rho$.
-%\end{definition}
+\begin{definition}[All-Path Cartesian Reachability Rule]\label{def:apCRLsemantics}
+An all-path Cartesian reachability rule
+$(\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\forall} (\psi_1,\ldots,\psi_k) \land \psi$
+of arity $k$
+is \emph{valid} in a reachability system $\mathcal{S} = (\mathcal{T}, S)$,
+written
+$\mathcal{S} \vDash_\CRL (\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\forall}
+(\psi_1,\ldots,\psi_k) \land \psi$,
+iff for all configurations $\sigma_1,\ldots,\sigma_k \in \Tcfg$ and any $\mathcal{T}$-valuation $\rho$,
+whenever $(\sigma_1, \rho) \vDash \varphi_1 \land \varphi$ and \ldots
+and $(\sigma_k, \rho) \vDash \varphi_k \land \varphi$,
+then for every $k$-tuple of complete paths $(\pi_1, \ldots, \pi_k)$
+such that
+$\sigma_1 = \pi_1(0) \land \ldots \land \sigma_k = \pi_k(0)$,
+there exist indices $i_1, \ldots, i_k$ such that
+$(\pi_1(i_1), \rho) \vDash \varphi_1 \land \psi$ and \ldots and $(\pi_k(i_k), \rho) \vDash \varphi_k \land \psi$.
+\end{definition}
 
 \begin{definition}
 We translate a language semantics into a semantics for lists of configurations as follows.
