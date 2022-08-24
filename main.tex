@@ -55,6 +55,8 @@ We define the matching logic syntax and semantics as follows.
     \item Let $T_{\Sigma}(\mathit{Var})$ denote the free $\Sigma$-algebra of terms with variables 
           in $\mathit{Var}$.
           Let $T_{\Sigma, s}(\mathit{Var})$ denote the set of $\Sigma$-terms (with variables in $\mathit{Var})$ of sort $s$.
+    \item Let $\mathcal{T}$ be a $\mathbf{\Sigma}$ algebra, and $f$ be a symbol from $\Sigma$.
+          We use the notation $\mathcal{T}_f$ to denote the interpretation of $f$ in $\mathcal{T}$.
     \item A function $\rho : \mathit{Var} \to \mathcal{T}$, where $\mathcal{T}$ is a $\Sigma$-algebra,
           extends uniquely (in the usual way) to a $\Sigma$-algebra morphism
           $\rho : T_{\Sigma}(\mathit{Var}) \to \mathcal{T}$.
@@ -284,7 +286,8 @@ We translate a language semantics into a semantics for lists of configurations a
                 $\lambda l_1, c, l_2.\, l_1 \texttt{++} [c] \texttt{++} l_2$.
           \end{enumerate}
 
-    \item Let $(\Sigma, \mathit{Var})$ be a matching logic signature, and let $\rho$ be a $\mathcal{T}$-valuation.
+    \item Let $(\Sigma, \mathit{Var})$ be a matching logic signature, let $\mathcal{T}$ be a configuration model,
+        and let $\rho$ be a $\mathcal{T}$-valuation.
         We define a $\mathcal{T}^*$-valuation $\rho^*$ by letting $\rho^*(v) = \rho(v)$ for any $v \in \mathit{Var}$.
           
     \item Let $\mathcal{S} = (\mathcal{T}, S)$ be a reachability system over $(\Sigma, \mathit{Cfg})$.
@@ -292,6 +295,31 @@ We translate a language semantics into a semantics for lists of configurations a
           by setting $\mathcal{S}^* = (\mathcal{T}^*, S^*)$.
 \end{enumerate}
 \end{definition}
+
+\begin{lemma}
+    Let $(\Sigma, \mathit{Var})$ be a matching logic signature, $\mathcal{T}$ be a configuration model,
+    and $\rho$ be a $\mathcal{T}$-valuation. Then for any basic $(\Sigma, \mathit{Var})$-pattern $\pi$,
+    \begin{equation}
+        \rho^*(\pi) = \rho(\pi) \, .
+    \end{equation}
+\end{lemma}
+\begin{proof}
+    By induction on the term $\pi$.
+    \begin{itemize}
+        \item $\pi = v$ for $v \in \mathit{Var}$ - follows from the definition of $\rho^*$.
+        \item $\pi = f(\pi_1, \ldots, \pi_k)$ - we have $\rho(\pi_i) = \rho^*(\pi_i)$ for any $i \in \{ 1, \ldots, k \}$
+              by the induction hypothesis.
+              Then
+              \begin{align*}
+                  \rho^*(f(\pi_1, \ldots, \pi_k)) 
+                  = & {\mathcal{T}^*}_f(\rho^*(\pi_1), \ldots, \rho^*(\pi_k)) \\
+                  = & {\mathcal{T}^*}_f(\rho(\pi_1), \ldots, \rho(\pi_k)) \\
+                  = & \mathcal{T}_f(\rho(\pi_1), \ldots, \rho(\pi_k)) \\
+                  = & \rho(f(\pi_1, \ldots, \pi_k))
+              \end{align*}
+              where the second-to-last equality holds by definition of $\mathcal{T}^*$.
+    \end{itemize}
+\end{proof}
 
 \begin{lemma}
     The star extension on matching logic models is conservative, in the following sense.
