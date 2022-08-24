@@ -16,7 +16,9 @@
 \usepackage{appendix}
 
 \title{Cartesian Reachability Logic}
-\author{Jan Tu\v{s}il \and Xiaohong Chen \and Traian Florin Serbanuta \and Jan Obdrzalek }
+\author{Jan Tu\v{s}il \and Xiaohong Chen \and Traian Florin Serbanuta
+%\and Jan Obdrzalek
+}
 \date{\today}
 
 \declaretheorem[]{example}
@@ -43,6 +45,49 @@
 
 \subsection{($\mu$-free) Matching Logic}
 
+We work with a variant of matching logic described in
+\cite{StefanescuCMMSR19,RosuSCM13lics}.
+
+\begin{definition}[Matching logic syntax and semantics]
+We define the matching logic syntax and semantics as follows.
+\begin{enumerate}
+    \item A matching logic \emph{signature} $\mathbf{\Sigma} = (\Sigma, \mathit{Var})$ is a many-sorted algebraic signature $\Sigma$ together with a sort-wise infinite set of variables $\mathit{Var}$.
+    \item Let $T_{\Sigma}(\mathit{Var})$ denote the free $\Sigma$-algebra of terms with variables 
+          in $\mathit{Var}$.
+          Let $T_{\Sigma, s}(\mathit{Var})$ denote the set of $\Sigma$-terms (with variables in $\mathit{Var})$ of sort $s$.
+    \item A function $\rho : \mathit{Var} \to \mathcal{T}$, where $\mathcal{T}$ is a $\Sigma$-algebra,
+          extends uniquely (in the usual way) to a $\Sigma$-algebra morphism
+          $\rho : T_{\Sigma}(\mathit{Var}) \to \mathcal{T}$.
+    \item A \emph{basic $\mathbf{\Sigma}$-pattern} of sort $s$
+          is a term in $T_{\Sigma, s}(\mathit{Var})$,
+          where $\mathbf{\Sigma} = (\Sigma, \mathit{Var})$.
+    \item A matching logic $\mathbf{\Sigma}$-formula (aka $\mathbf{\Sigma}$-\emph{pattern})
+          of sort $s$
+          is a FOL formula where symbols from $\Sigma$ are function symbols
+          and basic patterns of sort $s$ are nullary predicate symbols.
+    \item A matching logic $\Sigma$-\emph{model} $\mathcal{T}$ is a $\Sigma$-algebra.
+    \item A matching logic \emph{semantics} is given by means of
+          the satisfaction relation $\vDash_{\ML}$ between a matching logic $\Sigma$-model,
+          a model element, and a valuation,
+          defined inductively as
+          \begin{itemize}
+              \item $(\mathcal{T}, \gamma, \rho) \vDash \pi$ iff $\gamma = \rho(\pi)$, where $\pi$ is a basic pattern;
+              \item $(\mathcal{T}, \gamma, \rho) \vDash \varphi_1 \land \varphi_2$ iff
+                $(\mathcal{T}, \gamma, \rho) \vDash \varphi_1$ and
+                $(\mathcal{T}, \gamma, \rho) \vDash \varphi_2$;
+              \item $(\mathcal{T}, \gamma, \rho) \vDash \neg \varphi$ iff
+                $(\mathcal{T}, \gamma, \rho) \not\vDash \varphi$;
+              \item $(\mathcal{T}, \gamma, \rho) \vDash \exists x : s.\, \varphi$ iff
+                $(\mathcal{T}, \gamma, \rho^\prime) \vDash \varphi$ for some $\rho^\prime$ such that
+                $\rho^\prime(y) = \rho(y)$ for all $y \in \mathit{Var} \setminus \{ x \}$
+                and $\rho(x) \in \mathcal{T}_s$;
+          \end{itemize}
+          
+\end{enumerate}
+
+\end{definition}
+
+
 \subsection{One-path Reachability Logic}
 
 
@@ -50,18 +95,18 @@
 \begin{definition}[\cite{StefanescuCMMSR19,RosuS12oopsla}]\label{def:basics}
 We define reachability-logic signatures, rules, and systems as follows.
 \begin{enumerate}
-    \item A reachability-logic \emph{signature} is a pair $(\Sigma, \mathit{Cfg})$,
-          where $\Sigma$ is a matching logic signature and $\mathit{Cfg}$ is a sort.
+    \item A reachability-logic \emph{signature} is a pair $(\mathbf{\Sigma}, \mathit{Cfg})$,
+          where $\mathbf{\Sigma}$ is a matching logic signature and $\mathit{Cfg}$ is a sort from $\mathbf{\Sigma}$.
           
-    \item A \emph{one-path reachability rule} over reachability logic signature $(\Sigma, \mathit{Cfg})$        is a pair $\varphi \Rightarrow^\exists \varphi^\prime$,
+    \item A \emph{one-path reachability rule} over reachability logic signature $(\mathbf{\Sigma}, \mathit{Cfg})$        is a pair $\varphi \Rightarrow^\exists \varphi^\prime$,
           where $\varphi$ and $\varphi^\prime$
-          are patterns (which can have free variables) of sort $\mathit{Cfg}$.
+          are $\mathbf{\Sigma}$-patterns (which can have free variables) of sort $\mathit{Cfg}$.
           
-    \item A \emph{reachability system} over a reachability-logic signature $(\Sigma, \mathit{Cfg})$
+    \item A \emph{reachability system} over a reachability-logic signature $((\Sigma, \mathit{Var}), \mathit{Cfg})$
           is a pair $\mathcal{S} = (\mathcal{T}, S)$, where $\mathcal{T}$ is a $\Sigma$-algebra
-          and $S$ is a set of reachability rules over $(\Sigma, \mathit{Cfg})$.
+          and $S$ is a set of reachability rules over $((\Sigma, \mathit{Var}), \mathit{Cfg})$.
           
-    \item A rule $\varphi \Rightarrow^\exists \varphi^\prime$ over $(\Sigma, \mathit{Cfg})$
+    \item A rule $\varphi \Rightarrow^\exists \varphi^\prime$ over $((\Sigma, \mathit{Var}), \mathit{Cfg})$
           is \emph{weakly well-defined}
           with respect to $\Sigma$-algebra $\mathcal{T}$
           iff
@@ -72,7 +117,7 @@ We define reachability-logic signatures, rules, and systems as follows.
     \item A reachability system $\mathcal{S}$ is \emph{weakly well-defined} iff each its rule is weakly     
           well-defined.
           
-    \item A reachability system $\mathcal{S} = (\mathcal{T}, S)$ over $(\Sigma, \mathit{Cfg})$ induces
+    \item A reachability system $\mathcal{S} = (\mathcal{T}, S)$ over $((\Sigma, \mathit{Var}), \mathit{Cfg})$ induces
           a \emph{transition system} \\
           $(\Tcfg , \Rightarrow_{\mathcal{S}})$,
           where $\gamma \Rightarrow_{\mathcal{S}} \gamma^\prime$
@@ -194,8 +239,8 @@ $(\pi_1(i_1), \rho) \vDash \varphi_1 \land \psi$ and \ldots and $(\pi_k(i_k), \r
 \begin{definition}
 We translate a language semantics into a semantics for lists of configurations as follows.
 \begin{enumerate}
-    \item Let $(\Sigma, \mathit{Cfg})$ be a reachability-logic signature.
-          Then $(\Sigma, \mathit{Cfg})^*$ = $(\Sigma^*, \mathit{Cfg}^*)$,
+    \item Let $((\Sigma, \mathit{Var}), \mathit{Cfg})$ be a reachability-logic signature.
+          Then $((\Sigma, \mathit{Var}), \mathit{Cfg})^*$ = $((\Sigma^*, \mathit{Var}), \mathit{Cfg}^*)$,
           where
           \begin{enumerate}
               \item $\Sigma^* = \Sigma \cup \{ \mathit{cfgitem}, \mathit{cfgconcat},
@@ -208,8 +253,8 @@ We translate a language semantics into a semantics for lists of configurations a
               \item $\mathit{cfgconcat}$ a fresh symbol of sort $\mathit{Cfg}^* \times \mathit{Cfg}^* \to \mathit{Cfg}^*$; and
               \item $\mathit{cfgheat}$ is a fresh symbol of sort $\mathit{Cfg}^* \times \mathit{Cfg} \times \mathit{Cfg}^* \to \mathit{Cfg}^*$.
           \end{enumerate}
-    \item Let $S$ be a set of reachability rules over $(\Sigma, \mathit{Cfg})$.
-          We generate a set of reachability rules $S^*$ over $(\Sigma, \mathit{Cfg})^*$
+    \item Let $S$ be a set of reachability rules over $(\mathbf{\Sigma}, \mathit{Cfg})$.
+          We generate a set of reachability rules $S^*$ over $(\mathbf{\Sigma}, \mathit{Cfg})^*$
           by
           \begin{enumerate}
               \item defining a function $\mathit{heat}$ by
@@ -224,7 +269,7 @@ We translate a language semantics into a semantics for lists of configurations a
             \end{align*}
                           where $L,R$ are distinct fresh variables (not occurring in any rule in $S$).
           \end{enumerate}
-    \item Let $\mathcal{T}$ be a configuration model; that is, a $\Sigma$-algebra.
+    \item Let $(\Sigma, \mathit{Var})$ be a matching logic signature, and let $\mathcal{T}$ be a configuration model; that is, a $\Sigma$-algebra.
           We generate a $\Sigma^*$-algebra $\mathcal{T}*$, which interprets all sorts and symbols from
           $\Sigma$ as in $\mathcal{T}$, and in addition interprets
           \begin{enumerate}
@@ -238,6 +283,9 @@ We translate a language semantics into a semantics for lists of configurations a
               \item the symbol $\mathit{cfgheat}$ as the function
                 $\lambda l_1, c, l_2.\, l_1 \texttt{++} [c] \texttt{++} l_2$.
           \end{enumerate}
+
+    \item Let $(\Sigma, \mathit{Var})$ be a matching logic signature, and let $\rho$ be a $\mathcal{T}$-valuation.
+        We define a $\mathcal{T}^*$-valuation $\rho^*$ by letting $\rho^*(v) = \rho(v)$ for any $v \in \mathit{Var}$.
           
     \item Let $\mathcal{S} = (\mathcal{T}, S)$ be a reachability system over $(\Sigma, \mathit{Cfg})$.
           We generate a reachability system $\mathcal{S}^*$ over $(\Sigma, \mathit{Cfg})^*$
@@ -246,9 +294,25 @@ We translate a language semantics into a semantics for lists of configurations a
 \end{definition}
 
 \begin{lemma}
-    The star extension on matching logic models is conservative.
+    The star extension on matching logic models is conservative, in the following sense.
+    For any $\Sigma$-model $\mathcal{T}$, any $\mathcal{T}$-valuation $\rho$,
+    any $\Sigma$-sort $s$,
+    any $\gamma \in \mathcal{T}_s$,
+    and any matching logic $s$-pattern $\varphi$,
+    \begin{equation*}
+        (\mathcal{T}, \gamma, \rho) \vDash \varphi \iff (\mathcal{T}^*, \gamma, \rho^*) \vDash \varphi
+    \end{equation*}
 \end{lemma}
 \begin{proof}
+By induction on $\varphi$.
+\begin{itemize}
+    \item $\varphi \equiv \pi$, where $\pi$ is a basic pattern (of sort $s$).
+    \item $\varphi \equiv \varphi_1 \land \varphi_2$.
+    \item $\varphi \equiv \neg \varphi^\prime$.
+    \item $\varphi \equiv \exists x : s.\, \varphi^\prime$.
+\end{itemize}
+
+
 Admitted.
 \end{proof}
 
