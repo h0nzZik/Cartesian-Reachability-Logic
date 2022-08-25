@@ -82,7 +82,7 @@ We define the matching logic syntax and semantics as follows.
               \item $(\mathcal{T}, \gamma, \rho) \vDash \exists x : s.\, \varphi$ iff
                 $(\mathcal{T}, \gamma, \rho^\prime) \vDash \varphi$ for some $\rho^\prime$ such that
                 $\rho^\prime(y) = \rho(y)$ for all $y \in \mathit{Var} \setminus \{ x \}$
-                and $\rho(x) \in \mathcal{T}_s$;
+                and $\rho^\prime(x) \in \mathcal{T}_s$;
           \end{itemize}
           
 \end{enumerate}
@@ -296,7 +296,7 @@ We translate a language semantics into a semantics for lists of configurations a
 \end{enumerate}
 \end{definition}
 
-\begin{lemma}
+\begin{lemma}\label{lem:rhoStarOfPi}
     Let $(\Sigma, \mathit{Var})$ be a matching logic signature, $\mathcal{T}$ be a configuration model,
     and $\rho$ be a $\mathcal{T}$-valuation. Then for any basic $(\Sigma, \mathit{Var})$-pattern $\pi$,
     \begin{equation}
@@ -321,7 +321,7 @@ We translate a language semantics into a semantics for lists of configurations a
     \end{itemize}
 \end{proof}
 
-\begin{lemma}
+\begin{lemma}\label{lem:starConservative}
     The star extension on matching logic models is conservative, in the following sense.
     For any $\Sigma$-model $\mathcal{T}$, any $\mathcal{T}$-valuation $\rho$,
     any $\Sigma$-sort $s$,
@@ -334,14 +334,39 @@ We translate a language semantics into a semantics for lists of configurations a
 \begin{proof}
 By induction on $\varphi$.
 \begin{itemize}
-    \item $\varphi \equiv \pi$, where $\pi$ is a basic pattern (of sort $s$).
-    \item $\varphi \equiv \varphi_1 \land \varphi_2$.
-    \item $\varphi \equiv \neg \varphi^\prime$.
-    \item $\varphi \equiv \exists x : s.\, \varphi^\prime$.
+    \item $\varphi \equiv \pi$, where $\pi$ is a basic pattern (of sort $s$) - follows from \Cref{lem:rhoStarOfPi}.
+    \item $\varphi \equiv \varphi_1 \land \varphi_2$ - follows from the induction hypothesis.
+    \item $\varphi \equiv \neg \varphi^\prime$ - follows from the induction hypothesis.
+    \item $\varphi \equiv \exists x : s^\prime.\, \varphi^\prime$. We have
+    $ (\mathcal{T}^*, \gamma, \rho^\prime) \vDash \exists x : s^\prime.\, \varphi^\prime $
+    if and only if (by definition of $\vDash$)
+    there exists some valuation ${\rho^*}^\prime : \mathit{Var} \to \mathcal{T}^*$ such that
+    $(\mathcal{T}^*, \gamma, {\rho^*}^\prime) \vDash \varphi^\prime$
+    and ${\rho^*}^\prime(x) \in \mathcal{T}^*_s$
+    and ${\rho^*}^\prime(y) = \rho^*(y)$ for all $y \in \mathit{Var} \setminus \{ x \}$.
+    This holds if and only if
+    there exists some valuation $\rho^{\prime} : \mathit{Var} \to \mathcal{T}$ such that
+    $(\mathcal{T}^*, \gamma, {\rho^{\prime}}^*) \vDash \varphi^\prime$
+    and ${\rho^{\prime}}^*(x) \in \mathcal{T}^*_s$
+    and ${\rho^{\prime}}^*(y) = \rho^*(y)$ for all $y \in \mathit{Var} \setminus \{ x \}$:
+    one implication follows by letting ${\rho^*}^\prime := \rho^{\prime}$;
+    for the other implication, we let $\rho^{\prime}(v) := {\rho^*}^\prime(v)$ for all $v \in \mathit{Var}$,
+    and by the definition of star, we have ${\rho^{\prime}}^*(v) = {\rho^*}^\prime(v)$, from which the rest follows.
+    Next, by the induction hypothesis, this holds if and only if
+    there exists some valuation $\rho^{\prime} : \mathit{Var} \to \mathcal{T}$ such that
+    $(\mathcal{T}, \gamma, {\rho^{\prime}}) \vDash \varphi^\prime$
+    and ${\rho^{\prime}}^*(x) \in \mathcal{T}^*_s$
+    and ${\rho^{\prime}}^*(y) = \rho^*(y)$ for all $y \in \mathit{Var} \setminus \{ x \}$.
+    Next, by the definition of ${\rho^\prime}^*$ and $\rho^*$, this holds if and only if
+    there exists some valuation $\rho^{\prime} : \mathit{Var} \to \mathcal{T}$ such that
+    $(\mathcal{T}, \gamma, {\rho^{\prime}}) \vDash \varphi^\prime$
+    and ${\rho^{\prime}}(x) \in \mathcal{T}^*_s$
+    and ${\rho^{\prime}}(y) = \rho(y)$ for all $y \in \mathit{Var} \setminus \{ x \}$.
+    But since the star extensions interprets all sorts from $\Sigma$ as in the original model
+    (that is, $\mathcal{T}^*_s = \mathcal{T}_s$),
+    this is equivalent to the semantics of $(\mathcal{T}, \gamma, \rho) \vDash \exists x:s^\prime.\, \varphi^\prime$,
+    which is what we wanted to prove.
 \end{itemize}
-
-
-Admitted.
 \end{proof}
 
 \begin{lemma}
