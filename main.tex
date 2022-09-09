@@ -14,9 +14,12 @@
 \usepackage{fancyvrb}
 \usepackage{csquotes}
 \usepackage{appendix}
+\usepackage{todonotes}
+
+\newcommand{\traian}[1]{\todo[author=Traian]{#1}}
 
 \title{Cartesian Reachability Logic}
-\author{Jan Tu\v{s}il \and Xiaohong Chen \and Traian Florin Serbanuta
+\author{Jan Tu\v{s}il \and Xiaohong Chen \and Traian Florin Șerbănuță
 %\and Jan Obdrzalek
 }
 \date{\today}
@@ -145,6 +148,7 @@ We define reachability-logic signatures, rules, and systems as follows.
 
     \item A \emph{one-path reachability rule}
           is a pair $\varphi \Rightarrow^\exists \varphi^\prime$ of patterns $\varphi$ and $\varphi^\prime$.
+          \traian{Isn't this covered by (2)?}
 
     \item \label{def:oprlSemantics}
           A one-path reachability rule $\varphi \Rightarrow^\exists \varphi^\prime$ is \emph{satisfied}
@@ -208,6 +212,9 @@ and
 $(\gamma_1^\prime,\rho) \vDash \psi_1 \land \psi$ and \ldots and $(\gamma_k^\prime, \rho) \vDash \psi_k \land \psi$.
 \end{definition}
 
+% TODO remark that this is not the same as k "normal" reachability rules.
+% An example (monotonicity from the file)
+
 \begin{remark}
 \Cref{def:opCRLsemantics} extends \Cref{def:oprlSemantics} of \Cref{def:basics}:
 if we fix $k=1$, then
@@ -228,7 +235,8 @@ is \emph{valid} in a reachability system $\mathcal{S} = (\mathcal{T}, S)$,
 written
 $\mathcal{S} \vDash_\CRL (\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\forall}
 (\psi_1,\ldots,\psi_k) \land \psi$,
-iff for all configurations $\sigma_1,\ldots,\sigma_k \in \Tcfg$ and any $\mathcal{T}$-valuation $\rho$,
+iff for all configurations $\sigma_1,\ldots,\sigma_k \in \Tcfg$ \traian{Why $\sigma$ instead of $\gamma$?}
+and any $\mathcal{T}$-valuation $\rho$,
 whenever $(\sigma_1, \rho) \vDash \varphi_1 \land \varphi$ and \ldots
 and $(\sigma_k, \rho) \vDash \varphi_k \land \varphi$,
 then for every $k$-tuple of complete paths $(\pi_1, \ldots, \pi_k)$
@@ -247,7 +255,7 @@ We translate a language semantics into a semantics for lists of configurations a
           \begin{enumerate}
               \item $\Sigma^* = \Sigma \cup \{ \mathit{cfgitem}, \mathit{cfgconcat},
           %\mathit{cfgdummy},
-          \mathit{cfgheat} \}$
+          \mathit{cfgheat} \}$\traian{You need to add cfgnil here}
               \item $\mathit{Cfg}^*$ is a fresh sort (representing the sort of lists of configurations);
               %\item $\mathit{cfgdummy}$ is a fresh symbol of sort $\mathit{Cfg}$;
               \item $\mathit{cfgitem}$ a fresh symbol of sort $\mathit{Cfg} \to \mathit{Cfg}^*$;
@@ -259,7 +267,7 @@ We translate a language semantics into a semantics for lists of configurations a
           We generate a set of reachability rules $S^*$ over $(\mathbf{\Sigma}, \mathit{Cfg})^*$
           by
           \begin{enumerate}
-              \item defining a function $\mathit{heat}$ by
+              \item defining a function $\mathit{heat}$ by\traian{maybe make clear that heat is mapping formul{\ae} to formul{\ae}}
               \begin{align*}
                   \mathit{heat}(L, \exists \vec{X}.\, \bigvee_{i=1}^{m} (\phi_i \land P_i), R)
                   = \exists \vec{X}.\, \bigvee_{i=1}^{m} ( \mathit{cfgheat(L, \phi_i, R)} \land P_i)
@@ -342,7 +350,7 @@ By induction on $\varphi$.
     if and only if (by definition of $\vDash$)
     there exists some valuation ${\rho^*}^\prime : \mathit{Var} \to \mathcal{T}^*$ such that
     $(\mathcal{T}^*, \gamma, {\rho^*}^\prime) \vDash \varphi^\prime$
-    and ${\rho^*}^\prime(x) \in \mathcal{T}^*_s$
+    and ${\rho^*}^\prime(x) \in \mathcal{T}^*_s$\traian{you need to use $s'$ here and in the following.}
     and ${\rho^*}^\prime(y) = \rho^*(y)$ for all $y \in \mathit{Var} \setminus \{ x \}$.
     This holds if and only if
     there exists some valuation $\rho^{\prime} : \mathit{Var} \to \mathcal{T}$ such that
@@ -366,6 +374,7 @@ By induction on $\varphi$.
     (that is, $\mathcal{T}^*_s = \mathcal{T}_s$),
     this is equivalent to the semantics of $(\mathcal{T}, \gamma, \rho) \vDash \exists x:s^\prime.\, \varphi^\prime$,
     which is what we wanted to prove.
+    
 \end{itemize}
 \end{proof}
 
