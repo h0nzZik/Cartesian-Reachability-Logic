@@ -18,11 +18,11 @@
                   ];
               phases = ["unpackPhase" "buildPhase" "installPhase"];
               buildPhase = ''
-                mkdir -p $out
                 latexmk -shell-escape -pdf main.tex
               '';
 
               installPhase = ''
+                mkdir -p $out
                 cp main.pdf $out/
               '';
           }
