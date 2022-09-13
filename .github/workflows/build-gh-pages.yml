@@ -34,7 +34,10 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v2
       - name: Build with pdflatex/nix
-        run: nix build '.#report' --out-link 'result/'
+        run: |
+          nix build '.#report' --out-link 'result/'
+          pwd
+          ls -la
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
