@@ -37,12 +37,12 @@ jobs:
         run: |
           nix build '.#report' --out-link 'result/'
           mkdir d
-          cp result/main.pdf d
+          tar -cvf d/archive.tar result/main.pdf
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: github-pages
-          path: d/main.pdf
+          path: d/archive.tar
 
   # Deployment job
   deploy:
