@@ -40,10 +40,14 @@ jobs:
           cp result/main.pdf d/
           # tar -cvf d/archive.tar result/main.pdf
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        #uses: actions/upload-artifact@v3
+        #with:
+        #  name: github-pages
+        #  path: d/main.pdf
+        uses: actions/upload-pages-artifact@v1
         with:
-          name: github-pages
-          path: d/main.pdf
+          # Upload entire repository
+          path: 'd/'
 
   # Deployment job
   deploy:
