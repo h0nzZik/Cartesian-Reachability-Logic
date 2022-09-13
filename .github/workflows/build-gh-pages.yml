@@ -36,13 +36,14 @@ jobs:
       - name: Build with pdflatex/nix
         run: |
           nix build '.#report' --out-link 'result/'
-          mkdir d
-          tar -cvf d/archive.tar result/main.pdf
+          mkdir -p d
+          cp result/main.pdf d/
+          # tar -cvf d/archive.tar result/main.pdf
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: github-pages
-          path: d/archive.tar
+          path: d/main.pdf
 
   # Deployment job
   deploy:
