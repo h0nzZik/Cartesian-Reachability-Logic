@@ -376,7 +376,25 @@ By induction on $\varphi$.
     which is what we wanted to prove.
 
     Alternate attempt:
-\end{itemize}
+    The induction hypothesis is: for any $\mathcal{T}$, $\gamma$, $\rho$, 
+        $$(\mathcal{T}, \gamma, \rho) \vDash \varphi' \iff (\mathcal{T}^*, \gamma, \rho^\ast) \vDash \varphi'$$
+    We want to prove that for any $\mathcal{T}$, $\gamma$, $\rho$, 
+        $$(\mathcal{T}, \gamma, \rho) \vDash \exists x:s'. \varphi' \iff (\mathcal{T}^*, \gamma, \rho^\ast) \vDash \exists x:s'.\varphi'$$
+    
+    First, let us prove the left-to-right implication.
+    The left-hand-side of the claim is equivalent with
+    $$\exists \rho'. (\forall y. y \neq x \to \rho'(y) = \rho(y)) \wedge (T, \gamma, \rho') \vDash \varphi'$$
+    From the induction hypothesis, this is further equivalent with
+    $$\exists \rho'. (\forall y. y \neq x \to \rho'(y) = \rho(y)) \wedge (T^\ast, \gamma, {\rho'}^\ast) \vDash \varphi'$$
+    
+    Since $\forall y. y \neq x \to {\rho'}^\ast(y) = \rho'(y) = \rho(y) = \rho^\ast(y)$, we deduce $(\mathcal{T}^*, \gamma, \rho^\ast) \vDash \exists x:s'.\varphi'$.
+    
+    Conversely, the right-hand-side of the claim is equivalent with
+    $$\exists \rho''. (\forall y. y \neq x \to \rho'(y) = \rho\ast(y)) \wedge (T^\ast, \gamma, \rho'') \vDash \varphi'$$
+    Let $\rho'$ be defined by $\rho'(y) = \rho(y)$ if $y\neq x$ and $\rho'(x) = \rho''(x)$. Then it is
+    easy to see that ${\rho'}^\ast = \rho''$, whence by the induction hypothesis we obtain that
+    $(T, \gamma, \rho') \vDash \varphi'$, and by the definition of $\rho'$, $(T, \gamma, \rho) \vDash \exists x:s'. \varphi'$.
+ \end{itemize}
 \end{proof}
 
 \begin{lemma}
