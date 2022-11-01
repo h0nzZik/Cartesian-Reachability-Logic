@@ -30,6 +30,7 @@
 \declaretheorem[]{theorem}
 \declaretheorem[]{remark}
 
+\newcommand{\K}{$\mathbb{K}$}
 \newcommand{\RL}{\mathsf{RL}}
 \newcommand{\ML}{\mathsf{ML}}
 \newcommand{\CRL}{\mathsf{CRL}}
@@ -43,6 +44,43 @@
 \maketitle
 
 \section{Introduction}
+
+\emph{Reachability logic} (RL) \cite{RosuS12oopsla,RosuSCM13lics,StefanescuCMMSR19}
+is a
+formalism for reasoning about partial correctness of software, in the spirit of Hoare logics.
+Being implemented in the \K{} framework \cite{KVision},
+its biggest advantage is that reachability logic is \emph{language independent}:
+its proof system can be used unchanged to reason about programs in any language,
+as long as the language has a formal semantics in RL.
+Through \K{}, reachability logic has been used to build verifiers for real-world languages,
+such as C (\cite{RVMatch}), Java (\cite{StefanescuPYLR16VerifiersForAll}), Javascript (\cite{StefanescuPYLR16VerifiersForAll}),
+and EVM (\cite{KevmVerificationTool}).
+A fundamental limitation of reachability logic is that it is limited to partial correctness properties.
+In particular, neither RL nor \K{} can handle \emph{hyperproperties}.
+
+A hyperproperty is a set of \emph{sets of} execution traces, with the following semantics:
+a system $S$ (a set of traces) satisfies a hyperproperty $H$ iff $S \in H$.
+Hyperproperties are strictly more expressive then properties; for example, many security policies
+of interest are hyperproperties but not properties.
+Techniques and tools for verifying hyperproperties of software have been developed.
+In particular, \emph{Cartesian Hoare logic} (CHL, \cite{SousaD16}) extends Hoare logic
+to reason about \emph{$k$-safety hyperproperties}
+(a hyperproperty is a \emph{$k$-safety hyperproperty} if its violation can be witnessed
+by a set of traces of size $k$).
+Also, a game-based technique for verifying software hyperproperties beyond $k$-safety
+has been developed in \cite{BeutnerF22}.
+
+A question arises: can these techniques be used in a language-independent setting?
+Cartesian Hoare logic, being a kind of a Hoare logic, is tied to a particular imperative language,
+so it cannot be used for a different language as is.
+On the other hand, the technique developed in \cite{BeutnerF22} works with \emph{symbolic transition systems},
+so it already is language-independent \emph{in some sense}. However, it is not clear how to use the technique
+with an arbitrary language $L$, without writing a compiler from $L$ to symbolic transition systems first.
+
+In this paper we develop a logic named \emph{Cartesian Reachability logic}, which extends reachability logic
+to allow reasoning about $k$-safety hyperproperties. Simiarly to CHL, CRL has a sound
+and relatively complete proof system. However, an advantage of CRL against CHL is that it works with any language
+for which RL works; that is, with any language which has a RL-based semantics.
 
 \section{Preliminaries}
 
@@ -346,7 +384,7 @@ By induction on $\varphi$.
     if and only if (by definition of $\vDash$)
     there exists some valuation ${\rho^*}^\prime : \mathit{Var} \to \mathcal{T}^*$ such that
     $(\mathcal{T}^*, \gamma, {\rho^*}^\prime) \vDash \varphi^\prime$
-    and ${\rho^*}^\prime(x) \in \mathcal{T}^*_s$\traian{you need to use $s'$ here and in the following.}
+    and ${\rho^*}^\prime(x) \in \mathcal{T}^*_{s^\prime}$\traian{you need to use $s'$ here and in the following.}
     and ${\rho^*}^\prime(y) = \rho^*(y)$ for all $y \in \mathit{Var} \setminus \{ x \}$.
     This holds if and only if
     there exists some valuation $\rho^{\prime} : \mathit{Var} \to \mathcal{T}$ such that
@@ -393,7 +431,7 @@ By induction on $\varphi$.
  \end{itemize}
 \end{proof}
 
-\begin{lemma}
+\begin{lemma}\label{lem:compositeStep}
     Let $\mathcal{S} = (\mathcal{T}, S)$ be a reachability-logic system over $(\Sigma, \mathit{Cfg})$.
     For any $k \geq 1$, any configurations $c_1,\ldots,c_k, c^\prime \in \Tcfg$, and any $1 \leq i \leq k$,
     we have
