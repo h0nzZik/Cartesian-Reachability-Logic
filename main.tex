@@ -236,11 +236,19 @@ where $\phi$ is a basic pattern and $P$ a patternless FOL formula.
 For simplicity, we restrict the class of reachability systems we work with to those whose reachability rules
 have only disjunctions of constrained patterns. That is, we assume all rules have the shape
 \begin{equation*}
-    \bigvee_{i=1}^{m} (\phi_i \land P_i) \Rightarrow^\exists \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j) \, .
+    \exists \vec{X}.\, \bigvee_{i=1}^{m} (\phi_i \land P_i) \Rightarrow^\exists \exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j) \, .
 \end{equation*}
 \end{remark}
 
+\begin{remark}
+We do not allow the reachability system to take steps which do not have any effect.
+Formally, we assume that for any two configurations
+$\sigma, \sigma^\prime \in \mathcal{T}_{\mathit{Cfg}}$, if
+$\sigma \Rightarrow_{\mathcal{S}} \sigma^\prime$, then $\sigma \not = \sigma^\prime$.
+\end{remark}
+
 \section{Cartesian Reachability Logic}
+Cartesian reachability logic is an extension of (one-path) reachability logic.
 
 \begin{definition}[One-Path Cartesian Reachability Rule]\label{def:opCRLsemantics}
 A One-Path Cartesian reachability rule
