@@ -34,6 +34,8 @@
 \newcommand{\RL}{\mathsf{RL}}
 \newcommand{\ML}{\mathsf{ML}}
 \newcommand{\CRL}{\mathsf{CRL}}
+\newcommand{\FOL}{\mathsf{FOL}}
+\newcommand{\FOLeq}{\FOL_{=}}
 \newcommand{\Var}{\mathit{Var}}
 \newcommand{\Tcfg}{\mathcal{T}_{\mathit{Cfg}}}
 \newcommand{\Pattern}{\mathsf{Pattern}}
@@ -97,27 +99,32 @@ We define the matching logic syntax and semantics as follows.
     \item Let $T_{\Sigma}(\mathit{Var})$ denote the free $\Sigma$-algebra of terms with variables 
           in $\mathit{Var}$.
           Let $T_{\Sigma, s}(\mathit{Var})$ denote the set of $\Sigma$-terms (with variables in $\mathit{Var})$ of sort $s$.
-    \item Let $\mathcal{T}$ be a $\mathbf{\Sigma}$ algebra, and $f$ be a symbol from $\Sigma$.
+    \item Let $\mathcal{T}$ be a $\Sigma$-algebra, and $f$ be a symbol from $\Sigma$.
           We use the notation $\mathcal{T}_f$ to denote the interpretation of $f$ in $\mathcal{T}$.
     \item A function $\rho : \mathit{Var} \to \mathcal{T}$, where $\mathcal{T}$ is a $\Sigma$-algebra,
           extends uniquely (in the usual way) to a $\Sigma$-algebra morphism
           $\rho : T_{\Sigma}(\mathit{Var}) \to \mathcal{T}$.
-    \item A \emph{basic $\mathbf{\Sigma}$-pattern} of sort $s$
-          is a term $\phi \in T_{\Sigma, s}(\mathit{Var})$,
-          where $\mathbf{\Sigma} = (\Sigma, \mathit{Var})$.
-    \item A matching logic $\mathbf{\Sigma}$-formula (aka $\mathbf{\Sigma}$-\emph{pattern})
+    \item The set of \emph{nullary predicate symbols} $P_\epsilon((\Sigma, \mathit{Var}))$
+          (or just $P_\epsilon$ if $(\Sigma, \mathit{Var})$ is known from the context) is
+          defined to contain exactly terms $\phi \in T_{\Sigma, s}(\mathit{Var})$.
+    \item A matching logic $(\Sigma, \mathit{Var})$-formula (aka $(\Sigma, \mathit{Var})$-\emph{pattern})
           of sort $s$
-          is a FOL formula where symbols from $\Sigma$ are function symbols
-          and basic patterns of sort $s$ are nullary predicate symbols.
+          is a $(\Sigma, P_\epsilon)-\FOLeq$ formula (that is, a $\FOLeq$ formula where function symbols are
+          exactly symbols from $\Sigma$, and where nullary predicate symbols are exactly
+          terms $\phi \in T_{\Sigma, s}(\mathit{Var})$, without any $k$-ary predicate symbols for $k > 0$).
           We let $\Pattern(\mathbf{\Sigma})$ (or just $\Pattern$ when $\mathbf{\Sigma}$ is known from the context)
           denote the set of all $\mathbf{\Sigma}$-patterns.
+    \item A matching logic pattern is \emph{structureless} if it contains
+          no terms $\phi \in T_{\Sigma, s}(\mathit{Var})$ used as predicates.
+    \item A \emph{constrained term} is a pattern of the form $\phi \land P$,
+          where $\phi \in T_{\Sigma, s}(\mathit{Var})$ and $P$ a structureless pattern.
     \item A matching logic $\Sigma$-\emph{model} $\mathcal{T}$ is a $\Sigma$-algebra.
     \item A matching logic \emph{semantics} is given by means of
           the satisfaction relation $\vDash_{\ML}$ between a matching logic $\Sigma$-model,
           a model element, and a valuation,
           defined inductively as
           \begin{itemize}
-              \item $(\mathcal{T}, \gamma, \rho) \vDash \pi$ iff $\gamma = \rho(\pi)$, where $\pi$ is a basic pattern;
+              \item $(\mathcal{T}, \gamma, \rho) \vDash \phi$ iff $\gamma = \rho(\pi)$, where $\phi \in T_{\Sigma, s}(\mathit{Var})$;
               \item $(\mathcal{T}, \gamma, \rho) \vDash \varphi_1 \land \varphi_2$ iff
                 $(\mathcal{T}, \gamma, \rho) \vDash \varphi_1$ and
                 $(\mathcal{T}, \gamma, \rho) \vDash \varphi_2$;
@@ -227,14 +234,9 @@ $\mathcal{T}, A, C \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime$.
 
 \end{definition}
 
-\begin{definition}
-A \emph{constrained pattern} is a pattern of the form $\phi \land P$,
-where $\phi$ is a basic pattern and $P$ a patternless FOL formula.
-\end{definition}
-
 \begin{remark}
 For simplicity, we restrict the class of reachability systems we work with to those whose reachability rules
-have only disjunctions of constrained patterns. That is, we assume all rules have the shape
+have only disjunctions of constrained terms. That is, we assume all rules have the shape
 \begin{equation*}
     \exists \vec{X}.\, \bigvee_{i=1}^{m} (\phi_i \land P_i) \Rightarrow^\exists \exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j) \, .
 \end{equation*}
@@ -477,7 +479,7 @@ The proof system derives claims of the shape
 $\mathcal{S}, \vdash_\CRL \Phi \Downarrow_{C,E} \Psi$,
 where $\Phi$,$\Psi$ are of the shape
 $\exists \vec{X}.\, (\varphi_1, \ldots, \varphi_k) \land P$,
-where $P$ is a patternless FOL formula
+where $P$ is a structureless FOL formula
 and every $\varphi_i$ has the structure of
 $\exists x_1,\ldots,x_n. (\phi_1 \land P_1) \lor \ldots (\phi_m \land P_m)$.
 The idea is that $P$ is the part of the claim that relates variables from different components.
@@ -574,7 +576,7 @@ Admitted.
     { \prfStackPremises
        {\varphi \Rightarrow^\exists \varphi^\prime \in S}
        {\mathcal{T} \vDash_\ML \varphi_i \leftrightarrow \mathit{constrain}(P^\prime, \varphi)}
-       {P^\prime \mbox{ is a patternless FOL formula}}
+       {P^\prime \mbox{ is a structureless FOL formula}}
        {  (\mathcal{T}, S) \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \mathit{constrain}(P^\prime, \varphi^\prime), \varphi_{i+1}, \ldots, \varphi_k)
           \land P
           \Downarrow_{\emptyset, (C \cup E)} \Psi^\prime
@@ -714,7 +716,7 @@ By induction on the structure of the CRL proof. TODO
         we can apply the Consequence RL rule on the goal, followed by a Case Analysis rule applied to the two hypotheses, and we are done.
         
     \item If the proof ends with \emph{Step},
-      we can assume a patternless FOL formula $P^\prime$, a rule $\varphi \Rightarrow^\exists \varphi^\prime \in S$ such that
+      we can assume a structureless FOL formula $P^\prime$, a rule $\varphi \Rightarrow^\exists \varphi^\prime \in S$ such that
       $\mathcal{T} \vDash_\ML \varphi_i \leftrightarrow \mathit{constrain}(P^\prime, \varphi)$,
       and an induction hypothesis
       \begin{align*}
