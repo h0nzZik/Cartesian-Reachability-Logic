@@ -36,6 +36,7 @@
 \newcommand{\CRL}{\mathsf{CRL}}
 \newcommand{\Var}{\mathit{Var}}
 \newcommand{\Tcfg}{\mathcal{T}_{\mathit{Cfg}}}
+\newcommand{\Pattern}{\mathsf{Pattern}}
 
 \newcommand\oast{\stackMath\mathbin{\stackinset{c}{0ex}{c}{0ex}{\ast}{\bigcirc}}}
 
@@ -102,12 +103,14 @@ We define the matching logic syntax and semantics as follows.
           extends uniquely (in the usual way) to a $\Sigma$-algebra morphism
           $\rho : T_{\Sigma}(\mathit{Var}) \to \mathcal{T}$.
     \item A \emph{basic $\mathbf{\Sigma}$-pattern} of sort $s$
-          is a term in $T_{\Sigma, s}(\mathit{Var})$,
+          is a term $\phi \in T_{\Sigma, s}(\mathit{Var})$,
           where $\mathbf{\Sigma} = (\Sigma, \mathit{Var})$.
     \item A matching logic $\mathbf{\Sigma}$-formula (aka $\mathbf{\Sigma}$-\emph{pattern})
           of sort $s$
           is a FOL formula where symbols from $\Sigma$ are function symbols
           and basic patterns of sort $s$ are nullary predicate symbols.
+          We let $\Pattern(\mathbf{\Sigma})$ (or just $\Pattern$ when $\mathbf{\Sigma}$ is known from the context)
+          denote the set of all $\mathbf{\Sigma}$-patterns.
     \item A matching logic $\Sigma$-\emph{model} $\mathcal{T}$ is a $\Sigma$-algebra.
     \item A matching logic \emph{semantics} is given by means of
           the satisfaction relation $\vDash_{\ML}$ between a matching logic $\Sigma$-model,
@@ -197,17 +200,17 @@ We define reachability-logic signatures, rules, and systems as follows.
           $\gamma \Rightarrow^{*}_{\mathcal{S}} \gamma^\prime$
           and $(\gamma^\prime, \rho) \vDash \varphi^\prime$.
           
-    \item An \emph{all-path reachability rule} is a pair
-        $\varphi \Rightarrow^\forall \varphi^\prime$ of patterns $\varphi$ and $\varphi^\prime$.
-    
-    \item \label{def:aprlSemantics}
-          An all-path reachability rule $\varphi \Rightarrow^\forall \varphi^\prime$ is \emph{satisfied},
-          written $\mathcal{S} \vDash_\RL \varphi \Rightarrow^\forall \varphi^\prime$,
-          iff for all complete $\Rightarrow_{\mathcal{S}}$-paths $\tau$
-          starting with $\gamma \in \Tcfg$ and for all $\rho : \Var \to \mathcal{T}$
-          such that $(\gamma, \rho) \vDash \varphi$,
-          there exists some $\gamma^\prime \in \tau$
-          such that $(\gamma^\prime, \rho) \vDash \varphi^\prime$.
+%    \item An \emph{all-path reachability rule} is a pair
+%        $\varphi \Rightarrow^\forall \varphi^\prime$ of patterns $\varphi$ and $\varphi^\prime$.
+%    
+%    \item \label{def:aprlSemantics}
+%          An all-path reachability rule $\varphi \Rightarrow^\forall \varphi^\prime$ is \emph{satisfied},
+%          written $\mathcal{S} \vDash_\RL \varphi \Rightarrow^\forall \varphi^\prime$,
+%          iff for all complete $\Rightarrow_{\mathcal{S}}$-paths $\tau$
+%          starting with $\gamma \in \Tcfg$ and for all $\rho : \Var \to \mathcal{T}$
+%          such that $(\gamma, \rho) \vDash \varphi$,
+%          there exists some $\gamma^\prime \in \tau$
+%          such that $(\gamma^\prime, \rho) \vDash \varphi^\prime$.
 \end{enumerate}
 
 \begin{figure}
@@ -223,6 +226,19 @@ We have RL sequents of the shape
 $\mathcal{T}, A, C \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime$.
 
 \end{definition}
+
+\begin{definition}
+A \emph{constrained pattern} is a pattern of the form $\phi \land P$,
+where $\phi$ is a basic pattern and $P$ a patternless FOL formula.
+\end{definition}
+
+\begin{remark}
+For simplicity, we restrict the class of reachability systems we work with to those whose reachability rules
+have only disjunctions of constrained patterns. That is, we assume all rules have the shape
+\begin{equation*}
+    \bigvee_{i=1}^{m} (\phi_i \land P_i) \Rightarrow^\exists \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j) \, .
+\end{equation*}
+\end{remark}
 
 \section{Cartesian Reachability Logic}
 
@@ -261,24 +277,24 @@ if we fix $k=1$, then
 \end{align*}
 \end{remark}
 
-\begin{definition}[All-Path Cartesian Reachability Rule]\label{def:apCRLsemantics}
-An all-path Cartesian reachability rule
-$(\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\forall} (\psi_1,\ldots,\psi_k) \land \psi$
-of arity $k$
-is \emph{valid} in a reachability system $\mathcal{S} = (\mathcal{T}, S)$,
-written
-$\mathcal{S} \vDash_\CRL (\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\forall}
-(\psi_1,\ldots,\psi_k) \land \psi$,
-iff for all configurations $\sigma_1,\ldots,\sigma_k \in \Tcfg$ \traian{Why $\sigma$ instead of $\gamma$?}
-and any $\mathcal{T}$-valuation $\rho$,
-whenever $(\sigma_1, \rho) \vDash \varphi_1 \land \varphi$ and \ldots
-and $(\sigma_k, \rho) \vDash \varphi_k \land \varphi$,
-then for every $k$-tuple of complete paths $(\pi_1, \ldots, \pi_k)$
-such that
-$\sigma_1 = \pi_1(0) \land \ldots \land \sigma_k = \pi_k(0)$,
-there exist indices $i_1, \ldots, i_k$ such that
-$(\pi_1(i_1), \rho) \vDash \varphi_1 \land \psi$ and \ldots and $(\pi_k(i_k), \rho) \vDash \varphi_k \land \psi$.
-\end{definition}
+%\begin{definition}[All-Path Cartesian Reachability Rule]\label{def:apCRLsemantics}
+%An all-path Cartesian reachability rule
+%$(\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\forall} (\psi_1,\ldots,\psi_k) \land \psi$
+%of arity $k$
+%is \emph{valid} in a reachability system $\mathcal{S} = (\mathcal{T}, S)$,
+%written
+%$\mathcal{S} \vDash_\CRL (\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\forall}
+%(\psi_1,\ldots,\psi_k) \land \psi$,
+%iff for all configurations $\sigma_1,\ldots,\sigma_k \in \Tcfg$ \traian{Why $\sigma$ instead of $\gamma$?}
+%and any $\mathcal{T}$-valuation $\rho$,
+%whenever $(\sigma_1, \rho) \vDash \varphi_1 \land \varphi$ and \ldots
+%and $(\sigma_k, \rho) \vDash \varphi_k \land \varphi$,
+%then for every $k$-tuple of complete paths $(\pi_1, \ldots, \pi_k)$
+%such that
+%$\sigma_1 = \pi_1(0) \land \ldots \land \sigma_k = \pi_k(0)$,
+%there exist indices $i_1, \ldots, i_k$ such that
+%$(\pi_1(i_1), \rho) \vDash \varphi_1 \land \psi$ and \ldots and $(\pi_k(i_k), \rho) \vDash \varphi_k \land \psi$.
+%\end{definition}
 
 \begin{definition}
 We translate a language semantics into a semantics for lists of configurations as follows.
@@ -289,7 +305,8 @@ We translate a language semantics into a semantics for lists of configurations a
           \begin{enumerate}
               \item $\Sigma^* = \Sigma \cup \{ \mathit{cfgitem}, \mathit{cfgconcat},
           %\mathit{cfgdummy},
-          \mathit{cfgheat} \}$\traian{You need to add cfgnil here}
+          \mathit{cfgheat},
+          \mathit{cfgnil} \}$
               \item $\mathit{Cfg}^*$ is a fresh sort (representing the sort of lists of configurations);
               %\item $\mathit{cfgdummy}$ is a fresh symbol of sort $\mathit{Cfg}$;
               \item $\mathit{cfgitem}$ a fresh symbol of sort $\mathit{Cfg} \to \mathit{Cfg}^*$;
@@ -301,7 +318,7 @@ We translate a language semantics into a semantics for lists of configurations a
           We generate a set of reachability rules $S^*$ over $(\mathbf{\Sigma}, \mathit{Cfg})^*$
           by
           \begin{enumerate}
-              \item defining a function $\mathit{heat}$ by\traian{maybe make clear that heat is mapping formul{\ae} to formul{\ae}}
+              \item defining a function $\mathit{heat} : \mathit{Var} \times \Pattern \times \mathit{Var} \to \Pattern$ by
               \begin{align*}
                   \mathit{heat}(L, \exists \vec{X}.\, \bigvee_{i=1}^{m} (\phi_i \land P_i), R)
                   = \exists \vec{X}.\, \bigvee_{i=1}^{m} ( \mathit{cfgheat(L, \phi_i, R)} \land P_i)
