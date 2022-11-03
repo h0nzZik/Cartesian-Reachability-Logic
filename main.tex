@@ -92,7 +92,7 @@ for which RL works; that is, with any language which has a RL-based semantics.
 We work with a variant of matching logic described in
 \cite{StefanescuCMMSR19,RosuSCM13lics}.
 
-\begin{definition}[Matching logic syntax and semantics]
+\begin{definition}[Matching logic syntax and semantics]\label{def:matchinglogic}
 We define the matching logic syntax and semantics as follows.
 \begin{enumerate}
     \item A matching logic \emph{signature} $\mathbf{\Sigma} = (\Sigma, \mathit{Var})$ is a many-sorted algebraic signature $\Sigma$ together with a sort-wise infinite set of variables $\mathit{Var}$.
@@ -118,7 +118,7 @@ We define the matching logic syntax and semantics as follows.
           no terms $\phi \in T_{\Sigma, s}(\mathit{Var})$ used as predicates.
     \item A \emph{constrained term} is a pattern of the form $\phi \land P$,
           where $\phi \in T_{\Sigma, s}(\mathit{Var})$ and $P$ a structureless pattern.
-    \item A matching logic $\Sigma$-\emph{model} $\mathcal{T}$ is a $\Sigma$-algebra.
+    \item A matching logic $\Sigma$-\emph{model} $\mathcal{T}$ is a $\Sigma$-algebra with non-empty carrier sets.
     \item A matching logic \emph{semantics} is given by means of
           the satisfaction relation $\vDash_{\ML}$ between a matching logic $\Sigma$-model,
           a model element, and a valuation,
@@ -140,6 +140,19 @@ We define the matching logic syntax and semantics as follows.
 
 \end{definition}
 
+Validity of a structureless pattern does not depend on the selected model element.
+\begin{lemma}\label{lem:structurelessSemantics}
+Let $\mathcal{T}$ be a matching logic $\Sigma$-model, $\gamma,\gamma^\prime \in \mathcal{T}$ model elements,
+and $\rho$ a $\mathcal{T}$-valuation. Then for any structureless pattern $P$,
+\begin{equation*}
+    (\mathcal{T}, \gamma, \rho) \vDash P \iff (\mathcal{T}, \gamma^\prime, \rho) \vDash P \, .
+\end{equation*}
+Therefore, when $P$ is structureless, we may sometimes write $(\mathcal{T}, \rho) \vDash P$ to mean that 
+$(\mathcal{T}, \gamma, \rho) \vDash P$ for \emph{some} $\gamma \in \mathcal{T}$.
+\end{lemma}
+\begin{proof}
+Admitted.
+\end{proof}
 
 \subsection{One-path Reachability Logic}
 
@@ -234,7 +247,7 @@ $\mathcal{T}, A, C \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime$.
 
 \end{definition}
 
-\begin{remark}
+\begin{remark}\label{rem:shapeOfReachabilityRules}
 For simplicity, we restrict the class of reachability systems we work with to those whose reachability rules
 have only disjunctions of constrained terms. That is, we assume all rules have the shape
 \begin{equation*}
@@ -306,7 +319,7 @@ if we fix $k=1$, then
 %$(\pi_1(i_1), \rho) \vDash \varphi_1 \land \psi$ and \ldots and $(\pi_k(i_k), \rho) \vDash \varphi_k \land \psi$.
 %\end{definition}
 
-\begin{definition}
+\begin{definition}\label{def:starextension}
 We translate a language semantics into a semantics for lists of configurations as follows.
 \begin{enumerate}
     \item Let $((\Sigma, \mathit{Var}), \mathit{Cfg})$ be a reachability-logic signature.
@@ -468,6 +481,55 @@ By induction on $\varphi$.
         [c_1,\ldots,c_k] \Rightarrow_{\mathcal{S}^*} [c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k]
     \end{equation*}
 \end{lemma}
+\begin{proof}
+We have
+\begin{equation*}
+[c_1,\ldots,c_k] \Rightarrow_{\mathcal{S}^*} [c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k]    
+\end{equation*}
+iff (by \Cref{def:basics}) there exists a rule $\varphi \Rightarrow^\exists \varphi^\prime \in S^*$
+and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
+$([c_1,\ldots,c_k], \rho) \vDash \varphi$
+and $([c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k], \rho) \vDash \varphi^\prime$,
+iff (by
+%\Cref{def:matchinglogic} and
+\Cref{rem:shapeOfReachabilityRules} and \Cref{def:starextension})
+there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
+and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
+\begin{equation*}
+    ([c_1,\ldots,c_k], \rho) \vDash \exists \vec{X}.\, \bigvee_{l=1}^{m}(\mathit{cfgheat}(L, \phi_l, R) \land P_l)
+\end{equation*}
+and
+\begin{equation*}
+    ([c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k], \rho) \vDash
+    \exists \vec{Y}.\, \bigvee_{j=1}^{n}(\mathit{cfgheat}(L, \phi^\prime_j, R) \land P^\prime_j) \, ,
+\end{equation*}
+iff (by \Cref{def:matchinglogic} and \Cref{lem:structurelessSemantics})
+there exists some $\rho^\prime,\rho^{\prime\prime} \to \mathcal{T}^*$
+satisfying $\forall y \in \mathit{Var} \setminus X.\, \rho^\prime(y) = \rho(\prime)$
+and $\forall y \in \mathit{Var} \setminus y.\, \rho^{\prime\prime}(y) = \rho(\prime)$,
+and there exists some $l,j$ satisfying $1 \leq l \leq m$ and $1 \leq j \leq n$ such that
+$\rho^\prime \vDash P_l$ and $\rho^{\prime\prime} \vDash P_j$ and
+\begin{equation*}
+    ([c_1,\ldots,c_k], \rho^\prime) \vDash \mathit{cfgheat}(L, \phi_l, R)
+\end{equation*}
+and
+\begin{equation*}
+    ([c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k], \rho^{\prime\prime}) \vDash
+    \mathit{cfgheat}(L, \phi^\prime_j, R) \, ,
+\end{equation*}
+iff (by \Cref{def:matchinglogic} and \Cref{def:starextension})
+there exists some $\rho^\prime,\rho^{\prime\prime} \to \mathcal{T}^*$
+satisfying $\forall y \in \mathit{Var} \setminus X.\, \rho^\prime(y) = \rho(\prime)$
+and $\forall y \in \mathit{Var} \setminus y.\, \rho^{\prime\prime}(y) = \rho(\prime)$,
+and there exists some $l,j$ satisfying $1 \leq l \leq m$ and $1 \leq j \leq n$ such that
+\begin{itemize}
+    \item $\rho^\prime \vDash P_l$; and
+    \item $\rho^{\prime\prime} \vDash P_j$; and
+    \item $[c_1,\ldots,c_k] = \rho^\prime(L) ++ [\rho^\prime(\phi_l)] ++ \rho^\prime(R)$; and
+    \item $[c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k] = \rho^{\prime\prime}(L) ++ [\rho^{\prime\prime}(\phi_j)] ++ \rho^{\prime\prime}(R)$.
+\end{itemize}
+Now, TODO.
+\end{proof}
 \begin{proof}
 Admitted.
 \end{proof}
