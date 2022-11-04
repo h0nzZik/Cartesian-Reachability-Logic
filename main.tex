@@ -439,18 +439,6 @@ We translate a language semantics into a semantics for lists of configurations a
 \mathcal{S} \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime \iff \mathcal{S}^* \vDash_\RL \mathit{flatten}^\exists(\Psi, \Psi^\prime)
 \end{equation*}
 \end{theorem}
-\begin{proof}[Proof of \Cref{thm:correspondence}]
-We prove each implication separately.
-\begin{enumerate}
-    \item For the left-to-right implication, we assume
-    \begin{proofenv}
-    TODO
-    \end{proofenv}
-    and have to 
-\end{enumerate}
-
-Admitted.
-\end{proof}
 
 \section{Proof System}
 
@@ -926,6 +914,68 @@ The upwards implication is trivial; the downwards is as follows. If $i = i^\prim
 But otherwise, it would follow that $c_{i^\prime} \Rightarrow_{\mathcal{S}} c_{i^\prime}$,
 which contradicts \Cref{rem:noEmptySteps}.
 \end{proof}
+
+
+\begin{proof}[Proof of \Cref{thm:correspondence}]
+We prove each implication separately.
+\begin{enumerate}
+    \item For the left-to-right implication, we
+    let $\mathcal{S} = (\mathcal{T}, S)$
+    and $\Psi = (\varphi_1,\ldots,\varphi_k) \land \varphi$
+    and $\Psi^\prime = (\varphi_1^\prime,\ldots,\varphi_k^\prime) \land \varphi^\prime$
+    and assume (i) that
+    \begin{proofenv}
+    for all configurations $c_1,\ldots,c_k \in \Tcfg$
+    which terminate in $(\Tcfg, \Rightarrow_{\mathcal{S}})$
+    and any $\mathcal{T}$-valuation $\rho$,
+    whenever $(c_1,\rho) \vDash \varphi_1 \land \varphi$ and \ldots
+    and $(c_k,\rho) \vDash \varphi_k \land \varphi$,
+    then there exist configurations $c_1^\prime,\ldots,c_k^\prime \in \Tcfg$
+    such that $c_1 \Rightarrow^{*}_{\mathcal{S}} c_1^\prime$
+    and \ldots and $c_k \Rightarrow^{*}_{\mathcal{S}} c_k^\prime$,
+    and
+    $(c_1^\prime,\rho) \vDash \varphi^\prime_1 \land \varphi^\prime$ and \ldots
+    and $(c_k^\prime, \rho) \vDash \varphi^\prime_k \land \varphi^\prime$,
+    \end{proofenv}
+    and have to prove that
+    \begin{proofenv}
+    for every $C \in \mathcal{T}^*_{\mathit{Cfg}^*}$
+    such that $C$ terminates in $(\mathcal{T}^*_{\mathit{Cfg}^*}, \Rightarrow_{\mathcal{S}^*})$
+    and for any valuation $\rho : \Var \to \mathcal{T}^*$
+    such that $(\mathcal{T}^*, C, \rho) \vDash \varphi$,
+    there exists some $C^\prime \in \mathcal{T}^*_{\mathit{Cfg}^*}$
+    such that
+    $C \Rightarrow^{*}_{\mathcal{S}^*} C^\prime$
+    and $(\mathcal{T}^*, C^\prime, \rho) \vDash \varphi^\prime$.
+    \end{proofenv}
+    Let us then have some $C \in \mathcal{T}^*_{\mathit{Cfg}^*}$
+    such that $C$ terminates in $(\mathcal{T}^*_{\mathit{Cfg}^*}, \Rightarrow_{\mathcal{S}^*})$,
+    and a valuation $\rho : \Var \to \mathcal{T}^*$
+    such that $(\mathcal{T}^*, C, \rho) \vDash \varphi$.
+    We have to prove that
+    \begin{proofenv}
+    there exists some $C^\prime \in \mathcal{T}^*_{\mathit{Cfg}^*}$
+    such that
+    $C \Rightarrow^{*}_{\mathcal{S}^*} C^\prime$
+    and $(\mathcal{T}^*, C^\prime, \rho) \vDash \varphi^\prime$.
+    \end{proofenv}
+    We will proceed in five steps:
+    \begin{enumerate}
+        \item We prove that there exists $c_1,\ldots,c_k$ such that $C = [c_1,\ldots, c_k]$.
+        \item We prove that $c_1,\ldots,c_k$ are terminating.
+        \item We prove the premise of the assumption (i): that $(\mathcal{T}, c_1, \rho) \vDash \varphi_1 \land \varphi$
+        and \ldots and $(\mathcal{T}, c_k, \rho) \vDash \varphi_k \land \varphi$.
+        \item From the assumption (i) we get the appropriate $c_1^\prime,\ldots,c_k^\prime$.
+        \item We let $C^\prime := [c_1^\prime,\ldots,c_k^\prime]$ and prove that it is reachable from $C$,
+        as well as that it satisfies the flattened $\Psi^\prime$.
+    \end{enumerate}
+    TODO.
+    \item For the opposite implication, TODO.
+\end{enumerate}
+
+Admitted.
+\end{proof}
+
 
 
 \begin{lemma}\label{lem:constrain}
