@@ -206,6 +206,10 @@ We define reachability-logic signatures, rules, and systems as follows.
 
     \item A reachability system $(\mathcal{T}, S)$ is \emph{deterministic} iff the induced transition system
           is deterministic.
+          
+    \item A reachability system $(\mathcal{T}, S)$ is \emph{$\epsilon$-free}
+          iff for any two configurations $\sigma, \sigma^\prime \in \mathcal{T}_{\mathit{Cfg}}$, if
+          $\sigma \Rightarrow_{\mathcal{S}} \sigma^\prime$, then $\sigma \not = \sigma^\prime$.
 
     \item A configuration $\gamma \in \Tcfg$ \emph{terminates} in $(\Tcfg , \Rightarrow_{\mathcal{S}})$
           iff there is no infinite $\Rightarrow_{\mathcal{S}})$-sequence starting with $\gamma$.
@@ -231,6 +235,7 @@ We define reachability-logic signatures, rules, and systems as follows.
           such that
           $\gamma \Rightarrow^{*}_{\mathcal{S}} \gamma^\prime$
           and $(\gamma^\prime, \rho) \vDash \varphi^\prime$.
+          
           
 %    \item An \emph{all-path reachability rule} is a pair
 %        $\varphi \Rightarrow^\forall \varphi^\prime$ of patterns $\varphi$ and $\varphi^\prime$.
@@ -267,11 +272,8 @@ have only disjunctions of constrained terms. That is, we assume all rules have t
 \end{equation*}
 \end{remark}
 
-\begin{remark}
-We do not allow the reachability system to take steps which do not have any effect.
-Formally, we assume that for any two configurations
-$\sigma, \sigma^\prime \in \mathcal{T}_{\mathit{Cfg}}$, if
-$\sigma \Rightarrow_{\mathcal{S}} \sigma^\prime$, then $\sigma \not = \sigma^\prime$.
+\begin{remark}\label{rem:noEmptySteps}
+We work only with $\epsilon$-free reachability systems.
 \end{remark}
 
 \section{Cartesian Reachability Logic}
@@ -516,6 +518,8 @@ and
     \exists \vec{Y}.\, \bigvee_{j=1}^{n}(\mathit{cfgheat}(L, \phi^\prime_j, R) \land P^\prime_j) \, ,
 \end{equation*}
 iff (by \Cref{def:matchinglogic} and \Cref{lem:structurelessSemantics})
+there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
+and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
 there exists some $\rho^\prime,\rho^{\prime\prime} \to \mathcal{T}^*$
 satisfying $\forall y \in \mathit{Var} \setminus \vec{X}.\, \rho^\prime(y) = \rho(\prime)$
 and $\forall y \in \mathit{Var} \setminus \vec{Y}.\, \rho^{\prime\prime}(y) = \rho(\prime)$,
@@ -530,6 +534,8 @@ and
     \mathit{cfgheat}(L, \phi^\prime_j, R) \, ,
 \end{equation*}
 iff (by \Cref{def:matchinglogic} and \Cref{def:starextension})
+there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
+and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
 there exists some $\rho^\prime,\rho^{\prime\prime} \to \mathcal{T}^*$
 satisfying $\forall y \in \mathit{Var} \setminus \vec{X}.\, \rho^\prime(y) = \rho(y)$
 and $\forall y \in \mathit{Var} \setminus \vec{Y}.\, \rho^{\prime\prime}(y) = \rho(y)$,
@@ -550,6 +556,8 @@ and $\mathit{FV}(P_j) \subseteq \mathit{Var} \setminus \vec{Y}$,
 by \Cref{lem:unusedVariables} we have $(\mathcal{T}^*, \rho^\prime) \vDash P_l \iff (\mathcal{T}^*, \rho) \vDash P_l$
 and $(\mathcal{T}^*, \rho^{\prime\prime}) \vDash P_j \iff (\mathcal{T}^*, \rho) \vDash P_j$.
 Therefore, we can change the goal to one saying that
+there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
+and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
 there exists some $\rho^\prime,\rho^{\prime\prime} \to \mathcal{T}^*$
 satisfying $\forall y \in \mathit{Var} \setminus \vec{X}.\, \rho^\prime(y) = \rho(y)$
 and $\forall y \in \mathit{Var} \setminus \vec{Y}.\, \rho^{\prime\prime}(y) = \rho(y)$,
@@ -582,14 +590,18 @@ and
 Now, for any $v \in \mathit{FV}(\phi_l)$ it holds that
 $((\rho_0^\prime)^*)(v) = \rho^\prime(v)$.
 Why? Either $v \in \vec{X}$, in which case it has some sort $s$ from $\Sigma$
-(that is, $s \not = \mathit{Cfg}^*$). TODO so what? I got lost there.
+(that is, $s \not = \mathit{Cfg}^*$);
+then $\rho^\prime(v) \in \mathcal{T}^*_s = \mathcal{T}_s \subseteq \mathcal{T}$.
+Or $v \not\in \vec{X}$, and then $\rho^\prime(v) = \rho(v) \in \mathcal{T}$.
 Similarly, we have
 $((\rho_0^{\prime\prime})^*)(v) = \rho^{\prime\prime}(v)$
 for any $v \in \mathit{FV}(\phi_j)$.
 Therefore, we can use \Cref{lem:unusedVariables} to change the goal to one saying that
+there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
+and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
 there exists some $\rho_0^\prime,\rho_0^{\prime\prime} \to \mathcal{T}$
-satisfying $\forall y \in \mathit{Var} \setminus \vec{X}.\, (\rho_0^\prime)^*(y) = \rho(\prime)$
-and $\forall y \in \mathit{Var} \setminus \vec{Y}.\, (\rho_0^{\prime\prime})^*(y) = \rho(\prime)$,
+satisfying $\forall y \in \mathit{Var} \setminus \vec{X}.\, ((\rho_0^\prime)^*)(y) = \rho(y)$
+and $\forall y \in \mathit{Var} \setminus \vec{Y}.\, ((\rho_0^{\prime\prime})^*)(y) = \rho(y)$,
 and there exists some $l,j$ satisfying $1 \leq l \leq m$ and $1 \leq j \leq n$ such that
 \begin{itemize}
     \item $(\mathcal{T}^*, \rho) \vDash P_l$; and
@@ -599,11 +611,100 @@ and there exists some $l,j$ satisfying $1 \leq l \leq m$ and $1 \leq j \leq n$ s
     \texttt{++} [((\rho_0^{\prime\prime})^*)(\phi_j)] 
     \texttt{++} \rho(R)$.
 \end{itemize}
-
-Now, TODO.
-\end{proof}
-\begin{proof}
-Admitted.
+Now, we use \Cref{lem:starConservative} and definition of starred valuation to change the goal to one saying that
+there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
+and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
+there exists some $\rho_0^\prime,\rho_0^{\prime\prime} \to \mathcal{T}$
+satisfying $\forall y \in \mathit{Var} \setminus \vec{X}.\, \rho_0^\prime(y) = \rho(y)$
+and $\forall y \in \mathit{Var} \setminus \vec{Y}.\, \rho_0^{\prime\prime}(y) = \rho(y)$,
+and there exists some $l,j$ satisfying $1 \leq l \leq m$ and $1 \leq j \leq n$ such that
+\begin{itemize}
+    \item $(\mathcal{T}, \rho) \vDash P_l$; and
+    \item $(\mathcal{T}, \rho) \vDash P_j$; and
+    \item $[c_1,\ldots,c_k] = \rho(L) \texttt{++} [\rho_0^\prime(\phi_l)] \texttt{++} \rho(R)$; and
+    \item $[c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k] = \rho(L)
+    \texttt{++} [\rho_0^{\prime\prime}(\phi_j)] 
+    \texttt{++} \rho(R)$.
+\end{itemize}
+Now, by list reasoning, this is equivalent to
+saying that
+there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
+and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
+there exists some $\rho_0^\prime,\rho_0^{\prime\prime} \to \mathcal{T}$
+satisfying $\forall y \in \mathit{Var} \setminus \vec{X}.\, \rho_0^\prime(y) = \rho(y)$
+and $\forall y \in \mathit{Var} \setminus \vec{Y}.\, \rho_0^{\prime\prime}(y) = \rho(y)$,
+and there exists some $l,j$ satisfying $1 \leq l \leq m$ and $1 \leq j \leq n$
+and there exists some $i^\prime$ satisfying $1 \leq i^\prime \leq k$
+such that
+\begin{itemize}
+    \item $(\mathcal{T}, \rho) \vDash P_l$; and
+    \item $(\mathcal{T}, \rho) \vDash P_j$; and
+    \item $[c_1,\ldots, c_{i^\prime-1}] = \rho(L)$; and
+    \item $c_{i^\prime} = \rho_0^\prime(\phi_l)$; and
+    \item $[c_{i^\prime+1},\ldots,c_k] = \rho(R)$; and
+    \item $[c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k] = \rho(L)
+    \texttt{++} [\rho_0^{\prime\prime}(\phi_j)] 
+    \texttt{++} \rho(R)$.
+\end{itemize}
+Now, let us define $c^\prime_{z}$ by
+\begin{equation*}
+c^\prime_{z} =
+    \begin{cases}
+        c^\prime & \text{if } z = i \\
+        c_z & \text{if } z \not = i
+    \end{cases}
+\end{equation*}
+after which the goal is equivalent to saying that
+there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
+and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
+there exists some $\rho_0^\prime,\rho_0^{\prime\prime} \to \mathcal{T}$
+satisfying $\forall y \in \mathit{Var} \setminus \vec{X}.\, \rho_0^\prime(y) = \rho(y)$
+and $\forall y \in \mathit{Var} \setminus \vec{Y}.\, \rho_0^{\prime\prime}(y) = \rho(y)$,
+and there exists some $l,j$ satisfying $1 \leq l \leq m$ and $1 \leq j \leq n$
+and there exists some $i^\prime$ satisfying $1 \leq i^\prime \leq k$
+\begin{itemize}
+    \item $(\mathcal{T}, \rho) \vDash P_l$; and
+    \item $(\mathcal{T}, \rho) \vDash P_j$; and
+    \item $[c_1,\ldots, c_{i^\prime-1}] = \rho(L)$; and
+    \item $c_{i^\prime} = \rho_0^\prime(\phi_l)$; and
+    \item $[c_{i^\prime+1},\ldots,c_k] = \rho(R)$; and
+    \item $[c^\prime_1,\ldots, c^\prime_{i^\prime-1}] = \rho(L)$; and
+    \item $c^\prime_{i^\prime} = \rho_0^{\prime\prime}(\phi_j)$; and
+    \item $[c^\prime_{i^\prime+1},\ldots,c^\prime_k] = \rho(R)$.
+\end{itemize}
+Since $L,R$ were fresh, they do not occur in $\phi_l$ nor in $\phi_j$.
+Therefore, using \Cref{lem:unusedVariables}, the can equivalently say that
+there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
+and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
+there exists some $\rho_0^\prime,\rho_0^{\prime\prime} \to \mathcal{T}$
+satisfying $\forall y \in \mathit{Var} \setminus \vec{X}.\, \rho_0^\prime(y) = \rho(y)$
+and $\forall y \in \mathit{Var} \setminus \vec{Y}.\, \rho_0^{\prime\prime}(y) = \rho(y)$,
+and there exists some $l,j$ satisfying $1 \leq l \leq m$ and $1 \leq j \leq n$,
+and there exists some $i^\prime$ satisfying $1 \leq i^\prime \leq k$
+\begin{itemize}
+    \item $(\mathcal{T}, \rho) \vDash P_l$; and
+    \item $(\mathcal{T}, \rho) \vDash P_j$; and
+    \item $c_{i^\prime} = \rho_0^\prime(\phi_l)$; and
+    \item $c^\prime_{i^\prime} = \rho_0^{\prime\prime}(\phi_j)$.
+\end{itemize}
+(The downwards implication is trivial, as it is only removing constraints; the upwards implication
+is from the fact that we can always choose a valuation $\rho$ satisfying the constraints.)
+But that is equivalent (\Cref{def:matchinglogic}) to saying that 
+there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
+and there exists some $i^\prime$ satisfying $1 \leq i^\prime \leq k$
+and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
+\begin{itemize}
+    \item $(\mathcal{T}, c_{i^\prime}, \rho) \vDash \exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)$; and
+    \item $(\mathcal{T}, c^\prime_{i^\prime}, \rho) \vDash \exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi_j \land P_j)$
+    .
+\end{itemize}
+which is equivalent to saying that there exists some $i^\prime$ satisfying $1 \leq i^\prime \leq k$
+such that $c_{i^\prime} \Rightarrow_{\mathcal{S}} c^\prime_{i^\prime}$,
+which is almost equivalent to the left side of the equivalence we want to prove:
+that $c_{i} \Rightarrow_{\mathcal{S}} c^\prime_{i}$.
+The upwards implication is trivial; the downwards is as follows. If $i = i^\prime$, we are done.
+But otherwise, it would follow that $c_{i^\prime} \Rightarrow_{\mathcal{S}} c_{i^\prime}$,
+which contradicts \Cref{rem:noEmptySteps}.
 \end{proof}
 
 
