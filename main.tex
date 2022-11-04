@@ -531,8 +531,8 @@ and
 \end{equation*}
 iff (by \Cref{def:matchinglogic} and \Cref{def:starextension})
 there exists some $\rho^\prime,\rho^{\prime\prime} \to \mathcal{T}^*$
-satisfying $\forall y \in \mathit{Var} \setminus \vec{X}.\, \rho^\prime(y) = \rho(\prime)$
-and $\forall y \in \mathit{Var} \setminus \vec{Y}.\, \rho^{\prime\prime}(y) = \rho(\prime)$,
+satisfying $\forall y \in \mathit{Var} \setminus \vec{X}.\, \rho^\prime(y) = \rho(y)$
+and $\forall y \in \mathit{Var} \setminus \vec{Y}.\, \rho^{\prime\prime}(y) = \rho(y)$,
 and there exists some $l,j$ satisfying $1 \leq l \leq m$ and $1 \leq j \leq n$ such that
 \begin{itemize}
     \item $(\mathcal{T}^*, \rho^\prime) \vDash P_l$; and
@@ -551,8 +551,8 @@ by \Cref{lem:unusedVariables} we have $(\mathcal{T}^*, \rho^\prime) \vDash P_l \
 and $(\mathcal{T}^*, \rho^{\prime\prime}) \vDash P_j \iff (\mathcal{T}^*, \rho) \vDash P_j$.
 Therefore, we can change the goal to one saying that
 there exists some $\rho^\prime,\rho^{\prime\prime} \to \mathcal{T}^*$
-satisfying $\forall y \in \mathit{Var} \setminus \vec{X}.\, \rho^\prime(y) = \rho(\prime)$
-and $\forall y \in \mathit{Var} \setminus \vec{Y}.\, \rho^{\prime\prime}(y) = \rho(\prime)$,
+satisfying $\forall y \in \mathit{Var} \setminus \vec{X}.\, \rho^\prime(y) = \rho(y)$
+and $\forall y \in \mathit{Var} \setminus \vec{Y}.\, \rho^{\prime\prime}(y) = \rho(y)$,
 and there exists some $l,j$ satisfying $1 \leq l \leq m$ and $1 \leq j \leq n$ such that
 \begin{itemize}
     \item $(\mathcal{T}^*, \rho) \vDash P_l$; and
@@ -561,9 +561,45 @@ and there exists some $l,j$ satisfying $1 \leq l \leq m$ and $1 \leq j \leq n$ s
     \item $[c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k] = \rho(L) \texttt{++} [\rho^{\prime\prime}(\phi_j)] 
     \texttt{++} \rho(R)$.
 \end{itemize}
-Let $\rho_0^\prime$ be a valuation such that
+Suppose we have such valuations $\rho^\prime$ and $\rho^{\prime\prime}$.
+We can surely construct valuations $\rho_0^\prime$ and $\rho_0^{\prime\prime}$ by letting
+\begin{equation*}
+\rho_0^\prime(v)=
+    \begin{cases}
+        \rho^\prime(v) & \text{if } \rho^\prime(v) \in \mathcal{T}\\
+        a & \text{if } \rho^\prime(v) \not\in \mathcal{T}
+    \end{cases}
+\end{equation*}
+and
+\begin{equation*}
+\rho_0^{\prime\prime}(v)=
+    \begin{cases}
+        \rho^{\prime\prime}(v) & \text{if } \rho^{\prime\prime}(v) \in \mathcal{T}\\
+        a & \text{if } \rho^{\prime\prime}(v) \not\in \mathcal{T}
+    \end{cases}
+\end{equation*}
+(where $a \in \mathcal{T}$ is some arbitrary element).
+Now, for any $v \in \mathit{FV}(\phi_l)$ it holds that
+$((\rho_0^\prime)^*)(v) = \rho^\prime(v)$.
+Why? Either $v \in \vec{X}$, in which case it has some sort $s$ from $\Sigma$
+(that is, $s \not = \mathit{Cfg}^*$). TODO so what? I got lost there.
+Similarly, we have
+$((\rho_0^{\prime\prime})^*)(v) = \rho^{\prime\prime}(v)$
+for any $v \in \mathit{FV}(\phi_j)$.
+Therefore, we can use \Cref{lem:unusedVariables} to change the goal to one saying that
+there exists some $\rho_0^\prime,\rho_0^{\prime\prime} \to \mathcal{T}$
+satisfying $\forall y \in \mathit{Var} \setminus \vec{X}.\, (\rho_0^\prime)^*(y) = \rho(\prime)$
+and $\forall y \in \mathit{Var} \setminus \vec{Y}.\, (\rho_0^{\prime\prime})^*(y) = \rho(\prime)$,
+and there exists some $l,j$ satisfying $1 \leq l \leq m$ and $1 \leq j \leq n$ such that
+\begin{itemize}
+    \item $(\mathcal{T}^*, \rho) \vDash P_l$; and
+    \item $(\mathcal{T}^*, \rho) \vDash P_j$; and
+    \item $[c_1,\ldots,c_k] = \rho(L) \texttt{++} [((\rho_0^\prime)^*)(\phi_l)] \texttt{++} \rho(R)$; and
+    \item $[c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k] = \rho(L)
+    \texttt{++} [((\rho_0^{\prime\prime})^*)(\phi_j)] 
+    \texttt{++} \rho(R)$.
+\end{itemize}
 
-Also, 
 Now, TODO.
 \end{proof}
 \begin{proof}
