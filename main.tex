@@ -114,6 +114,7 @@ We define the matching logic syntax and semantics as follows.
           terms $\phi \in T_{\Sigma, s}(\mathit{Var})$, without any $k$-ary predicate symbols for $k > 0$).
           We let $\Pattern(\mathbf{\Sigma})$ (or just $\Pattern$ when $\mathbf{\Sigma}$ is known from the context)
           denote the set of all $\mathbf{\Sigma}$-patterns.
+    \item Let $\mathit{FV}(\varphi)$ denote the set of all free variables of $\varphi$.
     \item A matching logic pattern is \emph{structureless} if it contains
           no terms $\phi \in T_{\Sigma, s}(\mathit{Var})$ used as predicates.
     \item A \emph{constrained term} is a pattern of the form $\phi \land P$,
@@ -153,6 +154,17 @@ $(\mathcal{T}, \gamma, \rho) \vDash P$ for \emph{some} $\gamma \in \mathcal{T}$.
 \begin{proof}
 Admitted.
 \end{proof}
+
+Also, validity of any pattern does not depend on those variables which the pattern does not mention.
+\begin{lemma}\label{lem:unusedVariables}
+    Let $\mathcal{T}$ be a matching logic model, $\gamma$ an element of this model,
+    and $\varphi$ a pattern.
+    Then for any two $\mathcal{T}$-valuations $\rho,\rho^\prime$
+    satisfying $\rho^\prime(y) = \rho(y)$ for any $y \in \mathit{FV}(\varphi)$,
+    \begin{equation*}
+        (\mathcal{T}, \gamma, \rho) \vdash \varphi \iff (\mathcal{T}, \gamma, \rho^\prime) \, .
+    \end{equation*}
+\end{lemma}
 
 \subsection{One-path Reachability Logic}
 
@@ -488,46 +500,70 @@ We have
 \end{equation*}
 iff (by \Cref{def:basics}) there exists a rule $\varphi \Rightarrow^\exists \varphi^\prime \in S^*$
 and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
-$([c_1,\ldots,c_k], \rho) \vDash \varphi$
-and $([c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k], \rho) \vDash \varphi^\prime$,
+$(\mathcal{T}^*, [c_1,\ldots,c_k], \rho) \vDash \varphi$
+and $(\mathcal{T}^*, [c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k], \rho) \vDash \varphi^\prime$,
 iff (by
 %\Cref{def:matchinglogic} and
 \Cref{rem:shapeOfReachabilityRules} and \Cref{def:starextension})
 there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
 and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
 \begin{equation*}
-    ([c_1,\ldots,c_k], \rho) \vDash \exists \vec{X}.\, \bigvee_{l=1}^{m}(\mathit{cfgheat}(L, \phi_l, R) \land P_l)
+    (\mathcal{T}^*, [c_1,\ldots,c_k], \rho) \vDash \exists \vec{X}.\, \bigvee_{l=1}^{m}(\mathit{cfgheat}(L, \phi_l, R) \land P_l)
 \end{equation*}
 and
 \begin{equation*}
-    ([c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k], \rho) \vDash
+    (\mathcal{T}^*, [c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k], \rho) \vDash
     \exists \vec{Y}.\, \bigvee_{j=1}^{n}(\mathit{cfgheat}(L, \phi^\prime_j, R) \land P^\prime_j) \, ,
 \end{equation*}
 iff (by \Cref{def:matchinglogic} and \Cref{lem:structurelessSemantics})
 there exists some $\rho^\prime,\rho^{\prime\prime} \to \mathcal{T}^*$
-satisfying $\forall y \in \mathit{Var} \setminus X.\, \rho^\prime(y) = \rho(\prime)$
-and $\forall y \in \mathit{Var} \setminus y.\, \rho^{\prime\prime}(y) = \rho(\prime)$,
+satisfying $\forall y \in \mathit{Var} \setminus \vec{X}.\, \rho^\prime(y) = \rho(\prime)$
+and $\forall y \in \mathit{Var} \setminus \vec{Y}.\, \rho^{\prime\prime}(y) = \rho(\prime)$,
 and there exists some $l,j$ satisfying $1 \leq l \leq m$ and $1 \leq j \leq n$ such that
-$\rho^\prime \vDash P_l$ and $\rho^{\prime\prime} \vDash P_j$ and
+$(\mathcal{T}^*, \rho^\prime) \vDash P_l$ and $(\mathcal{T}^*, \rho^{\prime\prime}) \vDash P_j$ and
 \begin{equation*}
-    ([c_1,\ldots,c_k], \rho^\prime) \vDash \mathit{cfgheat}(L, \phi_l, R)
+    (\mathcal{T}^*, [c_1,\ldots,c_k], \rho^\prime) \vDash \mathit{cfgheat}(L, \phi_l, R)
 \end{equation*}
 and
 \begin{equation*}
-    ([c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k], \rho^{\prime\prime}) \vDash
+    (\mathcal{T}^*, [c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k], \rho^{\prime\prime}) \vDash
     \mathit{cfgheat}(L, \phi^\prime_j, R) \, ,
 \end{equation*}
 iff (by \Cref{def:matchinglogic} and \Cref{def:starextension})
 there exists some $\rho^\prime,\rho^{\prime\prime} \to \mathcal{T}^*$
-satisfying $\forall y \in \mathit{Var} \setminus X.\, \rho^\prime(y) = \rho(\prime)$
-and $\forall y \in \mathit{Var} \setminus y.\, \rho^{\prime\prime}(y) = \rho(\prime)$,
+satisfying $\forall y \in \mathit{Var} \setminus \vec{X}.\, \rho^\prime(y) = \rho(\prime)$
+and $\forall y \in \mathit{Var} \setminus \vec{Y}.\, \rho^{\prime\prime}(y) = \rho(\prime)$,
 and there exists some $l,j$ satisfying $1 \leq l \leq m$ and $1 \leq j \leq n$ such that
 \begin{itemize}
-    \item $\rho^\prime \vDash P_l$; and
-    \item $\rho^{\prime\prime} \vDash P_j$; and
-    \item $[c_1,\ldots,c_k] = \rho^\prime(L) ++ [\rho^\prime(\phi_l)] ++ \rho^\prime(R)$; and
-    \item $[c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k] = \rho^{\prime\prime}(L) ++ [\rho^{\prime\prime}(\phi_j)] ++ \rho^{\prime\prime}(R)$.
+    \item $(\mathcal{T}^*, \rho^\prime) \vDash P_l$; and
+    \item $(\mathcal{T}^*, \rho^{\prime\prime}) \vDash P_j$; and
+    \item $[c_1,\ldots,c_k] = \rho^\prime(L) \texttt{++} [\rho^\prime(\phi_l)] \texttt{++} \rho^\prime(R)$; and
+    \item $[c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k] = \rho^{\prime\prime}(L)
+    \texttt{++} [\rho^{\prime\prime}(\phi_j)] \texttt{++} \rho^{\prime\prime}(R)$.
 \end{itemize}
+Now, since $L$ and $R$ were chosen (in the definition of $\mathit{heat}$) to be fresh, we have that
+$L,R \not\in \vec{X}$ and $L,R \not\in \vec{Y}$. Therefore,
+$\rho^\prime(L) = \rho(L)$, $\rho^\prime(R) = \rho(R)$,
+$\rho^{\prime\prime}(L) = \rho(L)$, and $\rho^{\prime\prime}(R) = \rho(R)$.
+Also, since $\mathit{FV}(P_l) \subseteq \mathit{Var} \setminus \vec{X}$
+and $\mathit{FV}(P_j) \subseteq \mathit{Var} \setminus \vec{Y}$,
+by \Cref{lem:unusedVariables} we have $(\mathcal{T}^*, \rho^\prime) \vDash P_l \iff (\mathcal{T}^*, \rho) \vDash P_l$
+and $(\mathcal{T}^*, \rho^{\prime\prime}) \vDash P_j \iff (\mathcal{T}^*, \rho) \vDash P_j$.
+Therefore, we can change the goal to one saying that
+there exists some $\rho^\prime,\rho^{\prime\prime} \to \mathcal{T}^*$
+satisfying $\forall y \in \mathit{Var} \setminus \vec{X}.\, \rho^\prime(y) = \rho(\prime)$
+and $\forall y \in \mathit{Var} \setminus \vec{Y}.\, \rho^{\prime\prime}(y) = \rho(\prime)$,
+and there exists some $l,j$ satisfying $1 \leq l \leq m$ and $1 \leq j \leq n$ such that
+\begin{itemize}
+    \item $(\mathcal{T}^*, \rho) \vDash P_l$; and
+    \item $(\mathcal{T}^*, \rho) \vDash P_j$; and
+    \item $[c_1,\ldots,c_k] = \rho(L) \texttt{++} [\rho^\prime(\phi_l)] \texttt{++} \rho(R)$; and
+    \item $[c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k] = \rho(L) \texttt{++} [\rho^{\prime\prime}(\phi_j)] 
+    \texttt{++} \rho(R)$.
+\end{itemize}
+Let $\rho_0^\prime$ be a valuation such that
+
+Also, 
 Now, TODO.
 \end{proof}
 \begin{proof}
