@@ -426,7 +426,14 @@ We translate a language semantics into a semantics for lists of configurations a
     \end{equation*}
 \end{lemma}
 
-
+\begin{theorem}\label{thm:correspondence}
+\begin{equation*}
+\mathcal{S} \vDash_{\CRL} \Psi \iff \mathcal{S}^* \vDash_\RL \mathit{flatten}^\exists(\Psi)
+\end{equation*}
+\end{theorem}
+\begin{proof}[Proof of \Cref{thm:correspondence}]
+Admitted.
+\end{proof}
 
 \section{Proof System}
 
@@ -467,48 +474,6 @@ We define $\mathit{mergePatterns}$ and $\mathit{flatten}$ as follows:
     \item $\mathit{flatten}^\exists(A, \Psi^\prime) = \{ \mathit{flatten}^\exists(\Psi, \Psi^\prime) \mid \Psi \in A \}$, where $A$ is a set.
 \end{enumerate}
 \end{definition}
-
-\begin{lemma}\label{lem:constrain}
-  For any structureless pattens $P, Q, P_1, \ldots, P_m$
-  and any basic patterns $\phi_1, \ldots, \phi_m$,
-    \begin{align*}
-        \vDash_\ML & \mathit{constrain}(P \lor Q, \exists x_1,\ldots,x_{n}.\, (\phi_1 \land P_1) \lor \ldots (\phi_m \land P_{m})) \leftrightarrow
-        \\ & ( \mathit{constrain}(P, \exists x_1,\ldots,x_{n}.\, (\phi_1 \land P_1) \lor \ldots (\phi_m \land P_{m}))
-        \\ & \ \mathit{constrain}(Q, \exists x_1,\ldots,x_{n}.\, (\phi_1 \land P_1) \lor \ldots (\phi_m \land P_{m})) ) \, .
-    \end{align*}
-\end{lemma}
-\begin{proof}[Proof of \Cref{lem:constrain}]
-Admitted.
-\end{proof}
-
-\begin{lemma}\label{lem:doubleconstrain}
-    \begin{align*}
-        \vDash_\ML & \mathit{constrain}(P , \mathit{constrain}(Q, \varphi))
-        \leftrightarrow \mathit{constrain}(P \land Q, \varphi)
-    \end{align*}
-\end{lemma}
-\begin{proof}[Proof of \Cref{lem:doubleconstrain}]
-Admitted.
-\end{proof}
-
-\begin{lemma}\label{lem:constrainMergeComm}
-    \begin{align*}
-        \vDash_\ML & \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \mathit{constrain}(P, \varphi_i), \varphi_{i+1}, \ldots, \varphi_k) \\
-        & \leftrightarrow \mathit{constrain}(P, \mathit{mergePatterns(\varphi_1, \ldots, \varphi_k)})
-    \end{align*}
-\end{lemma}
-\begin{proof}[Proof of \Cref{lem:constrainMergeComm}]
-Admitted.
-\end{proof}
-
-\begin{lemma}\label{lem:constrainAsConjunction}
-    \begin{align*}
-        \vDash_{\ML} & \mathit{constrain}(P, \varphi) \leftrightarrow \varphi \land P
-    \end{align*}
-\end{lemma}
-\begin{proof}[Proof of \Cref{lem:constrainAsConjunction}]
-Admitted.
-\end{proof}
 
 \begin{figure}
     \centering
@@ -600,6 +565,20 @@ Admitted.
           \mathit{flatten}^\exists(\Psi, \Psi^\prime) 
     \end{align*}
 \end{lemma}
+
+\begin{theorem}[Proof system soundness]\label{thm:proofsystemSoundness}
+\begin{equation*}
+    \mathcal{S} \vdash_\CRL \Psi \Downarrow_{\emptyset,\emptyset} \Psi^\prime \implies
+    \mathcal{S} \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime
+\end{equation*}
+\end{theorem}
+\begin{proof}[Proof of \Cref{thm:proofsystemSoundness}]
+Assume $\mathcal{S} \vdash_\CRL \Psi \Downarrow_{\emptyset,\emptyset} \Psi^\prime$.
+By \Cref{lem:CRLalmostSoundness}, we have $\mathcal{S} \vdash_\RL \mathit{flatten}^\exists(\Psi, \Psi^\prime)$.
+By soundness of reachability logic, we have $\mathcal{S} \vDash_\RL \mathit{flatten}^\exists(\Psi, \Psi^\prime)$.
+By \Cref{thm:correspondence}, 
+we have $\mathcal{S} \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime$ and we are done.
+\end{proof}
 
 \section{Implementation}
 
@@ -898,6 +877,49 @@ that $c_{i} \Rightarrow_{\mathcal{S}} c^\prime_{i}$.
 The upwards implication is trivial; the downwards is as follows. If $i = i^\prime$, we are done.
 But otherwise, it would follow that $c_{i^\prime} \Rightarrow_{\mathcal{S}} c_{i^\prime}$,
 which contradicts \Cref{rem:noEmptySteps}.
+\end{proof}
+
+
+\begin{lemma}\label{lem:constrain}
+  For any structureless pattens $P, Q, P_1, \ldots, P_m$
+  and any basic patterns $\phi_1, \ldots, \phi_m$,
+    \begin{align*}
+        \vDash_\ML & \mathit{constrain}(P \lor Q, \exists x_1,\ldots,x_{n}.\, (\phi_1 \land P_1) \lor \ldots (\phi_m \land P_{m})) \leftrightarrow
+        \\ & ( \mathit{constrain}(P, \exists x_1,\ldots,x_{n}.\, (\phi_1 \land P_1) \lor \ldots (\phi_m \land P_{m}))
+        \\ & \ \mathit{constrain}(Q, \exists x_1,\ldots,x_{n}.\, (\phi_1 \land P_1) \lor \ldots (\phi_m \land P_{m})) ) \, .
+    \end{align*}
+\end{lemma}
+\begin{proof}[Proof of \Cref{lem:constrain}]
+Admitted.
+\end{proof}
+
+\begin{lemma}\label{lem:doubleconstrain}
+    \begin{align*}
+        \vDash_\ML & \mathit{constrain}(P , \mathit{constrain}(Q, \varphi))
+        \leftrightarrow \mathit{constrain}(P \land Q, \varphi)
+    \end{align*}
+\end{lemma}
+\begin{proof}[Proof of \Cref{lem:doubleconstrain}]
+Admitted.
+\end{proof}
+
+\begin{lemma}\label{lem:constrainMergeComm}
+    \begin{align*}
+        \vDash_\ML & \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \mathit{constrain}(P, \varphi_i), \varphi_{i+1}, \ldots, \varphi_k) \\
+        & \leftrightarrow \mathit{constrain}(P, \mathit{mergePatterns(\varphi_1, \ldots, \varphi_k)})
+    \end{align*}
+\end{lemma}
+\begin{proof}[Proof of \Cref{lem:constrainMergeComm}]
+Admitted.
+\end{proof}
+
+\begin{lemma}\label{lem:constrainAsConjunction}
+    \begin{align*}
+        \vDash_{\ML} & \mathit{constrain}(P, \varphi) \leftrightarrow \varphi \land P
+    \end{align*}
+\end{lemma}
+\begin{proof}[Proof of \Cref{lem:constrainAsConjunction}]
+Admitted.
 \end{proof}
 
 
