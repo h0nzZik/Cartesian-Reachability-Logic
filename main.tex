@@ -165,6 +165,10 @@ Also, validity of any pattern does not depend on those variables which the patte
         (\mathcal{T}, \gamma, \rho) \vdash \varphi \iff (\mathcal{T}, \gamma, \rho^\prime) \, .
     \end{equation*}
 \end{lemma}
+\begin{proof}
+Admitted.
+\end{proof}
+
 
 \subsection{One-path Reachability Logic}
 
@@ -399,7 +403,215 @@ We translate a language semantics into a semantics for lists of configurations a
         \rho^*(\pi) = \rho(\pi) \, .
     \end{equation}
 \end{lemma}
-\begin{proof}
+
+\begin{lemma}\label{lem:starConservative}
+    The star extension on matching logic models is conservative, in the following sense.
+    For any $\Sigma$-model $\mathcal{T}$, any $\mathcal{T}$-valuation $\rho$,
+    any $\Sigma$-sort $s$,
+    any $\gamma \in \mathcal{T}_s$,
+    and any matching logic $s$-pattern $\varphi$,
+    \begin{equation*}
+        (\mathcal{T}, \gamma, \rho) \vDash \varphi \iff (\mathcal{T}^*, \gamma, \rho^*) \vDash \varphi
+    \end{equation*}
+\end{lemma}
+
+\begin{lemma}\label{lem:compositeStep}
+    Let $\mathcal{S} = (\mathcal{T}, S)$ be a reachability-logic system over $(\Sigma, \mathit{Cfg})$.
+    For any $k \geq 1$, any configurations $c_1,\ldots,c_k, c^\prime \in \Tcfg$, and any $1 \leq i \leq k$,
+    we have
+    \begin{equation*}
+        c_i \Rightarrow_{\mathcal{S}} c^\prime
+                    \iff
+        [c_1,\ldots,c_k] \Rightarrow_{\mathcal{S}^*} [c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k]
+    \end{equation*}
+\end{lemma}
+
+
+
+\section{Proof System}
+
+The proof system derives claims of the shape
+$\mathcal{S}, \vdash_\CRL \Phi \Downarrow_{C,E} \Psi$,
+where $\Phi$,$\Psi$ are of the shape
+$\exists \vec{X}.\, (\varphi_1, \ldots, \varphi_k) \land P$,
+where $P$ is a structureless FOL formula
+and every $\varphi_i$ has the structure of
+$\exists x_1,\ldots,x_n. (\phi_1 \land P_1) \lor \ldots (\phi_m \land P_m)$.
+The idea is that $P$ is the part of the claim that relates variables from different components.
+Initially, the proof starts with the claim
+$\mathcal{S} \vdash_\CRL \Phi \Downarrow_{\emptyset, \emptyset} \Psi$.
+
+\begin{definition}
+We define $\mathit{mergePatterns}$ and $\mathit{flatten}$ as follows:
+\begin{enumerate}
+    \item
+    \begin{align*}
+     & \mathit{mergePatterns}(\exists \vec{X_1}.\, \bigvee_{i_{1}=1}^{m_1} (\phi_{i_1} \land P_{i_1}),
+     \ldots, \exists \vec{X_n}.\, \bigvee_{i_{n}=1}^{m_n} (\phi_{i_n} \land P_{i_n}))
+     \\ & = \exists \vec{X_1}\ldots\vec{X_n}.\, \bigvee_{i_{1}=1}^{m_1} \ldots \bigvee_{i_{n}=1}^{m_n}
+       (\mathit{mkList}(\phi_{1, i_1}, \ldots, \phi_{n, i_n}) \land (P_{1, i_1} \land \ldots \land P_{n, i_n}))
+    \end{align*}
+    \item
+        \begin{align*}
+            & \mathit{constrain}(P, \exists \vec{X^\prime} .\,
+            \bigvee_{i=1}^{m} (\phi^\prime_i \land P^\prime_i))
+            \\& = (\exists \vec{X^\prime}.\, (\phi^\prime_i \land (P^\prime_i \land P))
+    \end{align*}
+    (we assume that $\alpha$-renaming of (free) variables of $P$ happens implicitly);
+    \item
+        \begin{align*}
+            & \mathit{flatten}(\exists \vec{X}.\, (\varphi_1, \ldots, \varphi_k) \land P)
+            = \exists \vec{X}.\, \mathit{constrain}(P, \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_k))
+    \end{align*}
+    \item $\mathit{flatten}^\exists(\Psi, \Psi^\prime) = \mathit{flatten}(\Psi) \Rightarrow^\exists \mathit{flatten}(\Psi^\prime)$
+    \item $\mathit{flatten}^\exists(A, \Psi^\prime) = \{ \mathit{flatten}^\exists(\Psi, \Psi^\prime) \mid \Psi \in A \}$, where $A$ is a set.
+\end{enumerate}
+\end{definition}
+
+\begin{lemma}\label{lem:constrain}
+  For any structureless pattens $P, Q, P_1, \ldots, P_m$
+  and any basic patterns $\phi_1, \ldots, \phi_m$,
+    \begin{align*}
+        \vDash_\ML & \mathit{constrain}(P \lor Q, \exists x_1,\ldots,x_{n}.\, (\phi_1 \land P_1) \lor \ldots (\phi_m \land P_{m})) \leftrightarrow
+        \\ & ( \mathit{constrain}(P, \exists x_1,\ldots,x_{n}.\, (\phi_1 \land P_1) \lor \ldots (\phi_m \land P_{m}))
+        \\ & \ \mathit{constrain}(Q, \exists x_1,\ldots,x_{n}.\, (\phi_1 \land P_1) \lor \ldots (\phi_m \land P_{m})) ) \, .
+    \end{align*}
+\end{lemma}
+\begin{proof}[Proof of \Cref{lem:constrain}]
+Admitted.
+\end{proof}
+
+\begin{lemma}\label{lem:doubleconstrain}
+    \begin{align*}
+        \vDash_\ML & \mathit{constrain}(P , \mathit{constrain}(Q, \varphi))
+        \leftrightarrow \mathit{constrain}(P \land Q, \varphi)
+    \end{align*}
+\end{lemma}
+\begin{proof}[Proof of \Cref{lem:doubleconstrain}]
+Admitted.
+\end{proof}
+
+\begin{lemma}\label{lem:constrainMergeComm}
+    \begin{align*}
+        \vDash_\ML & \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \mathit{constrain}(P, \varphi_i), \varphi_{i+1}, \ldots, \varphi_k) \\
+        & \leftrightarrow \mathit{constrain}(P, \mathit{mergePatterns(\varphi_1, \ldots, \varphi_k)})
+    \end{align*}
+\end{lemma}
+\begin{proof}[Proof of \Cref{lem:constrainMergeComm}]
+Admitted.
+\end{proof}
+
+\begin{lemma}\label{lem:constrainAsConjunction}
+    \begin{align*}
+        \vDash_{\ML} & \mathit{constrain}(P, \varphi) \leftrightarrow \varphi \land P
+    \end{align*}
+\end{lemma}
+\begin{proof}[Proof of \Cref{lem:constrainAsConjunction}]
+Admitted.
+\end{proof}
+
+\begin{figure}
+    \centering
+    \begin{align*}
+    & \prftree[l]{Reflexivity}{\mathcal{S} \vdash_\CRL \Psi \Downarrow_{\emptyset,E} \Psi}
+    \end{align*}
+    \begin{align*}
+    & \prftree[l]{Axiom}{\Psi \in E}{\mathcal{S} \vdash_\CRL \Psi \Downarrow_{C,E} \Psi^\prime}
+    \end{align*}
+    \begin{align*}
+    & \prftree[l]{Reduce}
+      {(\mathcal{T}^*, S^* \cup \mathit{flatten}^\exists(E, \Psi^\prime)), \emptyset \vdash_\RL
+        \mathit{flatten}^\exists(\Psi, \Psi^\prime) }
+      {(\mathcal{T}, S) \vdash_\CRL \Psi \Downarrow_{C,E} \Psi^\prime}
+    \end{align*}
+    \begin{align*}
+    & \prftree[l]{Case}
+    { \prfStackPremises
+      {\mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P^\prime \Downarrow_{C, E} \Psi^\prime }
+      {\mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \psi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P^\prime \Downarrow_{C, E} \Psi^\prime }
+    }
+    {\mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, (\varphi_i \lor \psi_i), \varphi_{i+1}, \ldots, \varphi_k) \land P^\prime \Downarrow_{C, E} \Psi^\prime}
+    \end{align*}
+    \begin{align*}
+    & \prftree[l]{Step}
+    { \prfStackPremises
+       {\varphi \Rightarrow^\exists \varphi^\prime \in S}
+       {\mathcal{T} \vDash_\ML \varphi_i \leftrightarrow \mathit{constrain}(P^\prime, \varphi)}
+       {P^\prime \mbox{ is a structureless FOL formula}}
+       {  (\mathcal{T}, S) \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \mathit{constrain}(P^\prime, \varphi^\prime), \varphi_{i+1}, \ldots, \varphi_k)
+          \land P
+          \Downarrow_{\emptyset, (C \cup E)} \Psi^\prime
+      }
+    }
+    {(\mathcal{T}, S) \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P \Downarrow_{C, E} \Psi^\prime}
+    \end{align*}
+    \begin{align*}
+    & \prftree[l]{Circularity}
+      { \mathcal{S} \vdash_\CRL \Psi \Downarrow_{C \cup \{ \Psi \} , E} \Psi^\prime}
+      { \mathcal{S} \vdash_\CRL \Psi \Downarrow_{C, E} \Psi^\prime}
+    \end{align*}
+    \begin{align*}
+    & \prftree[l]{Conseq}
+      { \prfStackPremises
+        { (\mathcal{T}, S) \vdash_\CRL \Phi^\prime \Downarrow_{C, E} \Psi^\prime}
+        { \mathcal{T}^* \vDash_\ML \mathit{flatten}(\Phi) \rightarrow \mathit{flatten}(\Phi^\prime) }
+      }
+      { (\mathcal{T}, S) \vdash_\CRL \Phi \Downarrow_{C, E} \Psi^\prime}
+    \end{align*}
+%    \begin{align*}
+%    & \prftree[l]{Conseq2}
+%      { \prfStackPremises
+%        { (\mathcal{T}, S) \vdash_\CRL (\varphi_1, \ldots, \varphi_k) \land P \Downarrow_{C, E} \Psi^\prime}
+%        { \mathcal{T} \vDash_\ML \varphi_i \leftrightarrow \psi_i }
+%      }
+%      { (\mathcal{T}, S) \vdash_\CRL (\varphi_1^\prime, \ldots, \varphi_{i-1}, \varphi_{i}, \varphi_{i+1}, \ldots, \varphi_k^\prime) \land P^\prime \Downarrow_{C, E} \Psi^\prime}
+%    \end{align*}
+
+    %\begin{align*}
+    %& \prftree[l]{Abstract}
+      %{ \prfStackPremises
+        %{ X \not\in \mathit{FV}(\Psi^\prime, \varphi_1, \ldots, \varphi_{i-1}, \varphi_{i+1}, \ldots,\varphi_k)
+        %}
+        %{(\mathcal{T}, S) \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P \Downarrow_{C, E} \Psi^\prime}
+      %}
+      %{(\mathcal{T}, S) \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \exists X.\, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P \Downarrow_{C, E} \Psi^\prime}
+    %\end{align*}
+    
+    \begin{align*}
+    & \prftree[l]{Abstract}
+      { \prfStackPremises
+        { X \not\in \mathit{FV}(\Psi^\prime)
+        }
+        {(\mathcal{T}, S) \vdash_\CRL \exists \vec{Y}.\, (\varphi_1, \ldots, \varphi_k) \land P \Downarrow_{C, E} \Psi^\prime}
+      }
+      {(\mathcal{T}, S) \vdash_\CRL \exists X, \vec{Y}.\, (\varphi_1, \ldots, \varphi_k) \land P \Downarrow_{C, E} \Psi^\prime}
+    \end{align*}
+    \caption{Proof System}
+    \label{fig:my_label}
+\end{figure}
+
+
+
+\begin{lemma}\label{lem:CRLalmostSoundness}
+    \begin{align*}
+        & (\mathcal{T}, S) \vdash_\CRL \Psi \Downarrow_{C,E} \Psi^\prime \implies \\
+        &
+        (\mathcal{T}^*, S^* \cup \mathit{flatten}^\exists(E, \Psi^\prime)), \mathit{flatten}^\exists(C, \Psi^\prime) \vdash_\RL
+          \mathit{flatten}^\exists(\Psi, \Psi^\prime) 
+    \end{align*}
+\end{lemma}
+
+\section{Implementation}
+
+\bibliography{bibliography}
+\bibliographystyle{plain}
+
+\appendix
+
+\section{Proofs}
+
+
+\begin{proof}[Proof of \Cref{lem:rhoStarOfPi}]
     By induction on the term $\pi$.
     \begin{itemize}
         \item $\pi = v$ for $v \in \mathit{Var}$ - follows from the definition of $\rho^*$.
@@ -417,17 +629,8 @@ We translate a language semantics into a semantics for lists of configurations a
     \end{itemize}
 \end{proof}
 
-\begin{lemma}\label{lem:starConservative}
-    The star extension on matching logic models is conservative, in the following sense.
-    For any $\Sigma$-model $\mathcal{T}$, any $\mathcal{T}$-valuation $\rho$,
-    any $\Sigma$-sort $s$,
-    any $\gamma \in \mathcal{T}_s$,
-    and any matching logic $s$-pattern $\varphi$,
-    \begin{equation*}
-        (\mathcal{T}, \gamma, \rho) \vDash \varphi \iff (\mathcal{T}^*, \gamma, \rho^*) \vDash \varphi
-    \end{equation*}
-\end{lemma}
-\begin{proof}
+
+\begin{proof}[Proof of \Cref{lem:starConservative}]
 By induction on $\varphi$.
 \begin{itemize}
     \item $\varphi \equiv \pi$, where $\pi$ is a basic pattern (of sort $s$) - follows from \Cref{lem:rhoStarOfPi}.
@@ -485,17 +688,7 @@ By induction on $\varphi$.
  \end{itemize}
 \end{proof}
 
-\begin{lemma}\label{lem:compositeStep}
-    Let $\mathcal{S} = (\mathcal{T}, S)$ be a reachability-logic system over $(\Sigma, \mathit{Cfg})$.
-    For any $k \geq 1$, any configurations $c_1,\ldots,c_k, c^\prime \in \Tcfg$, and any $1 \leq i \leq k$,
-    we have
-    \begin{equation*}
-        c_i \Rightarrow_{\mathcal{S}} c^\prime
-                    \iff
-        [c_1,\ldots,c_k] \Rightarrow_{\mathcal{S}^*} [c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k]
-    \end{equation*}
-\end{lemma}
-\begin{proof}
+\begin{proof}[Proof of \Cref{lem:compositeStep}]
 We have
 \begin{equation*}
 [c_1,\ldots,c_k] \Rightarrow_{\mathcal{S}^*} [c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k]    
@@ -708,173 +901,7 @@ which contradicts \Cref{rem:noEmptySteps}.
 \end{proof}
 
 
-\section{Proof System}
-
-The proof system derives claims of the shape
-$\mathcal{S}, \vdash_\CRL \Phi \Downarrow_{C,E} \Psi$,
-where $\Phi$,$\Psi$ are of the shape
-$\exists \vec{X}.\, (\varphi_1, \ldots, \varphi_k) \land P$,
-where $P$ is a structureless FOL formula
-and every $\varphi_i$ has the structure of
-$\exists x_1,\ldots,x_n. (\phi_1 \land P_1) \lor \ldots (\phi_m \land P_m)$.
-The idea is that $P$ is the part of the claim that relates variables from different components.
-Initially, the proof starts with the claim
-$\mathcal{S} \vdash_\CRL \Phi \Downarrow_{\emptyset, \emptyset} \Psi$.
-
-\begin{definition}
-We define $\mathit{mergePatterns}$ and $\mathit{flatten}$ as follows:
-\begin{enumerate}
-    \item
-    \begin{align*}
-     & \mathit{mergePatterns}(\exists \vec{X_1}.\, \bigvee_{i_{1}=1}^{m_1} (\phi_{i_1} \land P_{i_1}),
-     \ldots, \exists \vec{X_n}.\, \bigvee_{i_{n}=1}^{m_n} (\phi_{i_n} \land P_{i_n}))
-     \\ & = \exists \vec{X_1}\ldots\vec{X_n}.\, \bigvee_{i_{1}=1}^{m_1} \ldots \bigvee_{i_{n}=1}^{m_n}
-       (\mathit{mkList}(\phi_{1, i_1}, \ldots, \phi_{n, i_n}) \land (P_{1, i_1} \land \ldots \land P_{n, i_n}))
-    \end{align*}
-    \item
-        \begin{align*}
-            & \mathit{constrain}(P, \exists \vec{X^\prime} .\,
-            \bigvee_{i=1}^{m} (\phi^\prime_i \land P^\prime_i))
-            \\& = (\exists \vec{X^\prime}.\, (\phi^\prime_i \land (P^\prime_i \land P))
-    \end{align*}
-    (we assume that $\alpha$-renaming of (free) variables of $P$ happens implicitly);
-    \item
-        \begin{align*}
-            & \mathit{flatten}(\exists \vec{X}.\, (\varphi_1, \ldots, \varphi_k) \land P)
-            = \exists \vec{X}.\, \mathit{constrain}(P, \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_k))
-    \end{align*}
-    \item $\mathit{flatten}^\exists(\Psi, \Psi^\prime) = \mathit{flatten}(\Psi) \Rightarrow^\exists \mathit{flatten}(\Psi^\prime)$
-    \item $\mathit{flatten}^\exists(A, \Psi^\prime) = \{ \mathit{flatten}^\exists(\Psi, \Psi^\prime) \mid \Psi \in A \}$, where $A$ is a set.
-\end{enumerate}
-\end{definition}
-
-\begin{lemma}\label{lem:constrain}
-  For any structureless pattens $P, Q, P_1, \ldots, P_m$
-  and any basic patterns $\phi_1, \ldots, \phi_m$,
-    \begin{align*}
-        \vDash_\ML & \mathit{constrain}(P \lor Q, \exists x_1,\ldots,x_{n}.\, (\phi_1 \land P_1) \lor \ldots (\phi_m \land P_{m})) \leftrightarrow
-        \\ & ( \mathit{constrain}(P, \exists x_1,\ldots,x_{n}.\, (\phi_1 \land P_1) \lor \ldots (\phi_m \land P_{m}))
-        \\ & \ \mathit{constrain}(Q, \exists x_1,\ldots,x_{n}.\, (\phi_1 \land P_1) \lor \ldots (\phi_m \land P_{m})) ) \, .
-    \end{align*}
-\end{lemma}
-\begin{proof}
-Admitted.
-\end{proof}
-
-\begin{lemma}\label{lem:doubleconstrain}
-    \begin{align*}
-        \vDash_\ML & \mathit{constrain}(P , \mathit{constrain}(Q, \varphi))
-        \leftrightarrow \mathit{constrain}(P \land Q, \varphi)
-    \end{align*}
-\end{lemma}
-\begin{proof}
-Admitted.
-\end{proof}
-
-\begin{lemma}\label{lem:constrainMergeComm}
-    \begin{align*}
-        \vDash_\ML & \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \mathit{constrain}(P, \varphi_i), \varphi_{i+1}, \ldots, \varphi_k) \\
-        & \leftrightarrow \mathit{constrain}(P, \mathit{mergePatterns(\varphi_1, \ldots, \varphi_k)})
-    \end{align*}
-\end{lemma}
-
-\begin{lemma}\label{lem:constrainAsConjunction}
-    \begin{align*}
-        \vDash_{\ML} & \mathit{constrain}(P, \varphi) \leftrightarrow \varphi \land P
-    \end{align*}
-\end{lemma}
-
-\begin{figure}
-    \centering
-    \begin{align*}
-    & \prftree[l]{Reflexivity}{\mathcal{S} \vdash_\CRL \Psi \Downarrow_{\emptyset,E} \Psi}
-    \end{align*}
-    \begin{align*}
-    & \prftree[l]{Axiom}{\Psi \in E}{\mathcal{S} \vdash_\CRL \Psi \Downarrow_{C,E} \Psi^\prime}
-    \end{align*}
-    \begin{align*}
-    & \prftree[l]{Reduce}
-      {(\mathcal{T}^*, S^* \cup \mathit{flatten}^\exists(E, \Psi^\prime)), \emptyset \vdash_\RL
-        \mathit{flatten}^\exists(\Psi, \Psi^\prime) }
-      {(\mathcal{T}, S) \vdash_\CRL \Psi \Downarrow_{C,E} \Psi^\prime}
-    \end{align*}
-    \begin{align*}
-    & \prftree[l]{Case}
-    { \prfStackPremises
-      {\mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P^\prime \Downarrow_{C, E} \Psi^\prime }
-      {\mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \psi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P^\prime \Downarrow_{C, E} \Psi^\prime }
-    }
-    {\mathcal{S} \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, (\varphi_i \lor \psi_i), \varphi_{i+1}, \ldots, \varphi_k) \land P^\prime \Downarrow_{C, E} \Psi^\prime}
-    \end{align*}
-    \begin{align*}
-    & \prftree[l]{Step}
-    { \prfStackPremises
-       {\varphi \Rightarrow^\exists \varphi^\prime \in S}
-       {\mathcal{T} \vDash_\ML \varphi_i \leftrightarrow \mathit{constrain}(P^\prime, \varphi)}
-       {P^\prime \mbox{ is a structureless FOL formula}}
-       {  (\mathcal{T}, S) \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \mathit{constrain}(P^\prime, \varphi^\prime), \varphi_{i+1}, \ldots, \varphi_k)
-          \land P
-          \Downarrow_{\emptyset, (C \cup E)} \Psi^\prime
-      }
-    }
-    {(\mathcal{T}, S) \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P \Downarrow_{C, E} \Psi^\prime}
-    \end{align*}
-    \begin{align*}
-    & \prftree[l]{Circularity}
-      { \mathcal{S} \vdash_\CRL \Psi \Downarrow_{C \cup \{ \Psi \} , E} \Psi^\prime}
-      { \mathcal{S} \vdash_\CRL \Psi \Downarrow_{C, E} \Psi^\prime}
-    \end{align*}
-    \begin{align*}
-    & \prftree[l]{Conseq}
-      { \prfStackPremises
-        { (\mathcal{T}, S) \vdash_\CRL \Phi^\prime \Downarrow_{C, E} \Psi^\prime}
-        { \mathcal{T}^* \vDash_\ML \mathit{flatten}(\Phi) \rightarrow \mathit{flatten}(\Phi^\prime) }
-      }
-      { (\mathcal{T}, S) \vdash_\CRL \Phi \Downarrow_{C, E} \Psi^\prime}
-    \end{align*}
-%    \begin{align*}
-%    & \prftree[l]{Conseq2}
-%      { \prfStackPremises
-%        { (\mathcal{T}, S) \vdash_\CRL (\varphi_1, \ldots, \varphi_k) \land P \Downarrow_{C, E} \Psi^\prime}
-%        { \mathcal{T} \vDash_\ML \varphi_i \leftrightarrow \psi_i }
-%      }
-%      { (\mathcal{T}, S) \vdash_\CRL (\varphi_1^\prime, \ldots, \varphi_{i-1}, \varphi_{i}, \varphi_{i+1}, \ldots, \varphi_k^\prime) \land P^\prime \Downarrow_{C, E} \Psi^\prime}
-%    \end{align*}
-
-    %\begin{align*}
-    %& \prftree[l]{Abstract}
-      %{ \prfStackPremises
-        %{ X \not\in \mathit{FV}(\Psi^\prime, \varphi_1, \ldots, \varphi_{i-1}, \varphi_{i+1}, \ldots,\varphi_k)
-        %}
-        %{(\mathcal{T}, S) \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P \Downarrow_{C, E} \Psi^\prime}
-      %}
-      %{(\mathcal{T}, S) \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \exists X.\, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P \Downarrow_{C, E} \Psi^\prime}
-    %\end{align*}
-    
-    \begin{align*}
-    & \prftree[l]{Abstract}
-      { \prfStackPremises
-        { X \not\in \mathit{FV}(\Psi^\prime)
-        }
-        {(\mathcal{T}, S) \vdash_\CRL \exists \vec{Y}.\, (\varphi_1, \ldots, \varphi_k) \land P \Downarrow_{C, E} \Psi^\prime}
-      }
-      {(\mathcal{T}, S) \vdash_\CRL \exists X, \vec{Y}.\, (\varphi_1, \ldots, \varphi_k) \land P \Downarrow_{C, E} \Psi^\prime}
-    \end{align*}
-    \caption{Proof System}
-    \label{fig:my_label}
-\end{figure}
-
-
-
-\begin{lemma}
-    \begin{align*}
-        & (\mathcal{T}, S) \vdash_\CRL \Psi \Downarrow_{C,E} \Psi^\prime \implies \\
-        &
-        (\mathcal{T}^*, S^* \cup \mathit{flatten}^\exists(E, \Psi^\prime)), \mathit{flatten}^\exists(C, \Psi^\prime) \vdash_\RL
-          \mathit{flatten}^\exists(\Psi, \Psi^\prime) 
-    \end{align*}
-\end{lemma}
-\begin{proof}
+\begin{proof}[Proof of \Cref{lem:CRLalmostSoundness}]
 By induction on the structure of the CRL proof. TODO
 \begin{enumerate}
     \item If the proof ends with \emph{Reduce}, then we are done, since $\mathit{flatten}^\exists(\emptyset, \psi^\prime) = \emptyset$.
@@ -1178,13 +1205,5 @@ By induction on the structure of the CRL proof. TODO
     
     \end{enumerate}
 \end{proof}
-
-\section{Implementation}
-
-\bibliography{bibliography}
-\bibliographystyle{plain}
-
-\appendix
-
 
 \end{document}
