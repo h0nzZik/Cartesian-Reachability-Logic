@@ -428,10 +428,19 @@ We translate a language semantics into a semantics for lists of configurations a
 
 \begin{theorem}\label{thm:correspondence}
 \begin{equation*}
-\mathcal{S} \vDash_{\CRL} \Psi \iff \mathcal{S}^* \vDash_\RL \mathit{flatten}^\exists(\Psi)
+\mathcal{S} \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime \iff \mathcal{S}^* \vDash_\RL \mathit{flatten}^\exists(\Psi, \Psi^\prime)
 \end{equation*}
 \end{theorem}
 \begin{proof}[Proof of \Cref{thm:correspondence}]
+We prove each implication separately.
+\begin{enumerate}
+    \item For the left-to-right implication, we assume
+    \begin{tcolorbox}
+    TODO
+    \end{tcolorbox}
+    and have to 
+\end{enumerate}
+
 Admitted.
 \end{proof}
 
@@ -669,16 +678,22 @@ By induction on $\varphi$.
 
 \begin{proof}[Proof of \Cref{lem:compositeStep}]
 We have
+\begin{tcolorbox}
 \begin{equation*}
 [c_1,\ldots,c_k] \Rightarrow_{\mathcal{S}^*} [c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k]    
 \end{equation*}
-iff (by \Cref{def:basics}) there exists a rule $\varphi \Rightarrow^\exists \varphi^\prime \in S^*$
+\end{tcolorbox}
+iff (by \Cref{def:basics})
+\begin{tcolorbox}
+there exists a rule $\varphi \Rightarrow^\exists \varphi^\prime \in S^*$
 and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
 $(\mathcal{T}^*, [c_1,\ldots,c_k], \rho) \vDash \varphi$
 and $(\mathcal{T}^*, [c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k], \rho) \vDash \varphi^\prime$,
+\end{tcolorbox}
 iff (by
 %\Cref{def:matchinglogic} and
 \Cref{rem:shapeOfReachabilityRules} and \Cref{def:starextension})
+\begin{tcolorbox}
 there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
 and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
 \begin{equation*}
@@ -689,7 +704,9 @@ and
     (\mathcal{T}^*, [c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k], \rho) \vDash
     \exists \vec{Y}.\, \bigvee_{j=1}^{n}(\mathit{cfgheat}(L, \phi^\prime_j, R) \land P^\prime_j) \, ,
 \end{equation*}
+\end{tcolorbox}
 iff (by \Cref{def:matchinglogic} and \Cref{lem:structurelessSemantics})
+\begin{tcolorbox}
 there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
 and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
 there exists some $\rho^\prime,\rho^{\prime\prime} \to \mathcal{T}^*$
@@ -705,7 +722,9 @@ and
     (\mathcal{T}^*, [c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k], \rho^{\prime\prime}) \vDash
     \mathit{cfgheat}(L, \phi^\prime_j, R) \, ,
 \end{equation*}
+\end{tcolorbox}
 iff (by \Cref{def:matchinglogic} and \Cref{def:starextension})
+\begin{tcolorbox}
 there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
 and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
 there exists some $\rho^\prime,\rho^{\prime\prime} \to \mathcal{T}^*$
@@ -719,6 +738,7 @@ and there exists some $l,j$ satisfying $1 \leq l \leq m$ and $1 \leq j \leq n$ s
     \item $[c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k] = \rho^{\prime\prime}(L)
     \texttt{++} [\rho^{\prime\prime}(\phi_j)] \texttt{++} \rho^{\prime\prime}(R)$.
 \end{itemize}
+\end{tcolorbox}
 Now, since $L$ and $R$ were chosen (in the definition of $\mathit{heat}$) to be fresh, we have that
 $L,R \not\in \vec{X}$ and $L,R \not\in \vec{Y}$. Therefore,
 $\rho^\prime(L) = \rho(L)$, $\rho^\prime(R) = \rho(R)$,
@@ -728,6 +748,7 @@ and $\mathit{FV}(P_j) \subseteq \mathit{Var} \setminus \vec{Y}$,
 by \Cref{lem:unusedVariables} we have $(\mathcal{T}^*, \rho^\prime) \vDash P_l \iff (\mathcal{T}^*, \rho) \vDash P_l$
 and $(\mathcal{T}^*, \rho^{\prime\prime}) \vDash P_j \iff (\mathcal{T}^*, \rho) \vDash P_j$.
 Therefore, we can change the goal to one saying that
+\begin{tcolorbox}
 there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
 and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
 there exists some $\rho^\prime,\rho^{\prime\prime} \to \mathcal{T}^*$
@@ -741,6 +762,7 @@ and there exists some $l,j$ satisfying $1 \leq l \leq m$ and $1 \leq j \leq n$ s
     \item $[c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k] = \rho(L) \texttt{++} [\rho^{\prime\prime}(\phi_j)] 
     \texttt{++} \rho(R)$.
 \end{itemize}
+\end{tcolorbox}
 Suppose we have such valuations $\rho^\prime$ and $\rho^{\prime\prime}$.
 We can surely construct valuations $\rho_0^\prime$ and $\rho_0^{\prime\prime}$ by letting
 \begin{equation*}
@@ -769,6 +791,7 @@ Similarly, we have
 $((\rho_0^{\prime\prime})^*)(v) = \rho^{\prime\prime}(v)$
 for any $v \in \mathit{FV}(\phi_j)$.
 Therefore, we can use \Cref{lem:unusedVariables} to change the goal to one saying that
+\begin{tcolorbox}
 there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
 and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
 there exists some $\rho_0^\prime,\rho_0^{\prime\prime} \to \mathcal{T}$
@@ -783,7 +806,9 @@ and there exists some $l,j$ satisfying $1 \leq l \leq m$ and $1 \leq j \leq n$ s
     \texttt{++} [((\rho_0^{\prime\prime})^*)(\phi_j)] 
     \texttt{++} \rho(R)$.
 \end{itemize}
+\end{tcolorbox}
 Now, we use \Cref{lem:starConservative} and definition of starred valuation to change the goal to one saying that
+\begin{tcolorbox}
 there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
 and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
 there exists some $\rho_0^\prime,\rho_0^{\prime\prime} \to \mathcal{T}$
@@ -798,8 +823,10 @@ and there exists some $l,j$ satisfying $1 \leq l \leq m$ and $1 \leq j \leq n$ s
     \texttt{++} [\rho_0^{\prime\prime}(\phi_j)] 
     \texttt{++} \rho(R)$.
 \end{itemize}
+\end{tcolorbox}
 Now, by list reasoning, this is equivalent to
 saying that
+\begin{tcolorbox}
 there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
 and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
 there exists some $\rho_0^\prime,\rho_0^{\prime\prime} \to \mathcal{T}$
@@ -818,6 +845,7 @@ such that
     \texttt{++} [\rho_0^{\prime\prime}(\phi_j)] 
     \texttt{++} \rho(R)$.
 \end{itemize}
+\end{tcolorbox}
 Now, let us define $c^\prime_{z}$ by
 \begin{equation*}
 c^\prime_{z} =
@@ -827,6 +855,7 @@ c^\prime_{z} =
     \end{cases}
 \end{equation*}
 after which the goal is equivalent to saying that
+\begin{tcolorbox}
 there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
 and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
 there exists some $\rho_0^\prime,\rho_0^{\prime\prime} \to \mathcal{T}$
@@ -844,8 +873,10 @@ and there exists some $i^\prime$ satisfying $1 \leq i^\prime \leq k$
     \item $c^\prime_{i^\prime} = \rho_0^{\prime\prime}(\phi_j)$; and
     \item $[c^\prime_{i^\prime+1},\ldots,c^\prime_k] = \rho(R)$.
 \end{itemize}
+\end{tcolorbox}
 Since $L,R$ were fresh, they do not occur in $\phi_l$ nor in $\phi_j$.
 Therefore, using \Cref{lem:unusedVariables}, the can equivalently say that
+\begin{tcolorbox}
 there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
 and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
 there exists some $\rho_0^\prime,\rho_0^{\prime\prime} \to \mathcal{T}$
@@ -859,9 +890,11 @@ and there exists some $i^\prime$ satisfying $1 \leq i^\prime \leq k$
     \item $c_{i^\prime} = \rho_0^\prime(\phi_l)$; and
     \item $c^\prime_{i^\prime} = \rho_0^{\prime\prime}(\phi_j)$.
 \end{itemize}
+\end{tcolorbox}
 (The downwards implication is trivial, as it is only removing constraints; the upwards implication
 is from the fact that we can always choose a valuation $\rho$ satisfying the constraints.)
 But that is equivalent (\Cref{def:matchinglogic}) to saying that 
+\begin{tcolorbox}
 there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
 and there exists some $i^\prime$ satisfying $1 \leq i^\prime \leq k$
 and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
@@ -870,10 +903,17 @@ and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
     \item $(\mathcal{T}, c^\prime_{i^\prime}, \rho) \vDash \exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi_j \land P_j)$
     .
 \end{itemize}
-which is equivalent to saying that there exists some $i^\prime$ satisfying $1 \leq i^\prime \leq k$
+\end{tcolorbox}
+which is equivalent to saying that
+\begin{tcolorbox}
+there exists some $i^\prime$ satisfying $1 \leq i^\prime \leq k$
 such that $c_{i^\prime} \Rightarrow_{\mathcal{S}} c^\prime_{i^\prime}$,
+\end{tcolorbox}
 which is almost equivalent to the left side of the equivalence we want to prove:
-that $c_{i} \Rightarrow_{\mathcal{S}} c^\prime_{i}$.
+that
+\begin{tcolorbox}
+$c_{i} \Rightarrow_{\mathcal{S}} c^\prime_{i}$.
+\end{tcolorbox}
 The upwards implication is trivial; the downwards is as follows. If $i = i^\prime$, we are done.
 But otherwise, it would follow that $c_{i^\prime} \Rightarrow_{\mathcal{S}} c_{i^\prime}$,
 which contradicts \Cref{rem:noEmptySteps}.
