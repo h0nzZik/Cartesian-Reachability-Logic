@@ -434,24 +434,6 @@ We translate a language semantics into a semantics for lists of configurations a
     \end{equation*}
 \end{lemma}
 
-\begin{theorem}\label{thm:correspondence}
-\begin{equation*}
-\mathcal{S} \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime \iff \mathcal{S}^* \vDash_\RL \mathit{flatten}^\exists(\Psi, \Psi^\prime)
-\end{equation*}
-\end{theorem}
-
-\section{Proof System}
-
-The proof system derives claims of the shape
-$\mathcal{S}, \vdash_\CRL \Phi \Downarrow_{C,E} \Psi$,
-where $\Phi$,$\Psi$ are of the shape
-$\exists \vec{X}.\, (\varphi_1, \ldots, \varphi_k) \land P$,
-where $P$ is a structureless FOL formula
-and every $\varphi_i$ has the structure of
-$\exists x_1,\ldots,x_n. (\phi_1 \land P_1) \lor \ldots (\phi_m \land P_m)$.
-The idea is that $P$ is the part of the claim that relates variables from different components.
-Initially, the proof starts with the claim
-$\mathcal{S} \vdash_\CRL \Phi \Downarrow_{\emptyset, \emptyset} \Psi$.
 
 \begin{definition}
 We define $\mathit{mergePatterns}$ and $\mathit{flatten}$ as follows:
@@ -479,6 +461,26 @@ We define $\mathit{mergePatterns}$ and $\mathit{flatten}$ as follows:
     \item $\mathit{flatten}^\exists(A, \Psi^\prime) = \{ \mathit{flatten}^\exists(\Psi, \Psi^\prime) \mid \Psi \in A \}$, where $A$ is a set.
 \end{enumerate}
 \end{definition}
+
+\begin{theorem}\label{thm:correspondence}
+\begin{equation*}
+\mathcal{S} \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime \iff \mathcal{S}^* \vDash_\RL \mathit{flatten}^\exists(\Psi, \Psi^\prime)
+\end{equation*}
+\end{theorem}
+
+\section{Proof System}
+
+The proof system derives claims of the shape
+$\mathcal{S}, \vdash_\CRL \Phi \Downarrow_{C,E} \Psi$,
+where $\Phi$,$\Psi$ are of the shape
+$\exists \vec{X}.\, (\varphi_1, \ldots, \varphi_k) \land P$,
+where $P$ is a structureless FOL formula
+and every $\varphi_i$ has the structure of
+$\exists x_1,\ldots,x_n. (\phi_1 \land P_1) \lor \ldots (\phi_m \land P_m)$.
+The idea is that $P$ is the part of the claim that relates variables from different components.
+Initially, the proof starts with the claim
+$\mathcal{S} \vdash_\CRL \Phi \Downarrow_{\emptyset, \emptyset} \Psi$.
+
 
 \begin{figure}
     \centering
@@ -938,8 +940,10 @@ We prove each implication separately.
 \begin{enumerate}
     \item For the left-to-right implication, we
     let $\mathcal{S} = (\mathcal{T}, S)$
-    and $\Psi = (\varphi_1,\ldots,\varphi_k) \land \varphi$
-    and $\Psi^\prime = (\varphi_1^\prime,\ldots,\varphi_k^\prime) \land \varphi^\prime$
+    and $\Psi \equiv  \exists \vec{X}.\, (\varphi_1,\ldots,\varphi_k) \land P$
+    and $\Psi^\prime \equiv \exists \vec{Y}.\, (\varphi_1^\prime,\ldots,\varphi_k^\prime) \land P^\prime$,
+    where $\varphi_j \equiv \exists \vec{X}_j.\, \bigvee_{i_j = 1}^{m_j} (\phi_{i_j} \land P_{i_j})$,
+    $\varphi^\prime_j \equiv \exists \vec{Y}_j.\, \bigvee_{i_j = 1}^{m^\prime_j} (\phi^\prime_{i_j} \land P^\prime_{i_j})$,
     and assume (i) that
     \begin{proofenv}
     for all configurations $c_1,\ldots,c_k \in \Tcfg$
@@ -959,29 +963,29 @@ We prove each implication separately.
     for every $C \in \mathcal{T}^*_{\mathit{Cfg}^*}$
     such that $C$ terminates in $(\mathcal{T}^*_{\mathit{Cfg}^*}, \Rightarrow_{\mathcal{S}^*})$
     and for any valuation $\rho : \Var \to \mathcal{T}^*$
-    such that $(\mathcal{T}^*, C, \rho) \vDash \varphi$,
+    such that $(\mathcal{T}^*, C, \rho) \vDash \mathit{flatten}(\Psi)$,
     there exists some $C^\prime \in \mathcal{T}^*_{\mathit{Cfg}^*}$
     such that
     $C \Rightarrow^{*}_{\mathcal{S}^*} C^\prime$
-    and $(\mathcal{T}^*, C^\prime, \rho) \vDash \varphi^\prime$.
+    and $(\mathcal{T}^*, C^\prime, \rho) \vDash \mathit{flatten}(\Psi^\prime)$.
     \end{proofenv}
     Let us then have some $C \in \mathcal{T}^*_{\mathit{Cfg}^*}$
     such that $C$ terminates in $(\mathcal{T}^*_{\mathit{Cfg}^*}, \Rightarrow_{\mathcal{S}^*})$,
     and a valuation $\rho : \Var \to \mathcal{T}^*$
-    such that $(\mathcal{T}^*, C, \rho) \vDash \varphi$.
+    such that $(\mathcal{T}^*, C, \rho) \vDash \mathit{flatten}(\Psi)$.
     We have to prove that
     \begin{proofenv}
     there exists some $C^\prime \in \mathcal{T}^*_{\mathit{Cfg}^*}$
     such that
     $C \Rightarrow^{*}_{\mathcal{S}^*} C^\prime$
-    and $(\mathcal{T}^*, C^\prime, \rho) \vDash \varphi^\prime$.
+    and $(\mathcal{T}^*, C^\prime, \rho) \vDash \mathit{flatten}(\Psi^\prime)$.
     \end{proofenv}
     We will proceed in five steps:
     \begin{enumerate}
         \item We prove that there exists $c_1,\ldots,c_k$ such that $C = [c_1,\ldots, c_k]$.
         \item We prove that $c_1,\ldots,c_k$ are terminating.
-        \item We prove the premise of the assumption (i): that $(\mathcal{T}, c_1, \rho) \vDash \varphi_1 \land \varphi$
-        and \ldots and $(\mathcal{T}, c_k, \rho) \vDash \varphi_k \land \varphi$.
+        \item We prove the premise of the assumption (i): that $(\mathcal{T}, c_1, \rho) \vDash \varphi_1 \land P$
+        and \ldots and $(\mathcal{T}, c_k, \rho) \vDash \varphi_k \land P$.
         \item From the assumption (i) we get the appropriate $c_1^\prime,\ldots,c_k^\prime$.
         \item We let $C^\prime := [c_1^\prime,\ldots,c_k^\prime]$ and prove that it is reachable from $C$,
         as well as that it satisfies the flattened $\Psi^\prime$.
