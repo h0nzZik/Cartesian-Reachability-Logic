@@ -1112,6 +1112,33 @@ By induction on $k$.
 \end{itemize}
 \end{proof}
 
+\begin{lemma}\label{lem:terminationComposite}
+    For any reachability system $\mathcal{S} = (\mathcal{T}, S)$, any $C \in \mathcal{T}^*_{\mathit{Cfg}^*}$,
+    and any $c_1,\ldots,c_k \in \Tcfg$ such that
+    $C = [c_1,\ldots,c_k]$, $C$ is terminating in $(\mathcal{T}^*_{\mathit{Cfg}^*}, \Rightarrow_{S^*})$
+    iff for every $j \in \{ 1, \ldots, k \}$, $c_j$ is terminating in $(\Tcfg, \Rightarrow_S)$.
+\end{lemma}
+\begin{proof}[Proof of \Cref{lem:terminationComposite}]
+We prove both implications separately, by contraposition.
+\begin{itemize}
+    \item Suppose some $c_j$ is not terminating in $(\Tcfg, \Rightarrow_S)$.
+    In other words, there exists some infinite $\Rightarrow_{\mathcal{S}}$-sequence
+    $c_j = d(0) \Rightarrow_{\mathcal{S}} d(1) \Rightarrow_{\mathcal{S}} d(2) \Rightarrow_{\mathcal{S}} \ldots$.
+    Then $C = [c_1,\ldots,c_{j-1}, d(0), c_{j+1}, \ldots, c_k] \Rightarrow_{\mathcal{S}^*}
+    [c_1,\ldots,c_{j-1}, d(1), c_{j+1}, \ldots, c_k] \Rightarrow_{\mathcal{S}^*} \ldots$
+    is (by \Cref{lem:compositeStep}) an infinite $\Rightarrow_{\mathcal{S}^*}$-sequence.
+    Therefore, $C$ is not terminating in $(\mathcal{T}^*_{\mathit{Cfg}^*}, \Rightarrow_{S^*})$.
+    \item Suppose $C$ is not terminating in $(\mathcal{T}^*_{\mathit{Cfg}^*}, \Rightarrow_{S^*})$.
+    In other words, there exists an infinite sequence $C = D(0) \Rightarrow_{\mathcal{S}^*} D(1) \Rightarrow_{\mathcal{S}^*} \ldots$.
+    Then there exists a component $j$ of the sequence which changes infinitely often in the sequence;
+    that is, there exists a function $f : \mathbb{N}_0 \to \mathbb{N}_0$ satisfying $f(0) = 0$
+    such that for every $n \in \mathbb{N}_0$,
+    $D(f(n))[j] \not = D(f(n)+1)[i]$.
+    But then (by \Cref{lem:compositeStep}), $D(f(0))[j] \Rightarrow_S D(f(1))[j] \Rightarrow_S D(f(2))[j] \Rightarrow_S$
+    is a $(\Tcfg, \Rightarrow_S)$ sequence witnessing the non-termination of $D(f(0))[j] = c_j$.
+\end{itemize}
+Admitted.
+\end{proof}
 
 \begin{proof}[Proof of \Cref{thm:correspondence}]
 We prove each implication separately.
