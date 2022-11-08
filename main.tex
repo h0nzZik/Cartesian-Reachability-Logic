@@ -436,8 +436,10 @@ We translate a language semantics into a semantics for lists of configurations a
 
 
 \begin{definition}
-We define $\mathit{mergePatterns}$ and $\mathit{flatten}$ as follows:
+We define $\mathit{mkList}$, $\mathit{mergePatterns}$, and $\mathit{flatten}$ as follows:
 \begin{enumerate}
+    \item $\mathit{mkList}(\phi) = \mathit{cfgitem}(\phi)$
+    \item $\mathit{mkList}(\phi_1, \ldots, \phi_k) = \mathit{cfgconcat}(\mathit{cfgitem}(\phi), \mathit{mkList}(\phi_2, \ldots, \phi_k))$ for $k > 1$
     \item
     \begin{align*}
      & \mathit{mergePatterns}(\exists \vec{X_1}.\, \bigvee_{i_{1}=1}^{m_1} (\phi_{i_1} \land P_{i_1}),
@@ -932,6 +934,17 @@ $c_{i} \Rightarrow_{\mathcal{S}} c^\prime_{i}$.
 The upwards implication is trivial; the downwards is as follows. If $i = i^\prime$, we are done.
 But otherwise, it would follow that $c_{i^\prime} \Rightarrow_{\mathcal{S}} c_{i^\prime}$,
 which contradicts \Cref{rem:noEmptySteps}.
+\end{proof}
+
+\begin{lemma}
+$(\mathcal{T}^*, C, \rho) \vDash \mathit{mkList}(\phi_1,\ldots,\phi_k)$
+iff there exists $c_1, \ldots, c_k \in \Tcfg$ and $\rho^\prime : \mathit{Var} \to \mathcal{T}$ such that
+$\rho^\prime(v) = \rho(v)$ for any $v \in \mathit{FV}(\mathit{mkList}(\phi_1, \ldots, \phi_k))$,
+$C = [c_1, \ldots, c_k]$,
+and $(\mathcal{T}, c_1, \rho^\prime) \vDash \phi_1$ and \ldots and $(\mathcal{T}, c_k, \rho^\prime) \vDash \phi_k$.
+\end{lemma}
+\begin{proof}
+Admitted.
 \end{proof}
 
 
