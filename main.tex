@@ -170,7 +170,7 @@ Also, validity of any pattern does not depend on those variables which the patte
     Then for any two $\mathcal{T}$-valuations $\rho,\rho^\prime$
     satisfying $\rho^\prime(y) = \rho(y)$ for any $y \in \mathit{FV}(\varphi)$,
     \begin{equation*}
-        (\mathcal{T}, \gamma, \rho) \vdash \varphi \iff (\mathcal{T}, \gamma, \rho^\prime) \, .
+        (\mathcal{T}, \gamma, \rho) \vDash \varphi \iff (\mathcal{T}, \gamma, \rho^\prime) \vDash \varphi \, .
     \end{equation*}
 \end{lemma}
 \begin{proof}
@@ -938,13 +938,178 @@ which contradicts \Cref{rem:noEmptySteps}.
 
 \begin{lemma}
 $(\mathcal{T}^*, C, \rho) \vDash \mathit{mkList}(\phi_1,\ldots,\phi_k)$
-iff there exists $c_1, \ldots, c_k \in \Tcfg$ and $\rho^\prime : \mathit{Var} \to \mathcal{T}$ such that
-$\rho^\prime(v) = \rho(v)$ for any $v \in \mathit{FV}(\mathit{mkList}(\phi_1, \ldots, \phi_k))$,
-$C = [c_1, \ldots, c_k]$,
-and $(\mathcal{T}, c_1, \rho^\prime) \vDash \phi_1$ and \ldots and $(\mathcal{T}, c_k, \rho^\prime) \vDash \phi_k$.
+iff there exists $c_1, \ldots, c_k \in \Tcfg$ such that $C = [c_1, \ldots, c_k]$ and for every $\rho^\prime : \mathit{Var} \to \mathcal{T}$ satisfying
+$\rho^\prime(v) = \rho(v)$ for any \\
+$v \in \mathit{FV}(\mathit{mkList}(\phi_1, \ldots, \phi_k))$,
+it holds that 
+$(\mathcal{T}, c_1, \rho^\prime) \vDash \phi_1$ and \ldots and $(\mathcal{T}, c_k, \rho^\prime) \vDash \phi_k$.
 \end{lemma}
 \begin{proof}
-Admitted.
+By induction on $k$.
+\begin{itemize}
+    \item If $k = 1$, then we have to prove that
+    \begin{proofenv}
+    $(\mathcal{T}^*, C, \rho) \vDash \mathit{cfgitem}(\phi_1)$
+    iff there exists $c_1 \in \Tcfg$ such that $C = [c_1]$ and for every $\rho^\prime : \mathit{Var} \to \mathcal{T}$ satisfying
+    $\rho^\prime(v) = \rho(v)$ for any $v \in \mathit{FV}(\mathit{cfgitem}(\phi_1))$, it holds that
+    $(\mathcal{T}, c, \rho^\prime) \vDash \phi_1$.
+    \end{proofenv}
+    By \cref{def:matchinglogic}, this is equivalent to
+    \begin{proofenv}
+    $C = \rho(\mathit{cfgitem}(\phi_1))$
+    iff there exists $c_1 \in \Tcfg$ such that $C = [c_1]$ and for every $\rho^\prime : \mathit{Var} \to \mathcal{T}$ satisfying
+    $\rho^\prime(v) = \rho(v)$ for any $v \in \mathit{FV}(\mathit{cfgitem}(\phi_1))$, it holds that
+    $c_1 = \rho^\prime(\phi_1)$.
+    \end{proofenv}
+    By \Cref{def:starextension}, this is equivalent to
+    \begin{proofenv}
+    $C = [\rho(\phi_1)]$
+    iff there exists $c_1 \in \Tcfg$ such that $C = [c_1]$ and for every $\rho^\prime : \mathit{Var} \to \mathcal{T}$ satisfying
+    $\rho^\prime(v) = \rho(v)$ for any $v \in \mathit{FV}(\mathit{cfgitem}(\phi_1))$, it holds that
+    $c_1 = \rho^\prime(\phi_1)$.
+    \end{proofenv}
+    We prove each implication separately.
+    For the left-to-right implication, we let $c_1 := \rho(\phi_1)$
+    and have to prove that $\rho(\phi_1) = \rho^\prime(\phi_1)$, which follows from \Cref{lem:unusedVariables}.
+    The right-to-left implication also follows from  \Cref{lem:unusedVariables}.
+    
+    \item If $k = k^\prime + 1$, we assume the induction hypothesis saying that
+    \begin{proofenv}
+    for every $C, \phi_1, \ldots, \phi_{k^\prime}$,
+    $(\mathcal{T}^*, C, \rho) \vDash \mathit{mkList}(\phi_1,\ldots,\phi_{k^\prime})$
+    iff there exists $c_1, \ldots, c_{k^\prime} \in \Tcfg$ such that $C = [c_1, \ldots, c_{k^\prime}]$
+    and for every $\rho^\prime : \mathit{Var} \to \mathcal{T}$ satisfying
+    $\rho^\prime(v) = \rho(v)$ for any
+    $v \in \mathit{FV}(\mathit{mkList}(\phi_1, \ldots, \phi_{k^\prime}))$,
+    it holds that
+    $(\mathcal{T}, c_1, \rho^\prime) \vDash \phi_1$ and \ldots and $(\mathcal{T}, c_{k^\prime}, \rho^\prime) \vDash \phi_k$,
+    \end{proofenv}
+    and have to prove that
+    \begin{proofenv}
+    $(\mathcal{T}^*, C, \rho) \vDash \mathit{mkList}(\phi_1,\ldots,\phi_{k^\prime + 1})$
+    iff there exists $c_1, \ldots, c_{k^\prime + 1} \in \Tcfg$ such that $C = [c_1, \ldots, c_{k^\prime + 1}]$ and 
+    for every $\rho^\prime : \mathit{Var} \to \mathcal{T}$ satisfying
+    $\rho^\prime(v) = \rho(v)$ for any
+    $v \in \mathit{FV}(\mathit{mkList}(\phi_1, \ldots, \phi_{k^\prime + 1}))$,
+    it holds that
+    $(\mathcal{T}, c_1, \rho^\prime) \vDash \phi_1$ and \ldots and $(\mathcal{T}, c_{k^\prime + 1}, \rho^\prime) \vDash \phi_{k^\prime + 1}$,
+    \end{proofenv}
+    which is (by \Cref{def:matchinglogic}) equivalent to
+    \begin{proofenv}
+    $C = \rho(\mathit{mkList}(\phi_1,\ldots,\phi_{k^\prime + 1}))$
+    iff there exists $c_1, \ldots, c_{k^\prime + 1} \in \Tcfg$ such that $C = [c_1, \ldots, c_{k^\prime + 1}]$
+    and for every $\rho^\prime : \mathit{Var} \to \mathcal{T}$ satisfying
+    $\rho^\prime(v) = \rho(v)$ for any
+    $v \in \mathit{FV}(\mathit{mkList}(\phi_1, \ldots, \phi_{k^\prime + 1}))$,
+    it holds that
+    $c_1 = \rho^\prime(\phi_1)$ and \ldots and $c_{k^\prime + 1} = \rho^\prime(\phi_{k^\prime + 1})$,
+    \end{proofenv}
+    which is (by \Cref{def:starextension}) equivalent to
+    \begin{proofenv}
+    $C = [\rho(\phi_1)] \texttt{++} C^\prime$ and $C^\prime = \rho(\mathit{mkList}(\phi_2,\ldots,\phi_{k^\prime + 1}))$
+    iff there exists $c_1, \ldots, c_{k^\prime + 1} \in \Tcfg$ such that $C = [c_1, \ldots, c_{k^\prime + 1}]$
+    and for every $\rho^\prime : \mathit{Var} \to \mathcal{T}$ satisfying
+    $\rho^\prime(v) = \rho(v)$ for any
+    $v \in \mathit{FV}(\mathit{mkList}(\phi_1, \ldots, \phi_{k^\prime + 1}))$,
+    it holds that
+    $c_1 = \rho^\prime(\phi_1)$ and \ldots and $c_{k^\prime + 1} = \rho^\prime(\phi_{k^\prime + 1})$,
+    \end{proofenv}
+    which is by the induction hypothesis with $\phi_1 := \phi_2,\ldots,\phi_k := \phi_{k^\prime + 1}$
+    and $\alpha$-renaming
+    equivalent to
+    \begin{proofenv}
+    $C = [\rho(\phi_1)] \texttt{++} C^\prime$ and
+    there exists $c_2, \ldots, c_{k^\prime + 1} \in \Tcfg$ such that $C^\prime = [c_2, \ldots, c_{k^\prime+1}]$ 
+    and for every $\rho^\prime : \mathit{Var} \to \mathcal{T}$ satisfying
+    $\rho^\prime(v) = \rho(v)$ for any
+    $v \in \mathit{FV}(\mathit{mkList}(\phi_2, \ldots, \phi_{k^\prime+1}))$,
+    it holds that
+    $(\mathcal{T}, c_2, \rho^\prime) \vDash \phi_2$ and \ldots and $(\mathcal{T}, c_{k^\prime+1}, \rho^\prime) \vDash \phi_{k^\prime + 1}$,
+    iff there exists $c_1, \ldots, c_{k^\prime + 1} \in \Tcfg$ such that $C = [c_1, \ldots, c_{k^\prime + 1}]$
+    and for every $\rho^\prime : \mathit{Var} \to \mathcal{T}$ satisfying
+    $\rho^\prime(v) = \rho(v)$ for any
+    $v \in \mathit{FV}(\mathit{mkList}(\phi_1, \ldots, \phi_{k^\prime + 1}))$,
+    it holds that
+    $c_1 = \rho^\prime(\phi_1)$ and \ldots and $c_{k^\prime + 1} = \rho^\prime(\phi_{k^\prime + 1})$,
+    \end{proofenv}
+    which is (by firstorder reasoning and simplification of list append) equivalent to
+    \begin{proofenv}
+    there exists $c_2, \ldots, c_{k^\prime + 1} \in \Tcfg$ such that
+    $C = [\rho(\phi_1), c_2, \ldots, c_{k^\prime+1}]$
+    and for every $\rho^\prime : \mathit{Var} \to \mathcal{T}$ satisfying
+    $\rho^\prime(v) = \rho(v)$ for any
+    $v \in \mathit{FV}(\mathit{mkList}(\phi_2, \ldots, \phi_{k^\prime+1}))$,
+    it holds that
+    $(\mathcal{T}, c_2, \rho^\prime) \vDash \phi_2$ and \ldots and $(\mathcal{T}, c_{k^\prime+1}, \rho^\prime) \vDash \phi_{k^\prime+1}$,
+    iff there exists $c_1, \ldots, c_{k^\prime + 1} \in \Tcfg$ such that $C = [c_1, \ldots, c_{k^\prime + 1}]$
+    and for every $\rho^\prime : \mathit{Var} \to \mathcal{T}$ satisfying
+    $\rho^\prime(v) = \rho(v)$ for any
+    $v \in \mathit{FV}(\mathit{mkList}(\phi_1, \ldots, \phi_{k^\prime + 1}))$,
+    it holds that
+    $c_1 = \rho^\prime(\phi_1)$ and \ldots and $c_{k^\prime + 1} = \rho^\prime(\phi_{k^\prime + 1})$.
+    \end{proofenv}
+    We simplify the goal using \Cref{def:matchinglogic} to
+    \begin{proofenv}
+    there exists $c_2, \ldots, c_{k^\prime + 1} \in \Tcfg$ such that
+    $C = [\rho(\phi_1), c_2, \ldots, c_{k^\prime+1}]$
+    and for every $\rho^\prime : \mathit{Var} \to \mathcal{T}$ satisfying
+    $\rho^\prime(v) = \rho(v)$ for any
+    $v \in \mathit{FV}(\mathit{mkList}(\phi_2, \ldots, \phi_{k^\prime+1}))$,
+    it holds that
+    $c_2 = \rho^\prime(\phi_2)$ and \ldots and $c_{k^\prime+1} = \rho^\prime(\phi_{k^\prime+1})$,
+    iff there exists $c_1, \ldots, c_{k^\prime + 1} \in \Tcfg$ such that $C = [c_1, \ldots, c_{k^\prime + 1}]$
+    and for every $\rho^\prime : \mathit{Var} \to \mathcal{T}$ satisfying
+    $\rho^\prime(v) = \rho(v)$ for any
+    $v \in \mathit{FV}(\mathit{mkList}(\phi_1, \ldots, \phi_{k^\prime + 1}))$,
+    it holds that
+    $c_1 = \rho^\prime(\phi_1)$ and \ldots and $c_{k^\prime + 1} = \rho^\prime(\phi_{k^\prime + 1})$.
+    \end{proofenv}
+    We prove each implication separately.
+    \begin{itemize}
+        \item Assuming
+        \begin{proofenv}
+        there exists $c_2, \ldots, c_{k^\prime + 1} \in \Tcfg$ such that
+        $C = [\rho(\phi_1), c_2, \ldots, c_{k^\prime+1}]$
+        and for every $\rho^\prime : \mathit{Var} \to \mathcal{T}$ satisfying
+        $\rho^\prime(v) = \rho(v)$ for any
+        $v \in \mathit{FV}(\mathit{mkList}(\phi_2, \ldots, \phi_{k^\prime+1}))$,
+        it holds that
+        $c_2 = \rho^\prime(\phi_1)$ and \ldots and $c_{k^\prime+1} = \rho^\prime(\phi_k)$,
+        \end{proofenv}
+        we prove that
+        \begin{proofenv}
+        there exists $c_1, \ldots, c_{k^\prime + 1} \in \Tcfg$ such that $C = [c_1, \ldots, c_{k^\prime + 1}]$
+        and for every $\rho^\prime : \mathit{Var} \to \mathcal{T}$ satisfying
+        $\rho^\prime(v) = \rho(v)$ for any
+        $v \in \mathit{FV}(\mathit{mkList}(\phi_1, \ldots, \phi_{k^\prime + 1}))$,
+        it holds that
+        $c_1 = \rho^\prime(\phi_1)$ and \ldots and $c_{k^\prime + 1} = \rho^\prime(\phi_{k^\prime + 1})$.
+        \end{proofenv}
+        by choosing $c_1 := \rho^\prime(\phi_1)$ and using \Cref{lem:unusedVariables}\\
+        (note that $\mathit{FV}(\mathit{mkList}(\phi_2,\ldots,\phi_{k^\prime+1})) \subseteq \mathit{FV}(\mathit{mkList}(\phi_1,\ldots,\phi_{k^\prime+1}))$).
+        \item Assuming
+        \begin{proofenv}
+        there exists $c_1, \ldots, c_{k^\prime + 1} \in \Tcfg$ such that $C = [c_1, \ldots, c_{k^\prime + 1}]$
+        and for every $\rho^\prime : \mathit{Var} \to \mathcal{T}$ satisfying
+        $\rho^\prime(v) = \rho(v)$ for any
+        $v \in \mathit{FV}(\mathit{mkList}(\phi_1, \ldots, \phi_{k^\prime + 1}))$,
+        it holds that
+        $c_1 = \rho^\prime(\phi_1)$ and \ldots and $c_{k^\prime + 1} = \rho^\prime(\phi_{k^\prime + 1})$,
+        \end{proofenv}
+        we prove that
+        \begin{proofenv}
+        there exists $c_2, \ldots, c_{k^\prime + 1} \in \Tcfg$ such that
+        $C = [\rho(\phi_1), c_2, \ldots, c_{k^\prime+1}]$
+        and for every $\rho^\prime : \mathit{Var} \to \mathcal{T}$ satisfying
+        $\rho^\prime(v) = \rho(v)$ for any
+        $v \in \mathit{FV}(\mathit{mkList}(\phi_2, \ldots, \phi_{k^\prime+1}))$,
+        it holds that
+        $c_2 = \rho^\prime(\phi_1)$ and \ldots and $c_{k^\prime+1} = \rho^\prime(\phi_k)$
+        \end{proofenv}
+        by setting $c_i := c_i$
+        (and again noting that $\mathit{FV}(\mathit{mkList}(\phi_2,\ldots,\phi_{k^\prime+1})) \subseteq \mathit{FV}(\mathit{mkList}(\phi_1,\ldots,\phi_{k^\prime+1}))$).
+    \end{itemize}
+\end{itemize}
 \end{proof}
 
 
