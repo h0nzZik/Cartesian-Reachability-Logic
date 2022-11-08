@@ -449,9 +449,9 @@ We define $\mathit{mkList}$, $\mathit{mergePatterns}$, and $\mathit{flatten}$ as
     \end{align*}
     \item
         \begin{align*}
-            & \mathit{constrain}(P, \exists \vec{X^\prime} .\,
+            \mathit{constrain}(P, \exists \vec{X^\prime} .\,
             \bigvee_{i=1}^{m} (\phi^\prime_i \land P^\prime_i))
-            \\& = (\exists \vec{X^\prime}.\, (\phi^\prime_i \land (P^\prime_i \land P))
+            = (\exists \vec{X^\prime}.\, \bigvee_{i=1}^{m}(\phi^\prime_i \land (P^\prime_i \land P))
     \end{align*}
     (we assume that $\alpha$-renaming of (free) variables of $P$ happens implicitly);
     \item
@@ -936,7 +936,7 @@ But otherwise, it would follow that $c_{i^\prime} \Rightarrow_{\mathcal{S}} c_{i
 which contradicts \Cref{rem:noEmptySteps}.
 \end{proof}
 
-\begin{lemma}
+\begin{lemma}\label{lem:mkListSemantics}
 $(\mathcal{T}^*, C, \rho) \vDash \mathit{mkList}(\phi_1,\ldots,\phi_k)$
 iff there exists $c_1, \ldots, c_k \in \Tcfg$ such that $C = [c_1, \ldots, c_k]$ and for every $\rho^\prime : \mathit{Var} \to \mathcal{T}$ satisfying
 $\rho^\prime(v) = \rho(v)$ for any \\
@@ -1168,7 +1168,56 @@ We prove each implication separately.
         \item We let $C^\prime := [c_1^\prime,\ldots,c_k^\prime]$ and prove that it is reachable from $C$,
         as well as that it satisfies the flattened $\Psi^\prime$.
     \end{enumerate}
-    TODO.
+    We have
+    \begin{proofenv}
+    $(\mathcal{T}^*, C, \rho) \vDash \mathit{flatten}(\Psi)$;
+    \end{proofenv}
+    that is,
+    \begin{proofenv}
+    \begin{equation*}
+     (\mathcal{T}^*, C, \rho) \vDash \exists \vec{X}.\, \mathit{constrain}(P, \mathit{mergePatterns}(\varphi_1,\ldots,\varphi_k))    \, ;
+    \end{equation*}
+    \end{proofenv}
+    that is,
+    \begin{proofenv}
+    \begin{equation*}
+     (\mathcal{T}^*, C, \rho) \vDash \exists \vec{Z}.\, \bigvee_{i_1 = 1}^{m_1} \ldots \bigvee_{i_k = 1}^{m_k} (
+    \mathit{mkList}(\phi_{i_1}, \ldots, \phi_{i_k}) \land ((P_{i_1} \land \ldots \land P_{i_k}) \land P) )
+    \end{equation*}
+    where $\mathit{\vec{Z}} = \vec{X},\vec{X}_1,\ldots,\vec{X}_k$.
+    \end{proofenv}
+    By \Cref{def:matchinglogic}, this is equivalent to
+    \begin{proofenv}
+    exists $\rho_0 : \mathit{Var} \to \mathcal{T}^*$ such that $\rho_0(v) = \rho(v)$ for any $v \in \mathit{Var} \setminus \vec{Z}$, and exists $i_1 \in \{ 1, \ldots, m_1 \}, \ldots, i_k \in \{ 1, \ldots, m_k \}$ such that
+    \begin{enumerate}
+        \item 
+        \begin{equation*}
+            (\mathcal{T}^*, C, \rho_0) \vDash \mathit{mkList}(\phi_{i_1}, \ldots, \phi_{i_k})
+        \end{equation*}
+        \item 
+        \begin{equation*}
+            (\mathcal{T}^*, C, \rho_0) \vDash (P_{i_1} \land \ldots \land P_{i_k}) \land P
+        \end{equation*}
+    \end{enumerate}
+    \end{proofenv}
+    which is by \Cref{lem:mkListSemantics} equivalent to
+    \begin{proofenv}
+    exists $\rho_0 : \mathit{Var} \to \mathcal{T}^*$ such that $\rho_0(v) = \rho(v)$ for any $v \in \mathit{Var} \setminus \vec{Z}$, and exists $i_1 \in \{ 1, \ldots, m_1 \}, \ldots, i_k \in \{ 1, \ldots, m_k \}$ such that
+    \begin{enumerate}
+        \item there exists $c_1,\ldots,c_k \in \Tcfg$ such that $C = [c_1,\ldots,c_k]$
+        and for every $\rho_0^\prime : \mathit{Var} \to \mathcal{T}$ satisfying $\rho_0^\prime(v) = \rho_0(v)$
+        for any $v \in \mathit{FV}(\mathit{mkList}(\phi_{i_1}, \ldots, \phi_{i_k}))$, it holds that
+        \begin{equation*}
+            (\mathcal{T}, c_j, \rho_0^\prime) \vDash \phi_j
+        \end{equation*}
+        for any $j \in \{ 1, \ldots, k \}$; and
+        \item
+        \begin{equation*}
+            (\mathcal{T}^*, C, \rho_0) \vDash (P_{i_1} \land \ldots \land P_{i_k}) \land P
+        \end{equation*}
+    \end{enumerate}
+    \end{proofenv}
+    TODO
     \item For the opposite implication, TODO.
 \end{enumerate}
 
