@@ -1181,7 +1181,7 @@ We prove each implication separately.
     \begin{proofenv}
     for every $C \in \mathcal{T}^*_{\mathit{Cfg}^*}$
     such that $C$ terminates in $(\mathcal{T}^*_{\mathit{Cfg}^*}, \Rightarrow_{\mathcal{S}^*})$
-    and for any valuation $\rho : \Var \to \mathcal{T}^*$
+    and for any valuation $\rho : \Var^* \to \mathcal{T}^*$
     such that $(\mathcal{T}^*, C, \rho) \vDash \mathit{flatten}(\Psi)$,
     there exists some $C^\prime \in \mathcal{T}^*_{\mathit{Cfg}^*}$
     such that
@@ -1190,7 +1190,7 @@ We prove each implication separately.
     \end{proofenv}
     Let us then have some $C \in \mathcal{T}^*_{\mathit{Cfg}^*}$
     such that $C$ terminates in $(\mathcal{T}^*_{\mathit{Cfg}^*}, \Rightarrow_{\mathcal{S}^*})$,
-    and a valuation $\rho : \Var \to \mathcal{T}^*$
+    and a valuation $\rho : \Var^* \to \mathcal{T}^*$
     such that $(\mathcal{T}^*, C, \rho) \vDash \mathit{flatten}(\Psi)$.
     We have to prove that
     \begin{proofenv}
@@ -1229,7 +1229,7 @@ We prove each implication separately.
     \end{proofenv}
     By \Cref{def:matchinglogic}, this is equivalent to
     \begin{proofenv}
-    exists $\rho_0 : \mathit{Var} \to \mathcal{T}^*$ such that $\rho_0(v) = \rho(v)$ for any $v \in \mathit{Var} \setminus \vec{Z}$, and exists $i_1 \in \{ 1, \ldots, m_1 \}, \ldots, i_k \in \{ 1, \ldots, m_k \}$ such that
+    exists $\rho_0 : \mathit{Var}^* \to \mathcal{T}^*$ such that $\rho_0(v) = \rho(v)$ for any $v \in \mathit{Var}^* \setminus \vec{Z}$, and exists $i_1 \in \{ 1, \ldots, m_1 \}, \ldots, i_k \in \{ 1, \ldots, m_k \}$ such that
     \begin{enumerate}
         \item 
         \begin{equation*}
@@ -1241,9 +1241,9 @@ We prove each implication separately.
         \end{equation*}
     \end{enumerate}
     \end{proofenv}
-    which is by \Cref{lem:mkListSemantics} equivalent to
+    which is by \Cref{lem:mkListSemantics} equivalent to (ii)
     \begin{proofenv}
-    exists $\rho_0 : \mathit{Var} \to \mathcal{T}^*$ such that $\rho_0(v) = \rho(v)$ for any $v \in \mathit{Var} \setminus \vec{Z}$, and exists $i_1 \in \{ 1, \ldots, m_1 \}, \ldots, i_k \in \{ 1, \ldots, m_k \}$ such that
+    exists $\rho_0 : \mathit{Var}^* \to \mathcal{T}^*$ such that $\rho_0(v) = \rho(v)$ for any $v \in \mathit{Var}^* \setminus \vec{Z}$, and exists $i_1 \in \{ 1, \ldots, m_1 \}, \ldots, i_k \in \{ 1, \ldots, m_k \}$ such that
     \begin{enumerate}
         \item there exists $c_1,\ldots,c_k \in \Tcfg$ such that $C = [c_1,\ldots,c_k]$
         and for every $\rho_0^\prime : \mathit{Var} \to \mathcal{T}$ satisfying $\rho_0^\prime(v) = \rho_0(v)$
@@ -1290,31 +1290,37 @@ We prove each implication separately.
             \end{equation*}
         \end{enumerate}
     \end{proofenv}
-    We let $\rho_1 := \rho_2$, where $\rho_2(v) := \rho_0(v)$
-    for any $v$ of sort other then $\mathit{Cfg}^*$,
-    let $i_j := j$, and have to prove that
+    We let $\rho_1 := \rho_2$, where
+    $\rho_2(v) := \rho_0(v)$ for any $v \in \vec{X}$ and
+    $\rho_2(v) := \rho(v)$ for any $v \in \mathit{Var} \setminus \vec{X}$,
+    let $l := j$, and have to prove that
     \begin{proofenv}
         \begin{enumerate}
             \item for any $v \in \mathit{Var} \setminus \vec{X}$, $\rho_2(v) = \rho(v)$;
             \item         
             \begin{equation*}
-            (\mathcal{T}, c_j, \rho_2) \vDash \phi_{i_j} \, ;
+            (\mathcal{T}, c_j, \rho_2) \vDash \phi_{j} \, ;
             \end{equation*}
             \item and
             \begin{equation*}
-            (\mathcal{T}, c_j, \rho_2) \vDash  P_{i_j} \land P \, .
+            (\mathcal{T}, c_j, \rho_2) \vDash  P_{j} \land P \, .
             \end{equation*}
         \end{enumerate}
     \end{proofenv}
     We prove these three subgoals one by one.
     \begin{enumerate}
-        \item Let $v \in \mathit{Var} \setminus \vec{X}$. If $v$ has sort $\mathit{Cfg}^*$,
-              then surely $v \not\in \vec{Z}$, and therefore 
+        \item Let $v \in \mathit{Var} \setminus \vec{X}$. The by definition of $\rho_2(v)$, we have
+        that $\rho_2(v) = \rho(v)$.
+        \item By (ii.b), we have $(\mathcal{T}, c_j, \rho_2) \vDash \phi_j$,
+        but we have to prove that for any $v \in \mathit{FV}(\mathit{mkList(\phi_{i_1}, \ldots, \phi_{i_k})})$,
+        it holds that $\rho_2(v) = \rho_0(v)$,
+        assuming that for any $v \in \mathit{Var}^* \setminus \vec{Z}$,
+        we have $\rho_0(v) = \rho(v)$.
+        In case $v \not\in \vec{X}$, then by definition of $\rho_2$, the goal reduces to
+        $\rho(v) = \rho_0(v)$, which follows from the assumption since $\vec{X} \subseteq \vec{Z}$.
+        In case $v \in \vec{X}$, the goal holds be definition of $\rho_2$.
+        \item TODO
     \end{enumerate}
-    %The first subgoal is trivial (note only that $\vec{X} \subseteq \vec{Z}$,
-    %and therefore $(\mathit{Var} \setminus \vec{Z}) \subseteq (\mathit{Var} \setminus \vec{X})$).
-    
-    TODO.
     \item For the opposite implication, TODO.
 \end{enumerate}
 
