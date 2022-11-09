@@ -363,15 +363,14 @@ if we fix $k=1$, then
 We translate a language semantics into a semantics for lists of configurations as follows.
 \begin{enumerate}
     \item Let $((\Sigma, \mathit{Var}), \mathit{Cfg})$ be a reachability-logic signature.
-          Then $((\Sigma, \mathit{Var}), \mathit{Cfg})^*$ = $((\Sigma^*, \mathit{Var}), \mathit{Cfg}^*)$,
+          Then $((\Sigma, \mathit{Var}^*), \mathit{Cfg})^*$ = $((\Sigma^*, \mathit{Var}^*), \mathit{Cfg}^*)$,
           where
           \begin{enumerate}
-              \item $\Sigma^* = \Sigma \cup \{ \mathit{cfgitem}, \mathit{cfgconcat},
-          %\mathit{cfgdummy},
-          \mathit{cfgheat},
-          \mathit{cfgnil} \}$
+              \item $\Sigma^* = \Sigma \cup \{ \mathit{cfgitem}, \mathit{cfgconcat}, \mathit{cfgheat}, \mathit{cfgnil} \}$
               \item $\mathit{Cfg}^*$ is a fresh sort (representing the sort of lists of configurations);
-              %\item $\mathit{cfgdummy}$ is a fresh symbol of sort $\mathit{Cfg}$;
+              \item $\mathit{Var}^* = \mathit{Var} \cup \mathit{Var}_{\mathit{Cfg}^*}$,
+              where $\mathit{Var}_{\mathit{Cfg}^*}$ is an infinite set of variables of sort $\mathit{Cfg}^*$,
+              distinct from varibles in $\mathit{Var}$;
               \item $\mathit{cfgitem}$ a fresh symbol of sort $\mathit{Cfg} \to \mathit{Cfg}^*$;
               \item $\mathit{cfgnil}$ a fresh symbol of sort $\mathit{Cfg}^*$;
               \item $\mathit{cfgconcat}$ a fresh symbol of sort $\mathit{Cfg}^* \times \mathit{Cfg}^* \to \mathit{Cfg}^*$; and
@@ -1259,15 +1258,60 @@ We prove each implication separately.
     \end{proofenv}
     By \Cref{lem:terminationComposite}, the configurations $c_1, \ldots, c_k$ are terminating.
     Furhermore, by \Cref{lem:structurelessSemantics}, we have $(\mathcal{T}^*, \rho_0) \vDash P$.
-    Now we use \Cref{lem:unusedVariables} to get
+    %Now we use \Cref{lem:unusedVariables} to get
+    %\begin{proofenv}
+    %for every $\rho_0^\prime : \mathit{Var} \to \mathcal{T}$ satisfying $\rho_0^\prime(v) = \rho_0(v)$
+    %    for any $v \in \mathit{FV}(\mathit{mkList}(\phi_{i_1}, \ldots, \phi_{i_k}))$, it holds that 
+    %$(\mathcal{T}^*, \rho_0^\prime) \vDash P$;
+    %\end{proofenv}
+    %however, we have to discharge the obligation that $\rho_0(v) = \rho_0^\prime(v)$ for any $v \in \mathit{FV}(P)$,
+    %which we do by noticing that from \Cref{def:opCRLsemantics}, 
+    Now we want to prove that for every $j \in \{ 1, \ldots, k \}$, $(\mathcal{T}, c_j, \rho) \vDash \varphi_j \land P$.
+    That is, after unfolding $\varphi_j$,
     \begin{proofenv}
-    for every $\rho_0^\prime : \mathit{Var} \to \mathcal{T}$ satisfying $\rho_0^\prime(v) = \rho_0(v)$
-        for any $v \in \mathit{FV}(\mathit{mkList}(\phi_{i_1}, \ldots, \phi_{i_k}))$, it holds that 
-    $(\mathcal{T}^*, \rho_0^\prime) \vDash P$;
+        for every $j \in \{ 1, \ldots, k \}$, $(\mathcal{T}, c_j, \rho) \vDash (\exists \vec{X}_j.\, \bigvee_{i_j = 1}^{m_j} (\phi_{i_j} \land P_{i_j})) \land P$ \, .
     \end{proofenv}
+    Let $j$ be in the range $1, \ldots, k$.
+    By \Cref{def:matchinglogic}, it is enough to show that
+    \begin{proofenv}
+        there exists a valuation $\rho_1 : \mathit{Var} \to \mathcal{T}$ such that
+        $\rho_1(v) = \rho(v)$ for any $v \in \mathit{Var} \setminus \vec{X}$,
+        and there exists some $l \in \{ 1, \ldots, m_j \}$ such that
+        \begin{enumerate}
+            \item         
+            \begin{equation*}
+            (\mathcal{T}, c_j, \rho_1) \vDash \phi_l \, ;
+            \end{equation*}
+            \item and
+            \begin{equation*}
+            (\mathcal{T}, c_j, \rho_1) \vDash  P_l \land P \, .
+            \end{equation*}
+        \end{enumerate}
+    \end{proofenv}
+    We let $\rho_1 := \rho_2$, where $\rho_2(v) := \rho_0(v)$
+    for any $v$ of sort other then $\mathit{Cfg}^*$,
+    let $i_j := j$, and have to prove that
+    \begin{proofenv}
+        \begin{enumerate}
+            \item for any $v \in \mathit{Var} \setminus \vec{X}$, $\rho_2(v) = \rho(v)$;
+            \item         
+            \begin{equation*}
+            (\mathcal{T}, c_j, \rho_2) \vDash \phi_{i_j} \, ;
+            \end{equation*}
+            \item and
+            \begin{equation*}
+            (\mathcal{T}, c_j, \rho_2) \vDash  P_{i_j} \land P \, .
+            \end{equation*}
+        \end{enumerate}
+    \end{proofenv}
+    We prove these three subgoals one by one.
+    \begin{enumerate}
+        \item Let $v \in \mathit{Var} \setminus \vec{X}$. If $v$ has sort $\mathit{Cfg}^*$,
+              then surely $v \not\in \vec{Z}$, and therefore 
+    \end{enumerate}
+    %The first subgoal is trivial (note only that $\vec{X} \subseteq \vec{Z}$,
+    %and therefore $(\mathit{Var} \setminus \vec{Z}) \subseteq (\mathit{Var} \setminus \vec{X})$).
     
-    however, we have to discharge the obligation that $\rho_0(v) = \rho_0^\prime(v)$ for any $v \in \mathit{FV}(P)$,
-    which we do by noticing that from \Cref{def:opCRLsemantics}, 
     TODO.
     \item For the opposite implication, TODO.
 \end{enumerate}
