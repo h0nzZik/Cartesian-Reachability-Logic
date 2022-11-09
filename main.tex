@@ -409,7 +409,9 @@ We translate a language semantics into a semantics for lists of configurations a
 
     \item Let $(\Sigma, \mathit{Var})$ be a matching logic signature, let $\mathcal{T}$ be a configuration model,
         and let $\rho$ be a $\mathcal{T}$-valuation.
-        We define a $\mathcal{T}^*$-valuation $\rho^*$ by letting $\rho^*(v) = \rho(v)$ for any $v \in \mathit{Var}$.
+        We define a $\mathcal{T}^*$-valuation $\rho^*$ by letting $\rho^*(v) = \rho(v)$ for any $v \in \mathit{Var}$,
+        and letting $\rho^*(v) = a$, where $a$ is some arbitrary element of sort $\mathit{Cfg}^*$, for
+        any variable $v$ of sort $\mathit{Cfg}^*$.
           
     \item Let $\mathcal{S} = (\mathcal{T}, S)$ be a reachability system over $(\Sigma, \mathit{Cfg})$.
           We generate a reachability system $\mathcal{S}^*$ over $(\Sigma, \mathit{Cfg})^*$
@@ -699,7 +701,7 @@ We have
 iff (by \Cref{def:basics})
 \begin{proofenv}
 there exists a rule $\varphi \Rightarrow^\exists \varphi^\prime \in S^*$
-and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
+and valuation $\rho : \mathit{Var}^* \to \mathcal{T}^*$ such that
 $(\mathcal{T}^*, [c_1,\ldots,c_k], \rho) \vDash \varphi$
 and $(\mathcal{T}^*, [c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k], \rho) \vDash \varphi^\prime$,
 \end{proofenv}
@@ -708,7 +710,7 @@ iff (by
 \Cref{rem:shapeOfReachabilityRules} and \Cref{def:starextension})
 \begin{proofenv}
 there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
-and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
+and valuation $\rho : \mathit{Var}^* \to \mathcal{T}^*$ such that
 \begin{equation*}
     (\mathcal{T}^*, [c_1,\ldots,c_k], \rho) \vDash \exists \vec{X}.\, \bigvee_{l=1}^{m}(\mathit{cfgheat}(L, \phi_l, R) \land P_l)
 \end{equation*}
@@ -721,10 +723,10 @@ and
 iff (by \Cref{def:matchinglogic} and \Cref{lem:structurelessSemantics})
 \begin{proofenv}
 there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
-and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
-there exists some $\rho^\prime,\rho^{\prime\prime} : \mathit{Var} \to \mathcal{T}^*$
-satisfying $\forall y \in \mathit{Var} \setminus \vec{X}.\, \rho^\prime(y) = \rho(\prime)$
-and $\forall y \in \mathit{Var} \setminus \vec{Y}.\, \rho^{\prime\prime}(y) = \rho(\prime)$,
+and valuation $\rho : \mathit{Var}^* \to \mathcal{T}^*$ such that
+there exists some $\rho^\prime,\rho^{\prime\prime} : \mathit{Var}^* \to \mathcal{T}^*$
+satisfying $\forall y \in \mathit{Var}^* \setminus \vec{X}.\, \rho^\prime(y) = \rho(y)$
+and $\forall y \in \mathit{Var}^* \setminus \vec{Y}.\, \rho^{\prime\prime}(y) = \rho(y)$,
 and there exists some $l,j$ satisfying $1 \leq l \leq m$ and $1 \leq j \leq n$ such that
 $(\mathcal{T}^*, \rho^\prime) \vDash P_l$ and $(\mathcal{T}^*, \rho^{\prime\prime}) \vDash P_j$ and
 \begin{equation*}
@@ -739,10 +741,10 @@ and
 iff (by \Cref{def:matchinglogic} and \Cref{def:starextension})
 \begin{proofenv}
 there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
-and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
-there exists some $\rho^\prime,\rho^{\prime\prime} : \mathit{Var} \to \mathcal{T}^*$
-satisfying $\forall y \in \mathit{Var} \setminus \vec{X}.\, \rho^\prime(y) = \rho(y)$
-and $\forall y \in \mathit{Var} \setminus \vec{Y}.\, \rho^{\prime\prime}(y) = \rho(y)$,
+and valuation $\rho : \mathit{Var}^* \to \mathcal{T}^*$ such that
+there exists some $\rho^\prime,\rho^{\prime\prime} : \mathit{Var}^* \to \mathcal{T}^*$
+satisfying $\forall y \in \mathit{Var}^* \setminus \vec{X}.\, \rho^\prime(y) = \rho(y)$
+and $\forall y \in \mathit{Var}^* \setminus \vec{Y}.\, \rho^{\prime\prime}(y) = \rho(y)$,
 and there exists some $l,j$ satisfying $1 \leq l \leq m$ and $1 \leq j \leq n$ such that
 \begin{itemize}
     \item $(\mathcal{T}^*, \rho^\prime) \vDash P_l$; and
@@ -763,10 +765,10 @@ and $(\mathcal{T}^*, \rho^{\prime\prime}) \vDash P_j \iff (\mathcal{T}^*, \rho) 
 Therefore, we can change the goal to one saying that
 \begin{proofenv}
 there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
-and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
-there exists some $\rho^\prime,\rho^{\prime\prime} : \mathit{Var} \to \mathcal{T}^*$
-satisfying $\forall y \in \mathit{Var} \setminus \vec{X}.\, \rho^\prime(y) = \rho(y)$
-and $\forall y \in \mathit{Var} \setminus \vec{Y}.\, \rho^{\prime\prime}(y) = \rho(y)$,
+and valuation $\rho : \mathit{Var}^* \to \mathcal{T}^*$ such that
+there exists some $\rho^\prime,\rho^{\prime\prime} : \mathit{Var}^* \to \mathcal{T}^*$
+satisfying $\forall y \in \mathit{Var}^* \setminus \vec{X}.\, \rho^\prime(y) = \rho(y)$
+and $\forall y \in \mathit{Var}^* \setminus \vec{Y}.\, \rho^{\prime\prime}(y) = \rho(y)$,
 and there exists some $l,j$ satisfying $1 \leq l \leq m$ and $1 \leq j \leq n$ such that
 \begin{itemize}
     \item $(\mathcal{T}^*, \rho) \vDash P_l$; and
@@ -806,7 +808,7 @@ for any $v \in \mathit{FV}(\phi_j)$.
 Therefore, we can use \Cref{lem:unusedVariables} to change the goal to one saying that
 \begin{proofenv}
 there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
-and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
+and valuation $\rho^* : \mathit{Var} \to \mathcal{T}^*$ such that
 there exists some $\rho_0^\prime,\rho_0^{\prime\prime} : \mathit{Var} \to \mathcal{T}$
 satisfying $\forall y \in \mathit{Var} \setminus \vec{X}.\, ((\rho_0^\prime)^*)(y) = \rho(y)$
 and $\forall y \in \mathit{Var} \setminus \vec{Y}.\, ((\rho_0^{\prime\prime})^*)(y) = \rho(y)$,
@@ -823,7 +825,7 @@ and there exists some $l,j$ satisfying $1 \leq l \leq m$ and $1 \leq j \leq n$ s
 Now, we use \Cref{lem:starConservative} and definition of starred valuation to change the goal to one saying that
 \begin{proofenv}
 there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
-and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
+and valuation $\rho : \mathit{Var}^* \to \mathcal{T}^*$ such that
 there exists some $\rho_0^\prime,\rho_0^{\prime\prime} : \mathit{Var} \to \mathcal{T}$
 satisfying $\forall y \in \mathit{Var} \setminus \vec{X}.\, \rho_0^\prime(y) = \rho(y)$
 and $\forall y \in \mathit{Var} \setminus \vec{Y}.\, \rho_0^{\prime\prime}(y) = \rho(y)$,
@@ -841,7 +843,7 @@ Now, by list reasoning, this is equivalent to
 saying that
 \begin{proofenv}
 there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
-and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
+and valuation $\rho : \mathit{Var}^* \to \mathcal{T}^*$ such that
 there exists some $\rho_0^\prime,\rho_0^{\prime\prime} : \mathit{Var} \to \mathcal{T}$
 satisfying $\forall y \in \mathit{Var} \setminus \vec{X}.\, \rho_0^\prime(y) = \rho(y)$
 and $\forall y \in \mathit{Var} \setminus \vec{Y}.\, \rho_0^{\prime\prime}(y) = \rho(y)$,
@@ -870,7 +872,7 @@ c^\prime_{z} =
 after which the goal is equivalent to saying that
 \begin{proofenv}
 there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
-and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
+and valuation $\rho^* : \mathit{Var} \to \mathcal{T}^*$ such that
 there exists some $\rho_0^\prime,\rho_0^{\prime\prime} : \mathit{Var} \to \mathcal{T}$
 satisfying $\forall y \in \mathit{Var} \setminus \vec{X}.\, \rho_0^\prime(y) = \rho(y)$
 and $\forall y \in \mathit{Var} \setminus \vec{Y}.\, \rho_0^{\prime\prime}(y) = \rho(y)$,
@@ -891,7 +893,7 @@ Since $L,R$ were fresh, they do not occur in $\phi_l$ nor in $\phi_j$.
 Therefore, using \Cref{lem:unusedVariables}, the can equivalently say that
 \begin{proofenv}
 there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
-and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
+and valuation $\rho^* : \mathit{Var} \to \mathcal{T}^*$ such that
 there exists some $\rho_0^\prime,\rho_0^{\prime\prime} : \mathit{Var} \to \mathcal{T}$
 satisfying $\forall y \in \mathit{Var} \setminus \vec{X}.\, \rho_0^\prime(y) = \rho(y)$
 and $\forall y \in \mathit{Var} \setminus \vec{Y}.\, \rho_0^{\prime\prime}(y) = \rho(y)$,
@@ -910,7 +912,7 @@ But that is equivalent (\Cref{def:matchinglogic}) to saying that
 \begin{proofenv}
 there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
 and there exists some $i^\prime$ satisfying $1 \leq i^\prime \leq k$
-and valuation $\rho : \mathit{Var} \to \mathcal{T}^*$ such that
+and valuation $\rho : \mathit{Var}^* \to \mathcal{T}^*$ such that
 \begin{itemize}
     \item $(\mathcal{T}, c_{i^\prime}, \rho) \vDash \exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)$; and
     \item $(\mathcal{T}, c^\prime_{i^\prime}, \rho) \vDash \exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi_j \land P_j)$
