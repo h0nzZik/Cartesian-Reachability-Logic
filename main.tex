@@ -300,10 +300,7 @@ Cartesian reachability logic is an extension of (one-path) reachability logic.
         \begin{equation*}
         \exists \vec{X}.\, (\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\exists} \exists \vec{Y}.\, (\psi_1,\ldots,\psi_k) \land \psi \, ,
         \end{equation*}
-        where $\varphi, \psi$ are structureless patterns,
-        $\mathit{FV}(\varphi) \subseteq \mathit{FV}((\varphi_1,\ldots,\varphi_k)) \cup \vec{X}$,
-        $\mathit{FV}(\psi) \subseteq \mathit{FV}((\psi_1,\ldots,\psi_k)) \cup \vec{Y}$,
-        and $\varphi_j, \psi_j$ for any $j \in \{ 1, \ldots, k \}$ are
+        where $\varphi, \psi$ are structureless patterns and $\varphi_j, \psi_j$ for any $j \in \{ 1, \ldots, k \}$ are
         existentially quantified\jt{Check whether we need that.} disjunctions of constrained terms.
     \item 
     A One-Path Cartesian reachability rule
