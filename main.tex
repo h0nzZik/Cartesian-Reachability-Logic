@@ -17,6 +17,7 @@
 \usepackage{todonotes}
 
 \newcommand{\traian}[1]{\todo[author=Traian]{#1}}
+\newcommand{\jt}[1]{\todo[author=Jan]{#1}}
 
 \title{Cartesian Reachability Logic}
 \author{Jan Tu\v{s}il \and Xiaohong Chen \and Traian Florin Șerbănuță
@@ -292,23 +293,36 @@ We work only with $\epsilon$-free reachability systems.
 Cartesian reachability logic is an extension of (one-path) reachability logic.
 
 \begin{definition}[One-Path Cartesian Reachability Rule]\label{def:opCRLsemantics}
-A One-Path Cartesian reachability rule
-$(\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\exists} (\psi_1,\ldots,\psi_k) \land \psi$
-of arity $k$
-is \emph{valid} in a reachability system $\mathcal{S} = (\mathcal{T}, S)$,
-written
-$\mathcal{S} \vDash_\CRL (\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\exists}
-(\psi_1,\ldots,\psi_k) \land \psi$,
-iff for all configurations $\gamma_1,\ldots,\gamma_k \in \Tcfg$
-which terminate in $(\Tcfg, \Rightarrow_{\mathcal{S}})$
-and any $\mathcal{T}$-valuation $\rho$,
-whenever $(\gamma_1,\rho) \vDash \varphi_1 \land \varphi$ and \ldots
-and $(\gamma_k,\rho) \vDash \varphi_k \land \varphi$,
-then there exist configurations $\gamma_1^\prime,\ldots,\gamma_k^\prime \in \Tcfg$
-such that $\gamma_1 \Rightarrow^{*}_{\mathcal{S}} \gamma_1^\prime$
-and \ldots and $\gamma_k \Rightarrow^{*}_{\mathcal{S}} \gamma_k^\prime$,
-and
-$(\gamma_1^\prime,\rho) \vDash \psi_1 \land \psi$ and \ldots and $(\gamma_k^\prime, \rho) \vDash \psi_k \land \psi$.
+    We define syntax and semantics of cartesian reachability rules as follows.
+\begin{itemize}
+    \item 
+        A One-Path Cartesian reachability rule of arity $k$ has the shape
+        \begin{equation*}
+        \exists \vec{X}.\, (\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\exists} \exists \vec{Y}.\, (\psi_1,\ldots,\psi_k) \land \psi \, ,
+        \end{equation*}
+        where $\varphi, \psi$ are structureless patterns,
+        $\mathit{FV}(\varphi) \subseteq \mathit{FV}((\varphi_1,\ldots,\varphi_k)) \cup \vec{X}$,
+        $\mathit{FV}(\psi) \subseteq \mathit{FV}((\psi_1,\ldots,\psi_k)) \cup \vec{Y}$,
+        and $\varphi_j, \psi_j$ for any $j \in \{ 1, \ldots, k \}$ are
+        existentially quantified\jt{Check whether we need that.} disjunctions of constrained terms.
+    \item 
+    A One-Path Cartesian reachability rule
+    $(\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\exists} (\psi_1,\ldots,\psi_k) \land \psi$
+    is \emph{valid} in a reachability system $\mathcal{S} = (\mathcal{T}, S)$,
+    written
+    $\mathcal{S} \vDash_\CRL (\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\exists}
+    (\psi_1,\ldots,\psi_k) \land \psi$,
+    iff for all configurations $\gamma_1,\ldots,\gamma_k \in \Tcfg$
+    which terminate in $(\Tcfg, \Rightarrow_{\mathcal{S}})$
+    and any $\mathcal{T}$-valuation $\rho$,
+    whenever $(\gamma_1,\rho) \vDash \varphi_1 \land \varphi$ and \ldots
+    and $(\gamma_k,\rho) \vDash \varphi_k \land \varphi$,
+    then there exist configurations $\gamma_1^\prime,\ldots,\gamma_k^\prime \in \Tcfg$
+    such that $\gamma_1 \Rightarrow^{*}_{\mathcal{S}} \gamma_1^\prime$  
+    and \ldots and $\gamma_k \Rightarrow^{*}_{\mathcal{S}} \gamma_k^\prime$,
+    and
+    $(\gamma_1^\prime,\rho) \vDash \psi_1 \land \psi$ and \ldots and $(\gamma_k^\prime, \rho) \vDash \psi_k \land \psi$.
+\end{itemize}
 \end{definition}
 
 % TODO remark that this is not the same as k "normal" reachability rules.
@@ -1153,14 +1167,14 @@ We prove each implication separately.
     for all configurations $c_1,\ldots,c_k \in \Tcfg$
     which terminate in $(\Tcfg, \Rightarrow_{\mathcal{S}})$
     and any $\mathcal{T}$-valuation $\rho$,
-    whenever $(c_1,\rho) \vDash \varphi_1 \land \varphi$ and \ldots
-    and $(c_k,\rho) \vDash \varphi_k \land \varphi$,
+    whenever $(\mathcal{T}, c_1,\rho) \vDash \varphi_1 \land P$ and \ldots
+    and $(\mathcal{T}, c_k,\rho) \vDash \varphi_k \land P$,
     then there exist configurations $c_1^\prime,\ldots,c_k^\prime \in \Tcfg$
     such that $c_1 \Rightarrow^{*}_{\mathcal{S}} c_1^\prime$
     and \ldots and $c_k \Rightarrow^{*}_{\mathcal{S}} c_k^\prime$,
     and
-    $(c_1^\prime,\rho) \vDash \varphi^\prime_1 \land \varphi^\prime$ and \ldots
-    and $(c_k^\prime, \rho) \vDash \varphi^\prime_k \land \varphi^\prime$,
+    $(\mathcal{T}, c_1^\prime,\rho) \vDash \varphi^\prime_1 \land P^\prime$ and \ldots
+    and $(\mathcal{T}, c_k^\prime, \rho) \vDash \varphi^\prime_k \land P^\prime$,
     \end{proofenv}
     and have to prove that
     \begin{proofenv}
@@ -1243,7 +1257,18 @@ We prove each implication separately.
         \end{equation*}
     \end{enumerate}
     \end{proofenv}
-    TODO
+    By \Cref{lem:terminationComposite}, the configurations $c_1, \ldots, c_k$ are terminating.
+    Furhermore, by \Cref{lem:structurelessSemantics}, we have $(\mathcal{T}^*, \rho_0) \vDash P$.
+    Now we use \Cref{lem:unusedVariables} to get
+    \begin{proofenv}
+    for every $\rho_0^\prime : \mathit{Var} \to \mathcal{T}$ satisfying $\rho_0^\prime(v) = \rho_0(v)$
+        for any $v \in \mathit{FV}(\mathit{mkList}(\phi_{i_1}, \ldots, \phi_{i_k}))$, it holds that 
+    $(\mathcal{T}^*, \rho_0^\prime) \vDash P$;
+    \end{proofenv}
+    
+    however, we have to discharge the obligation that $\rho_0(v) = \rho_0^\prime(v)$ for any $v \in \mathit{FV}(P)$,
+    which we do by noticing that from \Cref{def:opCRLsemantics}, 
+    TODO.
     \item For the opposite implication, TODO.
 \end{enumerate}
 
