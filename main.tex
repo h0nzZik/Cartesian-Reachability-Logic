@@ -1318,9 +1318,44 @@ We prove each implication separately.
         we have $\rho_0(v) = \rho(v)$.
         In case $v \not\in \vec{X}$, then by definition of $\rho_2$, the goal reduces to
         $\rho(v) = \rho_0(v)$, which follows from the assumption since $\vec{X} \subseteq \vec{Z}$.
-        In case $v \in \vec{X}$, the goal holds be definition of $\rho_2$.
-        \item TODO
+        In case $v \in \vec{X}$, the goal holds by the definition of $\rho_2$.
+        \item Assuming that
+        \begin{equation*}
+            (\mathcal{T}^*, C, \rho_0) \vDash (P_{i_1} \land \ldots \land P_{i_k}) \land P \, ,
+        \end{equation*}
+        for some $\rho_0$ satisfying $\rho_0(v) = \rho(v)$ for any $v \in \mathit{Var}^* \setminus \vec{Z}$,
+        we have to prove that
+        \begin{equation*}
+            (\mathcal{T}, c_j, \rho_2) \vDash  P_{j} \land P \, .
+        \end{equation*}
+        Since the formula $(P_{i_1} \land \ldots \land P_{i_k}) \land P$ does not contain any variables
+        of sort $\mathit{Cfg}^*$, we can derive (using \Cref{lem:unusedVariables}) that
+        \begin{equation*}
+            (\mathcal{T}^*, C, (\rho_0^\prime)^*) \vDash (P_{i_1} \land \ldots \land P_{i_k}) \land P \, ,
+        \end{equation*}
+        for some $\rho_0^\prime$ satisfying $\rho_0^\prime(v) = \rho(v)$ for any $v \in \mathit{Var} \setminus \vec{Z}$.
+        Since the formula is structureless, we can derive (using \Cref{lem:structurelessSemantics})
+        that
+        \begin{equation*}
+            (\mathcal{T}^*, c_j, (\rho_0^\prime)^*) \vDash (P_{i_1} \land \ldots \land P_{i_k}) \land P \, ,
+        \end{equation*}
+        and then by \Cref{lem:starConservative} that
+        \begin{equation*}
+            (\mathcal{T}, c_j, \rho_0^\prime)) \vDash (P_{i_1} \land \ldots \land P_{i_k}) \land P \, ,
+        \end{equation*}
+        from which by the semantics of conjunction (\Cref{def:matchinglogic}) follows that
+        \begin{equation*}
+            (\mathcal{T}, c_j, \rho_0^\prime)) \vDash P_{j} \land P \, .
+        \end{equation*}
+        We then use \Cref{lem:unusedVariables} to prove the goal, since for any $v \in \mathit{FV}(P_j \land P)$,
+        $\rho_0^\prime(v) = \rho_2(v)$,
+        because
+        \begin{itemize}
+            \item either $v \in \vec{X}$, in which case $\rho_2(v) = \rho_0(v)$ and we have to prove that
+                  $\rho_0^\prime(v) = \rho_0(v)$
+        \end{itemize}
     \end{enumerate}
+            TODO continue the proof
     \item For the opposite implication, TODO.
 \end{enumerate}
 
