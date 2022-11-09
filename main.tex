@@ -304,21 +304,27 @@ Cartesian reachability logic is an extension of (one-path) reachability logic.
         existentially quantified\jt{Check whether we need that.} disjunctions of constrained terms.
     \item 
     A One-Path Cartesian reachability rule
-    $(\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\exists} (\psi_1,\ldots,\psi_k) \land \psi$
+    \begin{equation*}
+     \exists \vec{X}.\, (\varphi_1,\ldots,\varphi_k) \land \varphi
+     \Rightarrow^{c\exists} \exists \vec{Y}.\, (\psi_1,\ldots,\psi_k) \land \psi   
+    \end{equation*}
     is \emph{valid} in a reachability system $\mathcal{S} = (\mathcal{T}, S)$,
     written
-    $\mathcal{S} \vDash_\CRL (\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\exists}
-    (\psi_1,\ldots,\psi_k) \land \psi$,
+    \begin{equation*}
+        \mathcal{S} \vDash_\CRL \exists \vec{X}.\, (\varphi_1,\ldots,\varphi_k) \land \varphi
+     \Rightarrow^{c\exists} \exists \vec{Y}.\, (\psi_1,\ldots,\psi_k) \land \psi \, ,
+    \end{equation*}
     iff for all configurations $\gamma_1,\ldots,\gamma_k \in \Tcfg$
     which terminate in $(\Tcfg, \Rightarrow_{\mathcal{S}})$
-    and any $\mathcal{T}$-valuation $\rho$,
+    and any two $\mathcal{T}$-valuation $\rho,\rho^\prime$
+    satisfying $\rho(v) = \rho^\prime(v)$ for any $v \in \mathit{Var} \setminus (\vec{X} \cup \vec{Y})$,
     whenever $(\gamma_1,\rho) \vDash \varphi_1 \land \varphi$ and \ldots
     and $(\gamma_k,\rho) \vDash \varphi_k \land \varphi$,
     then there exist configurations $\gamma_1^\prime,\ldots,\gamma_k^\prime \in \Tcfg$
     such that $\gamma_1 \Rightarrow^{*}_{\mathcal{S}} \gamma_1^\prime$  
     and \ldots and $\gamma_k \Rightarrow^{*}_{\mathcal{S}} \gamma_k^\prime$,
     and
-    $(\gamma_1^\prime,\rho) \vDash \psi_1 \land \psi$ and \ldots and $(\gamma_k^\prime, \rho) \vDash \psi_k \land \psi$.
+    $(\gamma_1^\prime,\rho^\prime) \vDash \psi_1 \land \psi$ and \ldots and $(\gamma_k^\prime, \rho^\prime) \vDash \psi_k \land \psi$.
 \end{itemize}
 \end{definition}
 
