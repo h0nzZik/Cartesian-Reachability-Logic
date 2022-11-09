@@ -1,0 +1,246 @@
+While1 == while(x>0){y++;x--;}
+If1 == if (x > 0) {y++;x--; while(x>0){y++;x--;}} else {}
+
+C1 ==
+exists X1, X2, Y1, Y2.
+(<k>While1</k><st>x |-> X1, y |-> Y1</st>,
+ <k>While1</k><st>x |-> X2, y |-> Y2</st>)
+/\ (0 <= X1 /\ X1 <= X2 /\ Y1 = Y2)
+
+Tgt ==
+∃ Y1', Y2'.
+(<k>.K</k><st>x |-> 0, y |-> Y1'</st>,
+ <k>.K</k><st>x |-> 0, y |-> Y2'</st>)
+/\ (Y1' <= Y2')
+
+Axioms = ∅, Circularities = ∅
+
+(<k>While1</k><st>x |-> X1, y |-> Y1</st>,
+ <k>While1</k><st>x |-> X2, y |-> Y2</st>)
+/\ (0 <= X1 /\ X1 <= X2 /\ Y1 = Y2)
+==>c
+Tgt
+
+apply Conseq (since phi(X) -> exists X. phi(X))
+========================================
+
+exists X1, X2, Y1, Y2.
+(<k>While1</k><st>x |-> X1, y |-> Y1</st>,
+ <k>While1</k><st>x |-> X2, y |-> Y2</st>)
+/\ (0 <= X1 /\ X1 <= X2 /\ Y1 = Y2)
+==>c
+Tgt
+
+
+apply Circularity
+========================================
+
+Axioms = ∅, Circularities = { C1 }
+
+exists X1, X2, Y1, Y2.
+(<k>While1</k><st>x |-> X1, y |-> Y1</st>,
+ <k>While1</k><st>x |-> X2, y |-> Y2</st>)
+/\ (0 <= X1 /\ X1 <= X2 /\ Y1 = Y2)
+
+==>c
+Tgt
+
+
+apply Abstract X1, X2, Y1, Y2.
+========================================
+
+Axioms = ∅, Circularities = { C1 }
+
+(<k>While1</k><st>x |-> X1, y |-> Y1</st>,
+ <k>While1</k><st>x |-> X2, y |-> Y2</st>)
+/\ (0 <= X1 /\ X1 <= X2 /\ Y1 = Y2)
+
+==>c
+Tgt
+
+
+structural rewriting (maybe step, maybe conseq)
+========================================
+
+(<k>If1</k><st>x |-> X1, y |-> Y1</st>,
+ <k>If1</k><st>x |-> X2, y |-> Y2</st>)
+/\ (0 <= X1 /\ X1 <= X2 /\ Y1 = Y2)
+==>c
+Tgt
+
+step at 1st component (var-lookup)
+===========================================
+
+Axioms = { C1 }, Circularities = ∅
+
+(<k>if (X1 > 0) {y++;x--; while(x>0){y++;x--;}} else {}</k><st>x |-> X1, y |-> Y1</st>,
+ <k>if (x > 0) {y++;x--; while(x>0){y++;x--;}} else {}</k><st>x |-> X2, y |-> Y2</st>)
+/\ (0 <= X1 /\ X1 <= X2 /\ Y1 = Y2)
+==>c
+Tgt
+
+
+step at 2nd component (var-lookup)
+===========================================
+
+Axioms = { C1 }, Circularities = ∅
+
+(<k>if (X1 > 0) {y++;x--; while(x>0){y++;x--;}} else {}</k><st>x |-> X1, y |-> Y1</st>,
+ <k>if (X2 > 0) {y++;x--; while(x>0){y++;x--;}} else {}</k><st>x |-> X2, y |-> Y2</st>)
+/\ (0 <= X1 /\ X1 <= X2 /\ Y1 = Y2)
+==>c
+Tgt
+
+conseq; restructure such that an if-rule might apply after case
+===========================================
+
+Axioms = { C1 }, Circularities = ∅
+
+((<k>if (true) {y++;x--; while(x>0){y++;x--;}} else {}</k><st>x |-> X1, y |-> Y1</st> /\ X1 > 0) \/ (<k>if (false) {while(x>0){y++;x--;}} else {}</k><st>x |-> X1, y |-> Y1</st> /\ X1 <= 0),
+ (<k>if (true) {y++;x--; while(x>0){y++;x--;}} else {}</k><st>x |-> X2, y |-> Y2</st> /\ X2 > 0) \/ (<k>if (false) {while(x>0){y++;x--;}} else {}</k><st>x |-> X2, y |-> Y2</st> /\ X2 <= 0))
+/\ (0 <= X1 /\ X1 <= X2 /\ Y1 = Y2)
+==>c
+Tgt
+
+repeat case
+============================================
+
+G1:
+((<k>if (true) {y++;x--;while(x>0){y++;x--;}} else {}</k><st>x |-> X1, y |-> Y1</st> /\ X1 > 0),
+ (<k>if (true) {y++;x--;while(x>0){y++;x--;}} else {}</k><st>x |-> X2, y |-> Y2</st> /\ X2 > 0))
+/\ (0 <= X1 /\ X1 <= X2 /\ Y1 = Y2)
+==>c
+Tgt
+
+G2:
+((<k>if (true) {y++;x--;while(x>0){y++;x--;}} else {}</k><st>x |-> X1, y |-> Y1</st> /\ X1 > 0),
+ (<k>if (false) {y++;x--;while(x>0){y++;x--;}} else {}</k><st>x |-> X2, y |-> Y2</st> /\ X2 <= 0))
+/\ (0 <= X1 /\ X1 <= X2 /\ Y1 = Y2)
+==>c
+Tgt
+
+G3:
+((<k>if (false) {y++;x--; while(x>0){y++;x--;}} else {}</k><st>x |-> X1, y |-> Y1</st> /\ X1 <= 0),
+ (<k>if (true) {y++;x--; while(x>0){y++;x--;}} else {}</k><st>x |-> X2, y |-> Y2</st> /\ X2 > 0))
+/\ (0 <= X1 /\ X1 <= X2 /\ Y1 = Y2)
+==>c
+Tgt
+
+G4:
+((<k>if (false) {y++;x--; while(x>0){y++;x--;}} else {}</k><st>x |-> X1, y |-> Y1</st> /\ X1 <= 0),
+ (<k>if (false) {y++;x--; while(x>0){y++;x--;}} else {}</k><st>x |-> X2, y |-> Y2</st> /\ X2 <= 0))
+/\ (0 <= X1 /\ X1 <= X2 /\ Y1 = Y2)
+==>c
+Tgt
+
+
+ad G4: reduce, done.
+ad G3: reduce; need to come up with an invariant
+ad G2: reduce. Since 0 <= X1 <= X2 <= 0 and X1 > 0, we are done (contradiction).
+
+ad G1: step at 1st, step at 2nd (if-true)
+===========================================
+
+Axioms = { C1 }, Circularities = ∅
+
+G1:
+((<k>y++;x--; while(x>0){y++;x--;}</k><st>x |-> X1, y |-> Y1</st> /\ X1 > 0),
+ (<k>y++;x--; while(x>0){y++;x--;}</k><st>x |-> X2, y |-> Y2</st> /\ X2 > 0))
+/\ (0 <= X1 /\ X1 <= X2 /\ Y1 = Y2)
+==>c
+Tgt
+
+do 2 step at 1st, do 2 step at 2nd
+===================================
+
+Axioms = { C1 }, Circularities = ∅
+
+G1:
+((<k>while(x>0){y++;x--;}</k><st>x |-> X1 - 1, y |-> Y1 + 1</st> /\ X1 > 0),
+ (<k>while(x>0){y++;x--;}</k><st>x |-> X2 - 1, y |-> Y2 + 1</st> /\ X2 > 0))
+/\ (0 <= X1 /\ X1 <= X2 /\ Y1 = Y2)
+==>c
+Tgt
+
+
+Btw,
+C1 ==
+exists X1, X2, Y1, Y2.
+(<k>While1</k><st>x |-> X1, y |-> Y1</st>,
+ <k>While1</k><st>x |-> X2, y |-> Y2</st>)
+/\ (0 <= X1 /\ X1 <= X2 /\ Y1 = Y2)
+
+
+apply Conseq, propagate local constraints to global
+=====================================================
+
+G1:
+((<k>while(x>0){y++;x--;}</k><st>x |-> X1 - 1, y |-> Y1 + 1</st>),
+ (<k>while(x>0){y++;x--;}</k><st>x |-> X2 - 1, y |-> Y2 + 1</st>))
+/\ (0 <= X1 /\ X1 <= X2 /\ Y1 = Y2 /\ X1 > 0 /\ X2 > 0)
+==>c
+Tgt
+
+apply Conseq (set fresh variables to some convenient values)
+==========================================
+exists X1'',X2'',Y1'',Y2''.
+((<k>while(x>0){y++;x--;}</k><st>x |-> X1 - 1, y |-> Y1 + 1</st>),
+ (<k>while(x>0){y++;x--;}</k><st>x |-> X2 - 1, y |-> Y2 + 1</st>))
+/\ (0 <= X1 /\ X1 <= X2 /\ Y1 = Y2 /\ X1 > 0 /\ X2 > 0 /\ X1'' = X1 - 1 /\ X2'' = X2 - 1 /\ Y1'' = Y1 + 1 /\ Y2'' = Y2 + 1)
+==>c
+Tgt
+
+apply Abstract X1'', X2'', Y1'', Y2'' (since they do not occur in the RHS)
+==========================================
+((<k>while(x>0){y++;x--;}</k><st>x |-> X1 - 1, y |-> Y1 + 1</st>),
+ (<k>while(x>0){y++;x--;}</k><st>x |-> X2 - 1, y |-> Y2 + 1</st>))
+/\ (0 <= X1 /\ X1 <= X2 /\ Y1 = Y2 /\ X1 > 0 /\ X2 > 0 /\ X1'' = X1 - 1 /\ X2'' = X2 - 1 /\ Y1'' = Y1 + 1 /\ Y2'' = Y2 + 1)
+==>c
+Tgt
+
+
+apply Conseq (equational reasoning)
+==========================================
+
+((<k>while(x>0){y++;x--;}</k><st>x |-> X1'', y |-> Y1''</st>),
+ (<k>while(x>0){y++;x--;}</k><st>x |-> X2'', y |-> Y2''</st>))
+/\ (0 <= X1'' + 1 /\ X1'' + 1 <= X2'' + 1 /\ Y1'' - 1 = Y2'' - 1 /\ X1'' + 1 > 0 /\ X2'' + 1 > 0 /\ X1'' = X1 - 1 /\ X2'' = X2 - 1 /\ Y1'' = Y1 + 1 /\ Y2'' = Y2 + 1)
+==>c
+Tgt
+
+apply Conseq (discard uninteresting conjuncts)
+===========================================
+
+((<k>while(x>0){y++;x--;}</k><st>x |-> X1'', y |-> Y1''</st>),
+ (<k>while(x>0){y++;x--;}</k><st>x |-> X2'', y |-> Y2''</st>))
+/\ (X1'' + 1 <= X2'' + 1 /\ Y1'' - 1 = Y2'' - 1 /\ X1'' + 1 > 0 /\ X2'' + 1 > 0)
+==>c
+Tgt
+
+apply Conseq (linear arithmetic)
+===========================================
+
+((<k>while(x>0){y++;x--;}</k><st>x |-> X1'', y |-> Y1''</st>),
+ (<k>while(x>0){y++;x--;}</k><st>x |-> X2'', y |-> Y2''</st>))
+/\ (0 <= X1'' /\ X1'' <= X2'' /\ Y1'' = Y2'')
+==>c
+Tgt
+
+To recall,
+C1 ==
+exists X1, X2, Y1, Y2.
+(<k>While1</k><st>x |-> X1, y |-> Y1</st>,
+ <k>While1</k><st>x |-> X2, y |-> Y2</st>)
+/\ (0 <= X1 /\ X1 <= X2 /\ Y1 = Y2)
+
+apply Conseq (existential quantification followed by alpha renaming)
+
+exists X1, X2, Y1, Y2.
+((<k>while(x>0){y++;x--;}</k><st>x |-> X1, y |-> Y1</st>),
+ (<k>while(x>0){y++;x--;}</k><st>x |-> X2, y |-> Y2</st>))
+/\ (0 <= X1 /\ X1 <= X2 /\ Y1 = Y2)
+==>c
+Tgt
+
+Now apply Axiom. Qed.
+
