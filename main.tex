@@ -1178,7 +1178,7 @@ We prove each implication separately.
     such that $c_1 \Rightarrow^{*}_{\mathcal{S}} c_1^\prime$  
     and \ldots and $c_k \Rightarrow^{*}_{\mathcal{S}} c_k^\prime$,
     and
-    $(\mathcal{T}, c_1^\prime,\rho^\prime) \vDash \psi_1 \land P^\prime$ and \ldots and $(\mathcal{T}, c_k^\prime, \rho^\prime) \vDash \psi_k \land P^\prime$,
+    $(\mathcal{T}, c_1^\prime,\rho^\prime) \vDash \varphi_1^\prime \land P^\prime$ and \ldots and $(\mathcal{T}, c_k^\prime, \rho^\prime) \vDash \varphi_k^\prime \land P^\prime$,
     \end{proofenv}
     and have to prove that
     \begin{proofenv}
@@ -1304,104 +1304,46 @@ We prove each implication separately.
     \end{proofenv}
     The first subgoal follows directly from the definitions.
     The second subgoal follows from the assumption, because $\rho_{1,j}(v) = \rho_0(v)$ by definition.
-    The third subgoal TODO.
-    \\\hline\\
-    %Now we use \Cref{lem:unusedVariables} to get
-    %\begin{proofenv}
-    %for every $\rho_0^\prime : \mathit{Var} \to \mathcal{T}$ satisfying $\rho_0^\prime(v) = \rho_0(v)$
-    %    for any $v \in \mathit{FV}(\mathit{mkList}(\phi_{i_1}, \ldots, \phi_{i_k}))$, it holds that 
-    %$(\mathcal{T}^*, \rho_0^\prime) \vDash P$;
-    %\end{proofenv}
-    %however, we have to discharge the obligation that $\rho_0(v) = \rho_0^\prime(v)$ for any $v \in \mathit{FV}(P)$,
-    %which we do by noticing that from \Cref{def:opCRLsemantics}, 
-    Now we want to prove that for every $j \in \{ 1, \ldots, k \}$, $(\mathcal{T}, c_j, \rho) \vDash \varphi_j \land P$.
-    That is, after unfolding $\varphi_j$,
+    For the third subgoal we first use (ii.b) and \Cref{lem:unusedVariables} to derive
+    \begin{equation*}
+        (\mathcal{T}^*, C, \rho_{00}^*) \vDash (P_{i_1} \land \ldots \land P_{i_k}) \land P
+    \end{equation*}
+    (where $\rho_{00}(v) = \rho_0(v)$ for any $v \in \mathit{Var}$),
+    from which we derive (using \Cref{lem:starConservative}, \Cref{lem:structurelessSemantics}),
+    and \Cref{def:matchinglogic}) that
+    \begin{equation*}
+        (\mathcal{T}^*, c_j, \rho_{00}) \vDash P_{i_j} \land P \, ,
+    \end{equation*}
+    from which
+    \begin{equation*}
+        (\mathcal{T}^*, c_j, \rho_{1,j}) \vDash P_{i_j} \land P
+    \end{equation*}
+    follows using \Cref{lem:unusedVariables}
+    (
+    because for any $v \in \mathit{FV}(P_{i_j} \land P)$, 
+    $\rho_{00}(v) = \rho_0(v) = \rho_{i_j}$
+    ).
+    \\
+    We have just proved the premise of the assumption (i).
+    It follows that (iii)
     \begin{proofenv}
-        for every $j \in \{ 1, \ldots, k \}$, $(\mathcal{T}, c_j, \rho) \vDash (\exists \vec{X}_j.\, \bigvee_{i_j = 1}^{m_j} (\phi_{i_j} \land P_{i_j})) \land P$ \, .
+        for any valuation $\rho_2 : \mathit{Var} \to \mathcal{T}$
+        satisfying $\rho_2(v) = \rho_1(v)$ for any $v \in \mathit{Var} \setminus (\vec{X} \cup \vec{Y})$,
+        there exist configurations $c_1^\prime,\ldots,c_k^\prime \in \Tcfg$ such that
+        $c_1 \Rightarrow^*_{\mathcal{S}} c_1^\prime$ and \ldots and
+        $c_k \Rightarrow^*_{\mathcal{S}} c_k^\prime$,
+        and $(\mathcal{T}, c_1^\prime,\rho^\prime) \vDash \varphi_1^\prime \land P^\prime$ and \ldots and $(\mathcal{T}, c_k^\prime, \rho^\prime) \vDash \varphi_k^\prime \land P^\prime$.
     \end{proofenv}
-    Let $j$ be in the range $1, \ldots, k$.
-    By \Cref{def:matchinglogic}, it is enough to show that
+    Let $\rho_2$ be such valuation (satisfying $\rho_2(v) = \rho_1(v)$ for any $v \in \mathit{Var} \setminus (\vec{X} \cup \vec{Y})$).
+    We choose $C^\prime := [ c_1^\prime,\ldots,c_k^\prime ]$,
+    and it remains to be proven that
     \begin{proofenv}
-        there exists a valuation $\rho_1 : \mathit{Var} \to \mathcal{T}$ such that
-        $\rho_1(v) = \rho(v)$ for any $v \in \mathit{Var} \setminus \vec{X}$,
-        and there exists some $l \in \{ 1, \ldots, m_j \}$ such that
-        \begin{enumerate}
-            \item         
-            \begin{equation*}
-            (\mathcal{T}, c_j, \rho_1) \vDash \phi_l \, ;
-            \end{equation*}
-            \item and
-            \begin{equation*}
-            (\mathcal{T}, c_j, \rho_1) \vDash  P_l \land P \, .
-            \end{equation*}
-        \end{enumerate}
+        $C \Rightarrow^*_{\mathcal{S}^*}$ and $(\mathcal{T}^*, C^\prime, \rho) \vDash \mathit{flatten}(\Psi^\prime)$ \,
     \end{proofenv}
-    We let $\rho_1 := \rho_2$, where
-    $\rho_2(v) := \rho_0(v)$ for any $v \in \vec{X}$ and
-    $\rho_2(v) := \rho(v)$ for any $v \in \mathit{Var} \setminus \vec{X}$,
-    let $l := j$, and have to prove that
-    \begin{proofenv}
-        \begin{enumerate}
-            \item for any $v \in \mathit{Var} \setminus \vec{X}$, $\rho_2(v) = \rho(v)$;
-            \item         
-            \begin{equation*}
-            (\mathcal{T}, c_j, \rho_2) \vDash \phi_{j} \, ;
-            \end{equation*}
-            \item and
-            \begin{equation*}
-            (\mathcal{T}, c_j, \rho_2) \vDash  P_{j} \land P \, .
-            \end{equation*}
-        \end{enumerate}
-    \end{proofenv}
-    We prove these three subgoals one by one.
-    \begin{enumerate}
-        \item Let $v \in \mathit{Var} \setminus \vec{X}$. The by definition of $\rho_2(v)$, we have
-        that $\rho_2(v) = \rho(v)$.
-        \item By (ii.b), we have $(\mathcal{T}, c_j, \rho_2) \vDash \phi_j$,
-        but we have to prove that for any $v \in \mathit{FV}(\mathit{mkList(\phi_{i_1}, \ldots, \phi_{i_k})})$,
-        it holds that $\rho_2(v) = \rho_0(v)$,
-        assuming that for any $v \in \mathit{Var}^* \setminus \vec{Z}$,
-        we have $\rho_0(v) = \rho(v)$.
-        In case $v \not\in \vec{X}$, then by definition of $\rho_2$, the goal reduces to
-        $\rho(v) = \rho_0(v)$, which follows from the assumption since $\vec{X} \subseteq \vec{Z}$.
-        In case $v \in \vec{X}$, the goal holds by the definition of $\rho_2$.
-        \item Assuming that
-        \begin{equation*}
-            (\mathcal{T}^*, C, \rho_0) \vDash (P_{i_1} \land \ldots \land P_{i_k}) \land P \, ,
-        \end{equation*}
-        for some $\rho_0$ satisfying $\rho_0(v) = \rho(v)$ for any $v \in \mathit{Var}^* \setminus \vec{Z}$,
-        we have to prove that
-        \begin{equation*}
-            (\mathcal{T}, c_j, \rho_2) \vDash  P_{j} \land P \, .
-        \end{equation*}
-        Since the formula $(P_{i_1} \land \ldots \land P_{i_k}) \land P$ does not contain any variables
-        of sort $\mathit{Cfg}^*$, we can derive (using \Cref{lem:unusedVariables}) that
-        \begin{equation*}
-            (\mathcal{T}^*, C, (\rho_0^\prime)^*) \vDash (P_{i_1} \land \ldots \land P_{i_k}) \land P \, ,
-        \end{equation*}
-        for some $\rho_0^\prime$ satisfying $\rho_0^\prime(v) = \rho(v)$ for any $v \in \mathit{Var} \setminus \vec{Z}$.
-        Since the formula is structureless, we can derive (using \Cref{lem:structurelessSemantics})
-        that
-        \begin{equation*}
-            (\mathcal{T}^*, c_j, (\rho_0^\prime)^*) \vDash (P_{i_1} \land \ldots \land P_{i_k}) \land P \, ,
-        \end{equation*}
-        and then by \Cref{lem:starConservative} that
-        \begin{equation*}
-            (\mathcal{T}, c_j, \rho_0^\prime)) \vDash (P_{i_1} \land \ldots \land P_{i_k}) \land P \, ,
-        \end{equation*}
-        from which by the semantics of conjunction (\Cref{def:matchinglogic}) follows that
-        \begin{equation*}
-            (\mathcal{T}, c_j, \rho_0^\prime)) \vDash P_{j} \land P \, .
-        \end{equation*}
-        We then use \Cref{lem:unusedVariables} to prove the goal, since for any $v \in \mathit{FV}(P_j \land P)$,
-        $\rho_0^\prime(v) = \rho_2(v)$,
-        because
-        \begin{itemize}
-            \item either $v \in \vec{X}$, in which case $\rho_2(v) = \rho_0(v)$ and we have to prove that
-                  $\rho_0^\prime(v) = \rho_0(v)$
-        \end{itemize}
-    \end{enumerate}
-            TODO continue the proof
+    (where $\rho$ is the valuation that we started with).
+    
+    
+    TODO continue the proof
     \item For the opposite implication, TODO.
 \end{enumerate}
 
