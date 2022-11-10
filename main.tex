@@ -626,6 +626,9 @@ we have $\mathcal{S} \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime$ and 
 
 \section{Discussion}\label{sec:discussion}
 
+\subsection{Relation to Cartesian Hoare logic}
+
+\subsubsection{(Non)determinism}
 We base our work on the \emph{one-path} variant of reachability logic.
 Consequently, CRL inherits a known limitation of one-path reachability logic: that the tight correspondence between
 one-path RL and Hoare logics is limited to deterministic languages.
@@ -645,6 +648,50 @@ and firstorder formulas $\Phi, \Psi$ over variables $\vec{x}_1,\ldots,\vec{x}_k$
 Admitted. Use the relationship between one-path CRL and all-path CRL on deterministic languages (TODO).
 \end{proof}
 
+\subsubsection{Main Idea and Proof Technique}
+
+Our understanding of the inner workings of CHL is based on the extended, unpublished version (\cite{SousaD16Extended})
+of \cite{SousaD16}.
+There, the authors define a \emph{linearization operation} on lists of programs, which roughly corresponds to our
+\emph{star extension} of the language's semantics.
+Then, the authors prove lemmas saying that a CHL triple with a list of programs inside is derivable
+in the CHL proof system
+if and only if 
+a Hoare triple having the same list of programs, but linearized, inside, is derivable;
+the "only if" implication corresponds to our \Cref{lem:CRLalmostSoundness}, where we construct
+an RL proof from a CRL proof,
+while the "if" implication corresponds to our Reduce rule.
+Furthermore, in the proof of soundness of CHL, the authors assume soundness of the self-composition technique;
+self-composition corresponds to our \emph{star extension} and its soundness to our \Cref{thm:correspondence}.
+Finally \cite{SousaD16Extended} assumes soundness and relative completeness of the underling Hoare logic;
+similarly, we assume soundness and relative completeness of reachability logic.
+However, for completeness, we have to prove that \emph{star extension} preserves decidability.
+
+\subsubsection{Differences}
+There are also differences between the CHL and CRL techniques.
+First, our proof system has only 8 rules, and they do not mention any programming language construct,
+while CHL has 17 rules (not counting the Expand rule), half of which are specific to the underlying language.
+
+Second, there is a redundancy between the language-specific CHL rules and the Hoare logic rules of the
+programming language: for example, conditional statement ("if") has (1) a rule in the formal semantics of the language,
+(2) a rule in the Hoare logic (not shown in the paper), and (3) a rule in CHL.
+When considering that the three rules have to play nice together (that is, CHL and Hoare logic rules have to be sound with respect to the semantics), someone had to think about the conditional statement at least five times .
+We consider this to be highly uneconomical
+- and the situation
+is even worse for the looping construct ("while-with-breaks"), which is supported using additional CHL rules.
+In contrast, in the CRL/RL framework, it is enough to design each language construct once - when giving
+semantics to it.
+
+
+Third, in CHL the support for lock-step reasoning is hard-wired into the rules for loops,
+while in our framework, lock-step reasoning is not limited to loops, but can support arbitrary sources
+of circular behavior - including loops, recursion, gotos.
+Therefore, while we are inspired by the \emph{idea} of lock-step execution from \cite{SousaD16},
+for the \emph{realization} of this idea we turn to the literature on \emph{equivalence checking}.
+
+\subsection{Relation to semantic-based program equivalence}
+
+TODO
 
 \bibliography{bibliography}
 \bibliographystyle{plain}
