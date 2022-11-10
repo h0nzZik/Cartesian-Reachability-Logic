@@ -89,10 +89,13 @@ On the other hand, the technique developed in \cite{BeutnerF22} works with \emph
 so it already is language-independent \emph{in some sense}. However, it is not clear how to use the technique
 with an arbitrary language $L$, without writing a compiler from $L$ to symbolic transition systems first.
 
-In this paper we develop a logic named \emph{Cartesian Reachability logic}, which extends reachability logic
+In this paper we develop a logic named \emph{Cartesian Reachability logic (CRL)}, which properly extends reachability logic
 to allow reasoning about $k$-safety hyperproperties. Simiarly to CHL, CRL has a sound
-and relatively complete proof system. However, an advantage of CRL against CHL is that it works with any language
-for which RL works; that is, with any language which has a RL-based semantics.
+and relatively complete proof system. A major advantage of CRL against CHL is that it works with any language
+for which RL works; that is, with any language which has a RL-based formal semantics.
+However, CRL does \emph{not} extend CHL, because the two logics give different semantics to properties of nondeterministic programs;
+despite this distinction, CRL extends CHL on the deterministic fragment of the CHL-supported language.
+We elaborate on this relation in \Cref{sec:discussion}. 
 
 \section{Preliminaries}
 
@@ -608,6 +611,28 @@ we have $\mathcal{S} \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime$ and 
 \end{proof}
 
 \section{Implementation}
+
+\section{Discussion}\label{sec:discussion}
+
+We base our work on the \emph{one-path} variant of reachability logic.
+Consequently, CRL inherits a known limitation of one-path reachability logic: that the tight correspondence between
+one-path RL and Hoare logics is limited to deterministic languages.
+However, we would still want to prove the following theorem.
+\begin{theorem}
+CRL extends CHL on the deterministic fragment of the CHL-supported language.
+That is, given any program $P$ in the deterministic fragment of the CHL's imperative language,
+a sound reachability-logic formalization (that is, a reachability system) $\mathcal{S}_{\mathit{IMP}}$ of the CHL's imperative language,
+and firstorder formulas $\Phi, \Psi$ over variables $\vec{x}_1,\ldots,\vec{x}_k$,
+\begin{equation*}
+    \vDash_{\mathit{CHL}} ||\Phi||\ P\ ||\Psi||
+    \iff
+    \mathcal{S}_{\mathit{IMP}} \vDash_\CRL \mathit{tr}(P, \Phi) \Rightarrow^{c\exists} \mathit{tr}(P, \Psi) \, .
+\end{equation*}
+\end{theorem}
+\begin{proof}
+Admitted. Use the relationship between one-path CRL and all-path CRL on deterministic languages (TODO).
+\end{proof}
+
 
 \bibliography{bibliography}
 \bibliographystyle{plain}
