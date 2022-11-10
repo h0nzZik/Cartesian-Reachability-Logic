@@ -1157,6 +1157,19 @@ We prove both implications separately, by contraposition.
 \end{itemize}
 \end{proof}
 
+
+\begin{lemma}\label{lem:reachComposite}
+    For any reachability system $\mathcal{S} = (\mathcal{T}, S)$, any $C,C^\prime \in \mathcal{T}^*_{\mathit{Cfg}^*}$,
+    and any $c_1,\ldots,c_k,c_1^\prime,\ldots,c_k^\prime \in \Tcfg$ such that
+    $C = [c_1,\ldots,c_k]$ and $C^\prime = [c_1^\prime,\ldots,c_k^\prime]$,
+    $C \Rightarrow^*_{\mathcal{S}^*} C^\prime$ iff for every $i \in \{ 1, \ldots, k \}$,
+    $c_i \Rightarrow^*_{\mathcal{S}} c_i^\prime$.
+\end{lemma}
+\begin{proof}[Proof of \Cref{lem:reachComposite}]
+TODO. Hint: use \Cref{lem:compositeStep}.
+Admitted.
+\end{proof}
+
 \begin{proof}[Proof of \Cref{thm:correspondence}]
 We prove each implication separately.
 \begin{enumerate}
@@ -1325,7 +1338,7 @@ We prove each implication separately.
     ).
     \\
     We have just proved the premise of the assumption (i).
-    It follows that (iii)
+    It follows that
     \begin{proofenv}
         for any valuation $\rho_2 : \mathit{Var} \to \mathcal{T}$
         satisfying $\rho_2(v) = \rho_1(v)$ for any $v \in \mathit{Var} \setminus (\vec{X} \cup \vec{Y})$,
@@ -1338,10 +1351,16 @@ We prove each implication separately.
     We choose $C^\prime := [ c_1^\prime,\ldots,c_k^\prime ]$,
     and it remains to be proven that
     \begin{proofenv}
-        $C \Rightarrow^*_{\mathcal{S}^*}$ and $(\mathcal{T}^*, C^\prime, \rho) \vDash \mathit{flatten}(\Psi^\prime)$ \,
+        $C \Rightarrow^*_{\mathcal{S}^*} C^\prime$ and $(\mathcal{T}^*, C^\prime, \rho) \vDash \mathit{flatten}(\Psi^\prime)$ \,
     \end{proofenv}
     (where $\rho$ is the valuation that we started with).
-    
+    After unfolding $\Psi^\prime$ and $C^\prime$, goal becomes
+    \begin{proofenv}
+        \begin{enumerate}
+            \item $C \Rightarrow^*_{\mathcal{S}^*} C^\prime$; and
+            \item $(\mathcal{T}^*, [ c_1^\prime,\ldots,c_k^\prime ], \rho) \vDash \mathit{flatten}(\Psi^\prime)$
+        \end{enumerate}
+    \end{proofenv}
     
     TODO continue the proof
     \item For the opposite implication, TODO.
