@@ -97,6 +97,18 @@ However, CRL does \emph{not} extend CHL, because the two logics give different s
 despite this distinction, CRL extends CHL on the deterministic fragment of the CHL-supported language.
 We elaborate on this relation in \Cref{sec:discussion}. 
 
+The idea behind soundness and completeness of our approach is similar to the one of \cite{SousaD16} for CHL.
+We define a language-agnostic equivalent of self-composition (\cite{BartheDR11}) and establish a relation
+between CRL validity of the original and RL validity of the composed system.
+Then we construct a proof system such that its proofs can be translated to ordinary RL proofs of the composed system
+(for soundness),
+but also such that it allows relatively high-level reasoning about \emph{circular behavior} and \emph{lock-step execution}
+(for ease of verification and simplicity of invariants).
+We draw our inspiration from the literature on language-independent verification of partial correctness
+(\cite{RosuS12oopsla,RosuSCM13lics,StefanescuCMMSR19})
+and program equivalence (\cite{CiobacaLRR16,CiobacaLRR14}).
+Again, we elaborate on the similarities and differences in \Cref{sec:discussion}. 
+
 \section{Preliminaries}
 
 \subsection{($\mu$-free) Matching Logic}
