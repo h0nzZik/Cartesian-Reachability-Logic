@@ -64,12 +64,17 @@ Being implemented in the \K{} framework \cite{KVision},
 its biggest advantage is that reachability logic is \emph{language independent}:
 its proof system can be used unchanged to reason about programs in any language,
 as long as the language has a formal semantics in RL.
+Therefore, researchers no longer need to think about a particular language construct three times
+(once for the operational semantics, once for axiomatic, and once for the correspondence);
+additionally, a single researcher or a tool-builder does not need to understand both the precise (and often intricate)
+semantics of a programming language, \emph{and} formal verification techniques,
+which makes \emph{division of labour} possible.
 Through \K{}, reachability logic has been used to build verifiers for real-world languages,
 such as C (\cite{RVMatch}), Java (\cite{StefanescuPYLR16VerifiersForAll}), Javascript (\cite{StefanescuPYLR16VerifiersForAll}),
 and EVM (\cite{KevmVerificationTool}).
+
 A fundamental limitation of reachability logic is that it is limited to partial correctness properties.
 In particular, neither RL nor \K{} can handle \emph{hyperproperties}.
-
 A hyperproperty is a set of \emph{sets of} execution traces, with the following semantics:
 a system $S$ (a set of traces) satisfies a hyperproperty $H$ iff $S \in H$.
 Hyperproperties are strictly more expressive then properties; for example, many security policies
