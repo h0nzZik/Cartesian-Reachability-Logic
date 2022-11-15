@@ -19,8 +19,8 @@
 \newcommand{\traian}[1]{\todo[author=Traian]{#1}}
 \newcommand{\jt}[1]{\todo[author=Jan]{#1}}
 
-\title{Cartesian Reachability Logic}
-\author{Jan Tu\v{s}il \and Xiaohong Chen \and Traian Florin Șerbănuță
+\title{Cartesian Reachability Logic: A Language-Independent Logic for Verifying $k$-Safety Properties}
+\author{Jan Tu\v{s}il  \and Traian Florin Șerbănuță \and Xiaohong Chen
 %\and Jan Obdrzalek
 }
 \date{\today}
@@ -56,6 +56,28 @@
 \maketitle
 
 \section{Introduction}
+Recent years have witnesssed an increased interest in formal verification of \emph{hyperproperties}.
+A hyperproperty is a set of \emph{sets of} execution traces, with the following semantics:
+a system $S$ (a set of traces) satisfies a hyperproperty $H$ iff $S \in H$.
+Hyperproperties are strictly more expressive then properties; for example, many security policies
+of interest are hyperproperties but not properties.
+
+Techniques and tools for verifying hyperproperties of (finite-state) hardware \cite{CoenenFST19,FinkbeinerRS15},
+as well as (infinite-state) software systems have been developed.
+For verification of software systems in particular, \emph{Cartesian Hoare logic} (CHL, \cite{SousaD16}) extends Hoare logic
+to reason about \emph{$k$-safety hyperproperties}
+(a hyperproperty is a \emph{$k$-safety hyperproperty} if its violation can be witnessed
+by a set of traces of size $k$).
+Also, a game-based technique for verifying software hyperproperties beyond $k$-safety
+has been developed in \cite{BeutnerF22}.
+
+However, it is not clear how to use these techniques with arbitrary programming languages.
+The technique developed in \cite{BeutnerF22} works on the level of symbolic transition systems (STS),
+and in order to verify programs, they have to be first somehow translated into STSs.
+On the other hand, Cartesian Hoare logic works on the source-code level - but only of a particular programming language.
+
+
+\section{Old Introduction}
 
 \emph{Reachability logic} (RL) \cite{RosuS12oopsla,RosuSCM13lics,StefanescuCMMSR19}
 is a
