@@ -1225,6 +1225,29 @@ By induction on $k$.
 \end{itemize}
 \end{proof}
 
+The following definition and theorem on filtering infinite sequences
+are based on the Coq development of \cite{ZamfirVLSM}
+(specifically, on \url{https://github.com/runtimeverification/vlsm/blob/d6c8cee56708c7be2431b9743fe80ca6a7a29a58/theories/VLSM/Lib/StreamFilters.v}).
+\begin{definition}[Filtering subsequence]\label{def:filteringSubsequence}
+Given a set $A$, a subset $P \subseteq A$ and a function $s : \mathbb{N} \to A$,
+a function $\mathit{ns} : \mathbb{N} \to \mathbb{N}$ is called a filtering subsequence for $P$ on $s$,
+iff
+\begin{itemize}
+    \item $\mathit{ns}$ is monotone;
+    \item $s(x) \not \in P$ for any $x < ns(0)$;
+    \item $s(\mathit{ns}(j)) \in P$ for any $j \in \mathbb{N}$; and
+    \item for every $j \in \mathbb{N}$ and every $x$ such that $\mathit{ns}(j) < x < \mathit{ns}(j+1)$,
+          $s(x) \not\in P$.
+\end{itemize}
+Intuitively, the last condition says that $ns$ does not skip any $P$-element in $s$.
+\end{definition}
+
+\begin{lemma}[Existence of filtering sequence for infinite occurrences]\label{lem:filteringSubsequenceExistsForInfinite}
+    Let $A$ be a set, let $P \subseteq A$, and let $s : \mathbb{N} \to A$ be a function whose output
+    falls to $P$ infinitely often (that is, $s(i) \in P$ for infinitely many $i$).
+    Then there exists a filtering subsequence for $P$ on $s$.
+\end{lemma}
+
 \begin{lemma}\label{lem:terminationComposite}
     For any reachability system $\mathcal{S} = (\mathcal{T}, S)$, any $C \in \mathcal{T}^*_{\mathit{Cfg}^*}$,
     and any $c_1,\ldots,c_k \in \Tcfg$ such that
