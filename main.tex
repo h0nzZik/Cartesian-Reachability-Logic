@@ -68,17 +68,10 @@ For verification of software systems in particular, \emph{Cartesian Hoare logic}
 to reason about \emph{$k$-safety hyperproperties}
 (a hyperproperty is a \emph{$k$-safety hyperproperty} if its violation can be witnessed
 by a set of traces of size $k$).
-Also, a game-based technique for verifying software hyperproperties beyond $k$-safety
-has been developed in \cite{BeutnerF22}.
+However, it is not clear how to use these techniques with arbitrary programming languages,
+since CHL is tied to a particular imperative language.
 
-However, it is not clear how to use these techniques with arbitrary programming languages.
-The technique developed in \cite{BeutnerF22} works on the level of symbolic transition systems (STS),
-and in order to verify programs, they have to be first somehow translated into STSs.
-On the other hand, Cartesian Hoare logic works on the source-code level - but only of a particular programming language.
-
-
-\section{Old Introduction}
-
+On the other hand, there have been recent developments in the are of \emph{language-independent} software verification.
 \emph{Reachability logic} (RL) \cite{RosuS12oopsla,RosuSCM13lics,StefanescuCMMSR19}
 is a
 formalism for reasoning about partial correctness of software, in the spirit of Hoare logics.
@@ -95,27 +88,7 @@ Through \K{}, reachability logic has been used to build verifiers for real-world
 such as C (\cite{RVMatch}), Java (\cite{StefanescuPYLR16VerifiersForAll}), Javascript (\cite{StefanescuPYLR16VerifiersForAll}),
 and EVM (\cite{KevmVerificationTool}).
 
-A fundamental limitation of reachability logic is that it is limited to partial correctness properties.
-In particular, neither RL nor \K{} can handle \emph{hyperproperties}.
-A hyperproperty is a set of \emph{sets of} execution traces, with the following semantics:
-a system $S$ (a set of traces) satisfies a hyperproperty $H$ iff $S \in H$.
-Hyperproperties are strictly more expressive then properties; for example, many security policies
-of interest are hyperproperties but not properties.
-Techniques and tools for verifying hyperproperties of software have been developed.
-In particular, \emph{Cartesian Hoare logic} (CHL, \cite{SousaD16}) extends Hoare logic
-to reason about \emph{$k$-safety hyperproperties}
-(a hyperproperty is a \emph{$k$-safety hyperproperty} if its violation can be witnessed
-by a set of traces of size $k$).
-Also, a game-based technique for verifying software hyperproperties beyond $k$-safety
-has been developed in \cite{BeutnerF22}.
-
-A question arises: can these techniques be used in a language-independent setting?
-Cartesian Hoare logic, being a kind of a Hoare logic, is tied to a particular imperative language,
-so it cannot be used for a different language as is.
-On the other hand, the technique developed in \cite{BeutnerF22} works with \emph{symbolic transition systems},
-so it already is language-independent \emph{in some sense}. However, it is not clear how to use the technique
-with an arbitrary language $L$, without writing a compiler from $L$ to symbolic transition systems first.
-
+Can we have the best of both worlds? We think it is possible.
 In this paper we develop a logic named \emph{Cartesian Reachability logic (CRL)}, which properly extends reachability logic
 to allow reasoning about $k$-safety hyperproperties. Simiarly to CHL, CRL has a sound
 and relatively complete proof system. A major advantage of CRL against CHL is that it works with any language
@@ -719,6 +692,17 @@ for the \emph{realization} of this idea we turn to the literature on \emph{equiv
 \subsection{Relation to semantic-based program equivalence}
 
 TODO
+
+\subsection{Other Related Work}
+
+
+Also, a game-based technique for verifying software hyperproperties beyond $k$-safety
+has been developed in \cite{BeutnerF22}.
+This technique works with \emph{symbolic transition systems},
+so it already is language-independent \emph{in some sense}. However, it is not clear how to use the technique
+with an arbitrary language $L$, without writing a compiler from $L$ to symbolic transition systems first.
+
+
 
 \bibliography{bibliography}
 \bibliographystyle{plain}
