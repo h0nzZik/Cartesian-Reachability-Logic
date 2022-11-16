@@ -1382,8 +1382,10 @@ We prove both implications separately, by contraposition.
     because we have only $k$ components.
     Now, consider the function $s : \mathbb{N} \to \mathcal{T}^*_{\mathit{Cfg}^*} \times \mathcal{T}^*_{\mathit{Cfg}^*}$
     defined by $s(i) = (D(i), D(i+1))$, and let $P \subseteq \mathcal{T}^*_{\mathit{Cfg}^*} \times \mathcal{T}^*_{\mathit{Cfg}^*}$
-    be defined by $(X, X^\prime) \in P$ iff $X[j] \not = X^\prime[j]$ and for any $j^\prime \not = j$,
-    $X[j^\prime] = X^\prime[j^\prime]$.
+    be defined by $(X, X^\prime) \in P$ iff $X[j] \not = X^\prime[j]$.
+    By \Cref{lem:atMostOneComponentChanges}, we know that whenever $(X, X^\prime) \in P$,
+    then for any $j^\prime$ satisfying $1 \leq j^\prime \leq k$ and $j^\prime \not = j$,
+    we have $X[j^\prime] = X^\prime[j^\prime]$.
     Then, $s(i) \in P$ iff in the sequence $C$, on position $i$, it is exactly the $j$th component (and no other)
     which makes step.
     Now, by \Cref{lem:filteringSubsequenceExistsForInfinite}, there exists a filtering subsequence $\mathit{ns}$
@@ -1397,23 +1399,26 @@ We prove both implications separately, by contraposition.
     \begin{itemize}
         \item $D(\mathit{ns}(0))[j] = D(0)[j]$, by (2) of \Cref{def:filteringSubsequence}, the definition of $P$,
         and transitivity of equality;
-        \item for any $i \in \mathbb{N}$, $D(\mathit{ns}(i))[j] \Rightarrow_{\mathcal{S}} D(\mathit{ns}(i+1))[j]$,
-        because by (3) of \Cref{def:filteringSubsequence} and definition of $P$ we have
-        $D(\mathit{ns}(i))[j] \not = D(\mathit{ns}(i)+1)[j]$, and by
+        \item for any $i \in \mathbb{N}$, $D(\mathit{ns}(i))[j] \Rightarrow_{\mathcal{S}} D(\mathit{ns}(i+1))[j]$.
+        We prove this as follows. By
         (4) of \Cref{def:filteringSubsequence} and definition of $P$ we have
         $D(\mathit{ns}(i+1))[j] = D(\mathit{ns}(i)+1)[j]$.
         Therefore, it is enough to show that
         \begin{equation*}
-            D(\mathit{ns}(i))[j] \Rightarrow_{\mathcal{S}} D(\mathit{ns}(i)+1)[j]
+            D(\mathit{ns}(i))[j] \Rightarrow_{\mathcal{S}} D(\mathit{ns}(i)+1)[j] \, .
         \end{equation*}
-        which follows by \Cref{lem:compositeStep}.
+        By (3) of \Cref{def:filteringSubsequence} and definition of $P$ we have
+        $D(\mathit{ns}(i))[j] \not = D(\mathit{ns}(i)+1)[j]$.
+        By \Cref{lem:compositeStep}, it is enough to show that there exists $k \geq 1$,
+        $c_1,\ldots,c_k,c^\prime \in \Tcfg$, and some $i$ satisfying $1 \leq i \leq k$,
+        such that
+        $[c_1,\ldots,c_k] = D(\mathit{ns}(i))$
+        and
+        $[c_1,\ldots,c_{i-1},c^\prime,c_{i+1},c_k] = D(\mathit{ns}(i) + 1)$.
+        But that follows from the fact that $D(\mathit{ns}(i)) \Rightarrow_{\mathcal{S}^*} D(\mathit{ns}(i) + 1)$
+        and that $D(\mathit{ns}(i))[j] \not = D(\mathit{ns}(i)+1)[j]$
+        by \Cref{lem:transitionOnlyBetweenListsOfSameLength} and \Cref{lem:atMostOneComponentChanges}.
     \end{itemize}
-    ;
-    that is, there exists a function $f : \mathbb{N}_0 \to \mathbb{N}_0$ satisfying $f(0) = 0$
-    such that for every $n \in \mathbb{N}_0$,
-    $D(f(n))[j] \not = D(f(n)+1)[i]$.
-    But then (by \Cref{lem:compositeStep}), $D(f(0))[j] \Rightarrow_S D(f(1))[j] \Rightarrow_S D(f(2))[j] \Rightarrow_S$
-    
 \end{itemize}
 \end{proof}
 
