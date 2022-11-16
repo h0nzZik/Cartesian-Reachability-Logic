@@ -175,9 +175,6 @@ and $\rho$ a $\mathcal{T}$-valuation. Then for any structureless pattern $P$,
 Therefore, when $P$ is structureless, we may sometimes write $(\mathcal{T}, \rho) \vDash P$ to mean that 
 $(\mathcal{T}, \gamma, \rho) \vDash P$ for \emph{some} $\gamma \in \mathcal{T}$.
 \end{lemma}
-\begin{proof}
-Admitted.
-\end{proof}
 
 Also, validity of any pattern does not depend on those variables which the pattern does not mention.
 \begin{lemma}\label{lem:unusedVariables}
@@ -710,6 +707,14 @@ with an arbitrary language $L$, without writing a compiler from $L$ to symbolic 
 \appendix
 
 \section{Proofs}
+
+\begin{proof}[Proof of \Cref{lem:structurelessSemantics}]
+Let $P$ be a structureless pattern.
+We perform induction on $P$.
+If $P = \phi$, we get contradiction with the assumption that $P$ is structureless;
+therefore, the conclusion holds by \emph{ex falso quodlibet}.
+Other cases follow from the induction hypotheses.
+\end{proof}
 
 
 \begin{proof}[Proof of \Cref{lem:rhoStarOfPi}]
@@ -1303,10 +1308,36 @@ Then by \Cref{lem:simplifyComposite},
 But then $C$ and $C^\prime$ have the same length.
 \end{proof}
 
-\begin{lemma}\label{lem:exactlyOneComponentMakesStep}
-    Let $\mathcal{S} = (\mathcal{T}, S)$ be a reachability system over $(\Sigma, \mathcal{Cfg})$.
-    Then for any.
+\begin{lemma}[Exactly one component makes step]\label{lem:exactlyOneComponentMakesStep}
+    Let $\mathcal{S} = (\mathcal{T}, S)$ be a reachability system over $(\Sigma, \mathit{Cfg})$.
+    Then for any $C,C^\prime \in \mathcal{T}^*{\mathit{Cfg}^*}$ satisfying $C \Rightarrow_{\mathcal{S}^*} C^\prime$
+    there exists some $i \in \mathbb{N}$ such that
+    \begin{itemize}
+        \item $C[i] \Rightarrow_{\mathcal{S}} C^\prime[i]$; and
+        \item for every $i^\prime \in \mathbb{N}$ such that $i^\prime \not = i$,
+        we have $C[i^\prime] = C^\prime[i^\prime]$ if both are defined.
+    \end{itemize}
 \end{lemma}
+\begin{proof}
+Assume $C \Rightarrow_{\mathcal{S}^*} C^\prime$.
+Then by \Cref{lem:simplifyComposite},
+\begin{proofenv}
+    there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\,     \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
+    and valuation $\rho : \mathit{Var}^* \to \mathcal{T}^*$ such that
+    there exists some $\rho^\prime,\rho^{\prime\prime} : \mathit{Var}^* \to \mathcal{T}^*$
+    satisfying $\forall y \in \mathit{Var}^* \setminus \vec{X}.\, \rho^\prime(y) = \rho(y)$
+    and $\forall y \in \mathit{Var}^* \setminus \vec{Y}.\, \rho^{\prime\prime}(y) = \rho(y)$,
+    and there exists some $l,j$ satisfying $1 \leq l \leq m$ and $1 \leq j \leq n$ such that
+    \begin{itemize}
+        \item $(\mathcal{T}^*, \rho) \vDash P_l$; and
+        \item $(\mathcal{T}^*, \rho) \vDash P_j$; and
+        \item $C = \rho(L) \texttt{++} [\rho^\prime(\phi_l)] \texttt{++} \rho(R)$; and
+        \item $C^\prime = \rho(L) \texttt{++} [\rho^{\prime\prime}(\phi_j)] 
+        \texttt{++} \rho(R)$.
+    \end{itemize}
+\end{proofenv}
+But then we can let $i := |\rho(L)|$, and the rest follows.
+\end{proof}
 
 
 The following definition and theorem on filtering infinite sequences
