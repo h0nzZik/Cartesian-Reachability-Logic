@@ -1308,15 +1308,12 @@ Then by \Cref{lem:simplifyComposite},
 But then $C$ and $C^\prime$ have the same length.
 \end{proof}
 
-\begin{lemma}[Exactly one component makes step]\label{lem:exactlyOneComponentMakesStep}
+\begin{lemma}[At most one component changes]\label{lem:atMostOneComponentChanges}
     Let $\mathcal{S} = (\mathcal{T}, S)$ be a reachability system over $(\Sigma, \mathit{Cfg})$.
     Then for any $C,C^\prime \in \mathcal{T}^*{\mathit{Cfg}^*}$ satisfying $C \Rightarrow_{\mathcal{S}^*} C^\prime$
     there exists some $i \in \mathbb{N}$ such that
-    \begin{itemize}
-        \item $C[i] \Rightarrow_{\mathcal{S}} C^\prime[i]$; and
-        \item for every $i^\prime \in \mathbb{N}$ such that $i^\prime \not = i$,
-        we have $C[i^\prime] = C^\prime[i^\prime]$ if both are defined.
-    \end{itemize}
+    for every $i^\prime \in \mathbb{N}$ such that $i^\prime \not = i$,
+    we have $C[i^\prime] = C^\prime[i^\prime]$ if both are defined.
 \end{lemma}
 \begin{proof}
 Assume $C \Rightarrow_{\mathcal{S}^*} C^\prime$.
