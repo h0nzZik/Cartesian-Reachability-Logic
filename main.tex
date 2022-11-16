@@ -791,26 +791,26 @@ By induction on $\varphi$.
 
 \begin{lemma}\label{lem:simplifyComposite}
 We have
-    \begin{proofenv}
+\begin{proofenv}
     \begin{equation*}
         C \Rightarrow_{\mathcal{S}^*} C^\prime
     \end{equation*}
-    \end{proofenv}
+\end{proofenv}
     if and only if
-    \begin{proofenv}
-there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
-and valuation $\rho : \mathit{Var}^* \to \mathcal{T}^*$ such that
-there exists some $\rho^\prime,\rho^{\prime\prime} : \mathit{Var}^* \to \mathcal{T}^*$
-satisfying $\forall y \in \mathit{Var}^* \setminus \vec{X}.\, \rho^\prime(y) = \rho(y)$
-and $\forall y \in \mathit{Var}^* \setminus \vec{Y}.\, \rho^{\prime\prime}(y) = \rho(y)$,
-and there exists some $l,j$ satisfying $1 \leq l \leq m$ and $1 \leq j \leq n$ such that
-\begin{itemize}
-    \item $(\mathcal{T}^*, \rho^\prime) \vDash P_l$; and
-    \item $(\mathcal{T}^*, \rho^{\prime\prime}) \vDash P_j$; and
-    \item $C = \rho^\prime(L) \texttt{++} [\rho^\prime(\phi_l)] \texttt{++} \rho^\prime(R)$; and
-    \item $C^\prime = \rho^{\prime\prime}(L)
-    \texttt{++} [\rho^{\prime\prime}(\phi_j)] \texttt{++} \rho^{\prime\prime}(R)$.
-\end{itemize}
+\begin{proofenv}
+    there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\,     \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
+    and valuation $\rho : \mathit{Var}^* \to \mathcal{T}^*$ such that
+    there exists some $\rho^\prime,\rho^{\prime\prime} : \mathit{Var}^* \to \mathcal{T}^*$
+    satisfying $\forall y \in \mathit{Var}^* \setminus \vec{X}.\, \rho^\prime(y) = \rho(y)$
+    and $\forall y \in \mathit{Var}^* \setminus \vec{Y}.\, \rho^{\prime\prime}(y) = \rho(y)$,
+    and there exists some $l,j$ satisfying $1 \leq l \leq m$ and $1 \leq j \leq n$ such that
+    \begin{itemize}
+        \item $(\mathcal{T}^*, \rho) \vDash P_l$; and
+        \item $(\mathcal{T}^*, \rho) \vDash P_j$; and
+        \item $C = \rho(L) \texttt{++} [\rho^\prime(\phi_l)] \texttt{++} \rho(R)$; and
+        \item $C^\prime = \rho(L) \texttt{++} [\rho^{\prime\prime}(\phi_j)] 
+        \texttt{++} \rho(R)$,
+    \end{itemize}
 \end{proofenv}
 \end{lemma}
 \begin{proof}
@@ -1283,7 +1283,24 @@ By induction on $k$.
     then the length of $C$ (it is a list) is the same as the length of $C^\prime$.
 \end{lemma}
 \begin{proof}
-Admitted.
+Assume $C \Rightarrow_{\mathcal{S}^*} C^\prime$.
+Then by \Cref{lem:simplifyComposite},
+\begin{proofenv}
+    there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\,     \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
+    and valuation $\rho : \mathit{Var}^* \to \mathcal{T}^*$ such that
+    there exists some $\rho^\prime,\rho^{\prime\prime} : \mathit{Var}^* \to \mathcal{T}^*$
+    satisfying $\forall y \in \mathit{Var}^* \setminus \vec{X}.\, \rho^\prime(y) = \rho(y)$
+    and $\forall y \in \mathit{Var}^* \setminus \vec{Y}.\, \rho^{\prime\prime}(y) = \rho(y)$,
+    and there exists some $l,j$ satisfying $1 \leq l \leq m$ and $1 \leq j \leq n$ such that
+    \begin{itemize}
+        \item $(\mathcal{T}^*, \rho) \vDash P_l$; and
+        \item $(\mathcal{T}^*, \rho) \vDash P_j$; and
+        \item $C = \rho(L) \texttt{++} [\rho^\prime(\phi_l)] \texttt{++} \rho(R)$; and
+        \item $C^\prime = \rho(L) \texttt{++} [\rho^{\prime\prime}(\phi_j)] 
+        \texttt{++} \rho(R)$.
+    \end{itemize}
+\end{proofenv}
+But then $C$ and $C^\prime$ have the same length.
 \end{proof}
 
 \begin{lemma}\label{lem:exactlyOneComponentMakesStep}
