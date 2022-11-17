@@ -1431,6 +1431,22 @@ We prove both implications separately, by contraposition.
     $c_i \Rightarrow^*_{\mathcal{S}} c_i^\prime$.
 \end{lemma}
 \begin{proof}[Proof of \Cref{lem:reachComposite}]
+We prove each implication separately.
+\begin{itemize}
+    \item For the "if" implication, we assume that $c_i \Rightarrow_{\mathcal{S}}^* c_i^\prime$
+          for any $i \in \{ 1, \ldots, k \}$,
+          and have to prove that $[c_1,\ldots,c_k] \Rightarrow_{\mathcal{S}^*}^* [c_1^\prime,\ldots,c_k^\prime]$.
+          We will prove that for any $j \in \{ 1, \ldots, k \}$, we it holds that
+          \begin{equation*}
+           [c^\prime_1,\ldots,c^\prime_{j-1}, c_j, c_{j+1}, \ldots, c_k] \Rightarrow_{\mathcal{S}^*}^* [c^\prime_1,\ldots,c^\prime_{j-1}, c_j^\prime, c_{j+1}, \ldots, c_k]    \, ,
+          \end{equation*}
+          from which the goal follows by transitivity.
+          Ok then, let $j \in \{ 1, \ldots, k \}$.
+          By \Cref{lem:compositeStep}, it is enough to prove that $c_j \Rightarrow^*_{\mathcal{S}} c_j^\prime$.
+          But that holds by the assumption.
+    \item For the "only if" implication, TODO.
+\end{itemize}
+
 TODO. Hint: use \Cref{lem:compositeStep}.
 Admitted.
 \end{proof}
