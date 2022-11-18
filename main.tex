@@ -1444,11 +1444,24 @@ We prove each implication separately.
           Ok then, let $j \in \{ 1, \ldots, k \}$.
           By \Cref{lem:compositeStep}, it is enough to prove that $c_j \Rightarrow^*_{\mathcal{S}} c_j^\prime$.
           But that holds by the assumption.
-    \item For the "only if" implication, TODO.
+    \item For the "only if" implication, we assume $C \Rightarrow^*_{\mathcal{S}^*} C^\prime$,
+          $i \in \{ 1,\ldots,k \}$, and have to prove that $c_i \Rightarrow^*_{\mathcal{S}} c_i^\prime$.
+          Let $C_1,\ldots,C_l \in \mathcal{T}^*_{\mathit{Cfg}^*}$ be a sequence witnessing $C \Rightarrow^*_{\mathcal{S}^*} C^\prime$;
+          that is, we have $C = C_1$, $C_l = C^\prime$, and $C_j \Rightarrow_{\mathcal{S}^*} C_{j+1}$ for any $j \in \{ 1, \ldots, l-1 \}$.
+          Let $i_1,\ldots,i_m \in \{ 1,\ldots,l-1 \}$ be a monotone sequence of maximal length such that
+          $C_{i_j}[i] \not = C_{i_j + 1}[i]$ for any $j \in \{ 1,\ldots,m \}$.
+          Then clearly, $C_1[j] = C_{i_1}[j]$ (otherwise we could create a longer sequence).
+          Similarly, $C_l[j] = C_{i_m}[j]$.
+          Now we claim that $C_{i_1}[j] \Rightarrow_{\mathcal{S}} \ldots \Rightarrow_{\mathcal{S}} C_{i_m}[j]$,
+          from which the conclusion easily follows.
+          We have to prove that for any $o \in \{ 1, \ldots, m \}$, it holds that
+          $C_{i_o}[j] \Rightarrow_{\mathcal{S}} C_{i_{o+1}}[j]$.
+          But from the definition of the sequence it follows that
+          $C_{i_o}[j] = C_{i_{o+1}-1}[j]$, and therefore it is enough to show that
+          $C_{i_{o+1}-1}[j] \Rightarrow_{\mathcal{S}} C_{i_{o+1}}[j]$.
+          By \Cref{lem:compositeStep} (using also \Cref{lem:atMostOneComponentChanges} and \Cref{lem:transitionOnlyBetweenListsOfSameLength}), it is enough to show that
+          $C_{i_{o+1}-1} \Rightarrow_{\mathcal{S}^*} C_{i_{o+1}}$, but that is trivial and we are done.
 \end{itemize}
-
-TODO. Hint: use \Cref{lem:compositeStep}.
-Admitted.
 \end{proof}
 
 \begin{proof}[Proof of \Cref{thm:correspondence}]
