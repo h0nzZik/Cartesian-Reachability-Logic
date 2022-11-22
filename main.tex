@@ -1448,19 +1448,23 @@ We prove each implication separately.
           $i \in \{ 1,\ldots,k \}$, and have to prove that $c_i \Rightarrow^*_{\mathcal{S}} c_i^\prime$.
           Let $C_1,\ldots,C_l \in \mathcal{T}^*_{\mathit{Cfg}^*}$ be a sequence witnessing $C \Rightarrow^*_{\mathcal{S}^*} C^\prime$;
           that is, we have $C = C_1$, $C_l = C^\prime$, and $C_j \Rightarrow_{\mathcal{S}^*} C_{j+1}$ for any $j \in \{ 1, \ldots, l-1 \}$.
-          Let $i_1,\ldots,i_m \in \{ 1,\ldots,l-1 \}$ be a monotone sequence of maximal length such that
-          $C_{i_j}[i] \not = C_{i_j + 1}[i]$ for any $j \in \{ 1,\ldots,m \}$.
-          Then clearly, $C_1[j] = C_{i_1}[j]$ (otherwise we could create a longer sequence).
-          Similarly, $C_l[j] = C_{i_m}[j]$.
-          Now we claim that $C_{i_1}[j] \Rightarrow_{\mathcal{S}} \ldots \Rightarrow_{\mathcal{S}} C_{i_m}[j]$,
+          Let $i_1,\ldots,i_m \in \{ 1,\ldots,l-1 \}$ be a strictly increasing sequence of maximal length such that
+          $C_{i_j}[i] \not = C_{i_j + 1}[i]$ for any $j \in \{ 1,\ldots,m \}$;
+          that is, the sequence of positions in the witnessing sequence when the component $i$ changes.
+          Then clearly, $C_1[i] = C_{i_1}[i]$ (otherwise we could create a longer sequence).
+          Similarly, $C_l[i] = C_{i_m}[i]$.
+          Now we claim that $C_{i_1}[i] \Rightarrow_{\mathcal{S}} \ldots \Rightarrow_{\mathcal{S}} C_{i_m}[i]$,
           from which the conclusion easily follows.
           We have to prove that for any $o \in \{ 1, \ldots, m \}$, it holds that
-          $C_{i_o}[j] \Rightarrow_{\mathcal{S}} C_{i_{o+1}}[j]$.
-          But from the definition of the sequence it follows that
-          $C_{i_o}[j] = C_{i_{o+1}-1}[j]$, and therefore it is enough to show that
-          $C_{i_{o+1}-1}[j] \Rightarrow_{\mathcal{S}} C_{i_{o+1}}[j]$.
+          $C_{i_o}[i] \Rightarrow_{\mathcal{S}} C_{i_{o+1}}[i]$.
+          Let $d := i_{o+1} - i_{o}$; clearly, we have $d > 0$.
+          By the definition of $d$, we have $C_{i_{o+1}}[i] = C_{i_{o} + d}[i]$.
+          By definition of the sequence, in particular by maximality, we have $C_{i_{o} + d}[i] = C_{i_{o} + 1}[i]$
+          (because there can be no change of the component $i$ between the change at the position $i_o$ and the change at the position $i_{o+1}$).
+          Therefore, it is enough to show that
+          $C_{i_o}[i] \Rightarrow_{\mathcal{S}} C_{i_{o}+1}[i]$.
           By \Cref{lem:compositeStep} (using also \Cref{lem:atMostOneComponentChanges} and \Cref{lem:transitionOnlyBetweenListsOfSameLength}), it is enough to show that
-          $C_{i_{o+1}-1} \Rightarrow_{\mathcal{S}^*} C_{i_{o+1}}$, but that is trivial and we are done.
+          $C_{i_{o}} \Rightarrow_{\mathcal{S}^*} C_{i_{o}+1}$, but that is trivial and we are done.
 \end{itemize}
 \end{proof}
 
@@ -1648,14 +1652,25 @@ We prove each implication separately.
         $C \Rightarrow^*_{\mathcal{S}^*} C^\prime$ and $(\mathcal{T}^*, C^\prime, \rho) \vDash \mathit{flatten}(\Psi^\prime)$ \,
     \end{proofenv}
     (where $\rho$ is the valuation that we started with).
-    After unfolding $\Psi^\prime$ and $C^\prime$, goal becomes
+    The part saying that $C \Rightarrow^*_{\mathcal{S}^*} C^\prime$ holds
+    follows by \Cref{lem:reachComposite}. The other part,
+    after unfolding $\Psi^\prime$ and $C^\prime$ and simplifying the definition of $\mathit{flatten}$,
+    and applying \Cref{def:matchinglogic}
+    becomes
     \begin{proofenv}
-        \begin{enumerate}
-            \item $C \Rightarrow^*_{\mathcal{S}^*} C^\prime$; and
-            \item $(\mathcal{T}^*, [ c_1^\prime,\ldots,c_k^\prime ], \rho) \vDash \mathit{flatten}(\Psi^\prime)$
-        \end{enumerate}
+    exists $\rho_0^\prime : \mathit{Var}^* \to \mathcal{T}^*$ such that $\rho_0^\prime(v) = \rho(v)$ for any $v \in \mathit{Var}^* \setminus \vec{T}$, and exists $i_1 \in \{ 1, \ldots, m_1 \}, \ldots, i_k \in \{ 1, \ldots, m_k \}$ such that
+    \begin{enumerate}
+        \item 
+        \begin{equation*}
+            (\mathcal{T}^*, [ c_1^\prime,\ldots,c_k^\prime ], \rho_0^\prime) \vDash \mathit{mkList}(\phi_{i_1}^\prime, \ldots, \phi_{i_k}^\prime)
+        \end{equation*}
+        \item 
+        \begin{equation*}
+            (\mathcal{T}^*, [ c_1^\prime,\ldots,c_k^\prime ], \rho_0^\prime) \vDash (P_{i_1}^\prime \land \ldots \land P_{i_k}^\prime) \land P^\prime
+        \end{equation*}
+    \end{enumerate}
+    where $\mathit{\vec{T}} = \vec{Y},\vec{Y}_1,\ldots,\vec{Y}_k$.
     \end{proofenv}
-    
     TODO continue the proof
     \item For the opposite implication, TODO.
 \end{enumerate}
