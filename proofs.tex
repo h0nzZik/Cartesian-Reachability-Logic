@@ -939,7 +939,15 @@ We prove each implication separately.
         $c_k \Rightarrow^*_{\mathcal{S}} c_k^\prime$,
         and $(\mathcal{T}, c_1^\prime,\rho_2) \vDash \varphi_1^\prime \land P^\prime$ and \ldots and $(\mathcal{T}, c_k^\prime, \rho_2) \vDash \varphi_k^\prime \land P^\prime$.
     \end{proofenv}
-    Let $\rho_2$ be such valuation \jt{What??} (satisfying $\rho_2(v) = \rho_1(v)$ for any $v \in \mathit{Var} \setminus (\vec{X} \cup \vec{Y})$).
+    Let $\rho_2 : \mathit{Var} \to \mathcal{T}$ be defined by letting \jt{Currently the same but may differ in future}
+    \begin{equation*}
+        \rho_2(v) = 
+        \begin{cases}
+            \rho_1(v) & \text{if } \rho^\prime(v) \not\in \vec{X} \cup \vec{Y} \\
+            \rho_1(v) & \text{if } \rho^\prime(v) \in \vec{X} \cup \vec{Y} \, .
+        \end{cases}
+    \end{equation*}
+    Let $c_1^\prime,\ldots,c_k^\prime$ be such configurations.
     We choose $C^\prime := [ c_1^\prime,\ldots,c_k^\prime ]$,
     and it remains to be proven that
     \begin{proofenv}
@@ -963,15 +971,31 @@ We prove each implication separately.
             (\mathcal{T}^*, [ c_1^\prime,\ldots,c_k^\prime ], \rho_0^\prime) \vDash (P_{i_1}^\prime \land \ldots \land P_{i_k}^\prime) \land P^\prime
         \end{equation*}
     \end{enumerate}
-    where $\mathit{\vec{T}} = \vec{Y},\vec{Y}_1,\ldots,\vec{Y}_k$.
+    where $\vec{T} = \vec{Y},\vec{Y}_1,\ldots,\vec{Y}_k$.
     \end{proofenv}
-    We let $\rho_0^\prime$ be defined by $\rho_0^\prime(v) = \rho(v)$ for any $v \in \mathit{Var}$,
-    and $i_i := i_1,\ldots,i_k := i_k$.
-    By \Cref{lem:mkListSemantics}, the goal changes to
+    We let $\rho_0^\prime$ be defined by $\rho_0^\prime(v) = \rho(v)$ for any $v \in \mathit{Var}$.
+    % No! It might be a different disjunct in the target disjunction than in the source disjunction.
+    % and $i_i := i_1,\ldots,i_k := i_k$.
+    By \Cref{lem:mkListSemantics} and \Cref{def:matchinglogic}, the goal changes to
     \begin{proofenv}
+    exists $i_1 \in \{ 1, \ldots, m_1 \}, \ldots, i_k \in \{ 1, \ldots, m_k \}$ such that
     \begin{enumerate}
-        \item $(\mathcal{T}, c_1^\prime, )$
+        \item $(\mathcal{T}, c_1^\prime, \rho_{00}^\prime) \vDash \phi_{i_1}^\prime$ and \ldots and $(\mathcal{T}, c_k^\prime, \rho_{00}^\prime) \vDash \phi_{i_k}^\prime$; and
+        \item $(\mathcal{T}^*, [ c_1^\prime,\ldots,c_k^\prime ], \rho_0^\prime) \vDash P_{i_1}^\prime$ and \ldots and 
+        $(\mathcal{T}^*, [ c_1^\prime,\ldots,c_k^\prime ], \rho_0^\prime) \vDash P_{i_k}^\prime$; and
+        \item $(\mathcal{T}^*, [ c_1^\prime,\ldots,c_k^\prime ], \rho_0^\prime) \vDash P^\prime$,
     \end{enumerate}
+    \end{proofenv}
+    where $\rho^\prime_{00} : \mathit{Var} \to \mathcal{T}$ is
+    arbitrary valuation satisfying
+    $\rho^\prime_{00}(v) = \rho_0^\prime(v)$ for every $v \in \mathit{FV}(\mathit{mkList}(\phi_{i_1},\ldots,\phi_{i_k}))$.
+    We now want to discharge the (a) case. From earlier, we know that
+    \begin{proofenv}
+    $(\mathcal{T}, c_j^\prime, \rho_2) \vDash \varphi^\prime_j \land P^\prime$;    
+    \end{proofenv}
+    that is, after unfolding $\varphi^\prime_j$,
+    \begin{proofenv}
+        $(\mathcal{T}, c_j^\prime, \rho_2) \vDash \varphi^\prime_j \land P^\prime$.
     \end{proofenv}
     TODO continue the proof
     \item For the opposite implication, TODO.
