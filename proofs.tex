@@ -943,8 +943,8 @@ We prove each implication separately.
     \begin{equation*}
         \rho_2(v) = 
         \begin{cases}
-            \rho_1(v) & \text{if } \rho^\prime(v) \not\in \vec{X} \cup \vec{Y} \\
-            \rho_1(v) & \text{if } \rho^\prime(v) \in \vec{X} \cup \vec{Y} \, .
+            \rho_1(v) & \text{if } v \not\in \vec{X} \cup \vec{Y} \\
+            \rho_1(v) & \text{if } v \in \vec{X} \cup \vec{Y} \, .
         \end{cases}
     \end{equation*}
     Let $c_1^\prime,\ldots,c_k^\prime$ be such configurations.
@@ -973,30 +973,75 @@ We prove each implication separately.
     \end{enumerate}
     where $\vec{T} = \vec{Y},\vec{Y}_1,\ldots,\vec{Y}_k$.
     \end{proofenv}
-    We let $\rho_0^\prime$ be defined by $\rho_0^\prime(v) = \rho(v)$ for any $v \in \mathit{Var}$.
+    %We let $\rho_0^\prime$ be defined by $\rho_0^\prime(v) = \rho(v)$ for any $v \in \mathit{Var}$.
     % No! It might be a different disjunct in the target disjunction than in the source disjunction.
     % and $i_i := i_1,\ldots,i_k := i_k$.
-    By \Cref{lem:mkListSemantics} and \Cref{def:matchinglogic}, the goal changes to
-    \begin{proofenv}
-    exists $i_1 \in \{ 1, \ldots, m_1 \}, \ldots, i_k \in \{ 1, \ldots, m_k \}$ such that
-    \begin{enumerate}
-        \item $(\mathcal{T}, c_1^\prime, \rho_{00}^\prime) \vDash \phi_{i_1}^\prime$ and \ldots and $(\mathcal{T}, c_k^\prime, \rho_{00}^\prime) \vDash \phi_{i_k}^\prime$; and
-        \item $(\mathcal{T}^*, [ c_1^\prime,\ldots,c_k^\prime ], \rho_0^\prime) \vDash P_{i_1}^\prime$ and \ldots and 
-        $(\mathcal{T}^*, [ c_1^\prime,\ldots,c_k^\prime ], \rho_0^\prime) \vDash P_{i_k}^\prime$; and
-        \item $(\mathcal{T}^*, [ c_1^\prime,\ldots,c_k^\prime ], \rho_0^\prime) \vDash P^\prime$,
-    \end{enumerate}
-    \end{proofenv}
-    where $\rho^\prime_{00} : \mathit{Var} \to \mathcal{T}$ is
-    arbitrary valuation satisfying
-    $\rho^\prime_{00}(v) = \rho_0^\prime(v)$ for every $v \in \mathit{FV}(\mathit{mkList}(\phi_{i_1},\ldots,\phi_{i_k}))$.
-    We now want to discharge the (a) case. From earlier, we know that
+    %By \Cref{lem:mkListSemantics} and \Cref{def:matchinglogic}, the goal changes to
+    %\begin{proofenv}
+    %exists $i_1 \in \{ 1, \ldots, m_1 \}, \ldots, i_k \in \{ 1, \ldots, m_k \}$ such that
+    %\begin{enumerate}
+    %    \item $(\mathcal{T}, c_1^\prime, \rho_{00}^\prime) \vDash \phi_{i_1}^\prime$ and \ldots and $(\mathcal{T}, c_k^\prime, \rho_{00}^\prime) \vDash \phi_{i_k}^\prime$; and
+    %    \item $(\mathcal{T}^*, [ c_1^\prime,\ldots,c_k^\prime ], \rho_0^\prime) \vDash P_{i_1}^\prime$ and \ldots and 
+    %    $(\mathcal{T}^*, [ c_1^\prime,\ldots,c_k^\prime ], \rho_0^\prime) \vDash P_{i_k}^\prime$; and
+    %    \item $(\mathcal{T}^*, [ c_1^\prime,\ldots,c_k^\prime ], \rho_0^\prime) \vDash P^\prime$,
+    %\end{enumerate}
+    %\end{proofenv}
+    %where $\rho^\prime_{00} : \mathit{Var} \to \mathcal{T}$ is
+    %arbitrary valuation satisfying
+    %$\rho^\prime_{00}(v) = \rho_0^\prime(v)$ for every $v \in \mathit{FV}(\mathit{mkList}(\phi_{i_1},\ldots,\phi_{i_k}))$.
+    %We now want to find appropriate $i_i$s.
+    From earlier, we know that for every $j \in \{ 1, \ldots, k \}$,
     \begin{proofenv}
     $(\mathcal{T}, c_j^\prime, \rho_2) \vDash \varphi^\prime_j \land P^\prime$;    
     \end{proofenv}
     that is, after unfolding $\varphi^\prime_j$,
     \begin{proofenv}
-        $(\mathcal{T}, c_j^\prime, \rho_2) \vDash \varphi^\prime_j \land P^\prime$.
+        $(\mathcal{T}, c_j^\prime, \rho_2) \vDash (\exists \vec{Y}_j.\, \bigvee_{i_j = 1}^{m^\prime_j} (\phi^\prime_{i_j} \land P^\prime_{i_j})) \land P^\prime$.
     \end{proofenv}
+    That is the same (by \Cref{def:matchinglogic}) as saying that
+    \begin{proofenv}
+        \begin{itemize}
+            \item  $(\mathcal{T}, c_j^\prime, \rho_2) \vDash P^\prime$; and
+            \item there exists some valuation $\rho_{2,j}$ satisfying $\rho_{2,j}(v) = \rho_2(v)$
+            for any $v \in \mathit{Var} \setminus \vec{Y}_j$, and some $i^\prime_j \in \{ 1, \ldots, m^\prime_j \}$ such that
+            $(\mathcal{T}, c_j^\prime, \rho_{2,j}) \vDash P^\prime_{i^\prime_j}$
+            and $(\mathcal{T}, c_j^\prime, \rho_{2,j}) \vDash \phi^\prime_{i^\prime_j}$.
+        \end{itemize}
+    \end{proofenv}
+    Let us have such $\rho_{2,j}$ and $i^\prime_j$.
+    Now in the goal (starting with existential quantifiers), let us define
+    \begin{equation*}
+        \rho^\prime_0(v) = 
+        \begin{cases}
+            \rho(v) & \text{if } v \not\in \vec{T} \\
+            \rho_{2,j}(v) & \text{if } v \in \vec{Y}_j \text{ for } j \in \{ 1, \ldots, k \} \\
+            ?? & \text{if } v \in \vec{Y} \, .
+        \end{cases}
+    \end{equation*}
+    and choose $i_1 := i^\prime_1, \ldots, i_k := i^\prime_k$. 
+    %\\\hline\\
+    We apply \Cref{lem:mkListSemantics} and \Cref{def:matchinglogic},
+    and then we have to prove that
+    \begin{proofenv}
+    \begin{enumerate}
+        \item $(\mathcal{T}, c_1^\prime, \rho_{00}^\prime) \vDash \phi_{i^\prime_1}^\prime$ and \ldots and $(\mathcal{T}, c_k^\prime, \rho_{00}^\prime) \vDash \phi_{i^\prime_k}^\prime$; and
+        \item $(\mathcal{T}^*, [ c_1^\prime,\ldots,c_k^\prime ], \rho_0^\prime) \vDash P_{i^\prime_1}^\prime$ and \ldots and 
+        $(\mathcal{T}^*, [ c_1^\prime,\ldots,c_k^\prime ], \rho_0^\prime) \vDash P_{i^\prime_k}^\prime$; and
+        \item $(\mathcal{T}^*, [ c_1^\prime,\ldots,c_k^\prime ], \rho_0^\prime) \vDash P^\prime$.
+    \end{enumerate}
+    where $\rho^\prime_{00} : \mathit{Var} \to \mathcal{T}$ is
+    arbitrary valuation satisfying
+    $\rho^\prime_{00}(v) = \rho_0^\prime(v)$ for every $v \in \mathit{FV}(\mathit{mkList}(\phi_{i_1},\ldots,\phi_{i_k}))$.
+    \end{proofenv}
+    We now want to discharge the (a) part. Let $j \in \{ 1, \ldots, k \}$.
+    We know from earlier that $(\mathcal{T}, c^\prime_j,\rho_{2,j}) \vDash \phi_{i^\prime_j}$,
+    and want to prove that $(\mathcal{T}, c^\prime_j, \rho^\prime_{00}) \vDash \phi^\prime_{i^\prime_j}$.
+    To do so, we apply \Cref{lem:unusedVariables}, and it remains to be proven that $\rho_{2,j}(v) = \rho^\prime_{00}(v)$
+    for any $v \in \mathit{FV}(\phi^\prime_{i^\prime_j})$.
+    But we know that for such $v$, $\rho^\prime_{00}(v) = \rho_0^\prime(v)$, so it is enough to show that
+    $\rho_{2,j}(v) = \rho^\prime_0(v)$. Now, if $v \in \vec{Y}_j$, we are done by definition of $\rho^\prime_0$.
+    Otherwise, we know that $\rho_{2,j}(v) = \rho_2(v)$, and therefore it is enough to show that
+    $\rho_2(v) = \rho^\prime_0(v)$.
     TODO continue the proof
     \item For the opposite implication, TODO.
 \end{enumerate}
