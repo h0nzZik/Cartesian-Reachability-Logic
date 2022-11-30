@@ -1015,7 +1015,7 @@ We prove each implication separately.
         \begin{cases}
             \rho(v) & \text{if } v \not\in \vec{T} \\
             \rho_{2,j}(v) & \text{if } v \in \vec{Y}_j \text{ for } j \in \{ 1, \ldots, k \} \\
-            ?? & \text{if } v \in \vec{Y} \, .
+            \rho_2(v) & \text{if } v \in \vec{Y} \, .
         \end{cases}
     \end{equation*}
     and choose $i_1 := i^\prime_1, \ldots, i_k := i^\prime_k$. 
@@ -1042,6 +1042,11 @@ We prove each implication separately.
     $\rho_{2,j}(v) = \rho^\prime_0(v)$. Now, if $v \in \vec{Y}_j$, we are done by definition of $\rho^\prime_0$.
     Otherwise, we know that $\rho_{2,j}(v) = \rho_2(v)$, and therefore it is enough to show that
     $\rho_2(v) = \rho^\prime_0(v)$.
+    If $v \in \vec{Y}$, we are also done by the definition of $\rho_0^\prime$.
+    Otherwise, if additionally $v \not\in \vec{T}$, by the definition of $\rho_0^\prime$
+    it is enough to show that $\rho_2(v) = \rho(v)$, and by the definition of $\rho_2$ it is enough to show
+    that $\rho_1(v) = \rho(v)$ \ldots .
+    Otherwise, \ldots .
     TODO continue the proof
     \item For the opposite implication, TODO.
 \end{enumerate}
