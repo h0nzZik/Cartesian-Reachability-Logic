@@ -315,6 +315,7 @@ Cartesian reachability logic is an extension of (one-path) reachability logic.
         \end{equation*}
         where $\varphi, \psi$ are structureless patterns and $\varphi_j, \psi_j$ for any $j \in \{ 1, \ldots, k \}$ are
         existentially quantified\jt{Check whether we need that.} disjunctions of constrained terms.
+        Moreover, we require that $\vec{X} \subseteq \vec{Y}$.
     \item 
     A One-Path Cartesian reachability rule
     \begin{equation*}
@@ -466,33 +467,20 @@ We translate a language semantics into a semantics for lists of configurations a
 \end{lemma}
 
 
-\begin{definition}
-We define $\mathit{mkList}$, $\mathit{mergePatterns}$, and $\mathit{flatten}$ as follows:
-\begin{enumerate}
-    \item $\mathit{mkList}(\phi) = \mathit{cfgitem}(\phi)$
-    \item $\mathit{mkList}(\phi_1, \ldots, \phi_k) = \mathit{cfgconcat}(\mathit{cfgitem}(\phi), \mathit{mkList}(\phi_2, \ldots, \phi_k))$ for $k > 1$
-    \item
-    \begin{align*}
-     & \mathit{mergePatterns}(\exists \vec{X_1}.\, \bigvee_{i_{1}=1}^{m_1} (\phi_{i_1} \land P_{i_1}),
-     \ldots, \exists \vec{X_n}.\, \bigvee_{i_{n}=1}^{m_n} (\phi_{i_n} \land P_{i_n}))
-     \\ & = \exists \vec{X_1}\ldots\vec{X_n}.\, \bigvee_{i_{1}=1}^{m_1} \ldots \bigvee_{i_{n}=1}^{m_n}
-       (\mathit{mkList}(\phi_{1, i_1}, \ldots, \phi_{n, i_n}) \land (P_{1, i_1} \land \ldots \land P_{n, i_n}))
-    \end{align*}
-    \item
-        \begin{align*}
-            \mathit{constrain}(P, \exists \vec{X^\prime} .\,
-            \bigvee_{i=1}^{m} (\phi^\prime_i \land P^\prime_i))
-            = (\exists \vec{X^\prime}.\, \bigvee_{i=1}^{m}(\phi^\prime_i \land (P^\prime_i \land P))
-    \end{align*}
-    (we assume that $\alpha$-renaming of (free) variables of $P$ happens implicitly \jt{?});
-    \item
-        \begin{align*}
-            & \mathit{flatten}(\exists \vec{X}.\, (\varphi_1, \ldots, \varphi_k) \land P)
-            = \exists \vec{X}.\, \mathit{constrain}(P, \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_k))
-    \end{align*}
-    \item $\mathit{flatten}^\exists(\Psi, \Psi^\prime) = \mathit{flatten}(\Psi) \Rightarrow^\exists \mathit{flatten}(\Psi^\prime)$
-    \item $\mathit{flatten}^\exists(A, \Psi^\prime) = \{ \mathit{flatten}^\exists(\Psi, \Psi^\prime) \mid \Psi \in A \}$, where $A$ is a set.
-\end{enumerate}
+\begin{definition}\label{def:mkList}
+We define $\mathit{mkList}$ by letting
+\begin{itemize}
+    \item $\mathit{mkList}(\phi) = \mathit{cfgitem}(\phi)$; and
+    \item $\mathit{mkList}(\phi_1, \ldots, \phi_k) = \mathit{cfgconcat}(\mathit{cfgitem}(\phi), \mathit{mkList}(\phi_2, \ldots, \phi_k))$ whenever $k > 1$.
+\end{itemize}
+\end{definition}
+
+\begin{definition}\label{def:flatten}
+    We let
+    \begin{equation*}
+        \mathit{flatten}(\exists \vec{X}.\, (\phi_1 \land P_1,\ldots,\phi_k \land P_k) \land P)
+        = \exists \vec{X}.\, \mathit{mkList}(\phi_1,\ldots,\phi_k) \land P \land P_1 \land \ldots \land P_k \, .
+    \end{equation*}
 \end{definition}
 
 \begin{theorem}\label{thm:correspondence}
@@ -707,7 +695,7 @@ with an arbitrary language $L$, without writing a compiler from $L$ to symbolic 
 
 \appendix
 
-\input{proofs}
 \section{Proofs}
+\input{proofs}
 
 \end{document}
