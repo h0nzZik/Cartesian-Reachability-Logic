@@ -981,7 +981,34 @@ We prove each implication separately.
     to change the valuation to $(\rho_2)^*$ (since the $P$s contain only variables from $\mathit{Var}$),
     then strip the stars using \Cref{lem:starConservative} and notice that we already have appropriate assumptions.
     This concludes the proof.
-    \item For the opposite implication, TODO.
+    \item For the opposite implication, 
+    we again assume that $\Psi \equiv \exists \vec{X}.\, (\varphi_1,\ldots,\varphi_k) \land P$,
+    $\Psi^\prime \equiv \exists \vec{Y}.\, (\varphi_1^\prime,\ldots,\varphi_k^\prime) \land P^\prime$,
+    $\varphi_j = \phi_j \land P_j$ and $\varphi^\prime_j = \phi^\prime_j \land P^\prime_j$ for any $j \in \{ 1, \ldots, k \}$,
+    and assume that
+    \begin{proofenv}
+        \begin{equation*}
+            \mathcal{S}^* \vDash_\RL \mathit{flatten}(\Psi) \Rightarrow^\exists \mathit{flatten}(\Psi^\prime) \, ;
+        \end{equation*}
+    \end{proofenv}
+    that is,
+    \begin{proofenv}
+        for every $C \in \mathcal{T}^*_{\mathit{Cfg}^*}$ such that $C$ terminates in
+        $(\mathcal{T}_{\mathcal{Cfg}^*}, \Rightarrow_{\mathcal{S}^*})$
+        and for any valuation $\rho : \mathit{Var}^* \to \mathcal{T}^*$ such that
+        $(\mathcal{T}^*, C, \rho) \vDash \mathit{flatten}(\Psi)$,
+        there exists some $C^\prime \in \mathcal{T}^*_{\mathit{Cfg}^*}$ such that
+        $C \Rightarrow_{\mathcal{S}^*}^* C^\prime$
+        and $(\mathcal{T}^*, C^\prime, \rho) \vDash \mathit{flatten}(\Psi^\prime)$;
+    \end{proofenv}
+    we have to prove that
+    \begin{proofenv}
+        \begin{equation*}
+            \mathcal{S} \vDash_\CRL \Psi \Rightarrow^{c\exists} \Psi^\prime
+        \end{equation*}
+    \end{proofenv}
+    TODO.
+    
 \end{enumerate}
 
 Admitted.
