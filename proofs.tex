@@ -991,10 +991,10 @@ We prove each implication separately.
             \mathcal{S}^* \vDash_\RL \mathit{flatten}(\Psi) \Rightarrow^\exists \mathit{flatten}(\Psi^\prime) \, ;
         \end{equation*}
     \end{proofenv}
-    that is,
+    that is (i),
     \begin{proofenv}
         for every $C \in \mathcal{T}^*_{\mathit{Cfg}^*}$ such that $C$ terminates in
-        $(\mathcal{T}_{\mathcal{Cfg}^*}, \Rightarrow_{\mathcal{S}^*})$
+        $(\mathcal{T}_{\mathit{Cfg}^*}, \Rightarrow_{\mathcal{S}^*})$
         and for any valuation $\rho : \mathit{Var}^* \to \mathcal{T}^*$ such that
         $(\mathcal{T}^*, C, \rho) \vDash \mathit{flatten}(\Psi)$,
         there exists some $C^\prime \in \mathcal{T}^*_{\mathit{Cfg}^*}$ such that
@@ -1004,9 +1004,43 @@ We prove each implication separately.
     we have to prove that
     \begin{proofenv}
         \begin{equation*}
-            \mathcal{S} \vDash_\CRL \Psi \Rightarrow^{c\exists} \Psi^\prime
+            \mathcal{S} \vDash_\CRL \Psi \Rightarrow^{c\exists} \Psi^\prime \, ;
         \end{equation*}
     \end{proofenv}
+    that is,
+    \begin{proofenv}
+        for all configurations $c_1,\ldots,c_k \in \mathcal{T}_{\mathit{Cfg}}$ which terminate
+        in $(\mathcal{T}_{\mathit{Cfg}}, \Rightarrow_{\mathcal{S}})$
+        and any two valuations $\rho_1,\rho_2 : \mathit{Var} \to \mathcal{T}$ satisfying
+        $\rho_1(v) = \rho_2(v)$ for any $v \in \mathit{Var} \setminus (\vec{X} \cup \vec{Y})$,
+        whenever $(\mathcal{T}, c_1, \rho_1) \vDash \varphi_1 \land P$
+        and \ldots and $(\mathcal{T}, c_k, \rho_1) \vDash \varphi_k \land P$,
+        then there exists configurations $c^\prime_1, \ldots, c^\prime_k \in \mathcal{T}_{\mathit{Cfg}}$
+        such that $c_1 \Rightarrow_{\mathcal{S}}^* c^\prime_1$ and \ldots
+        and $c_k \Rightarrow_{\mathcal{S}}^* c^\prime_k$,
+        and $(\mathcal{T}, c^\prime_1, \rho_2) \vDash \varphi^\prime_1 \land P$
+        and \ldots and $(\mathcal{T}, c^\prime_k, \rho_2) \vDash \varphi^\prime_k \land P$.
+    \end{proofenv}
+    Let us then have such terminating configurations $c_1,\ldots,c_k \in \mathcal{T}_{\mathit{Cfg}}$
+    and such valuations $\rho_1,\rho_2 : \mathit{Var} \to \mathcal{T}$.
+    We have to show that
+    \begin{proofenv}
+        there exists configurations $c^\prime_1, \ldots, c^\prime_k \in \mathcal{T}_{\mathit{Cfg}}$
+        such that $c_1 \Rightarrow_{\mathcal{S}}^* c^\prime_1$ and \ldots
+        and $c_k \Rightarrow_{\mathcal{S}}^* c^\prime_k$,
+        and $(\mathcal{T}, c^\prime_1, \rho_2) \vDash \varphi^\prime_1 \land P$
+        and \ldots and $(\mathcal{T}, c^\prime_k, \rho_2) \vDash \varphi^\prime_k \land P$.
+    \end{proofenv}
+    We will proceed in the following steps.
+    \begin{enumerate}
+        \item We prove the premise of (i) for $C := [c_1,\ldots,c_k]$, that is:
+        \begin{enumerate}
+            \item $[c_1,\ldots,c_k]$ terminates in $(\mathcal{T}_{\mathit{Cfg}^*}, \Rightarrow_{\mathcal{S}^*})$; and
+            \item $(\mathcal{T}^*, [c_1,\ldots,c_k], \rho) \vDash \mathit{flatten}(\Psi)$ for some constructed valuation $\rho$.
+        \end{enumerate}
+        \item We ``destruct'' the obtained $C^\prime$ into $[c^\prime_1,\ldots,c^\prime_k]$;
+        \item We prove the desired properties of $c^\prime_j$ from the properties of $C^\prime$.
+    \end{enumerate}
     TODO.
     
 \end{enumerate}
