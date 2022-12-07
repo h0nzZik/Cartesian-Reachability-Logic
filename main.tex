@@ -292,9 +292,9 @@ $\mathcal{T}, A, C \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime$.
 
 \begin{remark}\label{rem:shapeOfReachabilityRules}
 For simplicity, we restrict the class of reachability systems we work with to those whose reachability rules
-have only disjunctions of constrained terms. That is, we assume all rules have the shape
+have the shape
 \begin{equation*}
-    \exists \vec{X}.\, \bigvee_{i=1}^{m} (\phi_i \land P_i) \Rightarrow^\exists \exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j) \, .
+    \bigvee_{i=1}^{m} (\phi_i \land P_i) \Rightarrow^\exists \exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j) \, .
 \end{equation*}
 \end{remark}
 
@@ -311,27 +311,26 @@ Cartesian reachability logic is an extension of (one-path) reachability logic.
     \item 
         A One-Path Cartesian reachability rule of arity $k$ has the shape
         \begin{equation*}
-        \exists \vec{X}.\, (\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\exists} \exists \vec{Y}.\, (\psi_1,\ldots,\psi_k) \land \psi \, ,
+        (\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\exists} \exists \vec{Y}.\, (\psi_1,\ldots,\psi_k) \land \psi \, ,
         \end{equation*}
         where $\varphi, \psi$ are structureless patterns and $\varphi_j, \psi_j$ for any $j \in \{ 1, \ldots, k \}$ are
         existentially quantified\jt{Check whether we need that.} disjunctions of constrained terms.
-        Moreover, we require that $\vec{X} \subseteq \vec{Y}$.
     \item 
     A One-Path Cartesian reachability rule
     \begin{equation*}
-     \exists \vec{X}.\, (\varphi_1,\ldots,\varphi_k) \land \varphi
+     (\varphi_1,\ldots,\varphi_k) \land \varphi
      \Rightarrow^{c\exists} \exists \vec{Y}.\, (\psi_1,\ldots,\psi_k) \land \psi   
     \end{equation*}
     is \emph{valid} in a reachability system $\mathcal{S} = (\mathcal{T}, S)$,
     written
     \begin{equation*}
-        \mathcal{S} \vDash_\CRL \exists \vec{X}.\, (\varphi_1,\ldots,\varphi_k) \land \varphi
+        \mathcal{S} \vDash_\CRL (\varphi_1,\ldots,\varphi_k) \land \varphi
      \Rightarrow^{c\exists} \exists \vec{Y}.\, (\psi_1,\ldots,\psi_k) \land \psi \, ,
     \end{equation*}
     iff for all configurations $\gamma_1,\ldots,\gamma_k \in \Tcfg$
     which terminate in $(\Tcfg, \Rightarrow_{\mathcal{S}})$
-    and any two $\mathcal{T}$-valuation $\rho,\rho^\prime$
-    satisfying $\rho(v) = \rho^\prime(v)$ for any $v \in \mathit{Var} \setminus (\vec{X} \cup \vec{Y})$,
+    and any two $\mathcal{T}$-valuations $\rho,\rho^\prime$
+    satisfying $\rho(v) = \rho^\prime(v)$ for any $v \in \mathit{Var} \setminus \vec{Y}$,
     whenever $(\gamma_1,\rho) \vDash \varphi_1 \land \varphi$ and \ldots
     and $(\gamma_k,\rho) \vDash \varphi_k \land \varphi$,
     then there exist configurations $\gamma_1^\prime,\ldots,\gamma_k^\prime \in \Tcfg$
@@ -479,7 +478,11 @@ We define $\mathit{mkList}$ by letting
     We let
     \begin{equation*}
         \mathit{flatten}(\exists \vec{X}.\, (\phi_1 \land P_1,\ldots,\phi_k \land P_k) \land P)
-        = \exists \vec{X}.\, \mathit{mkList}(\phi_1,\ldots,\phi_k) \land P \land P_1 \land \ldots \land P_k \, .
+        \equiv \exists \vec{X}.\, \mathit{mkList}(\phi_1,\ldots,\phi_k) \land P \land P_1 \land \ldots \land P_k \, ,
+    \end{equation*}
+    and
+    \begin{equation*}
+        \mathit{flatten}^\exists(\Psi,\Psi^\prime) \equiv \mathit{flatten}(\Psi) \Rightarrow^\exists \mathit{flatten}(\Psi^\prime) \, .
     \end{equation*}
 \end{definition}
 
@@ -493,11 +496,14 @@ We define $\mathit{mkList}$ by letting
 
 The proof system derives claims of the shape
 $\mathcal{S}, \vdash_\CRL \Phi \Downarrow_{C,E} \Psi$,
-where $\Phi$,$\Psi$ are of the shape
-$\exists \vec{X}.\, (\varphi_1, \ldots, \varphi_k) \land P$,
-where $P$ is a structureless FOL formula
-and every $\varphi_i$ has the structure of
-$\exists x_1,\ldots,x_n. (\phi_1 \land P_1) \lor \ldots (\phi_m \land P_m)$.
+where $\Phi$ is of the shape
+$(\varphi_1, \ldots, \varphi_k) \land P$
+and $\Psi$ is of the shape
+$\exists \vec{Y}.\, (\varphi^\prime_1, \ldots, \varphi^\prime_k) \land P^\prime$,
+where $P,P^\prime$ are structureless FOL formulas
+and every $\varphi_i$ and $\varphi^\prime_i$ has the structure of
+$\exists x_1,\ldots,x_n. (\phi_1 \land P_1) \lor \ldots (\phi_m \land P_m)$
+and $\exists x^\prime_1,\ldots,x^\prime_{n^\prime}. (\phi^\prime_1 \land P^\prime_1) \lor \ldots (\phi^\prime_m \land P^\prime_m)$, respectively.
 The idea is that $P$ is the part of the claim that relates variables from different components.
 Initially, the proof starts with the claim
 $\mathcal{S} \vdash_\CRL \Phi \Downarrow_{\emptyset, \emptyset} \Psi$.

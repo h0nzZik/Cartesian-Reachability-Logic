@@ -94,17 +94,16 @@ We have
 \end{proofenv}
     if and only if
 \begin{proofenv}
-    there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\,     \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
+    there exists a rule $((\bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\,     \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
     and valuation $\rho : \mathit{Var}^* \to \mathcal{T}^*$ such that
-    there exists some $\rho^\prime,\rho^{\prime\prime} : \mathit{Var}^* \to \mathcal{T}^*$
-    satisfying $\forall y \in \mathit{Var}^* \setminus \vec{X}.\, \rho^\prime(y) = \rho(y)$
-    and $\forall y \in \mathit{Var}^* \setminus \vec{Y}.\, \rho^{\prime\prime}(y) = \rho(y)$,
+    there exists some $\rho^\prime : \mathit{Var}^* \to \mathcal{T}^*$
+    satisfying $\forall y \in \mathit{Var}^* \setminus \vec{Y}.\, \rho^{\prime}(y) = \rho(y)$,
     and there exists some $l,j$ satisfying $1 \leq l \leq m$ and $1 \leq j \leq n$ such that
     \begin{itemize}
         \item $(\mathcal{T}^*, \rho) \vDash P_l$; and
         \item $(\mathcal{T}^*, \rho) \vDash P_j$; and
-        \item $C = \rho(L) \texttt{++} [\rho^\prime(\phi_l)] \texttt{++} \rho(R)$; and
-        \item $C^\prime = \rho(L) \texttt{++} [\rho^{\prime\prime}(\phi_j)] 
+        \item $C = \rho(L) \texttt{++} [\rho(\phi_l)] \texttt{++} \rho(R)$; and
+        \item $C^\prime = \rho(L) \texttt{++} [\rho^{\prime}(\phi_j)] 
         \texttt{++} \rho(R)$,
     \end{itemize}
 \end{proofenv}
@@ -127,10 +126,10 @@ iff (by
 %\Cref{def:matchinglogic} and
 \Cref{rem:shapeOfReachabilityRules} and \Cref{def:starextension})
 \begin{proofenv}
-    there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
+    there exists a rule $((\bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
     and valuation $\rho : \mathit{Var}^* \to \mathcal{T}^*$ such that
     \begin{equation*}
-    (\mathcal{T}^*, C, \rho) \vDash \exists \vec{X}.\, \bigvee_{l=1}^{m}(\mathit{cfgheat}(L, \phi_l, R) \land P_l)
+    (\mathcal{T}^*, C, \rho) \vDash \bigvee_{l=1}^{m}(\mathit{cfgheat}(L, \phi_l, R) \land P_l)
     \end{equation*}
     and
     \begin{equation*}
@@ -140,46 +139,41 @@ iff (by
 \end{proofenv}
 iff (by \Cref{def:matchinglogic} and \Cref{lem:structurelessSemantics})
 \begin{proofenv}
-    there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
+    there exists a rule $((\bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
     and valuation $\rho : \mathit{Var}^* \to \mathcal{T}^*$ such that
-    there exists some $\rho^\prime,\rho^{\prime\prime} : \mathit{Var}^* \to \mathcal{T}^*$
-    satisfying $\forall y \in \mathit{Var}^* \setminus \vec{X}.\, \rho^\prime(y) = \rho(y)$
-    and $\forall y \in \mathit{Var}^* \setminus \vec{Y}.\, \rho^{\prime\prime}(y) = \rho(y)$,
+    there exists some $\rho^\prime : \mathit{Var}^* \to \mathcal{T}^*$
+    satisfying $\forall y \in \mathit{Var}^* \setminus \vec{Y}.\, \rho^{\prime}(y) = \rho(y)$,
     and there exists some $l,j$ satisfying $1 \leq l \leq m$ and $1 \leq j \leq n$ such that
-    $(\mathcal{T}^*, \rho^\prime) \vDash P_l$ and $(\mathcal{T}^*, \rho^{\prime\prime}) \vDash P_j$ and
+    $(\mathcal{T}^*, \rho) \vDash P_l$ and $(\mathcal{T}^*, \rho^{\prime}) \vDash P_j$ and
     \begin{equation*}
-        (\mathcal{T}^*, C, \rho^\prime) \vDash \mathit{cfgheat}(L, \phi_l, R)
+        (\mathcal{T}^*, C, \rho) \vDash \mathit{cfgheat}(L, \phi_l, R)
     \end{equation*}
     and
     \begin{equation*}
-        (\mathcal{T}^*, C^\prime, \rho^{\prime\prime}) \vDash
+        (\mathcal{T}^*, C^\prime, \rho^{\prime}) \vDash
         \mathit{cfgheat}(L, \phi^\prime_j, R) \, ,
     \end{equation*}
 \end{proofenv}
 iff (by \Cref{def:matchinglogic} and \Cref{def:starextension})
 \begin{proofenv}
-    there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
+    there exists a rule $((\bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
     and valuation $\rho : \mathit{Var}^* \to \mathcal{T}^*$ such that
-    there exists some $\rho^\prime,\rho^{\prime\prime} : \mathit{Var}^* \to \mathcal{T}^*$
-    satisfying $\forall y \in \mathit{Var}^* \setminus \vec{X}.\, \rho^\prime(y) = \rho(y)$
-    and $\forall y \in \mathit{Var}^* \setminus \vec{Y}.\, \rho^{\prime\prime}(y) = \rho(y)$,
+    there exists some $\rho^\prime : \mathit{Var}^* \to \mathcal{T}^*$
+    satisfying $\forall y \in \mathit{Var}^* \setminus \vec{Y}.\, \rho^{\prime}(y) = \rho(y)$,
     and there exists some $l,j$ satisfying $1 \leq l \leq m$ and $1 \leq j \leq n$ such that
     \begin{itemize}
-        \item $(\mathcal{T}^*, \rho^\prime) \vDash P_l$; and
-        \item $(\mathcal{T}^*, \rho^{\prime\prime}) \vDash P_j$; and
-        \item $C = \rho^\prime(L) \texttt{++} [\rho^\prime(\phi_l)] \texttt{++} \rho^\prime(R)$; and
-        \item $C^\prime = \rho^{\prime\prime}(L)
-        \texttt{++} [\rho^{\prime\prime}(\phi_j)] \texttt{++} \rho^{\prime\prime}(R)$.
+        \item $(\mathcal{T}^*, \rho) \vDash P_l$; and
+        \item $(\mathcal{T}^*, \rho^{\prime}) \vDash P_j$; and
+        \item $C = \rho(L) \texttt{++} [\rho(\phi_l)] \texttt{++} \rho(R)$; and
+        \item $C^\prime = \rho^{\prime}(L)
+        \texttt{++} [\rho^{\prime}(\phi_j)] \texttt{++} \rho^{\prime}(R)$.
     \end{itemize}
 \end{proofenv}
 Now, since $L$ and $R$ were chosen (in the definition of $\mathit{heat}$) to be fresh, we have that
-$L,R \not\in \vec{X}$ and $L,R \not\in \vec{Y}$. Therefore,
-$\rho^\prime(L) = \rho(L)$, $\rho^\prime(R) = \rho(R)$,
-$\rho^{\prime\prime}(L) = \rho(L)$, and $\rho^{\prime\prime}(R) = \rho(R)$.
-Also, since $\mathit{FV}(P_l) \subseteq \mathit{Var} \setminus \vec{X}$
-and $\mathit{FV}(P_j) \subseteq \mathit{Var} \setminus \vec{Y}$,
-by \Cref{lem:unusedVariables} we have $(\mathcal{T}^*, \rho^\prime) \vDash P_l \iff (\mathcal{T}^*, \rho) \vDash P_l$
-and $(\mathcal{T}^*, \rho^{\prime\prime}) \vDash P_j \iff (\mathcal{T}^*, \rho) \vDash P_j$.
+$L,R \not\in \vec{Y}$. Therefore,
+$\rho^\prime(L) = \rho(L)$ and $\rho^\prime(R) = \rho(R)$.
+Also, since $\mathit{FV}(P_j) \subseteq \mathit{Var} \setminus \vec{Y}$,
+by \Cref{lem:unusedVariables} we have $(\mathcal{T}^*, \rho^{\prime}) \vDash P_j \iff (\mathcal{T}^*, \rho) \vDash P_j$.
 Therefore, we can change the goal to one saying that
 \begin{proofenv}
 there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
