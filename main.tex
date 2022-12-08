@@ -293,9 +293,13 @@ $\mathcal{T}, A, C \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime$.
 \begin{remark}\label{rem:shapeOfReachabilityRules}
 For simplicity, we restrict the class of reachability systems we work with to those whose reachability rules
 have the shape
+%\begin{equation*}
+%    \bigvee_{i=1}^{m} (\phi_i \land P_i) \Rightarrow^\exists \exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j) \, .
+%\end{equation*}
 \begin{equation*}
-    \bigvee_{i=1}^{m} (\phi_i \land P_i) \Rightarrow^\exists \exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j) \, .
+    \phi \land P \Rightarrow^\exists \phi^\prime \land P^\prime
 \end{equation*}
+where $phi \land P$ and $\phi^\prime \land P^\prime$ are constrained terms.
 \end{remark}
 
 \begin{remark}\label{rem:noEmptySteps}
@@ -398,8 +402,8 @@ We translate a language semantics into a semantics for lists of configurations a
           \begin{enumerate}
               \item defining a function $\mathit{heat} : \mathit{Var} \times \Pattern \times \mathit{Var} \to \Pattern$ by
               \begin{align*}
-                  \mathit{heat}(L, \exists \vec{X}.\, \bigvee_{i=1}^{m} (\phi_i \land P_i), R)
-                  = \exists \vec{X}.\, \bigvee_{i=1}^{m} ( \mathit{cfgheat(L, \phi_i, R)} \land P_i)
+                  \mathit{heat}(L, \phi \land P, R)
+                  = \mathit{cfgheat}(L, \phi, R) \land P
               \end{align*}
               \item setting
               \begin{align*}
