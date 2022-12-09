@@ -887,7 +887,7 @@ We prove each implication separately.
     then strip the stars using \Cref{lem:starConservative} and notice that we already have appropriate assumptions.
     This concludes the proof.
     \item For the opposite implication, 
-    we again assume that $\Psi \equiv \exists \vec{X}.\, (\varphi_1,\ldots,\varphi_k) \land P$,
+    we again assume that $\Psi \equiv (\varphi_1,\ldots,\varphi_k) \land P$,
     $\Psi^\prime \equiv \exists \vec{Y}.\, (\varphi_1^\prime,\ldots,\varphi_k^\prime) \land P^\prime$,
     $\varphi_j = \phi_j \land P_j$ and $\varphi^\prime_j = \phi^\prime_j \land P^\prime_j$ for any $j \in \{ 1, \ldots, k \}$,
     and assume that
@@ -917,7 +917,7 @@ We prove each implication separately.
         for all configurations $c_1,\ldots,c_k \in \mathcal{T}_{\mathit{Cfg}}$ which terminate
         in $(\mathcal{T}_{\mathit{Cfg}}, \Rightarrow_{\mathcal{S}})$
         and any two valuations $\rho_1,\rho_2 : \mathit{Var} \to \mathcal{T}$ satisfying
-        $\rho_1(v) = \rho_2(v)$ for any $v \in \mathit{Var} \setminus (\vec{X} \cup \vec{Y})$,
+        $\rho_1(v) = \rho_2(v)$ for any $v \in \mathit{Var} \setminus \vec{Y}$,
         whenever $(\mathcal{T}, c_1, \rho_1) \vDash \varphi_1 \land P$
         and \ldots and $(\mathcal{T}, c_k, \rho_1) \vDash \varphi_k \land P$,
         then there exists configurations $c^\prime_1, \ldots, c^\prime_k \in \mathcal{T}_{\mathit{Cfg}}$
@@ -946,6 +946,47 @@ We prove each implication separately.
         \item We ``destruct'' the obtained $C^\prime$ into $[c^\prime_1,\ldots,c^\prime_k]$;
         \item We prove the desired properties of $c^\prime_j$ from the properties of $C^\prime$.
     \end{enumerate}
+    First, $[c_1,\ldots,c_k]$ is terminating by \Cref{lem:terminationComposite}.
+    Next, we have to show that
+    \begin{proofenv}
+        \begin{equation*}
+            (\mathcal{T}^*, [c_1,\ldots,c_k], \rho) \vDash \mathit{flatten}((\varphi_1,\ldots,\varphi_k) \land P) \, ;
+        \end{equation*}
+    \end{proofenv}
+    that is,
+    \begin{proofenv}
+        \begin{equation*}
+            (\mathcal{T}^*, [c_1,\ldots,c_k], \rho) \vDash \mathit{mkList}(\phi_1,\ldots,\phi_k) \land P \land P_1 \land \ldots P_k \, ,
+        \end{equation*}
+    \end{proofenv}
+    which is by \Cref{def:matchinglogic} and \Cref{lem:structurelessSemantics} equivalent to
+    \begin{proofenv}
+        \begin{itemize}
+            \item $(\mathcal{T}^*, [c_1,\ldots,c_k], \rho) \vDash \mathit{mkList}(\phi_1,\ldots,\phi_k)$
+            \item $(\mathcal{T}^*, \rho) \vDash P$
+            \item $(\mathcal{T}^*, \rho) \vDash P_j$ for any $j \in \{ 1, \ldots, k \} $.
+        \end{itemize}
+    \end{proofenv}
+    Since $\mathit{FV}(P) \cup \mathit{FV}(P_1) \cup \ldots \cup \mathit{FV}(P_k) \subseteq \mathit{Var}$,
+    we can discharge the second and third point by first replacing $\rho$ with $(\rho_1)^*$
+    using \Cref{lem:unusedVariables},
+    stripping the stars using \Cref{lem:starConservative}, and using assumptions
+    ($(\mathcal{T}, c_j, \rho_1) \vDash \phi_j \land P_j \land P$)
+    together with \Cref{def:matchinglogic} and \Cref{lem:unusedVariables}.
+    By \Cref{lem:mkListSemantics}, the remaining goal becomes
+    \begin{proofenv}
+        for every $\rho^\prime : \mathit{Var} \to \mathit{T}$ satisfying
+        $\rho^\prime(v) = \rho(v)$ for any $v \in \mathit{FV}(\mathit{mkList}(\phi_1,\ldots,\phi_k))$,
+        it holds that $(\mathcal{T}, c_j, \rho^\prime) \vDash \phi_j$
+        for every $j \in \{ 1, \ldots, k \}$
+    \end{proofenv}
+    which is again discharded by assumption, \Cref{def:matchinglogic}, and \Cref{lem:unusedVariables}.
+    Now we have obtained the following:
+    \begin{proofenv}
+        there exists some $C^\prime \in \mathcal{T}_{\mathit{Cfg}}^*$ such that
+        $[c_1,\ldots,c_k] \Rightarrow_{\mathcal{S}^*}^* C^\prime$
+        and $(\mathcal{T}^*, C^\prime, \rho) \vDash \mathit{flaten}(\Psi^\prime)$.
+    \end{proofenv}
     TODO.
     
 \end{enumerate}
