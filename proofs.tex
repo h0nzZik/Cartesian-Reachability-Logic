@@ -987,6 +987,44 @@ We prove each implication separately.
         $[c_1,\ldots,c_k] \Rightarrow_{\mathcal{S}^*}^* C^\prime$
         and $(\mathcal{T}^*, C^\prime, \rho) \vDash \mathit{flaten}(\Psi^\prime)$.
     \end{proofenv}
+    Now, by \Cref{lem:transitionOnlyBetweenListsOfSameLength} (and using induction on the length of the
+    sequence witnessing the reachability),
+    we get some $c^\prime_1,\ldots,c^\prime_k \in \Tcfg$ such that
+    \begin{proofenv}
+        $[c_1,\ldots,c_k] \Rightarrow_{\mathcal{S}^*}^* [c^\prime_1,\ldots,c^\prime_k]$
+        and $(\mathcal{T}^*, [c^\prime_1,\ldots,c^\prime_k], \rho) \vDash \mathit{flaten}(\Psi^\prime)$.
+    \end{proofenv}
+    Our goal is to prove that
+    \begin{proofenv}
+        there exists configurations $c^\prime_1, \ldots, c^\prime_k \in \mathcal{T}_{\mathit{Cfg}}$
+        such that $c_1 \Rightarrow_{\mathcal{S}}^* c^\prime_1$ and \ldots
+        and $c_k \Rightarrow_{\mathcal{S}}^* c^\prime_k$,
+        and $(\mathcal{T}, c^\prime_1, \rho_2) \vDash \varphi^\prime_1 \land P$
+        and \ldots and $(\mathcal{T}, c^\prime_k, \rho_2) \vDash \varphi^\prime_k \land P$,
+    \end{proofenv}
+    so we choose $c^\prime_j := c^\prime_j$ and have to prove that
+    \begin{proofenv}
+        $c_1 \Rightarrow_{\mathcal{S}}^* c^\prime_1$ and \ldots
+        and $c_k \Rightarrow_{\mathcal{S}}^* c^\prime_k$,
+        and $(\mathcal{T}, c^\prime_1, \rho_2) \vDash \varphi^\prime_1 \land P$
+        and \ldots and $(\mathcal{T}, c^\prime_k, \rho_2) \vDash \varphi^\prime_k \land P$.
+    \end{proofenv}
+    The first part follows from \Cref{lem:reachComposite};
+    it remains to be proven that
+    \begin{proofenv}
+        $(\mathcal{T}, c^\prime_1, \rho_2) \vDash \varphi^\prime_1 \land P$
+        and \ldots and $(\mathcal{T}, c^\prime_k, \rho_2) \vDash \varphi^\prime_k \land P$,
+    \end{proofenv}
+    and we already have
+    \begin{proofenv}
+        $(\mathcal{T}^*, [c^\prime_1,\ldots,c^\prime_k], \rho) \vDash \mathit{flaten}(\Psi^\prime)$ \, ;
+    \end{proofenv}
+    that is
+    \begin{proofenv}
+        $(\mathcal{T}^*, [c^\prime_1,\ldots,c^\prime_k], \rho) \vDash \exists \vec{Y}.\, \mathit{mkList}(\phi_1,\ldots,\phi_k) \land P^\prime \land P^\prime_1 \land \ldots \land P^\prime_k$.
+    \end{proofenv}
+    We also know that
+    $\rho_1(v) = \rho_2(v)$ for any $v \in \mathit{Var} \setminus \vec{Y}$.
     TODO.
     
 \end{enumerate}
