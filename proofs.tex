@@ -495,17 +495,13 @@ By induction on $k$.
 Assume $C \Rightarrow_{\mathcal{S}^*} C^\prime$.
 Then by \Cref{lem:simplifyComposite},
 \begin{proofenv}
-    there exists a rule $((\exists \vec{X}.\, \bigvee_{l=1}^{m} (\phi_l \land P_l)) \Rightarrow^\exists (\exists \vec{Y}.\,     \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j))) \in S$
+    there exists a rule $\phi \land P_l \Rightarrow^\exists \phi^\prime \land P^\prime \in S$
     and valuation $\rho : \mathit{Var}^* \to \mathcal{T}^*$ such that
-    there exists some $\rho^\prime,\rho^{\prime\prime} : \mathit{Var}^* \to \mathcal{T}^*$
-    satisfying $\forall y \in \mathit{Var}^* \setminus \vec{X}.\, \rho^\prime(y) = \rho(y)$
-    and $\forall y \in \mathit{Var}^* \setminus \vec{Y}.\, \rho^{\prime\prime}(y) = \rho(y)$,
-    and there exists some $l,j$ satisfying $1 \leq l \leq m$ and $1 \leq j \leq n$ such that
     \begin{itemize}
-        \item $(\mathcal{T}^*, \rho) \vDash P_l$; and
-        \item $(\mathcal{T}^*, \rho) \vDash P_j$; and
-        \item $C = \rho(L) \texttt{++} [\rho^\prime(\phi_l)] \texttt{++} \rho(R)$; and
-        \item $C^\prime = \rho(L) \texttt{++} [\rho^{\prime\prime}(\phi_j)] 
+        \item $(\mathcal{T}^*, \rho) \vDash P$; and
+        \item $(\mathcal{T}^*, \rho) \vDash P^\prime$; and
+        \item $C = \rho(L) \texttt{++} [\rho(\phi_l)] \texttt{++} \rho(R)$; and
+        \item $C^\prime = \rho(L) \texttt{++} [\rho(\phi_j)] 
         \texttt{++} \rho(R)$.
     \end{itemize}
 \end{proofenv}
