@@ -333,13 +333,14 @@ Cartesian reachability logic is an extension of (one-path) reachability logic.
     \end{equation*}
     iff for all configurations $\gamma_1,\ldots,\gamma_k \in \Tcfg$
     which terminate in $(\Tcfg, \Rightarrow_{\mathcal{S}})$
-    and any two $\mathcal{T}$-valuations $\rho,\rho^\prime$
-    satisfying $\rho(v) = \rho^\prime(v)$ for any $v \in \mathit{Var} \setminus \vec{Y}$,
+    and any $\mathcal{T}$-valuation $\rho$,
     whenever $(\gamma_1,\rho) \vDash \varphi_1 \land \varphi$ and \ldots
     and $(\gamma_k,\rho) \vDash \varphi_k \land \varphi$,
     then there exist configurations $\gamma_1^\prime,\ldots,\gamma_k^\prime \in \Tcfg$
-    such that $\gamma_1 \Rightarrow^{*}_{\mathcal{S}} \gamma_1^\prime$  
+    such that $\gamma_1 \Rightarrow^{*}_{\mathcal{S}} \gamma_1^\prime$
     and \ldots and $\gamma_k \Rightarrow^{*}_{\mathcal{S}} \gamma_k^\prime$,
+    and there also exists an $\mathcal{T}$-valuation $\rho^\prime$
+    satisfying $\rho(v) = \rho^\prime(v)$ for any $v \in \mathit{Var} \setminus \vec{Y}$,
     and
     $(\gamma_1^\prime,\rho^\prime) \vDash \psi_1 \land \psi$ and \ldots and $(\gamma_k^\prime, \rho^\prime) \vDash \psi_k \land \psi$.
 \end{itemize}
