@@ -958,6 +958,7 @@ We prove each implication separately.
             (\mathcal{T}^*, [c_1,\ldots,c_k], \rho) \vDash \mathit{flatten}((\varphi_1,\ldots,\varphi_k) \land P) \, ;
         \end{equation*}
     \end{proofenv}
+    where $\rho(v) = \rho_1(v)$ for any $v \in \mathit{Var}$ (and $\rho(v)$ has arbitrary value for $v$ outside of $\mathit{Var}$);
     that is,
     \begin{proofenv}
         \begin{equation*}
@@ -1023,7 +1024,7 @@ We prove each implication separately.
     The first part follows from \Cref{lem:reachComposite};
     it remains to be proven that
     \begin{proofenv}
-        there also exists an $\mathcal{T}$-valuation $\rho^\prime$
+        there also exists an $\mathcal{T}$-valuation $\rho_2$
         satisfying $\rho_1(v) = \rho_2(v)$ for any $v \in \mathit{Var} \setminus \vec{Y}$,
         and
         $(\mathcal{T}, c_1^\prime,\rho_2) \vDash \psi_1 \land P^\prime$ and \ldots
@@ -1035,9 +1036,25 @@ We prove each implication separately.
     \end{proofenv}
     that is
     \begin{proofenv}
-        $(\mathcal{T}^*, [c^\prime_1,\ldots,c^\prime_k], \rho) \vDash \exists \vec{Y}.\, (\mathit{mkList}(\phi_1,\ldots,\phi_k) \land P^\prime \land P^\prime_1 \land \ldots \land P^\prime_k)$.
+        $(\mathcal{T}^*, [c^\prime_1,\ldots,c^\prime_k], \rho) \vDash \exists \vec{Y}.\, (\mathit{mkList}(\phi_1,\ldots,\phi_k) \land P^\prime \land P^\prime_1 \land \ldots \land P^\prime_k)$ ;
     \end{proofenv}
+    in other words (by \Cref{def:matchinglogic}),
+    \begin{proofenv}
+        there exists some $\mathcal{T}^*$-valuation $\rho^\prime$
+        satisfying $\rho^\prime(v) = \rho(v)$ for every $v \in \mathit{Var}^* \setminus \vec{Y}$
+        such that
+        \begin{itemize}
+            \item $(\mathcal{T}^*, [c^\prime_1,\ldots,c^\prime_k], \rho^\prime) \vDash \mathit{mkList}(\phi_1,\ldots,\phi_k)$;
+            \item $(\mathcal{T}^*, [c^\prime_1,\ldots,c^\prime_k], \rho^\prime) \vDash P^\prime$; and
+            \item $(\mathcal{T}^*, [c^\prime_1,\ldots,c^\prime_k], \rho^\prime) \vDash P^\prime_1$ and \ldots \and 
+                  $(\mathcal{T}^*, [c^\prime_1,\ldots,c^\prime_k], \rho^\prime) \vDash P^\prime_k$.
+        \end{itemize}
+    \end{proofenv}
+    Let $\rho^\prime$ be such valuation.
+    In the goal, we let $\rho_2(v) := \rho^\prime(v)$ for any $v \in \mathit{Var}$;
+    we then note that $\rho_2(v) = \rho^\prime(v) =  \rho(v) =  \rho_1(v)$ for any $v \in \mathit{Var}^*$ by definitions (almost TODO).
     
+    and \Cref{lem:mkListSemantics}
     TODO.
     
 \end{enumerate}
