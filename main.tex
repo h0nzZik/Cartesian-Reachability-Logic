@@ -191,6 +191,25 @@ Also, validity of any pattern does not depend on those variables which the patte
 Admitted.
 \end{proof}
 
+\begin{definition}[\cite{StefanescuCMMSR19}]
+    Given a  matching logic $(\Sigma, \mathit{Var})$-formula $\varphi$ of sort $\mathit{Cfg}$,
+    and a fresh (with respect to $\varphi$) variable $\square$ of sort $\mathit{Cfg}$,
+    we let $\varphi^\square$ denote the $\FOLeq$ formula formed from $\varphi$ by replacing
+    nullary predicate symbols $\phi \in T_{\Sigma, \mathit{Cfg}}(\mathit{Var})$
+    with equalities $\square = \phi$.
+    Given a matching logic $(\Sigma, \mathit{Var})$-model $\mathcal{T}$, a $\mathcal{T}$-valuation $\rho$,
+    and an element $\gamma \in \Tcfg$,
+    we let the $\mathcal{T}$-valuation $\rho^\gamma$ be such that $\rho^\gamma(\square) = \gamma$,
+    and $\rho^\gamma(x) = \rho(x)$ for $x \not = \square$.
+\end{definition}
+\begin{lemma}[\cite{StefanescuCMMSR19}]
+    Whenever $\square$ is fresh in $\varphi$, we have
+    \begin{equation*}
+        (\mathcal{T}, \gamma, \rho) \vDash \varphi \iff (\mathcal{T}, \rho^\gamma) \vDash \varphi^\square
+    \end{equation*}
+    
+\end{lemma}
+
 
 \subsection{One-path Reachability Logic}
 
