@@ -664,6 +664,47 @@ We prove each implication separately.
 \end{itemize}
 \end{proof}
 
+\begin{proof}[Proof of \Cref{lem:flatten}]
+    We have
+    \begin{proofenv}
+        \begin{equation*}
+            (\mathcal{T}^*, C, \rho) \vDash \mathit{flatten}(\exists \vec{X}.\, (\varphi_1,\ldots,\varphi_k) \land P)
+        \end{equation*}
+    \end{proofenv}
+    if and only if (by unfolding the definition of $\mathit{flatten}$ and \Cref{def:matchinglogic})
+    \begin{proofenv}
+        there exists a $\mathcal{T}$-valuation $\rho^\prime$ satisfying $\rho^\prime(v) = \rho(v)$
+        for any $v \in \mathit{Var} \setminus \vec{X}$ such that
+        $(\mathcal{T}^*, C, \rho) \vDash \mathit{mkList}(Y_1,\ldots,Y_k)$
+        and for any $j \in \{ 1, \ldots, k \}$,
+        $(\mathcal{T}^*, C, \rho) \vDash (\varphi_j^{\square})[Y_j/\square] \land P$ \, ,
+    \end{proofenv}
+    if and only if (by \Cref{lem:mkListSemantics})
+    \begin{proofenv}
+        there exists a $\mathcal{T}$-valuation $\rho^\prime$ satisfying $\rho^\prime(v) = \rho(v)$
+        for any $v \in \mathit{Var} \setminus \vec{X}$ such that
+        \begin{itemize}
+            \item there exist configurations $c_1, \ldots, c_k \in \mathcal{T}_{\mathit{Cfg}}$ such that
+                    $C = [c_1, \ldots, c_k]$
+                    and for every $\mathcal{T}$-valuation $\rho^{\prime\prime}$,
+                    satisfying $\rho^{\prime\prime}(Y_j) = \rho(Y_j)$ for any $j \in \{ 1, \ldots, k \}$,
+                    it holds that for any $j \in \{ 1, \ldots, k \}$,
+                    $(\mathcal{T}, c_j, \rho^{\prime\prime}) \vDash Y_j$; and
+            \item for any $j \in \{ 1, \ldots, k \}$,
+                    $(\mathcal{T}^*, C, \rho) \vDash (\varphi_j^{\square})[Y_j/\square] \land P$ ,
+        \end{itemize}
+    \end{proofenv}
+    if and only if (TODO)
+    \begin{proofenv}
+        there exist configurations $c_1, \ldots, c_k \in \mathcal{T}_{\mathit{Cfg}}$ such that
+        $C = [c_1, \ldots, c_k]$ and there exists a $\mathcal{T}$-valuation $\rho_0$
+        satisfying $\rho_0(v) = \rho(v)$ for any $v \in \mathit{Var} \setminus \vec{X}$
+        such that for any $j \in \{ 1, \ldots, k \}$,
+        $(\mathcal{T}, c_j, \rho_0) \vDash \varphi_j \land P$ \, ,
+    \end{proofenv}
+    which is what we wanted to prove.
+\end{proof}
+
 \begin{proof}[Proof of \Cref{thm:correspondence}]
 We prove each implication separately.
 \begin{enumerate}
