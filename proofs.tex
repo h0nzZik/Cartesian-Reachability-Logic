@@ -675,9 +675,9 @@ We prove each implication separately.
     \begin{proofenv}
         there exists a $\mathcal{T}$-valuation $\rho^\prime$ satisfying $\rho^\prime(v) = \rho(v)$
         for any $v \in \mathit{Var} \setminus \vec{X}$ such that
-        $(\mathcal{T}^*, C, \rho) \vDash \mathit{mkList}(Y_1,\ldots,Y_k)$
+        $(\mathcal{T}^*, C, \rho^\prime) \vDash \mathit{mkList}(Y_1,\ldots,Y_k)$
         and for any $j \in \{ 1, \ldots, k \}$,
-        $(\mathcal{T}^*, C, \rho) \vDash (\varphi_j^{\square})[Y_j/\square] \land P$ \, ,
+        $(\mathcal{T}^*, C, \rho^\prime) \vDash (\varphi_j^{\square})[Y_j/\square] \land P$ \, ,
     \end{proofenv}
     if and only if (by \Cref{lem:mkListSemantics})
     \begin{proofenv}
@@ -686,15 +686,49 @@ We prove each implication separately.
         \begin{itemize}
             \item there exist configurations $c_1, \ldots, c_k \in \mathcal{T}_{\mathit{Cfg}}$ such that
                     $C = [c_1, \ldots, c_k]$
-                    and for every $\mathcal{T}$-valuation $\rho^{\prime\prime}$,
-                    satisfying $\rho^{\prime\prime}(Y_j) = \rho(Y_j)$ for any $j \in \{ 1, \ldots, k \}$,
+                    and for every $\mathcal{T}$-valuation $\rho^{\prime\prime}$
+                    satisfying $\rho^{\prime\prime}(Y_j) = \rho^\prime(Y_j)$ for any $j \in \{ 1, \ldots, k \}$,
                     it holds that for any $j \in \{ 1, \ldots, k \}$,
                     $(\mathcal{T}, c_j, \rho^{\prime\prime}) \vDash Y_j$; and
             \item for any $j \in \{ 1, \ldots, k \}$,
-                    $(\mathcal{T}^*, C, \rho) \vDash (\varphi_j^{\square})[Y_j/\square] \land P$ ,
+                    $(\mathcal{T}^*, C, \rho^\prime) \vDash (\varphi_j^{\square})[Y_j/\square] \land P$ ,
+        \end{itemize}
+    \end{proofenv}
+    if and only if (by \Cref{def:matchinglogic} and firstorder reasoning)
+    \begin{proofenv}
+        there exists a $\mathcal{T}$-valuation $\rho^\prime$ satisfying $\rho^\prime(v) = \rho(v)$
+        for any $v \in \mathit{Var} \setminus \vec{X}$ such that
+        \begin{itemize}
+            \item there exist configurations $c_1, \ldots, c_k \in \mathcal{T}_{\mathit{Cfg}}$ such that
+                    $C = [c_1, \ldots, c_k]$ and for any $j \in \{ 1, \ldots, k \}$,
+                    $\rho^{\prime}(Y_j) = c_j$; and
+            \item for any $j \in \{ 1, \ldots, k \}$,
+                    $(\mathcal{T}^*, C, \rho^\prime) \vDash (\varphi_j^{\square})[Y_j/\square] \land P$ ,
+        \end{itemize}
+    \end{proofenv}
+    if and only if (by firstorder reasoning, \Cref{def:matchinglogic}, and \Cref{lem:structurelessSemantics})
+    \begin{proofenv}
+        there exist configurations $c_1, \ldots, c_k \in \mathcal{T}_{\mathit{Cfg}}$ such that $C = [c_1, \ldots, c_k]$,
+        and there exists a $\mathcal{T}$-valuation $\rho^\prime$ satisfying $\rho^\prime(v) = \rho(v)$
+        for any $v \in \mathit{Var} \setminus \vec{X}$ such that for any $j \in \{ 1, \ldots, k \}$,
+        \begin{itemize}
+            \item $\rho^{\prime}(Y_j) = c_j$;
+            \item $(\mathcal{T}^*, \rho^\prime) \vDash (\varphi_j^{\square})[Y_j/\square]$ ; and
+            \item $(\mathcal{T}^*, \rho^\prime) \vDash P$ .
         \end{itemize}
     \end{proofenv}
     if and only if (TODO)
+    \begin{proofenv}
+        there exist configurations $c_1, \ldots, c_k \in \mathcal{T}_{\mathit{Cfg}}$ such that
+        $C = [c_1, \ldots, c_k]$ and there exists a $\mathcal{T}$-valuation $\rho_0$
+        satisfying $\rho_0(v) = \rho(v)$ for any $v \in \mathit{Var} \setminus \vec{X}$
+        such that for any $j \in \{ 1, \ldots, k \}$,
+        \begin{itemize}
+            \item $(\mathcal{T}, \rho_0^{c_j}) \vDash \varphi_j^{\square}$ ; and
+            \item $(\mathcal{T}, c_j, \rho_0) \vDash P$ ,
+        \end{itemize}
+    \end{proofenv}
+    if and only if (by \Cref{lem:patternToFOLSemantics} and \Cref{def:matchinglogic})
     \begin{proofenv}
         there exist configurations $c_1, \ldots, c_k \in \mathcal{T}_{\mathit{Cfg}}$ such that
         $C = [c_1, \ldots, c_k]$ and there exists a $\mathcal{T}$-valuation $\rho_0$
