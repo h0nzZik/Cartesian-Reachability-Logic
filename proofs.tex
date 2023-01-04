@@ -664,6 +664,18 @@ We prove each implication separately.
 \end{itemize}
 \end{proof}
 
+\begin{lemma}[A semantic property of variable renaming]\label{lem:varrenamesem}
+  For any two variables $X,Y$ of the same sort, and for any two $\mathcal{T}$-valuations $\rho_1, \rho_2$
+  which agree on all variables other than $X,Y$, if $\rho_1(X) = \rho_2(Y)$, then for any matching logic formula
+  $\varphi$,
+  \begin{equation*}
+      (\mathcal{T}, \gamma, \rho_1) \vDash \varphi \iff (\mathcal{T}, \gamma, \rho_2) \vDash \varphi[Y/X] \, .
+  \end{equation*}
+\end{lemma}
+\begin{proof}
+    Admitted.
+\end{proof}
+
 \begin{proof}[Proof of \Cref{lem:flatten}]
     We have
     \begin{proofenv}
@@ -673,16 +685,16 @@ We prove each implication separately.
     \end{proofenv}
     if and only if (by unfolding the definition of $\mathit{flatten}$ and \Cref{def:matchinglogic})
     \begin{proofenv}
-        there exists a $\mathcal{T}$-valuation $\rho^\prime$ satisfying $\rho^\prime(v) = \rho(v)$
-        for any $v \in \mathit{Var} \setminus \vec{X}$ such that
+        there exists a $\mathcal{T}^*$-valuation $\rho^\prime$ satisfying $\rho^\prime(v) = \rho(v)$
+        for any $v \in \mathit{Var}^* \setminus \vec{X}$ such that
         $(\mathcal{T}^*, C, \rho^\prime) \vDash \mathit{mkList}(Y_1,\ldots,Y_k)$
         and for any $j \in \{ 1, \ldots, k \}$,
         $(\mathcal{T}^*, C, \rho^\prime) \vDash (\varphi_j^{\square})[Y_j/\square] \land P$ \, ,
     \end{proofenv}
     if and only if (by \Cref{lem:mkListSemantics})
     \begin{proofenv}
-        there exists a $\mathcal{T}$-valuation $\rho^\prime$ satisfying $\rho^\prime(v) = \rho(v)$
-        for any $v \in \mathit{Var} \setminus \vec{X}$ such that
+        there exists a $\mathcal{T}^*$-valuation $\rho^\prime$ satisfying $\rho^\prime(v) = \rho(v)$
+        for any $v \in \mathit{Var}^* \setminus \vec{X}$ such that
         \begin{itemize}
             \item there exist configurations $c_1, \ldots, c_k \in \mathcal{T}_{\mathit{Cfg}}$ such that
                     $C = [c_1, \ldots, c_k]$
@@ -696,8 +708,8 @@ We prove each implication separately.
     \end{proofenv}
     if and only if (by \Cref{def:matchinglogic} and firstorder reasoning)
     \begin{proofenv}
-        there exists a $\mathcal{T}$-valuation $\rho^\prime$ satisfying $\rho^\prime(v) = \rho(v)$
-        for any $v \in \mathit{Var} \setminus \vec{X}$ such that
+        there exists a $\mathcal{T}^*$-valuation $\rho^\prime$ satisfying $\rho^\prime(v) = \rho(v)$
+        for any $v \in \mathit{Var}^* \setminus \vec{X}$ such that
         \begin{itemize}
             \item there exist configurations $c_1, \ldots, c_k \in \mathcal{T}_{\mathit{Cfg}}$ such that
                     $C = [c_1, \ldots, c_k]$ and for any $j \in \{ 1, \ldots, k \}$,
@@ -709,15 +721,30 @@ We prove each implication separately.
     if and only if (by firstorder reasoning, \Cref{def:matchinglogic}, and \Cref{lem:structurelessSemantics})
     \begin{proofenv}
         there exist configurations $c_1, \ldots, c_k \in \mathcal{T}_{\mathit{Cfg}}$ such that $C = [c_1, \ldots, c_k]$,
+        and there exists a $\mathcal{T}^*$-valuation $\rho^\prime$ satisfying $\rho^\prime(v) = \rho(v)$
+        for any $v \in \mathit{Var}^* \setminus \vec{X}$ such that for any $j \in \{ 1, \ldots, k \}$,
+        \begin{itemize}
+            \item $\rho^{\prime}(Y_j) = c_j$;
+            \item $(\mathcal{T}^*, \rho^\prime) \vDash (\varphi_j^{\square})[Y_j/\square]$ ; and
+            \item $(\mathcal{T}^*, \rho^\prime) \vDash P$,
+        \end{itemize}
+    \end{proofenv}
+    if and only if (by \Cref{lem:starConservative} and firstorder reasoning)
+    \begin{proofenv}
+        there exist configurations $c_1, \ldots, c_k \in \mathcal{T}_{\mathit{Cfg}}$ such that $C = [c_1, \ldots, c_k]$,
         and there exists a $\mathcal{T}$-valuation $\rho^\prime$ satisfying $\rho^\prime(v) = \rho(v)$
         for any $v \in \mathit{Var} \setminus \vec{X}$ such that for any $j \in \{ 1, \ldots, k \}$,
         \begin{itemize}
             \item $\rho^{\prime}(Y_j) = c_j$;
-            \item $(\mathcal{T}^*, \rho^\prime) \vDash (\varphi_j^{\square})[Y_j/\square]$ ; and
-            \item $(\mathcal{T}^*, \rho^\prime) \vDash P$ .
+            \item $(\mathcal{T}, \rho^\prime) \vDash (\varphi_j^{\square})[Y_j/\square]$ ; and
+            \item $(\mathcal{T}, \rho^\prime) \vDash P$,
         \end{itemize}
     \end{proofenv}
-    if and only if (TODO)
+    if and only if (by \Cref{lem:varrenamesem},
+    since we have $\rho^\prime(Y_j) = c_j$
+    on one side and $\rho_0^{c_j}(\square) = c_j$ on the other; for the implication from bottom to top,
+    we also need the assumption that $Y_j$ was fresh and \Cref{lem:unusedVariables} -
+    in order to choose the valuation $\rho^\prime$ satisfying $\rho^\prime(Y_j) = c_j$)
     \begin{proofenv}
         there exist configurations $c_1, \ldots, c_k \in \mathcal{T}_{\mathit{Cfg}}$ such that
         $C = [c_1, \ldots, c_k]$ and there exists a $\mathcal{T}$-valuation $\rho_0$
@@ -725,10 +752,10 @@ We prove each implication separately.
         such that for any $j \in \{ 1, \ldots, k \}$,
         \begin{itemize}
             \item $(\mathcal{T}, \rho_0^{c_j}) \vDash \varphi_j^{\square}$ ; and
-            \item $(\mathcal{T}, c_j, \rho_0) \vDash P$ ,
+            \item $(\mathcal{T}, \rho_0) \vDash P$ ,
         \end{itemize}
     \end{proofenv}
-    if and only if (by \Cref{lem:patternToFOLSemantics} and \Cref{def:matchinglogic})
+    if and only if (by \Cref{lem:patternToFOLSemantics}, \Cref{def:matchinglogic}, and \Cref{lem:structurelessSemantics})
     \begin{proofenv}
         there exist configurations $c_1, \ldots, c_k \in \mathcal{T}_{\mathit{Cfg}}$ such that
         $C = [c_1, \ldots, c_k]$ and there exists a $\mathcal{T}$-valuation $\rho_0$
