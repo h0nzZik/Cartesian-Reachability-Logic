@@ -794,8 +794,8 @@ We prove each implication separately.
         and there also exists an $\mathcal{T}$-valuation $\rho_2$
         satisfying $\rho_1(v) = \rho_2(v)$ for any $v \in \mathit{Var} \setminus \vec{Y}$,
         and
-        $(\mathcal{T}, c_1^\prime,\rho_2) \vDash \psi_1 \land P^\prime$ and \ldots
-        and $(\mathcal{T}, c_k^\prime, \rho_2) \vDash \psi_k \land P^\prime$.
+        $(\mathcal{T}, c_1^\prime,\rho_2) \vDash \varphi^\prime_1 \land P^\prime$ and \ldots
+        and $(\mathcal{T}, c_k^\prime, \rho_2) \vDash \varphi^\prime_k \land P^\prime$.
     \end{proofenv}
     We have to prove that
     \begin{proofenv}
@@ -852,7 +852,7 @@ We prove each implication separately.
     To prove Item~\ref{item:corr:step2}, saying that the configurations $c_1, \ldots, c_k$ are terminating,
     we simply use \Cref{lem:terminationComposite}.
     To prove Item~\ref{item:corr:step3}, we let $\rho_1 := \rho_0$, and apply the assumption (ii).
-    Now it follows that
+    Now it follows that (iii)
     \begin{proofenv}
         there exist configurations $c_1^\prime,\ldots,c_k^\prime \in \Tcfg$
         such that $c_1 \Rightarrow^{*}_{\mathcal{S}} c_1^\prime$
@@ -860,8 +860,8 @@ We prove each implication separately.
         and there also exists an $\mathcal{T}$-valuation $\rho_2$
         satisfying $\rho_1(v) = \rho_2(v)$ for any $v \in \mathit{Var} \setminus \vec{Y}$,
         and
-        $(\mathcal{T}, c_1^\prime,\rho_2) \vDash \psi_1 \land P^\prime$ and \ldots
-        and $(\mathcal{T}, c_k^\prime, \rho_2) \vDash \psi_k \land P^\prime$.
+        $(\mathcal{T}, c_1^\prime,\rho_2) \vDash \varphi^\prime_1 \land P^\prime$ and \ldots
+        and $(\mathcal{T}, c_k^\prime, \rho_2) \vDash \varphi^\prime_k \land P^\prime$.
     \end{proofenv}
     Let us have such configurations $c_1^\prime,\ldots,c_k^\prime$ and valuation $\rho_2$.
     We choose $C^\prime := [ c_1^\prime,\ldots,c_k^\prime ]$,
@@ -871,71 +871,28 @@ We prove each implication separately.
     \end{proofenv}
     (where $\rho$ is the valuation that we started with).
     The part saying that $C \Rightarrow^*_{\mathcal{S}^*} C^\prime$ holds
-    follows by \Cref{lem:reachComposite}. The other part,
-    after unfolding $\Psi^\prime$ and $C^\prime$ and simplifying the definition of $\mathit{flatten}$,
-    and applying \Cref{def:matchinglogic}
-    becomes
+    follows by \Cref{lem:reachComposite}. The other part can be changed using \Cref{lem:flatten} into
     \begin{proofenv}
-    exists $\rho_0^\prime : \mathit{Var}^* \to \mathcal{T}^*$ such that $\rho_0^\prime(v) = \rho(v)$ for any $v \in \mathit{Var}^* \setminus \vec{Y}$, and
-    \begin{enumerate}
-        \item 
-        \begin{equation*}
-            (\mathcal{T}^*, [ c_1^\prime,\ldots,c_k^\prime ], \rho_0^\prime) \vDash \mathit{mkList}(\phi_1^\prime, \ldots, \phi_k^\prime)
-        \end{equation*}
-        \item 
-        \begin{equation*}
-            (\mathcal{T}^*, [ c_1^\prime,\ldots,c_k^\prime ], \rho_0^\prime) \vDash (P_1^\prime \land \ldots \land P_k^\prime) \land P^\prime \, .
-        \end{equation*}
-    \end{enumerate}
+        there exist configurations $c^\prime_1, \ldots, c^\prime_k \in \mathcal{T}_{\mathit{Cfg}}$ such that
+        $C^\prime = [c^\prime_1, \ldots, c^\prime_k]$ and there exists a $\mathcal{T}$-valuation $\rho^\prime_0$
+        satisfying $\rho^\prime_0(v) = \rho(v)$ for any $v \in \mathit{Var} \setminus \vec{Y}$
+        such that for any $j \in \{ 1, \ldots, k \}$,
+        $(\mathcal{T}, c^\prime_j, \rho^\prime_0) \vDash \varphi^\prime_j \land P$.
     \end{proofenv}
-    From earlier, we know that for every $j \in \{ 1, \ldots, k \}$,
+    Since we have constructed $C^\prime$ as a list of smaller configurations,
+    it remains to be proven that
     \begin{proofenv}
-    $(\mathcal{T}, c_j^\prime, \rho_2) \vDash \varphi^\prime_j \land P^\prime$;    
+        there exists a $\mathcal{T}$-valuation $\rho^\prime_0$
+        satisfying $\rho^\prime_0(v) = \rho(v)$ for any $v \in \mathit{Var} \setminus \vec{Y}$
+        such that for any $j \in \{ 1, \ldots, k \}$,
+        $(\mathcal{T}, c^\prime_j, \rho^\prime_0) \vDash \varphi^\prime_j \land P$.
     \end{proofenv}
-    that is, after unfolding $\varphi^\prime_j$,
-    \begin{proofenv}
-        $(\mathcal{T}, c_j^\prime, \rho_2) \vDash \phi^\prime_j \land P^\prime_j \land P^\prime$.
-    \end{proofenv}
-    That is the same (by \Cref{def:matchinglogic}) as saying that
-    \begin{proofenv}
-        \begin{itemize}
-            \item  $(\mathcal{T}, c_j^\prime, \rho_2) \vDash \phi^\prime_j$; and
-            \item $(\mathcal{T}, c_j^\prime, \rho_2) \vDash P^\prime_j \land P^\prime$.
-        \end{itemize}
-    \end{proofenv}
-    Now in the goal (starting with existential quantifier), let us define
-    $\rho_0^\prime(v) = \rho_2(v)$ for any $v \in \mathit{Var}$ (and $\rho_0^\prime(w) = a$ for $w \in \mathit{Var}^* \setminus \mathit{Var}$, where $a$ is arbitrary).
+    Let us choose $\rho^\prime_0$ defined by
+    $\rho_0^\prime(v) = \rho_2(v)$ for any $v \in \mathit{Var}$.
     We verify that $\rho_0^\prime(v) = \rho_2(v) = \rho_1(v) = \rho_0(v) = \rho(v)$
-    for any $v \in \mathit{Var}^* \setminus \vec{Y}$. (The last equality holds only because $\vec{X} \subseteq \vec{Y}$,
-    as enforced by the CRL syntax.)
-    %\\\hline\\
-    We apply \Cref{lem:mkListSemantics} and \Cref{def:matchinglogic},
-    and then we have to prove that
-    \begin{proofenv}
-    \begin{enumerate}
-        \item $(\mathcal{T}, c_1^\prime, \rho_{00}^\prime) \vDash \phi_{1}^\prime$ and \ldots and $(\mathcal{T}, c_k^\prime, \rho_{00}^\prime) \vDash \phi_{k}^\prime$; and
-        \item $(\mathcal{T}^*, [ c_1^\prime,\ldots,c_k^\prime ], \rho_0^\prime) \vDash P_{1}^\prime$ and \ldots and 
-        $(\mathcal{T}^*, [ c_1^\prime,\ldots,c_k^\prime ], \rho_0^\prime) \vDash P_{k}^\prime$; and
-        \item $(\mathcal{T}^*, [ c_1^\prime,\ldots,c_k^\prime ], \rho_0^\prime) \vDash P^\prime$.
-    \end{enumerate}
-    where $\rho^\prime_{00} : \mathit{Var} \to \mathcal{T}$ is
-    arbitrary valuation satisfying
-    $\rho^\prime_{00}(v) = \rho_0^\prime(v)$ for every $v \in \mathit{FV}(\mathit{mkList}(\phi_{i_1},\ldots,\phi_{i_k}))$.
-    \end{proofenv}
-    We now want to discharge the (a) part. Let $j \in \{ 1, \ldots, k \}$.
-    We know from earlier that $(\mathcal{T}, c^\prime_j,\rho_2) \vDash \phi_{j}$,
-    and want to prove that $(\mathcal{T}, c^\prime_j, \rho^\prime_{00}) \vDash \phi^\prime_{j}$.
-    To do so, we apply \Cref{lem:unusedVariables}, and it remains to be proven that $\rho_{2}(v) = \rho^\prime_{00}(v)$
-    for any $v \in \mathit{FV}(\phi^\prime_{j})$.
-    But we know that for such $v$, $\rho^\prime_{00}(v) = \rho_0^\prime(v)$, so it is enough to show that
-    $\rho_{2}(v) = \rho^\prime_0(v)$, which holds by the definition of $\rho^\prime_0$.
-    For discharging the (b) and (c) part, we first use
-    \Cref{lem:structurelessSemantics}
-    to change the model element to the appropriate $c^\prime_j$,
-    then use \Cref{lem:unusedVariables}
-    to change the valuation to $(\rho_2)^*$ (since the $P$s contain only variables from $\mathit{Var}$),
-    then strip the stars using \Cref{lem:starConservative} and notice that we already have appropriate assumptions.
-    This concludes the proof.
+    for any $v \in \mathit{Var} \setminus \vec{Y}$,
+    and the rest follows from the assumption (iii) by \Cref{lem:unusedVariables}.
+    This concludes the proof of the first implication.
     \item For the opposite implication, 
     we again assume that $\Psi \equiv (\varphi_1,\ldots,\varphi_k) \land P$,
     $\Psi^\prime \equiv \exists \vec{Y}.\, (\varphi_1^\prime,\ldots,\varphi_k^\prime) \land P^\prime$,
