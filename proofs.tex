@@ -1,4 +1,5 @@
 
+
 \begin{proof}[Proof of \Cref{lem:structurelessSemantics}]
 Let $P$ be a structureless pattern.
 We perform induction on $P$.
@@ -1040,47 +1041,14 @@ We prove each implication separately.
 \end{proof}
 
 
-\begin{lemma}\label{lem:constrain}
-  For any structureless pattens $P, Q, P_1, \ldots, P_m$
-  and any basic patterns $\phi_1, \ldots, \phi_m$,
-    \begin{align*}
-        \vDash_\ML & \mathit{constrain}(P \lor Q, \exists x_1,\ldots,x_{n}.\, (\phi_1 \land P_1) \lor \ldots (\phi_m \land P_{m})) \leftrightarrow
-        \\ & ( \mathit{constrain}(P, \exists x_1,\ldots,x_{n}.\, (\phi_1 \land P_1) \lor \ldots (\phi_m \land P_{m}))
-        \\ & \ \mathit{constrain}(Q, \exists x_1,\ldots,x_{n}.\, (\phi_1 \land P_1) \lor \ldots (\phi_m \land P_{m})) ) \, .
-    \end{align*}
-\end{lemma}
-\begin{proof}[Proof of \Cref{lem:constrain}]
-Admitted.
-\end{proof}
-
-\begin{lemma}\label{lem:doubleconstrain}
-    \begin{align*}
-        \vDash_\ML & \mathit{constrain}(P , \mathit{constrain}(Q, \varphi))
-        \leftrightarrow \mathit{constrain}(P \land Q, \varphi)
-    \end{align*}
-\end{lemma}
-\begin{proof}[Proof of \Cref{lem:doubleconstrain}]
-Admitted.
-\end{proof}
-
-\begin{lemma}\label{lem:constrainMergeComm}
-    \begin{align*}
-        \vDash_\ML & \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \mathit{constrain}(P, \varphi_i), \varphi_{i+1}, \ldots, \varphi_k) \\
-        & \leftrightarrow \mathit{constrain}(P, \mathit{mergePatterns(\varphi_1, \ldots, \varphi_k)})
-    \end{align*}
-\end{lemma}
-\begin{proof}[Proof of \Cref{lem:constrainMergeComm}]
-Admitted.
-\end{proof}
-
-\begin{lemma}\label{lem:constrainAsConjunction}
-    \begin{align*}
-        \vDash_{\ML} & \mathit{constrain}(P, \varphi) \leftrightarrow \varphi \land P
-    \end{align*}
-\end{lemma}
-\begin{proof}[Proof of \Cref{lem:constrainAsConjunction}]
-Admitted.
-\end{proof}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{img/onepath-rl.png}
+    \caption{One-path reachability-logic proof system.
+    The use of $\Rightarrow^+$ in sequent means that it was derived without Reflexivity.
+    TODO retypeset}
+    \label{fig:RLproofsystem}
+\end{figure}
 
 
 \begin{proof}[Proof of \Cref{lem:CRLalmostSoundness}]
