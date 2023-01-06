@@ -1058,7 +1058,7 @@ By induction on the structure of the CRL proof. TODO
     
     \item If the proof ends with \emph{Reflexivity}, then we need to prove
     \begin{equation*}
-        \mathcal{S}^*, \mathit{flatten}^\exists(E, \psi), \emptyset \vdash_\RL
+        \mathcal{S}^* \cup \mathit{flatten}^\exists(E, \psi), \emptyset \vdash_\RL
           \mathit{flatten}^\exists(\psi, \psi) 
     \end{equation*}
     which we do by applying the Reflexivity proof rule.
@@ -1066,7 +1066,7 @@ By induction on the structure of the CRL proof. TODO
     \item If the proof ends with \emph{Axiom}, then $\psi \in E$,
           and we have to prove that
           \begin{equation*}
-            \mathcal{S}^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime) \vdash_\RL
+            \mathcal{S}^* \cup \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime) \vdash_\RL
             \mathit{flatten}^\prime(\psi, \psi^\prime)               \, .
           \end{equation*}
           By applying the Axiom proof rule of RL, it is enough to show that
@@ -1077,17 +1077,17 @@ By induction on the structure of the CRL proof. TODO
           
     \item If the proof ends with \emph{Case}, then we have
         \begin{equation*}
-            \mathcal{S}^*, \Bar{E}, \Bar{C} \vdash_\RL
+            \mathcal{S}^* \cup \Bar{E}, \Bar{C} \vdash_\RL
             \mathit{flatten}^\exists((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P^\prime, \Psi^\prime)
         \end{equation*}
         and
         \begin{equation*}
-            \mathcal{S}^*, \Bar{E}, \Bar{C} \vdash_\RL
+            \mathcal{S}^* \cup \Bar{E}, \Bar{C} \vdash_\RL
             \mathit{flatten}^\exists((\varphi_1, \ldots, \varphi_{i-1}, \psi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P^\prime, \Psi^\prime) 
         \end{equation*}
         as hypotheses, and we have to prove
         \begin{equation*}
-            \mathcal{S}^*, \Bar{E}, \Bar{C} \vdash_\RL
+            \mathcal{S}^* \cup \Bar{E}, \Bar{C} \vdash_\RL
             \mathit{flatten}^\exists((\varphi_1, \ldots, \varphi_{i-1}, (\varphi_i \lor \psi_i), \varphi_{i+1}, \ldots, \varphi_k) \land P^\prime, \Psi^\prime)               \, .
         \end{equation*}
         (where $\Bar{E} = \mathit{flatten}^\exists(E, \psi^\prime)$
@@ -1095,37 +1095,52 @@ By induction on the structure of the CRL proof. TODO
         ).
         After simplifications, we get
         \begin{align*}
-            \mathcal{S}^*, \Bar{E}, \Bar{C} \vdash_\RL
+            \mathcal{S}^* \cup \Bar{E}, \Bar{C} \vdash_\RL
             &
-            \mathit{constrain}(P^\prime, \mathit{mergePatterns}((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k)))
+            \mathit{mkList}(X_1, \ldots, X_k) \land \left( \bigwedge_{j=1}^{k} (\varphi_j^\square)[X_j/\square] \right) \land P^\prime
             \\ & \Rightarrow^\exists
             \mathit{flatten}(\Psi^\prime)
         \end{align*}
         and
         \begin{align*}
-            \mathcal{S}^*, \Bar{E}, \Bar{C} \vdash_\RL
+            \mathcal{S}^* \cup \Bar{E}, \Bar{C} \vdash_\RL
             &
-            \mathit{constrain}(P^\prime, \mathit{mergePatterns}((\varphi_1, \ldots, \varphi_{i-1}, \psi_i, \varphi_{i+1}, \ldots, \varphi_k)))
+            \mathit{mkList}(Y_1, \ldots, Y_k) \land \left(\bigwedge_{j=1, j \not = i}^{k} (\varphi_j^\square)[Y_j/\square] \right)
+            \land (\psi_i^\square)[Y_i/\square] \land P^\prime
             \\ & \Rightarrow^\exists
             \mathit{flatten}(\Psi^\prime)
         \end{align*}
         as hypotheses,
         and have to prove
         \begin{align*}
-            \mathcal{S}^*, \Bar{E}, \Bar{C} \vdash_\RL
+            \mathcal{S}^* \cup \Bar{E}, \Bar{C} \vdash_\RL
             &
-            \mathit{constrain}(P^\prime, \mathit{mergePatterns}((\varphi_1, \ldots, \varphi_{i-1}, (\varphi_i \lor \psi_i), \varphi_{i+1}, \ldots, \varphi_k)))
+            \mathit{mkList}(Z_1, \ldots, Z_k) \land \left(\bigwedge_{j=1,j \not = i}^{k} (\varphi_j^\square)[Z_j/\square]\right)
+            \land ((\varphi_i \lor \psi_i)^\square)[Z_i/\square]
             \\ & \Rightarrow^\exists
             \mathit{flatten}(\Psi^\prime)
         \end{align*}
-        Since
+        (where $X_1,\ldots,X_k,Y_1,\ldots,Y_k,Z_1,\ldots,Z_k$ are fresh variables).
+        We first apply the Consequence RL rule to the goal to distribute the $\varphi_i \lor \psi_i$ disjunction
+        to the top, changing the goal to
         \begin{align*}
-            \mathcal{T}^* \vDash_\ML & \mathit{constrain}(P^\prime, \mathit{mergePatterns}((\varphi_1, \ldots, \varphi_{i-1}, (\varphi_i \lor \psi_i), \varphi_{i+1}, \ldots, \varphi_k))) \leftrightarrow \\
-            & (\mathit{constrain}(P^\prime, \mathit{mergePatterns}((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k))) \\
-            & \lor \mathit{constrain}(P^\prime, \mathit{mergePatterns}((\varphi_1, \ldots, \varphi_{i-1}, \psi_i, \varphi_{i+1}, \ldots, \varphi_k))))
+            \mathcal{S}^* \cup \Bar{E}, \Bar{C} \vdash_\RL
+            &
+            \left( \mathit{mkList}(Z_1, \ldots, Z_k) \land \left(\bigwedge_{j=1,j \not = i}^{k} (\varphi_j^\square)[Z_j/\square]\right)
+            \land (\varphi_i^\square)[Z_i/\square] \right)
+            \\ \lor &
+            \left(
+            \mathit{mkList}(Z_1, \ldots, Z_k) \land \left(\bigwedge_{j=1,j \not = i}^{k} (\varphi_j^\square)[Z_j/\square]\right)
+            \land (\psi_i^\square)[Z_i/\square]
+            \right)
+            \\ & \Rightarrow^\exists
+            \mathit{flatten}(\Psi^\prime) \, .
         \end{align*}
-        (where $\mathcal{S}^* = (\mathcal{T}^*, S)$),
-        we can apply the Consequence RL rule on the goal, followed by a Case Analysis rule applied to the two hypotheses, and we are done.
+        Now we apply the Case Analysis rule.
+        Then we transform the hypotheses to the respective goals by existentially quantifying the $X_j$s (and $Y_j$s, respectively)
+        in the hypotheses
+        using the Abstraction RL rule, alpha-renaming (using the Consequence rule) the $X_j$s (and $Y_j$s, respectively)
+        into $Z_j$s, and stripping the existential quantifiers (using the Consequence rule, again), and we are done.
         
     \item If the proof ends with \emph{Step},
       we can assume a structureless FOL formula $P^\prime$, a rule $\varphi \Rightarrow^\exists \varphi^\prime \in S$ such that
