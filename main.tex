@@ -490,50 +490,7 @@ to matching logic patterns over a star-extended signature;
 the idea behind this construction is that flattened (E)CLPs are matched
 in star-extended models by lists of configurations, where each configuration from the list
 matches the corresponding pattern from the (E)CLP.
-
-\begin{definition}\label{def:mkList}
-We define $\mathit{mkList}$ by letting
-\begin{itemize}
-    \item $\mathit{mkList}(\phi) = \mathit{cfgitem}(\phi)$; and
-    \item $\mathit{mkList}(\phi_1, \ldots, \phi_k) = \mathit{cfgconcat}(\mathit{cfgitem}(\phi), \mathit{mkList}(\phi_2, \ldots, \phi_k))$ whenever $k > 1$.
-\end{itemize}
-\end{definition}
-
-\begin{definition}\label{def:flatten}
-    We define a function $\mathit{flatten}$ from (potentially existentially-quantified) constrained list patterns
-    to matching logic patterns over a star-extended signature by
-    \begin{align*}
-        & \mathit{flatten}(\exists \vec{X}.\, [\varphi_1, \ldots, \varphi_k) \land P] \equiv \\
-        & \exists \vec{X}.\, \mathit{mkList}(Y_1, \ldots, Y_k)
-        \land (\varphi_1^\square)[Y_1/\square] \land \ldots
-        \land (\varphi_k^\square)[Y_k/\square] \land P \, ,
-    \end{align*}
-    where $Y_1,\ldots,Y_k,\square$ are fresh.
-    Furthermore, we let
-    \begin{equation*}
-        \mathit{flatten}^\exists(\Psi,\Psi^\prime) \equiv \mathit{flatten}(\Psi) \Rightarrow^\exists \mathit{flatten}(\Psi^\prime) \, .
-    \end{equation*}
-\end{definition}
-
-
-\begin{lemma}[On Flattening]\label{lem:flatten}
-    For any matching logic $\Sigma$-model $\mathcal{T}$, any $C \in \mathcal{T}^*_{\mathit{Cfg}^*}$,
-    and any $\mathcal{T}^*$-valuation $\rho$, we have
-    %\begin{proofenv}
-        \begin{equation*}
-            (\mathcal{T}^*, C, \rho) \vDash \mathit{flatten}(\exists \vec{X}.\, [\varphi_1,\ldots,\varphi_k] \land P)
-        \end{equation*}
-    %\end{proofenv}
-    if and only if
-    %\begin{proofenv}
-        there exist configurations $c_1, \ldots, c_k \in \mathcal{T}_{\mathit{Cfg}}$ such that
-        $C = [c_1, \ldots, c_k]$ and there exists a $\mathcal{T}$-valuation $\rho_0$
-        satisfying $\rho_0(v) = \rho(v)$ for any $v \in \mathit{Var} \setminus \vec{X}$
-        such that for any $j \in \{ 1, \ldots, k \}$,
-        $(\mathcal{T}, c_j, \rho_0) \vDash \varphi_j \land P$.
-    %\end{proofenv}
-\end{lemma}
-
+We can then prove the following theorem, which says that one can reduce a CRL goal to a RL goal in a star-extended system.
 
 \begin{theorem}\label{thm:correspondence}
 \begin{equation*}
