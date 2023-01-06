@@ -484,6 +484,12 @@ We translate a language semantics into a semantics for lists of configurations a
     \end{equation*}
 \end{lemma}
 
+We now want to characterize the semantics of cartesian reachability logic in terms of semantics of reachability logic.
+To do so, we define a function $\mathit{flatten}$ from (potentially existentially-quantified) constrained list patterns
+to matching logic patterns over a star-extended signature;
+the idea behind this construction is that flattened (E)CLPs are matched
+in star-extended models by lists of configurations, where each configuration from the list
+matches the corresponding pattern from the (E)CLP.
 
 \begin{definition}\label{def:mkList}
 We define $\mathit{mkList}$ by letting
@@ -494,13 +500,10 @@ We define $\mathit{mkList}$ by letting
 \end{definition}
 
 \begin{definition}\label{def:flatten}
-    We let
-    %\begin{equation*}
-    %    \mathit{flatten}(\exists \vec{X}.\, (\phi_1 \land P_1,\ldots,\phi_k \land P_k) \land P)
-    %    \equiv \exists \vec{X}.\, \mathit{mkList}(\phi_1,\ldots,\phi_k) \land P \land P_1 \land \ldots \land P_k \, ,
-    %\end{equation*}
+    We define a function $\mathit{flatten}$ from (potentially existentially-quantified) constrained list patterns
+    to matching logic patterns over a star-extended signature by
     \begin{align*}
-        & \mathit{flatten}(\exists \vec{X}.\, (\varphi_1, \ldots, \varphi_k) \land P) \equiv \\
+        & \mathit{flatten}(\exists \vec{X}.\, [\varphi_1, \ldots, \varphi_k) \land P] \equiv \\
         & \exists \vec{X}.\, \mathit{mkList}(Y_1, \ldots, Y_k)
         \land (\varphi_1^\square)[Y_1/\square] \land \ldots
         \land (\varphi_k^\square)[Y_k/\square] \land P \, ,
@@ -518,7 +521,7 @@ We define $\mathit{mkList}$ by letting
     and any $\mathcal{T}^*$-valuation $\rho$, we have
     %\begin{proofenv}
         \begin{equation*}
-            (\mathcal{T}^*, C, \rho) \vDash \mathit{flatten}(\exists \vec{X}.\, (\varphi_1,\ldots,\varphi_k) \land P)
+            (\mathcal{T}^*, C, \rho) \vDash \mathit{flatten}(\exists \vec{X}.\, [\varphi_1,\ldots,\varphi_k] \land P)
         \end{equation*}
     %\end{proofenv}
     if and only if
@@ -531,10 +534,11 @@ We define $\mathit{mkList}$ by letting
     %\end{proofenv}
 \end{lemma}
 
-We now want to characterize the semantics of cartesian reachability logic in terms of semantics of reachability logic.
+
 \begin{theorem}\label{thm:correspondence}
 \begin{equation*}
-\mathcal{S} \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime \iff \mathcal{S}^* \vDash_\RL \mathit{flatten}^\exists(\Psi, \Psi^\prime)
+\mathcal{S} \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime
+  \iff \mathcal{S}^* \vDash_\RL \mathit{flatten}(\Psi) \Rightarrow^{c\exists} \mathit{flatten}(\Psi^\prime)
 \end{equation*}
 \end{theorem}
 
