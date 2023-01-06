@@ -1190,24 +1190,40 @@ By induction on the structure of the CRL proof. TODO
         
     \item If the proof ends with \emph{Step},
       we can assume a structureless FOL formula $P^\prime$, a rule $\varphi \Rightarrow^\exists \varphi^\prime \in S$ such that
-      $\mathcal{T} \vDash_\ML \varphi_i \leftrightarrow \mathit{constrain}(P^\prime, \varphi)$,
+      $\mathcal{T} \vDash_\ML \varphi_i \leftrightarrow \varphi \land P^\prime$,
       and an induction hypothesis
       \begin{align*}
         (&\mathcal{T}^*, S^* \cup \mathit{flatten}^\exists(C \cup E, \Psi^\prime)), \emptyset \vdash_\RL
           \\ &
-          \mathit{flatten}((\varphi_1, \ldots, \varphi_{i-1}, \mathit{constrain}(P^\prime, \varphi^\prime), \varphi_{i+1}, \ldots, \varphi_k) \land P) \Rightarrow^\exists \mathit{flatten}(\Psi^\prime)     
+          \mathit{flatten}([\varphi_1, \ldots, \varphi_{i-1}, \varphi^\prime \land P^\prime, \varphi_{i+1}, \ldots, \varphi_k] \land P) \Rightarrow^\exists \mathit{flatten}(\Psi^\prime)     
       \end{align*}
       and have to construct
       \begin{align*}
       & (\mathcal{T}^*, S^* \cup \mathit{flatten}^\exists(E, \Psi^\prime)), \mathit{flatten}^\exists(C, \Psi^\prime) \vdash_\RL \\
-          & \mathit{flatten}((\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P) \Rightarrow^\exists \mathit{flatten}(\Psi^\prime)    \, .
+          & \mathit{flatten}([\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k] \land P) \Rightarrow^\exists \mathit{flatten}(\Psi^\prime)    \, .
       \end{align*}
         By definition of $S^*$, we also have
         \begin{align*}
             (\mathit{heat}(L, \varphi, R) \Rightarrow^\exists \mathit{heat}(L, \varphi^\prime, R)) \in S^* \, .
         \end{align*}
-      
-    We apply the Transitivity rule with the second premise being our first inductive hypothesis, and it remains to prove the second premise, which is (after simplification)
+    We apply the Transitivity rule with the second premise being our first inductive hypothesis, and it remains to prove the second premise, which is
+    \begin{align*}
+        & (\mathcal{T}, S)^*, \mathit{flatten}^\exists(E, \psi^\prime), \mathit{flatten}^\exists(C, \psi^\prime)
+        \\& \vdash_\RL
+        \mathit{flatten}([\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k] \land P)
+        \\&\quad \Rightarrow^\exists
+        \mathit{flatten}([\varphi_1, \ldots, \varphi_{i-1}, \varphi^\prime \land P^\prime, \varphi_{i+1}, \ldots, \varphi_k] \land P) \, .
+    \end{align*}
+    that is (after simplification, assuming a reasonable choice of fresh variables)
+    \begin{align*}
+        & (\mathcal{T}, S)^*, \mathit{flatten}^\exists(E, \psi^\prime), \mathit{flatten}^\exists(C, \psi^\prime)
+        \\& \vdash_\RL
+        \mathit{mkList}(X_1, \ldots, X_k) \land \left( \bigwedge_{j=1}^{k} (\varphi_j^\square)[X_j/\square] \right) \land P
+        \\&\quad \Rightarrow^\exists
+        \mathit{mkList}(X_1, \ldots, X_k) \land \left( \bigwedge_{j=1, j \not = i}^{k} (\varphi_j^\square)[X_j/\square] \right) \land ((\varphi^\prime \land P^\prime)^\square)[X_i/\square] \land P
+        \, .
+    \end{align*}
+    OLD:
     \begin{align*}
         & (\mathcal{T}, S)^*, \mathit{flatten}^\exists(E, \psi^\prime), \mathit{flatten}^\exists(C, \psi^\prime)
         \\& \vdash_\RL
