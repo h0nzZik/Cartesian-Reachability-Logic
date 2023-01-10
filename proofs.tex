@@ -1096,7 +1096,7 @@ We prove each implication separately.
     \label{fig:RLproofsystem}
 \end{figure}
 
-\begin{lemma}[On equivalence and FOL translation]
+\begin{lemma}[On equivalence and FOL translation]\label{lem:equivFOLtransl}
     Let $\varphi_1, \varphi_2$ be two matching logic formulas such that $\vDash \varphi_1 \leftrightarrow \varphi_2$.
     Then $\vDash (\varphi_1^\square)[X/\square] \leftrightarrow (\varphi_2^\square)[X/\square]$.
 \end{lemma}
@@ -1241,135 +1241,87 @@ By induction on the structure of the CRL proof. TODO
         \mathit{mkList}(X_1, \ldots, X_k) \land \left( \bigwedge_{j=1, j \not = i}^{k} (\varphi_j^\square)[X_j/\square] \right) \land ((\varphi^\prime \land P^\prime)^\square)[X_i/\square] \land P
         \, .
     \end{align*}
-    OLD:
+    By \Cref{lem:equivFOLtransl}, our assumption that $\mathcal{T} \vDash_\ML \varphi_i \leftrightarrow (\varphi \land P^\prime)$,
+    and conservativeness,
+    we can apply the Consequence rule, and the goal changes to
     \begin{align*}
         & (\mathcal{T}, S)^*, \mathit{flatten}^\exists(E, \psi^\prime), \mathit{flatten}^\exists(C, \psi^\prime)
         \\& \vdash_\RL
-        \mathit{constrain}(P, \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots,                          \varphi_k))
+        \mathit{mkList}(X_1, \ldots, X_k) \land \left( \bigwedge_{j=1,j\not = i}^{k} (\varphi_j^\square)[X_j/\square] \right)
+        \land ((\varphi \land P^\prime)^\square)[X_i/\square] \land P
         \\&\quad \Rightarrow^\exists
-        \mathit{constrain}(P, \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \mathit{constrain}(P^\prime, \varphi^\prime), \varphi_{i+1}, \ldots, \varphi_k) ) \, .
+        \mathit{mkList}(X_1, \ldots, X_k) \land \left( \bigwedge_{j=1, j \not = i}^{k} (\varphi_j^\square)[X_j/\square] \right) \land ((\varphi^\prime \land P^\prime)^\square)[X_i/\square] \land P
+        \, .
     \end{align*}
-    By Congruence lemma and our assumption $\mathcal{T} \vDash_\ML \varphi_i \leftrightarrow (\varphi \land \psi)$ (adding the star does not break anything, by conservativeness), we have
+    We apply the Consequence rule again, changing the goal to
     \begin{align*}
-        \mathcal{T}^* \vDash_\ML &
-        \mathit{constrain}(P, \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots,                          \varphi_k))
-        \\ & \leftrightarrow
-        \mathit{constrain}(P, \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \mathit{constrain}(P^\prime, \varphi), \varphi_{i+1}, \ldots, \varphi_k)) \, ,
-    \end{align*}
-    and therefore we can apply the Consequence rule on the goal, changing it into
-    \begin{align*}
-        & (\mathcal{T}, S)^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime)
+        & (\mathcal{T}, S)^*, \mathit{flatten}^\exists(E, \psi^\prime), \mathit{flatten}^\exists(C, \psi^\prime)
         \\& \vdash_\RL
-        \mathit{constrain}(P, \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \mathit{constrain}(P^\prime, \varphi), \varphi_{i+1}, \ldots,                          \varphi_k))
+        (\varphi^\square)[X_i/\square] \land (
+        \mathit{mkList}(X_1, \ldots, X_k) \land \left( \bigwedge_{j=1,j\not = i}^{k} (\varphi_j^\square)[X_j/\square] \right)
+        \land ((P^\prime)^\square)[X_i/\square] \land P)
         \\&\quad \Rightarrow^\exists
-        \mathit{constrain}(P, \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \mathit{constrain}(P^\prime, \varphi^\prime), \varphi_{i+1}, \ldots, \varphi_k)) \, .
+        ((\varphi^\prime)^\square)[X_i/\square] \land (
+        \mathit{mkList}(X_1, \ldots, X_k) \land \left( \bigwedge_{j=1, j \not = i}^{k} (\varphi_j^\square)[X_j/\square] \right) \land ((P^\prime)^\square)[X_i/\square] \land P)
+        \, .
     \end{align*}
-    Now we apply Consequence again using \Cref{lem:constrainMergeComm},
-    changing the goal into
+    Now we apply Logic Framing to remove the structureless parts that are the same in both the left and right sides,
+    resulting in the goal
     \begin{align*}
-        & (\mathcal{T}, S)^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime)
+        & (\mathcal{T}, S)^*, \mathit{flatten}^\exists(E, \psi^\prime), \mathit{flatten}^\exists(C, \psi^\prime)
         \\& \vdash_\RL
-        \mathit{constrain}(P, \mathit{constrain}(P^\prime, \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \varphi, \varphi_{i+1}, \ldots, \varphi_k)))
+        (\varphi^\square)[X_i/\square] \land
+        \mathit{mkList}(X_1, \ldots, X_k)
         \\&\quad \Rightarrow^\exists
-        \mathit{constrain}(P, \mathit{constrain}(P^\prime, \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \varphi^\prime, \varphi_{i+1}, \ldots, \varphi_k))) \, .
+        ((\varphi^\prime)^\square)[X_i/\square] \land
+        \mathit{mkList}(X_1, \ldots, X_k)
+        \, .
     \end{align*}
-    Now apply Consequence again using \Cref{lem:doubleconstrain},
-    changing the goal into
+    Now, from the assumption that $\varphi \Rightarrow^\exists \varphi^\prime \in S$ and the construction of $S^*$
+    it follows that
+    $\mathit{heat}(L, \varphi, R) \Rightarrow^\exists \mathit{heat}(L, \varphi^\prime, R) \in S^*$;
+    and therefore
+    $\mathit{cfgheat}(L, \phi, R) \land Q \Rightarrow^\exists \mathit{cfgheat}(L, \phi^\prime, R) \land Q^\prime \in S^*$
+    where $\varphi \equiv \phi \land Q$ and $\varphi^\prime \equiv \phi^\prime \land Q^\prime$.
+    By semantic reasoning we can prove that
     \begin{align*}
-        & (\mathcal{T}, S)^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime)
+        \mathcal{T}^* \vDash & ((\varphi^\square)[X_i/\square] \land \mathit{mkList}(X_1, \ldots, X_k))
+        \\ \leftrightarrow  &
+        \mathit{cfgheat}(L, X_i, R)
+        \\ & \land L = \mathit{mkList}(X_1, \ldots, X_{i-1})
+        \\ & \land R = \mathit{mkList}(X_{i+1}, \ldots, X_k)
+        \\ & \land (\phi^\square)[X_i/\square] \land Q
+    \end{align*}
+    and that
+    \begin{align*}
+        \mathcal{T}^* \vDash & (((\varphi^\prime)^\square)[X_i/\square] \land \mathit{mkList}(X_1, \ldots, X_k))
+        \\ \leftrightarrow  &
+        \mathit{cfgheat}(L, X_i, R)
+        \\ & \land L = \mathit{mkList}(X_1, \ldots, X_{i-1})
+        \\ & \land R = \mathit{mkList}(X_{i+1}, \ldots, X_k)
+        \\ & \land ((\phi^\prime)^\square)[X_i/\square] \land Q^\prime \, .
+    \end{align*}
+    Now we apply Consequence and subsequently strip the $L$,$R$ equalities using Logic Framing, thus getting
+    \begin{align*}
+        & (\mathcal{T}, S)^*, \mathit{flatten}^\exists(E, \psi^\prime), \mathit{flatten}^\exists(C, \psi^\prime)
         \\& \vdash_\RL
-        \mathit{constrain}(P \land P^\prime, \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \varphi, \varphi_{i+1}, \ldots, \varphi_k))
+        \mathit{cfgheat}(L, X_i, R) \land (\phi^\square)[X_i/\square] \land Q
         \\&\quad \Rightarrow^\exists
-        \mathit{constrain}(P \land P^\prime, \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \varphi^\prime, \varphi_{i+1}, \ldots, \varphi_k)) \, ,
+        \mathit{cfgheat}(L, X_i, R) \land ((\phi^\prime)^\square)[X_i/\square] \land Q^\prime
+        \, .
     \end{align*}
-    and once again using \Cref{lem:constrainAsConjunction}, changing the goal into
+    Now we use Consequence to expand $\phi^\square$ and $(\phi^\prime)^\square$ into equalities,
+    perform the substitution, and use the equalities to replace the $X_i$ subterm of $\mathit{cfgheat}$ with
+    $\phi$ and $\phi^\prime$, respectively; this way the goal becomes
     \begin{align*}
-        & (\mathcal{T}, S)^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime)
+        & (\mathcal{T}, S)^*, \mathit{flatten}^\exists(E, \psi^\prime), \mathit{flatten}^\exists(C, \psi^\prime)
         \\& \vdash_\RL
-        \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \varphi, \varphi_{i+1}, \ldots, \varphi_k)
-        \land (P \land P^\prime)
+        \mathit{cfgheat}(L, \phi, R) \land Q
         \\&\quad \Rightarrow^\exists
-        \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \varphi^\prime, \varphi_{i+1}, \ldots, \varphi_k) \land (P \land P^\prime) \, ,
+        \mathit{cfgheat}(L, \phi^\prime, R) \land Q^\prime
+        \, .
     \end{align*}
-    Now we strip $P \land P^\prime$ by applying Logic Framing, resulting in the goal
-    \begin{align*}
-        & (\mathcal{T}, S)^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime)
-        \\& \vdash_\RL
-        \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \varphi, \varphi_{i+1}, \ldots, \varphi_k)
-        \\&\quad \Rightarrow^\exists
-        \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_{i-1}, \varphi^\prime, \varphi_{i+1}, \ldots, \varphi_k) \, .
-    \end{align*}
-    We apply Consequence again, changing the goal to
-    \begin{align*}
-        & (\mathcal{T}, S)^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime)
-        \\ \vdash_\RL &
-        \bigvee_{i_1=1}^{m_1} \ldots \bigvee_{i_{j-1}=1}^{m_{j-1}}
-        \bigvee_{i_{j+1}=1}^{m_{j+1}} \ldots \bigvee_{i_n=1}^{m_n}
-        \exists \vec{X_1} \ldots \vec{X_{j-1}} \vec{X_{j+1}} \ldots \vec{X_n}
-        \\& \exists \vec{X_j} \bigvee_{i_j=1}^{m_j} (\mathit{cfgheat}(L, \phi_{j, i_j}, R) \land P_{j, i_j}
-        \\&\quad \land (L = \mathit{mkList}(\phi_{1, i_1}, \ldots, \phi_{j-1, i_{j-1}}))
-        \\&\quad \land R = \mathit{mkList}(\phi_{j+1, i_{j+1}}, \ldots, \phi_{n, i_{n}})
-        \\&\quad \land (P_{1, i_1} \land \ldots \land P_{j-1, i_{j-1}} \land P_{j+1, i_{j+1}} \land \ldots \land P_{n, i_n}))
-        \\ \Rightarrow^\exists &
-        \bigvee_{i_1=1}^{m_1} \ldots \bigvee_{i_{j-1}=1}^{m_{j-1}}
-        \bigvee_{i_{j+1}=1}^{m_{j+1}} \ldots \bigvee_{i_n=1}^{m_n}
-        \exists \vec{X_1} \ldots \vec{X_{j-1}} \vec{X_{j+1}} \ldots \vec{X_n}
-        \\& \exists \vec{X^\prime_j} \bigvee_{i^\prime_j=1}^{m^\prime_j} (\mathit{cfgheat}(L, \phi^\prime_{j, i^\prime_j}, R) \land P^\prime_{j, i^\prime_j}
-        \\&\quad \land (L = \mathit{mkList}(\phi_{1, i_1}, \ldots, \phi_{j-1, i_{j-1}}))
-        \\&\quad \land R = \mathit{mkList}(\phi_{j+1, i_{j+1}}, \ldots, \phi_{n, i_{n}})
-        \\&\quad \land (P_{1, i_1} \land \ldots \land P_{j-1, i_{j-1}} \land P_{j+1, i_{j+1}} \land \ldots \land P_{n, i_n}))
-    \end{align*}
-    where $\exists \vec{X_j}.\, \bigvee_{i_j = 1}^{m_j} (\phi_{i_j} \land P_{i_j}) = \varphi $
-    and $\exists \vec{X_j^\prime}.\, \bigvee_{i_j^\prime = 1}^{m_j^\prime} (\phi_{i_j^\prime} \land P_{i_j}^\prime) = \varphi^\prime$.
-    Now we iteratively apply Case Analysis, followed by Consequence where on the RHS of $\Rightarrow^\exists$ we select the disjunct corresponding to the LHS.
-    We end up with a bunch of goals of the shape
-    \begin{align*}
-        & (\mathcal{T}, S)^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime)
-        \\ \vdash_\RL &
-        \exists \vec{X_1} \ldots \vec{X_{j-1}} \vec{X_{j+1}} \ldots \vec{X_n}
-        \\& \exists \vec{X_j} \bigvee_{i_j=1}^{m_j} (\mathit{cfgheat}(L, \phi_{j, i_j}, R) \land P_{j, i_j}
-        \\&\quad \land (L = \mathit{mkList}(\phi_{1, i_1}, \ldots, \phi_{j-1, i_{j-1}}))
-        \\&\quad \land R = \mathit{mkList}(\phi_{j+1, i_{j+1}}, \ldots, \phi_{n, i_{n}})
-        \\&\quad \land (P_{1, i_1} \land \ldots \land P_{j-1, i_{j-1}} \land P_{j+1, i_{j+1}} \land \ldots \land P_{n, i_n}))
-        \\ \Rightarrow^\exists &
-        \exists \vec{X_1} \ldots \vec{X_{j-1}} \vec{X_{j+1}} \ldots \vec{X_n}
-        \\& \exists \vec{X^\prime_j} \bigvee_{i^\prime_j=1}^{m^\prime_j} (\mathit{cfgheat}(L, \phi^\prime_{j, i^\prime_j}, R) \land P^\prime_{j, i^\prime_j}
-        \\&\quad \land (L = \mathit{mkList}(\phi_{1, i_1}, \ldots, \phi_{j-1, i_{j-1}}))
-        \\&\quad \land R = \mathit{mkList}(\phi_{j+1, i_{j+1}}, \ldots, \phi_{n, i_{n}})
-        \\&\quad \land (P_{1, i_1} \land \ldots \land P_{j-1, i_{j-1}} \land P_{j+1, i_{j+1}} \land \ldots \land P_{n, i_n})) \, .
-    \end{align*}
-    Now we strip the quantifiers using Abstraction followed by Consequence,
-    leading to goals of the shape
-    \begin{align*}
-        & (\mathcal{T}, S)^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime)
-        \\ \vdash_\RL &
-        \exists \vec{X_j} \bigvee_{i_j=1}^{m_j} (\mathit{cfgheat}(L, \phi_{j, i_j}, R) \land P_{j, i_j}
-        \\&\quad \land (L = \mathit{mkList}(\phi_{1, i_1}, \ldots, \phi_{j-1, i_{j-1}}))
-        \\&\quad \land R = \mathit{mkList}(\phi_{j+1, i_{j+1}}, \ldots, \phi_{n, i_{n}})
-        \\&\quad \land (P_{1, i_1} \land \ldots \land P_{j-1, i_{j-1}} \land P_{j+1, i_{j+1}} \land \ldots \land P_{n, i_n}))
-        \\ \Rightarrow^\exists &
-        \exists \vec{X^\prime_j} \bigvee_{i^\prime_j=1}^{m^\prime_j} (\mathit{cfgheat}(L, \phi^\prime_{j, i^\prime_j}, R) \land P^\prime_{j, i^\prime_j}
-        \\&\quad \land (L = \mathit{mkList}(\phi_{1, i_1}, \ldots, \phi_{j-1, i_{j-1}}))
-        \\&\quad \land R = \mathit{mkList}(\phi_{j+1, i_{j+1}}, \ldots, \phi_{n, i_{n}})
-        \\&\quad \land (P_{1, i_1} \land \ldots \land P_{j-1, i_{j-1}} \land P_{j+1, i_{j+1}} \land \ldots \land P_{n, i_n})) \, .
-    \end{align*}
-    Since variables from $\vec{X_j}$ and $\vec{X_j^\prime}$ can occur only in $\phi_{j, i_j}$,
-    $\phi^\prime_{j, i_j}$, $P_{j, i_j}$ and $P^\prime_{j, i_j}$, we can change the goals
-    (using Consequence) into
-    \begin{align*}
-        & (\mathcal{T}, S)^*, \mathit{flatten}^\prime(E, \psi^\prime), \mathit{flatten}^\prime(C, \psi^\prime)
-        \\ \vdash_\RL &
-        (\exists \vec{X_j} \bigvee_{i_j=1}^{m_j} \mathit{cfgheat}(L, \phi_{j, i_j}, R) \land P_{j, i_j})
-        \\&\land L = \mathit{mkList}(\phi_{1, i_1}, \ldots, \phi_{j-1, i_{j-1}})
-        \\&\land R = \mathit{mkList}(\phi_{j+1, i_{j+1}}, \ldots, \phi_{n, i_{n}})
-        \\&\land (P_{1, i_1} \land \ldots \land P_{j-1, i_{j-1}} \land P_{j+1, i_{j+1}} \land \ldots \land P_{n, i_n})
-        \\ \Rightarrow^\exists &
-        (\exists \vec{X^\prime_j} \bigvee_{i^\prime_j=1}^{m^\prime_j} \mathit{cfgheat}(L, \phi^\prime_{j, i^\prime_j}, R) \land P^\prime_{j, i^\prime_j})
-        \\&\land L = \mathit{mkList}(\phi_{1, i_1}, \ldots, \phi_{j-1, i_{j-1}})
-        \\&\land R = \mathit{mkList}(\phi_{j+1, i_{j+1}}, \ldots, \phi_{n, i_{n}})
-        \\&\land (P_{1, i_1} \land \ldots \land P_{j-1, i_{j-1}} \land P_{j+1, i_{j+1}} \land \ldots \land P_{n, i_n}) \, .
-    \end{align*}
-    We conclude this case by applying Framing and Axiom.
+    We finish the proof of this case using the Axiom rule.
     
     \item If the proof ends with \emph{Circularity}, we can assume
         \begin{align*}
