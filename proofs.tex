@@ -1115,7 +1115,7 @@ We prove each implication separately.
 \end{proof}
 
 \begin{proof}[Proof of \Cref{lem:CRLalmostSoundness}]
-By induction on the structure of the CRL proof. TODO
+By induction on the structure of the CRL proof.
 \begin{enumerate}
     \item If the proof ends with \emph{Reduce}, then we are done, since $\mathit{flatten}^\exists(\emptyset, \psi^\prime) = \emptyset$.
     
@@ -1388,17 +1388,18 @@ By induction on the structure of the CRL proof. TODO
     After simplifications, the second premise becomes
     \begin{align*}
             &(\mathcal{T}^*, S^* \cup \mathit{flatten}^\exists(E, \Psi^\prime)), \mathit{flatten}^\exists(C, \Psi^\prime) \vdash_\RL
-          \\& \exists \vec{Y}.\, \mathit{constrain}(P, \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_k))
+          \\& \exists \vec{Y}.\, (\mathit{mkList}(Z_1, \ldots, Z_k) \land (\varphi_1^\square)[Z_1/\square] \land \ldots (\varphi_1^\square)[Z_k/\square]) \land P)
+          \\&
           \Rightarrow^\exists \mathit{flatten}(\Psi^\prime) \, ,
     \end{align*}
     while the goal becomes
     \begin{align*}
           &(\mathcal{T}^*, S^* \cup \mathit{flatten}^\exists(E, \Psi^\prime)), \mathit{flatten}^\exists(C, \Psi^\prime) \vdash_\RL
-          \\&\exists X,\vec{Y}.\, \mathit{constrain}(P, \mathit{mergePatterns}(\varphi_1, \ldots, \varphi_k))
-          \Rightarrow^\exists \mathit{flatten}(\Psi^\prime) \, .
+          \\&\exists X. \exists \vec{Y}.\, (\mathit{mkList}(Z_1, \ldots, Z_k) \land (\varphi_1^\square)[Z_1/\square] \land \ldots (\varphi_1^\square)[Z_k/\square]) \land P) \, .
     \end{align*}
     We prove the goal using the Abstraction rule
-    (note that $X \not\in \mathit{FV}(\Psi^\prime)$ implies $X \not\in \mathit{FV}(\mathit{flatten}(\Psi^\prime))$).
-    
+    (note that $X \not\in \mathit{FV}(\Psi^\prime)$ implies $X \not\in \mathit{FV}(\mathit{flatten}(\Psi^\prime))$
+    because we are free to choose the fresh variables inside the $\mathit{flatten}$ such).
     \end{enumerate}
+    This concludes the proof.
 \end{proof}
