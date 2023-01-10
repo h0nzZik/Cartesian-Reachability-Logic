@@ -1096,6 +1096,23 @@ We prove each implication separately.
     \label{fig:RLproofsystem}
 \end{figure}
 
+\begin{lemma}[On equivalence and FOL translation]
+    Let $\varphi_1, \varphi_2$ be two matching logic formulas such that $\vDash \varphi_1 \leftrightarrow \varphi_2$.
+    Then $\vDash (\varphi_1^\square)[X/\square] \leftrightarrow (\varphi_2^\square)[X/\square]$.
+\end{lemma}
+\begin{proof}
+    Let $M$ be any matching logic model, $\gamma$ an element of $M$, and $\rho$ an $M$-valuation.
+    We have to prove that $(M, \gamma, \rho) \vDash (\varphi_1^\square)[X/\square] \leftrightarrow (\varphi_2^\square)[X/\square]$,
+    which is (by definition of the squaring function and substitution) equivalent to
+    $(M, \gamma, \rho) \vDash ((\varphi_1 \leftrightarrow \varphi_2)^\square)[X/\square]$,
+    which is
+    (by \Cref{lem:varrenamesem}, because $\rho(X) = \rho[\square := \rho(X)](\square)$)
+    equivalent to
+    $(M, \gamma, \rho[\square := \rho(X)]) \vDash (\varphi_1 \leftrightarrow \varphi_2)^\square$,
+    which is  (by \Cref{lem:patternToFOLSemantics}, because $\rho[\square := \rho(X)] = \rho^{\rho(X)}$) equivalent to
+    $(M, \rho(X), \rho) \vDash \varphi_1 \leftrightarrow \varphi_2$,
+    which holds by the assumption.
+\end{proof}
 
 \begin{proof}[Proof of \Cref{lem:CRLalmostSoundness}]
 By induction on the structure of the CRL proof. TODO
@@ -1218,7 +1235,8 @@ By induction on the structure of the CRL proof. TODO
     \begin{align*}
         & (\mathcal{T}, S)^*, \mathit{flatten}^\exists(E, \psi^\prime), \mathit{flatten}^\exists(C, \psi^\prime)
         \\& \vdash_\RL
-        \mathit{mkList}(X_1, \ldots, X_k) \land \left( \bigwedge_{j=1}^{k} (\varphi_j^\square)[X_j/\square] \right) \land P
+        \mathit{mkList}(X_1, \ldots, X_k) \land \left( \bigwedge_{j=1,j\not = i}^{k} (\varphi_j^\square)[X_j/\square] \right)
+        \land (\varphi_i^\square)[X_i/\square] \land P
         \\&\quad \Rightarrow^\exists
         \mathit{mkList}(X_1, \ldots, X_k) \land \left( \bigwedge_{j=1, j \not = i}^{k} (\varphi_j^\square)[X_j/\square] \right) \land ((\varphi^\prime \land P^\prime)^\square)[X_i/\square] \land P
         \, .
