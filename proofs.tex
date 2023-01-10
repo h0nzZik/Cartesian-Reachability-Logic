@@ -668,13 +668,33 @@ We prove each implication separately.
 \begin{lemma}[A semantic property of variable renaming]\label{lem:varrenamesem}
   For any two variables $X,Y$ of the same sort, and for any two $\mathcal{T}$-valuations $\rho_1, \rho_2$
   which agree on all variables other than $X,Y$, if $\rho_1(X) = \rho_2(Y)$, then for any matching logic formula
-  $\varphi$,
+  $\varphi$ in which $Y$ does not occur free,
   \begin{equation*}
       (\mathcal{T}, \gamma, \rho_1) \vDash \varphi \iff (\mathcal{T}, \gamma, \rho_2) \vDash \varphi[Y/X] \, .
   \end{equation*}
 \end{lemma}
-\begin{proof}
-    Admitted.
+\begin{proof}[Proof of \Cref{lem:varrenamesem}]
+    We first prove that for any term $t \in T_{\Sigma, s}(\mathit{Var})$,
+    $\rho_1(t) = \rho_2(t[Y/X])$, by induction in $t$:
+    if $t$ is a variable, then we perform case analysis on whether the variable is $X$ or not, and we are done;
+    if $t$ is a function application, then we use the induction hypothesis and the fact that function application preserves equality.
+    Now we prove the lemma by induction on the size of $\varphi$, generalizing over $\rho_1$ and $\rho_2$.
+    \begin{itemize}
+        \item If $\varphi \equiv \phi$ for some $\phi \in T_{\Sigma, s}(\mathit{Var})$, we apply the above property.
+        \item If $\varphi$ is a conjunction or negation, the desired property follows directly from the induction hypothesis.
+        \item If $\varphi \equiv \exists Z : s.\, \varphi^\prime$.
+        \begin{itemize}
+            \item If $X = Z$, then we have to prove that $(\mathcal{T}, \gamma, \rho^\prime) \vDash \varphi^\prime$
+            for some $\rho^\prime$ satisfying $\rho^\prime(y) = \rho_1(y)$ for all $y \in \mathit{Var} \setminus \{ Z \}$, iff $(\mathcal{T}, \gamma, \rho^{\prime\prime}) \vDash \varphi^\prime$
+            for some $\rho^{\prime\prime}$ satisfying $\rho^{\prime\prime}(y) = \rho_2(y)$ for all $y \in \mathit{Var} \setminus \{ Z \}$ - which is easy.
+            \item If $X \not = Z$, then we have to prove that
+            $(\mathcal{T}, \gamma, \rho^\prime) \vDash \varphi^\prime$
+            for some $\rho^\prime$ satisfying $\rho^\prime(y) = \rho_1(y)$ for all $y \in \mathit{Var} \setminus \{ Z \}$, iff $(\mathcal{T}, \gamma, \rho^{\prime\prime}) \vDash \varphi^\prime[Y/X]$ for some $\rho^{\prime\prime}$ satisfying $\rho^{\prime\prime}(y) = \rho_2(y)$ for all $y \in \mathit{Var} \setminus \{ Z \}$.
+            Since the size of $\varphi^\prime$ is smaller then the size of $\varphi$,
+            and since $\rho^{\prime}(X) = \rho_1(X) = \rho_2(Y) = \rho^{\prime\prime}(Y)$,
+            we can use the induction hypothesis and finish the proof using firstorder reasoning.
+        \end{itemize}
+    \end{itemize}
 \end{proof}
 
 
