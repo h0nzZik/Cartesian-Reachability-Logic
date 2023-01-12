@@ -363,6 +363,33 @@ A \emph{list-pattern} has the shape $[\varphi_1,\ldots,\varphi_k]$,
     $(\gamma_1^\prime,\rho^\prime) \vDash \varphi^\prime_1 \land P^\prime$ and \ldots and $(\gamma_k^\prime, \rho^\prime) \vDash \varphi^\prime_k \land P^\prime$.
 \end{definition}
 
+We note here that in general, having one valid CRL claim is different from having just $k$ valid RL claims.
+Consider, for example, a reachability system $S_{\mathit{IMP}}$ representing a simple imperative language,
+and a program $P \equiv \texttt{while(x > 0)\{ y++; x--;\}}$.
+We can let $C(Q, X,Y)$ represent a configuration of a program $Q$ where the program variable $\texttt{x}$ has the value $X$
+and the program variable $\texttt{y}$ has the value $Y$;
+for example,
+\begin{equation*}
+ C(Q, X, Y) \equiv \texttt{<k>} Q \texttt{</k><st>(x |-> } X \texttt{)(y |-> } Y \texttt{)</st>}    \, .
+\end{equation*}
+Then, the proposition
+\begin{align*}
+ S_{\mathit{IMP}} \vDash_\CRL
+&[C(P, X_1, Y_1),C(P, X_2, Y_2)] \land X_1 \leq X_2
+\\ \Rightarrow^{c\exists} &
+\exists X^\prime_1, Y^\prime_1, X^\prime_2, Y^\prime_2.\,  [C(\epsilon, X^\prime_1, Y^\prime_1), C(\epsilon, X^\prime_2, Y^\prime_2)] \land Y^\prime_1 \leq Y^\prime_2   
+\end{align*}
+holds iff the program $P$ is monotone (when considering the variable $x$ to be an input, and $y$ to be an output; $\epsilon$ represents an empty program).
+One can localize the ``global'' constraints; for example, the above proposition is equivalent to
+\begin{align*}
+ S_{\mathit{IMP}} \vDash_\CRL
+&[C(P, X_1, Y_1),C(P, X_2, Y_2) \land X_1 \leq X_2] 
+\\ \Rightarrow^{c\exists} &
+\exists X^\prime_1, Y^\prime_1, X^\prime_2, Y^\prime_2.\, [C(\epsilon, X^\prime_1, Y^\prime_1), C(\epsilon, X^\prime_2, Y^\prime_2) \land Y^\prime_1 \leq Y^\prime_2] \, .
+\end{align*}
+TODO
+
+
 % TODO remark that this is not the same as k "normal" reachability rules.
 % An example (monotonicity from the file)
 
