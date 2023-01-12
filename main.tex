@@ -213,64 +213,21 @@ Admitted.
 
 
 \subsection{One-path Reachability Logic}
-
-
-
-\begin{definition}[\cite{StefanescuCMMSR19,RosuS12oopsla}]\label{def:basics}
-We define reachability-logic signatures, rules, and systems as follows.
-\begin{enumerate}
-    \item A reachability-logic \emph{signature} is a pair $(\mathbf{\Sigma}, \mathit{Cfg})$,
-          where $\mathbf{\Sigma}$ is a matching logic signature and $\mathit{Cfg}$ is a sort from $\mathbf{\Sigma}$.
-          
-    \item A \emph{one-path reachability rule} over reachability logic signature $(\mathbf{\Sigma}, \mathit{Cfg})$        is a pair $\varphi \Rightarrow^\exists \varphi^\prime$,
-          where $\varphi$ and $\varphi^\prime$
-          are $\mathbf{\Sigma}$-patterns (which can have free variables) of sort $\mathit{Cfg}$.
-          
-    \item A \emph{reachability system} over a reachability-logic signature $((\Sigma, \mathit{Var}), \mathit{Cfg})$
-          is a pair $\mathcal{S} = (\mathcal{T}, S)$, where $\mathcal{T}$ is a $\Sigma$-algebra
-          and $S$ is a set of reachability rules over $((\Sigma, \mathit{Var}), \mathit{Cfg})$.
-          
-    \item A rule $\varphi \Rightarrow^\exists \varphi^\prime$ over $((\Sigma, \mathit{Var}), \mathit{Cfg})$
-          is \emph{weakly well-defined}
-          with respect to $\Sigma$-algebra $\mathcal{T}$
-          iff
-          for any $\gamma \in \Tcfg$ and $\rho : \Var \to \mathcal{T}$
-          with $(\gamma, \rho) \vDash \varphi$,
-          there exists $\gamma^\prime \in \Tcfg$ with $(\gamma^\prime , \rho) \vDash \varphi^\prime$.
-          
-    \item A reachability system $\mathcal{S}$ is \emph{weakly well-defined} iff each its rule is weakly     
-          well-defined.
-          
-    \item A reachability system $\mathcal{S} = (\mathcal{T}, S)$ over $((\Sigma, \mathit{Var}), \mathit{Cfg})$ induces
-          a \emph{transition system} \\
+Reachability logic \cite{StefanescuCMMSR19,RosuS12oopsla} is a formalism for reasoning about partial correctness
+of programs in any programming language which has a RL-based formal semantics. The programming language is modelled as a \emph{reachability system}
+$\mathcal{S} = (\mathcal{T}, S)$, where $\mathcal{T}$ is a $\Sigma$-algebra
+and $S$ is a set of \emph{reachability rules} of the shape $\varphi \Rightarrow^\exists \varphi^\prime$,
+where $\varphi$ and $\varphi^\prime$ are matching logic patterns over $\Sigma$.
+A reachability system $\mathcal{S} = (\mathcal{T}, S)$ (together with a $\Sigma$-sort $\mathit{Cfg}$)
+induces
+          a \emph{transition system}
           $(\Tcfg , \Rightarrow_{\mathcal{S}})$,
           where $\gamma \Rightarrow_{\mathcal{S}} \gamma^\prime$
           for $\gamma, \gamma^\prime \in \Tcfg$
-          iff there is some rule \\ $\varphi \Rightarrow^\exists \varphi^\prime \in S$
+          iff there is some rule $\varphi \Rightarrow^\exists \varphi^\prime \in S$
           and some valuation $\rho : \Var \to \mathcal{T}$ with $(\gamma, \rho) \vDash \varphi$
           and $(\gamma^\prime , \rho) \vDash \varphi^\prime$.
-
-    \item A reachability system $(\mathcal{T}, S)$ is \emph{deterministic} iff the induced transition system
-          is deterministic.
-          
-    \item A reachability system $(\mathcal{T}, S)$ is \emph{$\epsilon$-free}
-          iff for any two configurations $\sigma, \sigma^\prime \in \mathcal{T}_{\mathit{Cfg}}$, if
-          $\sigma \Rightarrow_{\mathcal{S}} \sigma^\prime$, then $\sigma \not = \sigma^\prime$.
-
-    \item A configuration $\gamma \in \Tcfg$ \emph{terminates} in $(\Tcfg , \Rightarrow_{\mathcal{S}})$
-          iff there is no infinite $\Rightarrow_{\mathcal{S}})$-sequence starting with $\gamma$.
-          
-    \item A \emph{$\Rightarrow_{\mathcal{S}}$-path} is a finite
-          sequence $\gamma_0 \Rightarrow_{\mathcal{S}} \gamma_1 \Rightarrow_{\mathcal{S}} \ldots
-          \Rightarrow_{\mathcal{S}} \gamma_n$
-          with $\gamma_0,\ldots,\gamma_n \in \Tcfg$.
-          
-    \item A $\Rightarrow_{\mathcal{S}}$-path is \emph{complete}
-          iff it is not a strict prefix of any
-          other $\Rightarrow_{\mathcal{S}}$-path.
-
-    \item \label{def:oprlSemantics}
-          A one-path reachability rule $\varphi \Rightarrow^\exists \varphi^\prime$ is \emph{satisfied}
+A one-path reachability rule $\varphi \Rightarrow^\exists \varphi^\prime$ is \emph{satisfied}
           in a reachability system $\mathcal{S} = (\mathcal{T}, S)$,
           written $\mathcal{S} \vDash_\RL \varphi \Rightarrow^\exists \varphi^\prime$,
           iff for every $\gamma \in \Tcfg$
@@ -281,26 +238,14 @@ We define reachability-logic signatures, rules, and systems as follows.
           such that
           $\gamma \Rightarrow^{*}_{\mathcal{S}} \gamma^\prime$
           and $(\gamma^\prime, \rho) \vDash \varphi^\prime$.
-          
-          
-%    \item An \emph{all-path reachability rule} is a pair
-%        $\varphi \Rightarrow^\forall \varphi^\prime$ of patterns $\varphi$ and $\varphi^\prime$.
-%    
-%    \item \label{def:aprlSemantics}
-%          An all-path reachability rule $\varphi \Rightarrow^\forall \varphi^\prime$ is \emph{satisfied},
-%          written $\mathcal{S} \vDash_\RL \varphi \Rightarrow^\forall \varphi^\prime$,
-%          iff for all complete $\Rightarrow_{\mathcal{S}}$-paths $\tau$
-%          starting with $\gamma \in \Tcfg$ and for all $\rho : \Var \to \mathcal{T}$
-%          such that $(\gamma, \rho) \vDash \varphi$,
-%          there exists some $\gamma^\prime \in \tau$
-%          such that $(\gamma^\prime, \rho) \vDash \varphi^\prime$.
-\end{enumerate}
+A reachability system $(\mathcal{T}, S)$ is \emph{$\epsilon$-free}
+          iff for any two configurations $\sigma, \sigma^\prime \in \mathcal{T}_{\mathit{Cfg}}$, if
+          $\sigma \Rightarrow_{\mathcal{S}} \sigma^\prime$, then $\sigma \not = \sigma^\prime$;
+Reachability logic is equipped with a proof system which derives sequents of the shape
+$\mathcal{S}, A, C \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime$;
+the proof system is sound and complete: a RL claim is satisfied in $\mathcal{S}$
+iff $\mathcal{S}, \emptyset, \emptyset \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime$.
 
-
-We have RL sequents of the shape
-$\mathcal{T}, A, C \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime$.
-
-\end{definition}
 
 \begin{remark}\label{rem:shapeOfReachabilityRules}
 For simplicity, we restrict the class of reachability systems we work with to those whose reachability rules
@@ -695,7 +640,7 @@ with an arbitrary language $L$, without writing a compiler from $L$ to symbolic 
 
 \appendix
 
-\section{Proofs}
+\section{Appendix}
 \input{proofs}
 
 \end{document}
