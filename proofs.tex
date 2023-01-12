@@ -8,6 +8,73 @@ therefore, the conclusion holds by \emph{ex falso quodlibet}.
 Other cases follow from the induction hypotheses.
 \end{proof}
 
+\begin{definition}\label{def:starextension}
+We translate a language semantics into a semantics for lists of configurations as follows.
+\begin{enumerate}
+    \item Let $((\Sigma, \mathit{Var}), \mathit{Cfg})$ be a reachability-logic signature.
+          Then $((\Sigma, \mathit{Var}^*), \mathit{Cfg})^*$ = $((\Sigma^*, \mathit{Var}^*), \mathit{Cfg}^*)$,
+          where
+          \begin{enumerate}
+              \item $\Sigma^* = \Sigma \cup \{ \mathit{cfgitem}, \mathit{cfgconcat}, \mathit{cfgheat}, \mathit{cfgnil} \}$
+              \item $\mathit{Cfg}^*$ is a fresh sort (representing the sort of lists of configurations);
+              \item $\mathit{Var}^* = \mathit{Var} \cup \mathit{Var}_{\mathit{Cfg}^*}$,
+              where $\mathit{Var}_{\mathit{Cfg}^*}$ is an infinite set of variables of sort $\mathit{Cfg}^*$,
+              distinct from varibles in $\mathit{Var}$;
+              \item $\mathit{cfgitem}$ a fresh symbol of sort $\mathit{Cfg} \to \mathit{Cfg}^*$;
+              \item $\mathit{cfgnil}$ a fresh symbol of sort $\mathit{Cfg}^*$;
+              \item $\mathit{cfgconcat}$ a fresh symbol of sort $\mathit{Cfg}^* \times \mathit{Cfg}^* \to \mathit{Cfg}^*$; and
+              \item $\mathit{cfgheat}$ is a fresh symbol of sort $\mathit{Cfg}^* \times \mathit{Cfg} \times \mathit{Cfg}^* \to \mathit{Cfg}^*$.
+          \end{enumerate}
+    \item Let $S$ be a set of reachability rules over $(\mathbf{\Sigma}, \mathit{Cfg})$.
+          We generate a set of reachability rules $S^*$ over $(\mathbf{\Sigma}, \mathit{Cfg})^*$
+          by
+          \begin{enumerate}
+              \item defining a function $\mathit{heat} : \mathit{Var} \times \Pattern \times \mathit{Var} \to \Pattern$ by
+              \begin{align*}
+                  \mathit{heat}(L, \phi \land P, R)
+                  = \mathit{cfgheat}(L, \phi, R) \land P
+              \end{align*}
+              \item setting
+              \begin{align*}
+              S^* = \{ \mathit{heat}(L, \varphi, R) \Rightarrow^\exists \mathit{heat}(L, \varphi^\prime, R)
+              \mid  ( \varphi \Rightarrow^\exists \varphi^\prime ) \in S \} \, ,
+            \end{align*}
+                          where $L,R$ are distinct fresh variables (not occurring in any rule in $S$).
+          \end{enumerate}
+    \item Let $(\Sigma, \mathit{Var})$ be a matching logic signature, and let $\mathcal{T}$ be a configuration model; that is, a $\Sigma$-algebra.
+          We generate a $\Sigma^*$-algebra $\mathcal{T}*$, which interprets all sorts and symbols from
+          $\Sigma$ as in $\mathcal{T}$, and in addition interprets
+          \begin{enumerate}
+              \item the sort $\mathit{Cfg}*$ as the set of all finite lists
+              $[c_1;\ldots;c_n]$ for $n \in \mathbb{N}$, where $c_i$ is an element of sort $\mathit{Cfg}$
+              for any $0 \leq i \leq n$;
+              \item the symbol $\mathit{cfgitem}$ as the function $\lambda c.\, [c]$;
+              \item the symbol $\mathit{cfgnil}$ as the empty list ($[]$);
+              \item the symbol $\mathit{cfgconcat}$ as the function $\lambda l_1,l_2.\, l_1 \texttt{++} l_2$,
+                where $\texttt{++}$ is list concatenation; and
+              \item the symbol $\mathit{cfgheat}$ as the function
+                $\lambda l_1, c, l_2.\, l_1 \texttt{++} [c] \texttt{++} l_2$.
+          \end{enumerate}
+
+    \item Let $(\Sigma, \mathit{Var})$ be a matching logic signature, let $\mathcal{T}$ be a configuration model,
+        and let $\rho$ be a $\mathcal{T}$-valuation.
+        We define a $\mathcal{T}^*$-valuation $\rho^*$ by letting $\rho^*(v) = \rho(v)$ for any $v \in \mathit{Var}$,
+        and letting $\rho^*(v) = a$, where $a$ is some arbitrary element of sort $\mathit{Cfg}^*$, for
+        any variable $v$ of sort $\mathit{Cfg}^*$.
+          
+    \item Let $\mathcal{S} = (\mathcal{T}, S)$ be a reachability system over $(\Sigma, \mathit{Cfg})$.
+          We generate a reachability system $\mathcal{S}^*$ over $(\Sigma, \mathit{Cfg})^*$
+          by setting $\mathcal{S}^* = (\mathcal{T}^*, S^*)$.
+\end{enumerate}
+\end{definition}
+
+\begin{lemma}\label{lem:rhoStarOfPi}
+    Let $(\Sigma, \mathit{Var})$ be a matching logic signature, $\mathcal{T}$ be a configuration model,
+    and $\rho$ be a $\mathcal{T}$-valuation. Then for any basic $(\Sigma, \mathit{Var})$-pattern $\pi$,
+    \begin{equation}
+        \rho^*(\pi) = \rho(\pi) \, .
+    \end{equation}
+\end{lemma}
 
 \begin{proof}[Proof of \Cref{lem:rhoStarOfPi}]
     By induction on the term $\pi$.
@@ -27,6 +94,16 @@ Other cases follow from the induction hypotheses.
     \end{itemize}
 \end{proof}
 
+\begin{lemma}\label{lem:starConservative}
+    The star extension on matching logic models is conservative, in the following sense.
+    For any $\Sigma$-model $\mathcal{T}$, any $\mathcal{T}$-valuation $\rho$,
+    any $\Sigma$-sort $s$,
+    any $\gamma \in \mathcal{T}_s$,
+    and any matching logic $s$-pattern $\varphi$,
+    \begin{equation*}
+        (\mathcal{T}, \gamma, \rho) \vDash \varphi \iff (\mathcal{T}^*, \gamma, \rho^*) \vDash \varphi
+    \end{equation*}
+\end{lemma}
 
 \begin{proof}[Proof of \Cref{lem:starConservative}]
 By induction on $\varphi$.
@@ -165,6 +242,16 @@ That proves the desired equivalence.
 \end{proof}
 
 
+\begin{lemma}\label{lem:compositeStep}
+    Let $\mathcal{S} = (\mathcal{T}, S)$ be a reachability system over $(\Sigma, \mathit{Cfg})$.
+    For any $k \geq 1$, any configurations $c_1,\ldots,c_k, c^\prime \in \Tcfg$, and any $1 \leq i \leq k$,
+    we have
+    \begin{equation*}
+        c_i \Rightarrow_{\mathcal{S}} c^\prime
+                    \iff
+        [c_1,\ldots,c_k] \Rightarrow_{\mathcal{S}^*} [c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k]
+    \end{equation*}
+\end{lemma}
 \begin{proof}[Proof of \Cref{lem:compositeStep}]
 We have
 \begin{proofenv}
@@ -832,6 +919,14 @@ We define $\mathit{mkList}$ by letting
     \end{proofenv}
     which is what we wanted to prove.
 \end{proof}
+
+
+\begin{lemma}\label{thm:correspondence}
+\begin{equation*}
+\mathcal{S} \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime
+  \iff \mathcal{S}^* \vDash_\RL \mathit{flatten}(\Psi) \Rightarrow^{c\exists} \mathit{flatten}(\Psi^\prime)
+\end{equation*}
+\end{lemma}
 
 \begin{proof}[Proof of \Cref{thm:correspondence}]
 We prove each implication separately.
