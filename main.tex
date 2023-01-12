@@ -319,6 +319,9 @@ We work only with $\epsilon$-free reachability systems.
 \end{remark}
 
 \section{Cartesian Reachability Logic}
+
+\subsection{Syntax and Semantics}
+
 Cartesian reachability logic is an extension of (one-path) reachability logic.
 Syntactically, we define
 \begin{itemize}
@@ -363,7 +366,8 @@ A \emph{list-pattern} has the shape $[\varphi_1,\ldots,\varphi_k]$,
     $(\gamma_1^\prime,\rho^\prime) \vDash \varphi^\prime_1 \land P^\prime$ and \ldots and $(\gamma_k^\prime, \rho^\prime) \vDash \varphi^\prime_k \land P^\prime$.
 \end{definition}
 
-We note here that in general, having one valid CRL claim is different from having just $k$ valid RL claims.
+We note here that in general, having one valid CRL claim is different from having just $k$ valid RL claims,
+because in CRL, the variables are shared across components.
 Consider, for example, a reachability system $S_{\mathit{IMP}}$ representing a simple imperative language,
 and a program $P \equiv \texttt{while(x > 0)\{ y++; x--;\}}$.
 We can let $C(Q, X,Y)$ represent a configuration of a program $Q$ where the program variable $\texttt{x}$ has the value $X$
@@ -387,12 +391,27 @@ One can localize the ``global'' constraints; for example, the above proposition 
 \\ \Rightarrow^{c\exists} &
 \exists X^\prime_1, Y^\prime_1, X^\prime_2, Y^\prime_2.\, [C(\epsilon, X^\prime_1, Y^\prime_1), C(\epsilon, X^\prime_2, Y^\prime_2) \land Y^\prime_1 \leq Y^\prime_2] \, .
 \end{align*}
-TODO
+However, if one were to ``split'' the CRL claim into two, the resulting claims would may say something other than monotonicity.
+For example, the propositions
+\begin{align*}
+ S_{\mathit{IMP}} \vDash_\RL
+C(P^\prime, X_1, Y_1)
+\Rightarrow^{\exists}
+\exists X^\prime_1, Y^\prime_1.\, C(\epsilon, X^\prime_1, Y^\prime_1)
+\end{align*}
+and
+\begin{align*}
+ S_{\mathit{IMP}} \vDash_\RL
+C(P^\prime, X_2, Y_2) \land X_1 \leq X_2] 
+ \Rightarrow^{\exists}
+\exists X^\prime_2, Y^\prime_2.\, C(\epsilon, X^\prime_2, Y^\prime_2) \land Y^\prime_1 \leq Y^\prime_2
+\end{align*}
+do \emph{not} hold when $P^\prime \equiv P$: in fact, the second proposition requires the variable $\texttt{y}$ in a resulting configuration
+to have greater value then any number, since $Y_1^\prime$ is not existentially quantified in the right side of the claim,
+and therefore is implicitly universally quantified.
+On the other hand, if we existentiall quantified it, the claim would say nothing about the value of $\texttt{y}$.
 
-
-% TODO remark that this is not the same as k "normal" reachability rules.
-% An example (monotonicity from the file)
-
+However, cartesian reachability logic does extend reachability logic:
 \begin{remark}
 \Cref{def:opCRLsemantics} extends \Cref{def:oprlSemantics} of \Cref{def:basics}:
 if we fix $k=1$, then
@@ -448,13 +467,13 @@ such that
 \end{theorem}
 
 
-\section{Proof System}
+\subsection{Proof System}
 
 We give Cartesian Reachability Logic a proof system to faciliate mechanical reasoning.
 One may ask the question, ``why give CRL a new proof system if one can perform the same reasoning
-by means of \Cref{thm:correspondence} and the existing proof system of reachability logic?''.
+by means of \Cref{thm:CRLandRLcorrespondence} and the existing proof system of reachability logic?''.
 The answer is the following.
-When one reduces a CRL goal into RL using \Cref{thm:correspondence},
+When one reduces a CRL goal into RL using \Cref{thm:CRLandRLcorrespondence},
 the function $\mathit{flatten}$ appears in the goal.
 To perform reasoning using the RL proof system, one then has to either simplify the goal
 by unfolding the definition of $\mathit{flatten}$,
