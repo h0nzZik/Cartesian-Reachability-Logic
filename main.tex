@@ -117,99 +117,25 @@ Again, we elaborate on the similarities and differences in \Cref{sec:discussion}
 
 We work with a variant of matching logic described in
 \cite{StefanescuCMMSR19,RosuSCM13lics}.
+This particular variant of matching logic is used for reasoning about static properties of program configurations.
+There exist newer and more expressive variants of matching logic (\cite{MmL, MLexplained});
+we used the older variant in order to be compatible with the literature on reachability logic which uses this variant.
 
-\begin{definition}[Matching logic syntax and semantics]\label{def:matchinglogic}
-We define the matching logic syntax and semantics as follows.
-\begin{enumerate}
-    \item A matching logic \emph{signature} $\mathbf{\Sigma} = (\Sigma, \mathit{Var})$ is a many-sorted algebraic signature $\Sigma$ together with a sort-wise infinite set of variables $\mathit{Var}$.
-    \item Let $T_{\Sigma}(\mathit{Var})$ denote the free $\Sigma$-algebra of terms with variables 
-          in $\mathit{Var}$.
-          Let $T_{\Sigma, s}(\mathit{Var})$ denote the set of $\Sigma$-terms (with variables in $\mathit{Var})$ of sort $s$.
-    \item Let $\mathcal{T}$ be a $\Sigma$-algebra, and $f$ be a symbol from $\Sigma$.
-          We use the notation $\mathcal{T}_f$ to denote the interpretation of $f$ in $\mathcal{T}$.
-    \item A function $\rho : \mathit{Var} \to \mathcal{T}$, where $\mathcal{T}$ is a $\Sigma$-algebra,
-          extends uniquely (in the usual way) to a $\Sigma$-algebra morphism
-          $\rho : T_{\Sigma}(\mathit{Var}) \to \mathcal{T}$.
-    \item The set of \emph{nullary predicate symbols} $P_\epsilon((\Sigma, \mathit{Var}))$
-          (or just $P_\epsilon$ if $(\Sigma, \mathit{Var})$ is known from the context) is
-          defined to contain exactly terms $\phi \in T_{\Sigma, s}(\mathit{Var})$.
-    \item A matching logic $(\Sigma, \mathit{Var})$-formula (aka $(\Sigma, \mathit{Var})$-\emph{pattern})
-          of sort $s$
-          is a $(\Sigma, P_\epsilon)-\FOLeq$ formula (that is, a $\FOLeq$ formula where function symbols are
-          exactly symbols from $\Sigma$, and where nullary predicate symbols are exactly
-          terms $\phi \in T_{\Sigma, s}(\mathit{Var})$, without any $k$-ary predicate symbols for $k > 0$).
-          We let $\Pattern(\mathbf{\Sigma})$ (or just $\Pattern$ when $\mathbf{\Sigma}$ is known from the context)
-          denote the set of all $\mathbf{\Sigma}$-patterns.
-    \item Let $\mathit{FV}(\varphi)$ denote the set of all free variables of $\varphi$.
-    \item A matching logic pattern is \emph{structureless} if it contains
-          no terms $\phi \in T_{\Sigma, s}(\mathit{Var})$ used as predicates.
-    \item A \emph{constrained term} is a pattern of the form $\phi \land P$,
-          where $\phi \in T_{\Sigma, s}(\mathit{Var})$ and $P$ a structureless pattern.
-    \item A matching logic $\Sigma$-\emph{model} $\mathcal{T}$ is a $\Sigma$-algebra with non-empty carrier sets.
-    \item A matching logic \emph{semantics} is given by means of
-          the satisfaction relation $\vDash_{\ML}$ between a matching logic $\Sigma$-model,
-          a model element, and a valuation,
-          defined inductively as
-          \begin{itemize}
-              \item $(\mathcal{T}, \gamma, \rho) \vDash \phi$ iff $\gamma = \rho(\phi)$, where $\phi \in T_{\Sigma, s}(\mathit{Var})$;
-              \item $(\mathcal{T}, \gamma, \rho) \vDash \varphi_1 \land \varphi_2$ iff
-                $(\mathcal{T}, \gamma, \rho) \vDash \varphi_1$ and
-                $(\mathcal{T}, \gamma, \rho) \vDash \varphi_2$;
-              \item $(\mathcal{T}, \gamma, \rho) \vDash \neg \varphi$ iff
-                $(\mathcal{T}, \gamma, \rho) \not\vDash \varphi$;
-              \item $(\mathcal{T}, \gamma, \rho) \vDash \exists x : s.\, \varphi$ iff
-                $(\mathcal{T}, \gamma, \rho^\prime) \vDash \varphi$ for some $\rho^\prime$ such that
-                $\rho^\prime(y) = \rho(y)$ for all $y \in \mathit{Var} \setminus \{ x \}$
-                and $\rho^\prime(x) \in \mathcal{T}_s$;
-          \end{itemize}
-          
-\end{enumerate}
-
-\end{definition}
-
-Validity of a structureless pattern does not depend on the selected model element.
-\begin{lemma}\label{lem:structurelessSemantics}
-Let $\mathcal{T}$ be a matching logic $\Sigma$-model, $\gamma,\gamma^\prime \in \mathcal{T}$ model elements,
-and $\rho$ a $\mathcal{T}$-valuation. Then for any structureless pattern $P$,
+Matching logic \emph{formula} (aka \emph{pattern}) is a first-order logic (FOL) formula which allows terms,
+over a signature $\Sigma$, with variables, as nullary predicates.
+The satisfaction relation $(M, \gamma, \rho) \vDash \varphi$ between a model $M$, a model element $\gamma \in M$,
+an $M$-valuation $\rho$, and a pattern $\varphi$, is defined inductively on the structure of $\varphi$.
+The definition is as in FOL; the main difference is the semantics of terms-as-predicates, which is defined by
 \begin{equation*}
-    (\mathcal{T}, \gamma, \rho) \vDash P \iff (\mathcal{T}, \gamma^\prime, \rho) \vDash P \, .
+    (M, \gamma, \rho) \vDash t \iff \gamma = \rho(t) \text{ if t is a term}
 \end{equation*}
-Therefore, when $P$ is structureless, we may sometimes write $(\mathcal{T}, \rho) \vDash P$ to mean that 
-$(\mathcal{T}, \gamma, \rho) \vDash P$ for \emph{some} $\gamma \in \mathcal{T}$.
-\end{lemma}
+(where $\rho(t)$ is the homomorphic extension of $\rho$ applied to the term $t$).
+A pattern $\varphi$ is \emph{valid in $M$}, written $M \vDash \varphi$, iff $(M, \gamma, \rho) \vDash \varphi$
+for every $\gamma$ and $\rho$.
+A formal definition is to be found in the Appendix.
 
+We observe that validity of a structureless pattern (that is a pattern without terms-as-predicates) does not depend on the selected model element.
 Also, validity of any pattern does not depend on those variables which the pattern does not mention.
-\begin{lemma}\label{lem:unusedVariables}
-    Let $\mathcal{T}$ be a matching logic model, $\gamma$ an element of this model,
-    and $\varphi$ a pattern.
-    Then for any two $\mathcal{T}$-valuations $\rho,\rho^\prime$
-    satisfying $\rho^\prime(y) = \rho(y)$ for any $y \in \mathit{FV}(\varphi)$,
-    \begin{equation*}
-        (\mathcal{T}, \gamma, \rho) \vDash \varphi \iff (\mathcal{T}, \gamma, \rho^\prime) \vDash \varphi \, .
-    \end{equation*}
-\end{lemma}
-\begin{proof}
-Admitted.
-\end{proof}
-
-\begin{definition}[\cite{StefanescuCMMSR19}]
-    Given a  matching logic $(\Sigma, \mathit{Var})$-formula $\varphi$ of sort $\mathit{Cfg}$,
-    and a fresh (with respect to $\varphi$) variable $\square$ of sort $\mathit{Cfg}$,
-    we let $\varphi^\square$ denote the $\FOLeq$ formula formed from $\varphi$ by replacing
-    nullary predicate symbols $\phi \in T_{\Sigma, \mathit{Cfg}}(\mathit{Var})$
-    with equalities $\square = \phi$.
-    Given a matching logic $(\Sigma, \mathit{Var})$-model $\mathcal{T}$, a $\mathcal{T}$-valuation $\rho$,
-    and an element $\gamma \in \Tcfg$,
-    we let the $\mathcal{T}$-valuation $\rho^\gamma$ be such that $\rho^\gamma(\square) = \gamma$,
-    and $\rho^\gamma(x) = \rho(x)$ for $x \not = \square$.
-\end{definition}
-\begin{lemma}[\cite{StefanescuCMMSR19}]\label{lem:patternToFOLSemantics}
-    Whenever $\square$ is fresh in $\varphi$, we have
-    \begin{equation*}
-        (\mathcal{T}, \gamma, \rho) \vDash \varphi \iff (\mathcal{T}, \rho^\gamma) \vDash \varphi^\square
-    \end{equation*}
-    
-\end{lemma}
 
 
 \subsection{One-path Reachability Logic}
