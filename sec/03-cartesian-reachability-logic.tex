@@ -1,4 +1,33 @@
 \section{Cartesian Reachability Logic}
+In this section we introduce \emph{Cartesian Reachability logic (CRL)} - a language-parametric logic for reasoning
+about $k$-safety hyperproperties.
+Our aim with CRL is to make reasoning in the style of \emph{Cartesian Hoare logic (CHL)}~\cite{SousaD16} available for any
+deterministic language with given reachability-logic semantics $S$.
+For that purpose we define the language of CRL and its semantics, and demonstrate the logic's expressiveness
+on a couple of examples.
+Then we give CRL a sound proof system, which is the main contribution of this paper.
+While the intuition behind the semantics of CRL is similar to that of CHL, with only a few minor differences,
+giving CRL a proof system is not straightforward.
+One could attempt to reuse the proof system of CHL and modify it \emph{somehow} to be independent
+of the particular programming language.
+Since many CHL rules (e.g., its \texttt{Step} rule) are simply Hoare logic rules acting on a particular component of
+a tuple of formulas (that is, symbolic states),
+one could for example lift rules of reachability logic (RL) to the tuple-context and be done.
+That would indeed work, and the resulting proof system might even be complete.
+
+However, the distinguishing feature of Cartesian Hoare logic is \emph{not} its completeness,
+but its ability to simplify reasoning by performing lock-step execution of loops,
+because that can \textquote[\cite{SousaD16}]{greatly simplify the verification task (e.g., by requiring simpler invariants)}.
+Simply (re)using RL rules lifted to the tuple-context does not provide any support for that.
+And it is not entirely obvious how to support lock-step reasoning about construct with repetetive behavior:
+in order to support while-with-breaks, Cartesian Hoare logic itself uses additionally (besides the lifted Hoare logic rules)
+five fairly complex rules that need to understand the precise semantics of this construct.
+The task for us is even harder, since we do not know in advance what constructs with repetetive behavior does
+the supplied language support: \texttt{goto}s? Mutual recursion? 
+
+Yet, we provide a single proof system consisting of only eight rules which enables lockstep reasoning about such constructs.
+The rules itself are fairly simple, and none of them has the semantics of any particular language construct
+hard-wired into it.
 
 \subsection{Syntax and Semantics}
 
