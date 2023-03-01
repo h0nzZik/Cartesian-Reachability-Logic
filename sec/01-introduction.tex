@@ -1,0 +1,53 @@
+\section{Introduction}
+Recent years have witnesssed an increased interest in formal verification of \emph{hyperproperties}.
+A hyperproperty is a set of \emph{sets of} execution traces, with the following semantics:
+a system $S$ (a set of traces) satisfies a hyperproperty $H$ iff $S \in H$.
+Hyperproperties are strictly more expressive then properties; for example, many security policies
+of interest are hyperproperties but not properties.
+
+Techniques and tools for verifying hyperproperties of (finite-state) hardware \cite{CoenenFST19,FinkbeinerRS15},
+as well as (infinite-state) software systems have been developed.
+For verification of software systems in particular, \emph{Cartesian Hoare logic} (CHL, \cite{SousaD16}) extends Hoare logic
+to reason about \emph{$k$-safety hyperproperties}
+(a hyperproperty is a \emph{$k$-safety hyperproperty} if its violation can be witnessed
+by a set of traces of size $k$).
+However, it is not clear how to use these techniques with arbitrary programming languages,
+since CHL is tied to a particular imperative language.
+
+On the other hand, there have been recent developments in the are of \emph{language-independent} software verification.
+\emph{Reachability logic} (RL) \cite{RosuS12oopsla,RosuSCM13lics,StefanescuCMMSR19}
+is a
+formalism for reasoning about partial correctness of software, in the spirit of Hoare logics.
+Being implemented in the \K{} framework \cite{KVision},
+its biggest advantage is that reachability logic is \emph{language independent}:
+its proof system can be used unchanged to reason about programs in any language,
+as long as the language has a formal semantics in RL.
+Therefore, researchers no longer need to think about a particular language construct three times
+(once for the operational semantics, once for axiomatic, and once for the correspondence);
+additionally, a single researcher or a tool-builder does not need to understand both the precise (and often intricate)
+semantics of a programming language, \emph{and} formal verification techniques,
+which makes \emph{division of labour} possible.
+Through \K{}, reachability logic has been used to build verifiers for real-world languages,
+such as C (\cite{RVMatch}), Java (\cite{StefanescuPYLR16VerifiersForAll}), Javascript (\cite{StefanescuPYLR16VerifiersForAll}),
+and EVM (\cite{KevmVerificationTool}).
+
+Can we have the best of both worlds? We think it is possible.
+In this paper we develop a logic named \emph{Cartesian Reachability logic (CRL)}, which properly extends reachability logic
+to allow reasoning about $k$-safety hyperproperties. Simiarly to CHL, CRL has a sound
+and relatively complete proof system. A major advantage of CRL against CHL is that it works with any language
+for which RL works; that is, with any language which has a RL-based formal semantics.
+However, CRL does \emph{not} extend CHL, because the two logics give different semantics to properties of nondeterministic programs;
+despite this distinction, CRL extends CHL on the deterministic fragment of the CHL-supported language.
+We elaborate on this relation in \Cref{sec:discussion}. 
+
+The idea behind soundness and completeness of our approach is similar to the one of \cite{SousaD16} for CHL.
+We define a language-agnostic equivalent of self-composition (\cite{BartheDR11}) and establish a relation
+between CRL validity of the original and RL validity of the composed system.
+Then we construct a proof system such that its proofs can be translated to ordinary RL proofs of the composed system
+(for soundness),
+but also such that it allows relatively high-level reasoning about \emph{circular behavior} and \emph{lock-step execution}
+(for ease of verification and simplicity of invariants).
+We draw our inspiration from the literature on language-independent verification of partial correctness
+(\cite{RosuS12oopsla,RosuSCM13lics,StefanescuCMMSR19})
+and program equivalence (\cite{CiobacaLRR16,CiobacaLRR14}).
+Again, we elaborate on the similarities and differences in \Cref{sec:discussion}. 

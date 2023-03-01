@@ -1,0 +1,77 @@
+\section{Preliminaries}
+
+\subsection{($\mu$-free) Matching Logic}
+
+We work with a variant of matching logic described in
+\cite{StefanescuCMMSR19,RosuSCM13lics}.
+This particular variant of matching logic is used for reasoning about static properties of program configurations.
+There exist newer and more expressive variants of matching logic (\cite{MmL, MLexplained});
+we used the older variant in order to be compatible with the literature on reachability logic which uses this variant.
+
+Matching logic \emph{formula} (aka \emph{pattern}) is a first-order logic (FOL) formula which allows terms,
+over a signature $\Sigma$, with variables, as nullary predicates.
+The satisfaction relation $(M, \gamma, \rho) \vDash \varphi$ between a model $M$, a model element $\gamma \in M$,
+an $M$-valuation $\rho$, and a pattern $\varphi$, is defined inductively on the structure of $\varphi$.
+The definition is as in FOL; the main difference is the semantics of terms-as-predicates, which is defined by
+\begin{equation*}
+    (M, \gamma, \rho) \vDash t \iff \gamma = \rho(t) \text{ if t is a term}
+\end{equation*}
+(where $\rho(t)$ is the homomorphic extension of $\rho$ applied to the term $t$).
+A pattern $\varphi$ is \emph{valid in $M$}, written $M \vDash \varphi$, iff $(M, \gamma, \rho) \vDash \varphi$
+for every $\gamma$ and $\rho$.
+A formal definition is to be found in the Appendix.
+
+We observe that validity of a structureless pattern (that is a pattern without terms-as-predicates) does not depend on the selected model element.
+Also, validity of any pattern does not depend on those variables which the pattern does not mention.
+
+
+\subsection{One-path Reachability Logic}
+Reachability logic \cite{StefanescuCMMSR19,RosuS12oopsla} is a formalism for reasoning about partial correctness
+of programs in any programming language which has a RL-based formal semantics. The programming language is modelled as a \emph{reachability system}
+$\mathcal{S} = (\mathcal{T}, S)$, where $\mathcal{T}$ is a $\Sigma$-algebra
+and $S$ is a set of \emph{reachability rules} of the shape $\varphi \Rightarrow^\exists \varphi^\prime$,
+where $\varphi$ and $\varphi^\prime$ are matching logic patterns over $\Sigma$.
+A reachability system $\mathcal{S} = (\mathcal{T}, S)$ (together with a $\Sigma$-sort $\mathit{Cfg}$)
+induces
+          a \emph{transition system}
+          $(\Tcfg , \Rightarrow_{\mathcal{S}})$,
+          where $\gamma \Rightarrow_{\mathcal{S}} \gamma^\prime$
+          for $\gamma, \gamma^\prime \in \Tcfg$
+          iff there is some rule $\varphi \Rightarrow^\exists \varphi^\prime \in S$
+          and some valuation $\rho : \Var \to \mathcal{T}$ with $(\gamma, \rho) \vDash \varphi$
+          and $(\gamma^\prime , \rho) \vDash \varphi^\prime$.
+A one-path reachability rule $\varphi \Rightarrow^\exists \varphi^\prime$ is \emph{satisfied}
+          in a reachability system $\mathcal{S} = (\mathcal{T}, S)$,
+          written $\mathcal{S} \vDash_\RL \varphi \Rightarrow^\exists \varphi^\prime$,
+          iff for every $\gamma \in \Tcfg$
+          such that $\gamma$ terminates in $(\Tcfg, \Rightarrow_{\mathcal{S}})$
+          and for any valuation $\rho : \Var \to \mathcal{T}$
+          such that $(\gamma, \rho) \vDash \varphi$,
+          there exists some $\gamma^\prime \in \Tcfg$
+          such that
+          $\gamma \Rightarrow^{*}_{\mathcal{S}} \gamma^\prime$
+          and $(\gamma^\prime, \rho) \vDash \varphi^\prime$.
+A reachability system $(\mathcal{T}, S)$ is \emph{$\epsilon$-free}
+          iff for any two configurations $\sigma, \sigma^\prime \in \mathcal{T}_{\mathit{Cfg}}$, if
+          $\sigma \Rightarrow_{\mathcal{S}} \sigma^\prime$, then $\sigma \not = \sigma^\prime$;
+Reachability logic is equipped with a proof system which derives sequents of the shape
+$\mathcal{S}, A, C \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime$;
+the proof system is sound and complete: a RL claim is satisfied in $\mathcal{S}$
+iff $\mathcal{S}, \emptyset, \emptyset \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime$.
+
+
+\begin{remark}\label{rem:shapeOfReachabilityRules}
+For simplicity, we restrict the class of reachability systems we work with to those whose reachability rules
+have the shape
+%\begin{equation*}
+%    \bigvee_{i=1}^{m} (\phi_i \land P_i) \Rightarrow^\exists \exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j) \, .
+%\end{equation*}
+\begin{equation*}
+    \phi \land P \Rightarrow^\exists \phi^\prime \land P^\prime
+\end{equation*}
+where $phi \land P$ and $\phi^\prime \land P^\prime$ are constrained terms.
+\end{remark}
+
+\begin{remark}\label{rem:noEmptySteps}
+We work only with $\epsilon$-free reachability systems.
+\end{remark}

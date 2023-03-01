@@ -1,0 +1,289 @@
+\section{Cartesian Reachability Logic}
+
+\subsection{Syntax and Semantics}
+
+Cartesian reachability logic is an extension of (one-path) reachability logic.
+Syntactically, we define
+\begin{itemize}
+    \item 
+A \emph{list-pattern} has the shape $[\varphi_1,\ldots,\varphi_k]$,
+          where each $\varphi_j$ (for $j \in \{ 1, \ldots, k \} $) is a matching logic pattern.
+    \item
+          A \emph{constrained list-pattern (CLP)} is a conjunction $\Psi_0 \land P$
+          of a list-pattern $\Psi_0$ and a structureless pattern $P$.
+    \item
+          An \emph{existentially-quantified constrained list-pattern (ECLP)} has the form
+          $\exists \vec{Y}.\, \Psi$, where $\Psi$ is a CLP and $\vec{Y}$ is a (possibly empty) list of variables.
+    \item
+          A \emph{One-Path Cartesian reachability claim of arity $k$} has the shape
+          $\Phi \Rightarrow^{c\exists} \Psi$,
+          where $\Phi$ is a CLP and $\Psi$ is an ECLP.
+\end{itemize}
+
+\begin{definition}[CRL semantics]\label{def:opCRLsemantics}
+    A claim
+    \begin{equation*}
+     [\varphi_1,\ldots,\varphi_k] \land P
+     \Rightarrow^{c\exists} \exists \vec{Y}.\, [\varphi^\prime_1,\ldots,\varphi^\prime_k] \land P^\prime
+    \end{equation*}
+    is \emph{valid} in a reachability system $\mathcal{S} = (\mathcal{T}, S)$,
+    written
+    \begin{equation*}
+        \mathcal{S} \vDash_\CRL [\varphi_1,\ldots,\varphi_k] \land P
+     \Rightarrow^{c\exists} \exists \vec{Y}.\, [\varphi^\prime_1,\ldots,\varphi^\prime_k] \land P^\prime \, ,
+    \end{equation*}
+    iff for all configurations $\gamma_1,\ldots,\gamma_k \in \Tcfg$
+    which terminate in $(\Tcfg, \Rightarrow_{\mathcal{S}})$
+    and any $\mathcal{T}$-valuation $\rho$,
+    whenever $(\gamma_1,\rho) \vDash \varphi_1 \land P$ and \ldots
+    and $(\gamma_k,\rho) \vDash \varphi_k \land P$,
+    then there exist configurations $\gamma_1^\prime,\ldots,\gamma_k^\prime \in \Tcfg$
+    such that $\gamma_1 \Rightarrow^{*}_{\mathcal{S}} \gamma_1^\prime$
+    and \ldots and $\gamma_k \Rightarrow^{*}_{\mathcal{S}} \gamma_k^\prime$,
+    and there also exists an $\mathcal{T}$-valuation $\rho^\prime$
+    satisfying $\rho(v) = \rho^\prime(v)$ for any $v \in \mathit{Var} \setminus \vec{Y}$,
+    and
+    $(\gamma_1^\prime,\rho^\prime) \vDash \varphi^\prime_1 \land P^\prime$ and \ldots and $(\gamma_k^\prime, \rho^\prime) \vDash \varphi^\prime_k \land P^\prime$.
+\end{definition}
+
+We note here that in general, having one valid CRL claim is different from having just $k$ valid RL claims,
+because in CRL, the variables are shared across components.
+Consider, for example, a reachability system $S_{\mathit{IMP}}$ representing a simple imperative language,
+and a program $P \equiv \texttt{while(x > 0)\{ y++; x--;\}}$.
+We can let $C(Q, X,Y)$ represent a configuration of a program $Q$ where the program variable $\texttt{x}$ has the value $X$
+and the program variable $\texttt{y}$ has the value $Y$;
+for example,
+\begin{equation*}
+ C(Q, X, Y) \equiv \texttt{<k>} Q \texttt{</k><st>(x |-> } X \texttt{)(y |-> } Y \texttt{)</st>}    \, .
+\end{equation*}
+Then, the proposition
+\begin{align*}
+ S_{\mathit{IMP}} \vDash_\CRL
+&[C(P, X_1, Y_1),C(P, X_2, Y_2)] \land X_1 \leq X_2
+\\ \Rightarrow^{c\exists} &
+\exists X^\prime_1, Y^\prime_1, X^\prime_2, Y^\prime_2.\,  [C(\epsilon, X^\prime_1, Y^\prime_1), C(\epsilon, X^\prime_2, Y^\prime_2)] \land Y^\prime_1 \leq Y^\prime_2   
+\end{align*}
+holds iff the program $P$ is monotone (when considering the variable $x$ to be an input, and $y$ to be an output; $\epsilon$ represents an empty program).
+One can localize the ``global'' constraints; for example, the above proposition is equivalent to
+\begin{align*}
+ S_{\mathit{IMP}} \vDash_\CRL
+&[C(P, X_1, Y_1),C(P, X_2, Y_2) \land X_1 \leq X_2] 
+\\ \Rightarrow^{c\exists} &
+\exists X^\prime_1, Y^\prime_1, X^\prime_2, Y^\prime_2.\, [C(\epsilon, X^\prime_1, Y^\prime_1), C(\epsilon, X^\prime_2, Y^\prime_2) \land Y^\prime_1 \leq Y^\prime_2] \, .
+\end{align*}
+However, if one were to ``split'' the CRL claim into two, the resulting claims would may say something other than monotonicity.
+For example, the propositions
+\begin{align*}
+ S_{\mathit{IMP}} \vDash_\RL
+C(P^\prime, X_1, Y_1)
+\Rightarrow^{\exists}
+\exists X^\prime_1, Y^\prime_1.\, C(\epsilon, X^\prime_1, Y^\prime_1)
+\end{align*}
+and
+\begin{align*}
+ S_{\mathit{IMP}} \vDash_\RL
+C(P^\prime, X_2, Y_2) \land X_1 \leq X_2] 
+ \Rightarrow^{\exists}
+\exists X^\prime_2, Y^\prime_2.\, C(\epsilon, X^\prime_2, Y^\prime_2) \land Y^\prime_1 \leq Y^\prime_2
+\end{align*}
+do \emph{not} hold when $P^\prime \equiv P$: in fact, the second proposition requires the variable $\texttt{y}$ in a resulting configuration
+to have greater value then any number, since $Y_1^\prime$ is not existentially quantified in the right side of the claim,
+and therefore is implicitly universally quantified.
+On the other hand, if we existentiall quantified it, the claim would say nothing about the value of $\texttt{y}$.
+
+However, cartesian reachability logic does extend reachability logic:
+\begin{remark}
+\Cref{def:opCRLsemantics} extends \Cref{def:oprlSemantics} of \Cref{def:basics}:
+if we fix $k=1$, then
+\begin{align*}
+    (\mathcal{T}, S) \vDash_\CRL
+    [\varphi] \land \top  \Rightarrow^{c\exists}
+    [\varphi^\prime] \land \top
+    \iff
+    (\mathcal{T}, S) \vDash_\RL \varphi \Rightarrow^{\exists} \varphi^\prime \, .
+\end{align*}
+\end{remark}
+
+%\begin{definition}[All-Path Cartesian Reachability Rule]\label{def:apCRLsemantics}
+%An all-path Cartesian reachability rule
+%$(\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\forall} (\psi_1,\ldots,\psi_k) \land \psi$
+%of arity $k$
+%is \emph{valid} in a reachability system $\mathcal{S} = (\mathcal{T}, S)$,
+%written
+%$\mathcal{S} \vDash_\CRL (\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\forall}
+%(\psi_1,\ldots,\psi_k) \land \psi$,
+%iff for all configurations $\sigma_1,\ldots,\sigma_k \in \Tcfg$ \traian{Why $\sigma$ instead of $\gamma$?}
+%and any $\mathcal{T}$-valuation $\rho$,
+%whenever $(\sigma_1, \rho) \vDash \varphi_1 \land \varphi$ and \ldots
+%and $(\sigma_k, \rho) \vDash \varphi_k \land \varphi$,
+%then for every $k$-tuple of complete paths $(\pi_1, \ldots, \pi_k)$
+%such that
+%$\sigma_1 = \pi_1(0) \land \ldots \land \sigma_k = \pi_k(0)$,
+%there exist indices $i_1, \ldots, i_k$ such that
+%$(\pi_1(i_1), \rho) \vDash \varphi_1 \land \psi$ and \ldots and $(\pi_k(i_k), \rho) \vDash \varphi_k \land \psi$.
+%\end{definition}
+
+
+
+We now want to characterize the semantics of cartesian reachability logic in terms of semantics of reachability logic.
+To do so, we need
+\begin{itemize}
+    \item to extend a matching logic signature $\Sigma$ into some $\Sigma^*$;
+    \item to transform a reachability-system $\mathcal{S}$ into some extended system $\mathcal{S}^*$; 
+    \item to translate a cartesian reachability logic claim $\Psi \Rightarrow^{c\exists} \Psi^\prime$
+    into some reachability logic claim $\mathit{flatten}(\Psi) \Rightarrow^{c\exists} \mathit{flatten}(\Psi^\prime)$; and
+    \item make sure that the translated claim holds in the extended system iff the original claim holds in the original system.
+\end{itemize}
+Formally:
+\begin{theorem}\label{thm:CRLandRLcorrespondence}
+There exist a function $\_^*$ on matching logic signatures,
+a (equally-named) function $\_^*$ from reachability systems over $\Sigma$ to reachability systems over $\Sigma^*$,
+and a function $\mathit{flatten}$ from ECLPs over $\Sigma$ to matching logic $\Sigma^*$-formulas,
+such that
+\begin{equation*}
+\mathcal{S} \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime
+  \iff \mathcal{S}^* \vDash_\RL \mathit{flatten}(\Psi) \Rightarrow^{c\exists} \mathit{flatten}(\Psi^\prime)
+\end{equation*}
+\end{theorem}
+
+
+\subsection{Proof System}
+
+We give Cartesian Reachability Logic a proof system to faciliate mechanical reasoning.
+One may ask the question, ``why give CRL a new proof system if one can perform the same reasoning
+by means of \Cref{thm:CRLandRLcorrespondence} and the existing proof system of reachability logic?''.
+The answer is the following.
+When one reduces a CRL goal into RL using \Cref{thm:CRLandRLcorrespondence},
+the function $\mathit{flatten}$ appears in the goal.
+To perform reasoning using the RL proof system, one then has to either simplify the goal
+by unfolding the definition of $\mathit{flatten}$,
+or use (and prove) some helper lemmas about the effect of applying RL proof rules
+%and other frequently used steps
+on RL goals containing $\mathit{flatten}$.
+In the first case one lowers the abstraction level and have to reason about matching logic formulas
+containing translations of other matching logic formulas into FOL, which then makes RL reasoning more complex.
+In the second case, however, one may end up proving lemmas which, when combined, result in a proof system for CRL.
+
+Indeed, the soundness of our proof system (\Cref{fig:CRLproofsystem})
+is established by a (meta-)proof which constructs a RL proof from a CRL one (\Cref{lem:CRLalmostSoundness}).
+
+The proof system derives claims of the shape
+$\mathcal{S}, \vdash_\CRL \Phi \Downarrow_{C,E} \Psi$,
+where $\Phi$ is of the shape
+$(\varphi_1, \ldots, \varphi_k) \land P$
+and $\Psi$ is of the shape
+$\exists \vec{Y}.\, (\varphi^\prime_1, \ldots, \varphi^\prime_k) \land P^\prime$,
+where $P,P^\prime$ are structureless FOL formulas
+and every $\varphi_i$ is a matching logic pattern.
+%and every $\varphi_i$ and $\varphi^\prime_i$ has the structure of
+%$\exists x_1,\ldots,x_n. (\phi_1 \land P_1) \lor \ldots (\phi_m \land P_m)$
+%and $\exists x^\prime_1,\ldots,x^\prime_{n^\prime}. (\phi^\prime_1 \land P^\prime_1) \lor \ldots (\phi^\prime_m \land P^\prime_m)$, respectively.
+The idea is that $P$ is the part of the claim that relates variables from different components.
+Initially, the proof starts with the claim
+$\mathcal{S} \vdash_\CRL \Phi \Downarrow_{\emptyset, \emptyset} \Psi$.
+
+
+\begin{figure}
+    \centering
+    \begin{align*}
+    & \prftree[l]{Reflexivity}{\mathcal{S} \vdash_\CRL \Psi \Downarrow_{\emptyset,E} \Psi}
+    \end{align*}
+    \begin{align*}
+    & \prftree[l]{Axiom}{\Psi \in E}{\mathcal{S} \vdash_\CRL \Psi \Downarrow_{C,E} \Psi^\prime}
+    \end{align*}
+    \begin{align*}
+    & \prftree[l]{Reduce}
+      {(\mathcal{T}^*, S^* \cup \mathit{flatten}^\exists(E, \Psi^\prime)), \emptyset \vdash_\RL
+        \mathit{flatten}^\exists(\Psi, \Psi^\prime) }
+      {(\mathcal{T}, S) \vdash_\CRL \Psi \Downarrow_{C,E} \Psi^\prime}
+    \end{align*}
+    \begin{align*}
+    & \prftree[l]{Case}
+    { \prfStackPremises
+      {\mathcal{S} \vdash_\CRL [\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k] \land P^\prime \Downarrow_{C, E} \Psi^\prime }
+      {\mathcal{S} \vdash_\CRL [\varphi_1, \ldots, \varphi_{i-1}, \psi_i, \varphi_{i+1}, \ldots, \varphi_k] \land P^\prime \Downarrow_{C, E} \Psi^\prime }
+    }
+    {\mathcal{S} \vdash_\CRL [\varphi_1, \ldots, \varphi_{i-1}, (\varphi_i \lor \psi_i), \varphi_{i+1}, \ldots, \varphi_k] \land P^\prime \Downarrow_{C, E} \Psi^\prime}
+    \end{align*}
+    \begin{align*}
+    & \prftree[l]{Step}
+    { \prfStackPremises
+       {\varphi \Rightarrow^\exists \varphi^\prime \in S}
+       {\mathcal{T} \vDash_\ML \varphi_i \leftrightarrow \varphi \land P^\prime}
+       {P^\prime \mbox{ is a structureless FOL formula}}
+       {  (\mathcal{T}, S) \vdash_\CRL [\varphi_1, \ldots, \varphi_{i-1}, \varphi^\prime \land P^\prime, \varphi_{i+1}, \ldots, \varphi_k]
+          \land P
+          \Downarrow_{\emptyset, (C \cup E)} \Psi^\prime
+      }
+    }
+    {(\mathcal{T}, S) \vdash_\CRL [\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
+    \end{align*}
+    \begin{align*}
+    & \prftree[l]{Circularity}
+      { \mathcal{S} \vdash_\CRL \Psi \Downarrow_{C \cup \{ \Psi \} , E} \Psi^\prime}
+      { \mathcal{S} \vdash_\CRL \Psi \Downarrow_{C, E} \Psi^\prime}
+    \end{align*}
+    \begin{align*}
+    & \prftree[l]{Conseq}
+      { \prfStackPremises
+        { (\mathcal{T}, S) \vdash_\CRL \Phi^\prime \Downarrow_{C, E} \Psi^\prime}
+        { \mathcal{T}^* \vDash_\ML \mathit{flatten}(\Phi) \rightarrow \mathit{flatten}(\Phi^\prime) }
+      }
+      { (\mathcal{T}, S) \vdash_\CRL \Phi \Downarrow_{C, E} \Psi^\prime}
+    \end{align*}
+%    \begin{align*}
+%    & \prftree[l]{Conseq2}
+%      { \prfStackPremises
+%        { (\mathcal{T}, S) \vdash_\CRL (\varphi_1, \ldots, \varphi_k) \land P \Downarrow_{C, E} \Psi^\prime}
+%        { \mathcal{T} \vDash_\ML \varphi_i \leftrightarrow \psi_i }
+%      }
+%      { (\mathcal{T}, S) \vdash_\CRL (\varphi_1^\prime, \ldots, \varphi_{i-1}, \varphi_{i}, \varphi_{i+1}, \ldots, \varphi_k^\prime) \land P^\prime \Downarrow_{C, E} \Psi^\prime}
+%    \end{align*}
+
+    %\begin{align*}
+    %& \prftree[l]{Abstract}
+      %{ \prfStackPremises
+        %{ X \not\in \mathit{FV}(\Psi^\prime, \varphi_1, \ldots, \varphi_{i-1}, \varphi_{i+1}, \ldots,\varphi_k)
+        %}
+        %{(\mathcal{T}, S) \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P \Downarrow_{C, E} \Psi^\prime}
+      %}
+      %{(\mathcal{T}, S) \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \exists X.\, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P \Downarrow_{C, E} \Psi^\prime}
+    %\end{align*}
+    
+    \begin{align*}
+    & \prftree[l]{Abstract}
+      { \prfStackPremises
+        { X \not\in \mathit{FV}(\Psi^\prime)
+        }
+        {(\mathcal{T}, S) \vdash_\CRL \exists \vec{Y}.\, [\varphi_1, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
+      }
+      {(\mathcal{T}, S) \vdash_\CRL \exists X, \vec{Y}.\, [\varphi_1, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
+    \end{align*}
+    \caption{Proof System}
+    \label{fig:CRLproofsystem}
+\end{figure}
+
+
+
+\begin{lemma}\label{lem:CRLalmostSoundness}
+    \begin{align*}
+        & (\mathcal{T}, S) \vdash_\CRL \Psi \Downarrow_{C,E} \Psi^\prime \implies \\
+        &
+        (\mathcal{T}^*, S^* \cup \mathit{flatten}^\exists(E, \Psi^\prime)), \mathit{flatten}^\exists(C, \Psi^\prime) \vdash_\RL
+          \mathit{flatten}^\exists(\Psi, \Psi^\prime) 
+    \end{align*}
+\end{lemma}
+
+\begin{theorem}[Proof system soundness]\label{thm:proofsystemSoundness}
+\begin{equation*}
+    \mathcal{S} \vdash_\CRL \Psi \Downarrow_{\emptyset,\emptyset} \Psi^\prime \implies
+    \mathcal{S} \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime
+\end{equation*}
+\end{theorem}
+\begin{proof}[Proof of \Cref{thm:proofsystemSoundness}]
+Assume $\mathcal{S} \vdash_\CRL \Psi \Downarrow_{\emptyset,\emptyset} \Psi^\prime$.
+By \Cref{lem:CRLalmostSoundness}, we have $\mathcal{S} \vdash_\RL \mathit{flatten}^\exists(\Psi, \Psi^\prime)$.
+By soundness of reachability logic, we have $\mathcal{S} \vDash_\RL \mathit{flatten}^\exists(\Psi, \Psi^\prime)$.
+By \Cref{thm:correspondence}, 
+we have $\mathcal{S} \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime$ and we are done.
+\end{proof}
