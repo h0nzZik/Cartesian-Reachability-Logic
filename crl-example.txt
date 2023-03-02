@@ -244,3 +244,86 @@ Tgt
 
 Now apply Axiom. Qed.
 
+
+
+Consider G3 again
+================================================
+G3:
+((<k>if (false) {y++;x--; while(x>0){y++;x--;}} else {}</k><st>x |-> X1, y |-> Y1</st> /\ X1 <= 0),
+ (<k>if (true) {y++;x--; while(x>0){y++;x--;}} else {}</k><st>x |-> X2, y |-> Y2</st> /\ X2 > 0))
+/\ (0 <= X1 /\ X1 <= X2 /\ Y1 = Y2)
+==>c
+Tgt
+
+Suppose we do not want to use Reduce, but reason directly using the rest of the proof system.
+We apply Step in both components, resulting in 
+((<k> {} </k><st>x |-> X1, y |-> Y1</st> /\ X1 <= 0),
+ (<k> y++;x--; while(x>0){y++;x--;} </k><st>x |-> X2, y |-> Y2</st> /\ X2 > 0))
+/\ (0 <= X1 /\ X1 <= X2 /\ Y1 = Y2)
+==>c
+Tgt
+
+and then repeat step on the second component, resulting in
+```
+((<k> {} </k><st>x |-> X1, y |-> Y1</st> /\ X1 <= 0),
+ (<k> while(x>0){y++;x--;} </k><st>x |-> X2 -Int 1, y |-> Y2 +Int 1</st> /\ X2 > 0))
+/\ (0 <= X1 /\ X1 <= X2 /\ Y1 = Y2)
+==>c
+Tgt
+```
+which is the same as
+```
+((<k> {} </k><st>x |-> X1, y |-> Y1</st> /\ X1 <= 0),
+ (<k> while(x>0){y++;x--;} </k><st>x |-> X2', y |-> Y2'</st> /\ X2 > 0))
+/\ (0 <= X1 /\ X1 <= X2 /\ Y1 = Y2) /\ (X2' = X2 -Int 1) /\ (Y2' = Y2 +Int 1)
+==>c
+Tgt
+```
+and
+```
+((<k> {} </k><st>x |-> X1, y |-> Y1</st> /\ X1 <= 0),
+ (<k> while(x>0){y++;x--;} </k><st>x |-> X2', y |-> Y2'</st> /\ X2 > 0))
+/\ (0 <= X1 /\ X1 <= X2' +Int 1 /\ Y1 = Y2' -Int 1) /\ (X2' = X2 -Int 1) /\ (Y2' = Y2 +Int 1)
+==>c
+Tgt
+```
+and
+```
+((<k> {} </k><st>x |-> X1, y |-> Y1</st>),
+ (<k> while(x>0){y++;x--;} </k><st>x |-> X2, y |-> Y2</st>))
+/\ (0 <= X1 /\ X1 <= X2 +Int 1 /\ Y1 = Y2 -Int 1 /\ X1 <= 0 /\ X2 > 0)
+==>c
+Tgt
+```
+We want to reach configurations where the value of `y` in the first one is leq the value of `y` in the second one.
+
+It already is that way, we just have to prove that it stays that way.
+So, we relax the side condition to obtain
+
+```
+((<k> {} </k><st>x |-> X1, y |-> Y1</st>),
+ (<k> while(x>0){y++;x--;} </k><st>x |-> X2, y |-> Y2</st>))
+/\ (Y1 <= Y2)
+==>c
+Tgt
+```
+Now we want to add the claim to the circularities, but generalized, so we
+apply Conseq, apply Circularity, and apply Abstract,
+and we get a new circularity
+c2 === ∃ X2. ∃ Y2. ((<k> {} </k><st>x |-> X1, y |-> Y1</st>),
+                    (<k> while(x>0){y++;x--;} </k><st>x |-> X2, y |-> Y2</st>))
+                 /\ (Y1 <= Y2)
+
+and we continue the proof as if using RL. That is, we symbolically execute the second component
+for one iteration of the while loop while flushing the circularity c2 to the axiom set.
+That means, we reach
+```
+((<k> {} </k><st>x |-> X1, y |-> Y1</st>),
+ (<k> while(x>0){y++;x--;} </k><st>x |-> X2 - 1, y |-> Y2 + 1</st>))
+/\ (Y1 <= Y2)
+==>c
+Tgt
+```
+which matches the axiom, and the proof of this branch is finished.
+
+
