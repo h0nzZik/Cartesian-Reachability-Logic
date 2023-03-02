@@ -10,6 +10,23 @@ we used the older variant in order to be compatible with the literature on reach
 
 Matching logic \emph{formula} (aka \emph{pattern}) is a first-order logic (FOL) formula which allows terms,
 over a signature $\Sigma$, with variables, as nullary predicates.
+A typical example of a matching logic formula is
+\begin{equation*}
+\texttt{<k> x--; <k><st> x} \texttt{ |-> } X\texttt{ </st>} \land (X \texttt{ >Int } 1 = \mathit{true})
+\end{equation*}
+which, when interpreted in a model of a particular programming language,
+denotes the set of program configurations in which the code \texttt{x--} is to be executed
+and in which the program variable $\texttt{x}$ has a value $X$ that is greater than $1$.
+In this example, the part $\texttt{<k> x--; <k><st> x} \texttt{ |-> } X\texttt{ </st>}$
+is the term-as-predicate, with $X$ being the only free FOL variable.
+The program variable $\texttt{x}$ is not a FOL variable, but a constant symbol from the signature of the programming language.
+The subterm $\texttt{x} \texttt{ |-> } X\texttt{ </st>}$ says that the program variable $\texttt{x}$
+has the value $X$, and the $X \texttt{ >Int } 1 = \mathit{true}$ part then says that the realization
+of the function symbol $\_ \texttt{ >Int } \_$ returns the boolean value $\mathit{true}$ when given $X$ and $1$
+as arguments.
+
+
+
 The satisfaction relation $(M, \gamma, \rho) \vDash \varphi$ between a model $M$, a model element $\gamma \in M$,
 an $M$-valuation $\rho$, and a pattern $\varphi$, is defined inductively on the structure of $\varphi$.
 The definition is as in FOL; the main difference is the semantics of terms-as-predicates, which is defined by
