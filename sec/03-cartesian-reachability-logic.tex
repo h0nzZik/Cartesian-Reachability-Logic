@@ -43,6 +43,11 @@ The literature on language-independent equivalence checking also contain the ide
 In~\cite{CiobacaLRR16}, circularities are used to synchronize executions of different programs (possibly in different languages);
 however, the proof system of~\cite{CiobacaLRR16} can be used only to reason about full program equivalence
 and not about $k$-safety hyperproperties.
+What makes the proof system of~\cite{CiobacaLRR16} really unusable in our situation is the fact that its
+Circularity rule requires all the components to make progress before the circularity can be used,
+which would prohibit RL-like reasoning when one component has already finished execution.
+The need for such reasoning is there even in our simple running example, as we illustrate in ???.
+
 We believe that all the mentioned proof systems that use a variant of the Circularity rule are instances of a more general
 framework, known as \emph{Circular coinduction} in the literature~\cite{RosuL09CircularCoinduction}.
 
