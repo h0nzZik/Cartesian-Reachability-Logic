@@ -356,13 +356,18 @@ we have $\mathcal{S} \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime$ and 
       {(\mathcal{T}, S) \vdash_\CRL \Phi \Downarrow_{C, E} \Psi^\prime}
   \end{align*}
 
-
   \begin{align*}
     & \prftree[l]{ImplEnabled}
       { \prfStackPremises
         { \Phi^\prime \in E }
         {\mathcal{T}^* \vDash_\ML \mathit{flatten}(\Phi) \rightarrow \mathit{flatten}(\Phi^\prime)}
       }
+      {(\mathcal{T}, S) \vdash_\CRL \Phi \Downarrow_{C, E} \Psi^\prime}
+  \end{align*}
+
+  \begin{align*}
+    & \prftree[l]{Contradiction}
+      {\mathcal{T}^* \vDash_\ML \mathit{flatten}(\Phi) \rightarrow \bot }
       {(\mathcal{T}, S) \vdash_\CRL \Phi \Downarrow_{C, E} \Psi^\prime}
   \end{align*}
 
