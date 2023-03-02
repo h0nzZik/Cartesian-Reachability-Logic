@@ -345,7 +345,7 @@ we have $\mathcal{S} \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime$ and 
       { \prfStackPremises
         { \vec{X} = \mathit{FV}(\Phi) \setminus \mathit{FV}(\Psi^\prime)
         }
-        {(\mathcal{T}, S) \vdash_\CRL \exists \vec{X}.\, \Phi \Downarrow_{C \cup \{ \exists \vec{X}.\, \Phi  \}, E} \Psi^\prime}
+        {(\mathcal{T}, S) \vdash_\CRL \Phi \Downarrow_{C \cup \{ \exists \vec{X}.\, \Phi  \}, E} \Psi^\prime}
       }
       {(\mathcal{T}, S) \vdash_\CRL \Phi \Downarrow_{C, E} \Psi^\prime}
     \end{align*}
