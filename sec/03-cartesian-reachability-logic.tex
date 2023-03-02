@@ -6,6 +6,7 @@ deterministic language with given reachability-logic semantics $S$.
 For that purpose we define the language of CRL and its semantics, and demonstrate the logic's expressiveness
 on a couple of examples.
 Then we give CRL a sound proof system, which is the main contribution of this paper.
+
 While the intuition behind the semantics of CRL is similar to that of CHL, with only a few minor differences,
 giving CRL a proof system is not straightforward.
 One could attempt to reuse the proof system of CHL and modify it \emph{somehow} to be independent
@@ -28,6 +29,22 @@ the supplied language support: \texttt{goto}s? Mutual recursion?
 Yet, we provide a single proof system consisting of only eight rules which enables lockstep reasoning about such constructs.
 The rules itself are fairly simple, and none of them has the semantics of any particular language construct
 hard-wired into it.
+The key component allowing lockstep reasoning about arbitrary constructs is the Circularity rule,
+which allows user to postulate validity of the current claim by means of adding the \emph{current state}
+into the set of \emph{cutpoints}, from which a $k$-tuple of states satisfying the postcondition
+is claimed to be reachable; once progress is made (by means of the Step rule), the added cutpoints are
+\emph{enabled} and can be used to finish the proof.
+
+The idea of a Circularity rule is present already 
+in the existing literature on reachability logics \cite{RosuS12oopsla,RosuSCM13lics,StefanescuCMMSR19},
+where it was used to generalize the notion of \emph{loop invariant}.
+However, RL can not be used to reason about $k$-safety hyperproperties and does not perform lockstep execution.
+The literature on language-independent equivalence checking also contain the idea of a Circularity rule.
+In~\cite{CiobacaLRR16}, circularities are used to synchronize executions of different programs (possibly in different languages);
+however, the proof system of~\cite{CiobacaLRR16} can be used only to reason about full program equivalence
+and not about $k$-safety hyperproperties.
+We believe that all the mentioned proof systems that use a variant of the Circularity rule are instances of a more general
+framework, known as \emph{Circular coinduction} in the literature~\cite{RosuL09CircularCoinduction}.
 
 \subsection{Syntax and Semantics}
 
