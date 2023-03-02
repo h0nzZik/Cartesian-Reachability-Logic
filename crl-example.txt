@@ -301,24 +301,27 @@ It already is that way, we just have to prove that it stays that way.
 So, we relax the side condition to obtain
 
 ```
-((<k> {} </k><st>x |-> X1, y |-> Y1</st>),
+((<k> {} </k><st>x |-> 0, y |-> Y1</st>),
  (<k> while(x>0){y++;x--;} </k><st>x |-> X2, y |-> Y2</st>))
 /\ (Y1 <= Y2)
 ==>c
 Tgt
 ```
+(note that we used the two conditions on X1 to figure out that it is actually equal to 0).
 Now we want to add the claim to the circularities, but generalized, so we
 apply Conseq, apply Circularity, and apply Abstract,
 and we get a new circularity
-c2 === ∃ X2. ∃ Y2. ((<k> {} </k><st>x |-> X1, y |-> Y1</st>),
+c2 === ∃ X2. ∃ Y2. ((<k> {} </k><st>x |-> 0, y |-> Y1</st>),
                     (<k> while(x>0){y++;x--;} </k><st>x |-> X2, y |-> Y2</st>))
                  /\ (Y1 <= Y2)
 
-and we continue the proof as if using RL. That is, we symbolically execute the second component
+and we continue the proof as if using RL.
+That is, we branch and in one case check the subsumtion / apply the Reflexivity rule,
+and in the other case we symbolically execute the second component
 for one iteration of the while loop while flushing the circularity c2 to the axiom set.
 That means, we reach
 ```
-((<k> {} </k><st>x |-> X1, y |-> Y1</st>),
+((<k> {} </k><st>x |-> 0, y |-> Y1</st>),
  (<k> while(x>0){y++;x--;} </k><st>x |-> X2 - 1, y |-> Y2 + 1</st>))
 /\ (Y1 <= Y2)
 ==>c
