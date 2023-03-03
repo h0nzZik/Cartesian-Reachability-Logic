@@ -51,7 +51,7 @@ A more formal treatment of matching logic is to be found in the Appendix.
 
 
 \subsection{One-path Reachability Logic}
-Reachability logic \cite{StefanescuCMMSR19,RosuS12oopsla} (RL) is a formalism for
+Reachability logic \cite{RosuS12oopsla, StefanescuCMMSR19} (RL) is a formalism for
 defining formal semantics of programming languages,
 and also for specifying and reasoning about partial correctness properties
 of programs in those languages.
@@ -121,9 +121,35 @@ and $(\gamma^\prime, \rho) \vDash \varphi^\prime$.
 
 
 Reachability logic is equipped with a proof system which derives sequents of the shape
-$\mathcal{S}, A, C \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime$;
+$A, C \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime$;
 the proof system is sound and complete: a RL claim is satisfied in $\mathcal{S}$
-iff $\mathcal{S}, \emptyset, \emptyset \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime$.
+iff $\mathcal{S}, \emptyset \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime$.
+The set $C$, initially empty, contains so-called \emph{circularities},
+which are claims postulated to hold but not justified yet.
+Circularities, which correspond to the notion of \emph{loop invariants} of Hoare logic,
+enable one to reason about repetetive behavior of programs.
+The proof system contains a rule
+\begin{align*}
+    & \prftree[l]{Circularity}
+      { A, C \cup \{ \varphi\Rightarrow^\exists \varphi^\prime \} \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime }
+      { A, C \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime }
+\end{align*}
+which adds to current claim to the set of circularities.
+When a progress is made (by means of other rules, essentially performing a symbolic execution),
+the claim is moved from circularities to axioms and can be reused, similarly to the way one assumes a loop invariant
+in order to prove it again.
+We refer an interested reader to~\cite{RosuS12oopsla} for more details.
+
+
+%For illustration purposes, we show one rule of the RL proof system:
+%\begin{align*}
+%    & \prftree[l]{Case Analysis}
+%      %{ \prfStackPremises
+%        { A, C \vdash_\RL \varphi_1 \Rightarrow^\exists \varphi }
+%        { A, C \vdash_\RL \varphi_2 \Rightarrow^\exists \varphi }
+%      %}
+%      { A, C \vdash_\RL \varphi_1 \lor \varphi_2 \Rightarrow^\exists \varphi }
+%\end{align*}
 
 
 \begin{remark}\label{rem:shapeOfReachabilityRules}
