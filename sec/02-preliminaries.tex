@@ -10,10 +10,10 @@ we used the older variant in order to be compatible with the literature on reach
 
 Matching logic \emph{formula} (aka \emph{pattern}) is a first-order logic (FOL) formula which allows terms,
 over a signature $\Sigma$, with variables, as nullary predicates.
-A typical example of a matching logic formula is
-\begin{equation*}
+A typical example of a matching logic formula is $\varphi_{\mathit{example}}$, defined as
+\begin{equation}\label{eqn:exampleMLPattern}
 \texttt{<k> x--; <k><st> x} \texttt{ |-> } X\texttt{ </st>} \land (X \texttt{ >Int } 1 = \mathit{true})
-\end{equation*}
+\end{equation}
 which, when interpreted in a model of a particular programming language,
 denotes the set of program configurations in which the code \texttt{x--} is to be executed
 and in which the program variable $\texttt{x}$ has a value $X$ that is greater than $1$.
@@ -25,8 +25,6 @@ has the value $X$, and the $X \texttt{ >Int } 1 = \mathit{true}$ part then says 
 of the function symbol $\_ \texttt{ >Int } \_$ returns the boolean value $\mathit{true}$ when given $X$ and $1$
 as arguments.
 
-
-
 The satisfaction relation $(M, \gamma, \rho) \vDash \varphi$ between a model $M$, a model element $\gamma \in M$,
 an $M$-valuation $\rho$, and a pattern $\varphi$, is defined inductively on the structure of $\varphi$.
 The definition is as in FOL; the main difference is the semantics of terms-as-predicates, which is defined by
@@ -34,12 +32,22 @@ The definition is as in FOL; the main difference is the semantics of terms-as-pr
     (M, \gamma, \rho) \vDash t \iff \gamma = \rho(t) \text{ if t is a term}
 \end{equation*}
 (where $\rho(t)$ is the homomorphic extension of $\rho$ applied to the term $t$).
+For example, we might have a matching logic model $M$ containing (concrete) program configurations
+of a particular programming language.
+One such configuration might be $\gamma_{\mathit{example}}$:
+\begin{equation*}
+    \texttt{<k> x--; <k><st> x} \texttt{ |-> } 3\texttt{ </st>} \, .
+\end{equation*}
+Then, we have that $(M, \gamma_{\mathit{example}}, \rho) \vDash \varphi_{\mathit{example}}$
+for any valuation $\rho$ satisfying $\rho(X) = 3$, and we say that
+$\varphi_{\mathit{example}}$ \emph{matches} $\gamma_{\mathit{example}}$ in $\rho$.
+
+
 A pattern $\varphi$ is \emph{valid in $M$}, written $M \vDash \varphi$, iff $(M, \gamma, \rho) \vDash \varphi$
 for every $\gamma$ and $\rho$.
-A formal definition is to be found in the Appendix.
-
 We observe that validity of a structureless pattern (that is a pattern without terms-as-predicates) does not depend on the selected model element.
 Also, validity of any pattern does not depend on those variables which the pattern does not mention.
+A more formal treatment of matching logic is to be found in the Appendix.
 
 
 \subsection{One-path Reachability Logic}
