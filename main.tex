@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass{easychair}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath,amssymb,mathtools}
 \usepackage{amsthm}
@@ -21,11 +21,26 @@
 \newcommand{\jt}[1]{\todo[author=Jan]{#1}}
 
 \title{Cartesian Reachability Logic: A Language-Independent Logic for Verifying $k$-Safety Properties}
-\author{Jan Tu\v{s}il  \and Traian Florin Șerbănuță 
-%\and Xiaohong Chen
-\and Jan Obdrzalek
+\author{
+  Jan Tu\v{s}il \inst{1}
+  \and Traian Florin Șerbănuță  \inst{2}
+  \and Jan Obdržálek \inst{1}
 }
-\date{\today}
+
+\institute{
+  Masaryk University,
+  Brno, Czech Republic\\
+  \email{jan.tusil@mail.muni.cz}
+\and
+   University of Bucharest,
+   Bucharest, Romania\\
+   \email{traian.serbanuta@unibuc.ro}\\
+ }
+
+\authorrunning{Tušil, Șerbănuță, and Obdržálek}
+\titlerunning{CRL: A Language-Independent Logic for $k$-Safety}
+
+%\date{\today}
 
 \declaretheorem[]{example}
 \declaretheorem[]{definition}
@@ -56,6 +71,14 @@
 \begin{document}
 
 \maketitle
+
+\begin{abstract}
+  Crafting a program logic targeting a specific language can be a challenging and time-consuming task.
+  In this paper we introduce a program logic for reasoning about $k$-safety hyperproperties,
+  with the distinguishing feature that our logic works with any deterministic language
+  that has a Reachability logic-based formal semantics.
+  This powerful instrument can significantly reduce development costs of tools and techniques for k-safety verification.
+\end{abstract}
 
 \input{sec/01-introduction}
 \input{sec/02-preliminaries}

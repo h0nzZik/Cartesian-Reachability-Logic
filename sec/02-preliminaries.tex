@@ -17,7 +17,10 @@ A typical example of a matching logic formula is $\varphi_{\mathit{example}}$, d
 which, when interpreted in a model of a particular programming language,
 denotes the set of program configurations in which the code \texttt{x--} is to be executed
 and in which the program variable $\texttt{x}$ has a value $X$ that is greater than $1$.
-In this example, the part $\texttt{<k> x--; <k><st> x} \texttt{ |-> } X\texttt{ </st>}$
+In this example, the part
+\begin{equation*}
+    \texttt{<k> x--; <k><st> x} \texttt{ |-> } X\texttt{ </st>}
+\end{equation*}
 is the term-as-predicate, with $X$ being the only free FOL variable.
 The program variable $\texttt{x}$ is not a FOL variable, but a constant symbol from the signature of the programming language.
 The subterm $\texttt{x} \texttt{ |-> } X\texttt{ </st>}$ says that the program variable $\texttt{x}$
