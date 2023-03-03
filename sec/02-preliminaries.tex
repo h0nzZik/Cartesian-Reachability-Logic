@@ -38,6 +38,20 @@ In CHL, this can be formalized as
 \end{equation*}
 The main idea here is that the formulas can \emph{relate} variables from different executions.
 
+Cartesian Hoare logic is equipped with a proof system that allows one to prove validity of CHL triples.
+The proof system contains rules like
+\begin{align*}
+    & \prftree[l]{If}
+      { \prfStackPremises
+        { \langle \Phi \land c \rangle (\texttt{B1; S}) * R \langle \Psi \rangle }
+        { \langle \Phi \land \neg c \rangle (\texttt{B2; S}) * R \langle \Psi \rangle }
+      }
+      { \langle \Phi \rangle (\texttt{if (c) {B1} {B2} ; S}) * R \langle \Psi \rangle }
+\end{align*}
+that replicate standard Hoare-logic reasoning, and is sound and complete.
+However, what is even more interesting, the proof system has rules that enable \emph{lockstep reasoning}.
+
+TODO
 
 \subsection{($\mu$-free) Matching Logic}
 
