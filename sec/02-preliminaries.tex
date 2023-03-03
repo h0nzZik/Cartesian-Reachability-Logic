@@ -89,13 +89,25 @@ For example, the rule in \Cref{eqn:ruleIfTrue} induces (among others) the transi
 \begin{equation}\label{eqn:ruleIfTrue}
     \begin{aligned}
     & \texttt{<k> if (} \mathit{true} \texttt{) x++; else x--; </k><st>x} \texttt{ |-> } 3\texttt{</st>} \\
-    & \Rightarrow \texttt{<k> x++; </k><st>x} \texttt{ |-> } 3\texttt{</st>} \, .
+    & \Rightarrow_{\mathcal{S}} \texttt{<k> x++; </k><st>x} \texttt{ |-> } 3\texttt{</st>} \, .
     \end{aligned}
 \end{equation}
 
-On the partial correctness side, RL reuses the notion of a \emph{reachability rule}
-of the shape $\varphi \Rightarrow^\exists \varphi^\prime$.
-The rule is \emph{satisfied}
+On the partial correctness side, RL reuses the notion of a \emph{reachability rule}.
+For example, one can specify that the program \texttt{while(x > 0) x--;}
+can, if it terminates at all, reach a configuration
+where the program variable \texttt{x} has a non-positive value
+by means of the reachability rule
+\begin{equation*}
+    \begin{aligned}
+        & \texttt{<k> while( x > 0 ) x--; </k> <st> x |-> } V \texttt{</st>} \\
+        & \Rightarrow^\exists \exists V^\prime.\, \texttt{<k> . </k> x |-> } V^\prime \texttt{</st>} \land (V^\prime \texttt{ <=Int } 0 = \mathit{true})
+    \end{aligned}
+\end{equation*}
+Assuming the language is deterministic, this is equivalent to saying that if the program terminates,
+the resulting configuration will have non-positive value of \texttt{x}.
+Formally, a rule of the shape $\varphi \Rightarrow^\exists \varphi^\prime$
+is \emph{satisfied}
 in a reachability system $\mathcal{S} = (\mathcal{T}, S)$,
 written $\mathcal{S} \vDash_\RL \varphi \Rightarrow^\exists \varphi^\prime$,
 iff for every $\gamma \in \Tcfg$
@@ -108,10 +120,6 @@ $\gamma \Rightarrow^{*}_{\mathcal{S}} \gamma^\prime$
 and $(\gamma^\prime, \rho) \vDash \varphi^\prime$.
 
 
-
-A reachability system $(\mathcal{T}, S)$ is \emph{$\epsilon$-free}
-iff for any two configurations $\sigma, \sigma^\prime \in \mathcal{T}_{\mathit{Cfg}}$, if
-$\sigma \Rightarrow_{\mathcal{S}} \sigma^\prime$, then $\sigma \not = \sigma^\prime$;
 Reachability logic is equipped with a proof system which derives sequents of the shape
 $\mathcal{S}, A, C \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime$;
 the proof system is sound and complete: a RL claim is satisfied in $\mathcal{S}$
@@ -121,15 +129,15 @@ iff $\mathcal{S}, \emptyset, \emptyset \vdash_\RL \varphi \Rightarrow^\exists \v
 \begin{remark}\label{rem:shapeOfReachabilityRules}
 For simplicity, we restrict the class of reachability systems we work with to those whose reachability rules
 have the shape
-%\begin{equation*}
-%    \bigvee_{i=1}^{m} (\phi_i \land P_i) \Rightarrow^\exists \exists \vec{Y}.\, \bigvee_{j=1}^{n} (\phi^\prime_j \land P^\prime_j) \, .
-%\end{equation*}
 \begin{equation*}
     \phi \land P \Rightarrow^\exists \phi^\prime \land P^\prime
 \end{equation*}
-where $phi \land P$ and $\phi^\prime \land P^\prime$ are constrained terms.
+where $\phi \land P$ and $\phi^\prime \land P^\prime$ are constrained terms.
 \end{remark}
 
 \begin{remark}\label{rem:noEmptySteps}
 We work only with $\epsilon$-free reachability systems.
+A reachability system $(\mathcal{T}, S)$ is \emph{$\epsilon$-free}
+iff for any two configurations $\sigma, \sigma^\prime \in \mathcal{T}_{\mathit{Cfg}}$, if
+$\sigma \Rightarrow_{\mathcal{S}} \sigma^\prime$, then $\sigma \not = \sigma^\prime$;
 \end{remark}
