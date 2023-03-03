@@ -1,5 +1,44 @@
 \section{Preliminaries}
 
+%\subsection{$k$-safety hyperproperties}
+
+\subsection{Cartesian Hoare logic}
+
+Introduced in~\cite{SousaD16}, Cartesian Hoare logic is a formalism for specifying and reasoning about
+a class of hyperproperties known as \emph{$k$-safety hyperproperties}, or simply
+\emph{$k$-safety properties}.
+A $k$-safety property is a hyperproperty whose violation can be witnessed by a $k$-tuple of execution traces.
+Many \emph{security policies} - for example, noninterference (requiring that sensitive or privileged data
+do not influence insensitive or unprivileged computations) - are $k$-safety hyperproperties.
+Similarly, many functional correctness properties are actually $k$-safety hyperproperties;
+for example, \emph{transitivity} (which needs to by satisfied e.g. by comparators when managing data
+in collections), associativity (important in the map/reduce paradigm), or monotonicity.
+Cartesian Hoare logic (CHL) can be used for reasoning about these on the level of the source code,
+similarly to Hoare logic.
+
+In a Hoare logic, one specifies safety properties by means of so-called \emph{Hoare triples}.
+These have the shape $\{ \varphi \} S \{ \psi \}$, with the meaning that
+the formula $\psi$ holds in any state after the termination (if any) of the program $S$,
+executed from a state satisfying $\varphi$.
+In Cartesian Hoare logic, the situation is similar: one can specify a triple
+$\langle \Phi \rangle (S_1 * \cdots * S_k) \langle \Psi \rangle$
+with the following meaning: for any $k$-tuple $(\sigma_1,\ldots,\sigma_k)$ of states
+satisfying the formula $\Phi$, if we execute each program $S_i$ in the respective state $\sigma_i$ and they all terminate,
+then the $k$-tuple $(\sigma_1^\prime,\ldots,\sigma_k^\prime)$ of resulting program states satisfies $\Psi$ \footnote{An
+important technical assumption here is that every program $S_i$ operates on its own set of program variables,
+distinct from variables of other programs $S_j$ (for $i \not = j$) - otherwise the formulas $\Phi$ and $\Psi$
+would not be able to distinguish between program variables of different programs.}.
+%To make specifications more compact, one can also consider triples $|| \Phi ||\ S \ || \Psi ||$ 
+
+As an example, consider the program $P(x,y) \equiv \texttt{while(x > 0) \{ x--; y++; \} }$ and the 2-safety property
+of \emph{monotonicity}; that is, intuitively: with growing input $x$, the resulting $y$ also grows.
+In CHL, this can be formalized as
+\begin{equation*}
+\langle x_1 \leq x_2 \land y_1 = y_2  \rangle (P(x_1, y_1) * P(x_2, y_2)) \langle y_1 \leq y_2 \rangle \, .
+\end{equation*}
+The main idea here is that the formulas can \emph{relate} variables from different executions.
+
+
 \subsection{($\mu$-free) Matching Logic}
 
 We work with a variant of matching logic described in
