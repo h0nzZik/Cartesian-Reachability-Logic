@@ -51,34 +51,67 @@ A more formal treatment of matching logic is to be found in the Appendix.
 
 
 \subsection{One-path Reachability Logic}
-Reachability logic \cite{StefanescuCMMSR19,RosuS12oopsla} is a formalism for reasoning about partial correctness
-of programs in any programming language which has a RL-based formal semantics. The programming language is modelled as a \emph{reachability system}
+Reachability logic \cite{StefanescuCMMSR19,RosuS12oopsla} (RL) is a formalism for
+defining formal semantics of programming languages,
+and also for specifying and reasoning about partial correctness properties
+of programs in those languages.
+On the formal semantics side, a programming language is modelled as a \emph{reachability system}
 $\mathcal{S} = (\mathcal{T}, S)$, where $\mathcal{T}$ is a $\Sigma$-algebra
 and $S$ is a set of \emph{reachability rules} of the shape $\varphi \Rightarrow^\exists \varphi^\prime$,
 where $\varphi$ and $\varphi^\prime$ are matching logic patterns over $\Sigma$.
+For example, one can have a rule
+\begin{equation}\label{eqn:ruleIfTrue}
+    \begin{aligned}
+    & \texttt{<k> if (} \mathit{true} \texttt{) }P_1\texttt{ else } P_2 \texttt{</k><st>} S \texttt{</st>} \\
+    & \Rightarrow \texttt{<k> }P_1 \texttt{</k><st>} S \texttt{</st>}
+    \end{aligned}
+\end{equation}
+saying that the \texttt{if} construct of the particular language takes the first branch ($P_1$)
+whenever the condition is $\mathit{true}$.
+(Typically, there would be another rules governing evaluation of the condition.)
+
+The meaning of reachability rules is the following.
 A reachability system $\mathcal{S} = (\mathcal{T}, S)$ (together with a $\Sigma$-sort $\mathit{Cfg}$)
 induces
-          a \emph{transition system}
-          $(\Tcfg , \Rightarrow_{\mathcal{S}})$,
-          where $\gamma \Rightarrow_{\mathcal{S}} \gamma^\prime$
-          for $\gamma, \gamma^\prime \in \Tcfg$
-          iff there is some rule $\varphi \Rightarrow^\exists \varphi^\prime \in S$
-          and some valuation $\rho : \Var \to \mathcal{T}$ with $(\gamma, \rho) \vDash \varphi$
-          and $(\gamma^\prime , \rho) \vDash \varphi^\prime$.
-A one-path reachability rule $\varphi \Rightarrow^\exists \varphi^\prime$ is \emph{satisfied}
-          in a reachability system $\mathcal{S} = (\mathcal{T}, S)$,
-          written $\mathcal{S} \vDash_\RL \varphi \Rightarrow^\exists \varphi^\prime$,
-          iff for every $\gamma \in \Tcfg$
-          such that $\gamma$ terminates in $(\Tcfg, \Rightarrow_{\mathcal{S}})$
-          and for any valuation $\rho : \Var \to \mathcal{T}$
-          such that $(\gamma, \rho) \vDash \varphi$,
-          there exists some $\gamma^\prime \in \Tcfg$
-          such that
-          $\gamma \Rightarrow^{*}_{\mathcal{S}} \gamma^\prime$
-          and $(\gamma^\prime, \rho) \vDash \varphi^\prime$.
+a \emph{transition system}
+$(\Tcfg , \Rightarrow_{\mathcal{S}})$,
+where $\gamma \Rightarrow_{\mathcal{S}} \gamma^\prime$
+for $\gamma, \gamma^\prime \in \Tcfg$
+iff there is some rule $\varphi \Rightarrow^\exists \varphi^\prime \in S$
+and some valuation $\rho : \Var \to \mathcal{T}$ with $(\gamma, \rho) \vDash \varphi$
+and $(\gamma^\prime , \rho) \vDash \varphi^\prime$.
+The intuition is that when taking a transition in the resulting transition system,
+some rule $\varphi \Rightarrow^\exists \varphi^\prime \in S$ is selected,
+then the current configuration is pattern-matched against the rule's left-side pattern $\varphi$,
+resulting in a valuation $\rho$ which is then used to instantiate the right-side $\varphi^\prime$ of the rule,
+forming a new configuration.
+For example, the rule in \Cref{eqn:ruleIfTrue} induces (among others) the transition
+\begin{equation}\label{eqn:ruleIfTrue}
+    \begin{aligned}
+    & \texttt{<k> if (} \mathit{true} \texttt{) x++; else x--; </k><st>x} \texttt{ |-> } 3\texttt{</st>} \\
+    & \Rightarrow \texttt{<k> x++; </k><st>x} \texttt{ |-> } 3\texttt{</st>} \, .
+    \end{aligned}
+\end{equation}
+
+On the partial correctness side, RL reuses the notion of a \emph{reachability rule}
+of the shape $\varphi \Rightarrow^\exists \varphi^\prime$.
+The rule is \emph{satisfied}
+in a reachability system $\mathcal{S} = (\mathcal{T}, S)$,
+written $\mathcal{S} \vDash_\RL \varphi \Rightarrow^\exists \varphi^\prime$,
+iff for every $\gamma \in \Tcfg$
+such that $\gamma$ terminates in $(\Tcfg, \Rightarrow_{\mathcal{S}})$
+and for any valuation $\rho : \Var \to \mathcal{T}$
+such that $(\gamma, \rho) \vDash \varphi$,
+there exists some $\gamma^\prime \in \Tcfg$
+such that
+$\gamma \Rightarrow^{*}_{\mathcal{S}} \gamma^\prime$
+and $(\gamma^\prime, \rho) \vDash \varphi^\prime$.
+
+
+
 A reachability system $(\mathcal{T}, S)$ is \emph{$\epsilon$-free}
-          iff for any two configurations $\sigma, \sigma^\prime \in \mathcal{T}_{\mathit{Cfg}}$, if
-          $\sigma \Rightarrow_{\mathcal{S}} \sigma^\prime$, then $\sigma \not = \sigma^\prime$;
+iff for any two configurations $\sigma, \sigma^\prime \in \mathcal{T}_{\mathit{Cfg}}$, if
+$\sigma \Rightarrow_{\mathcal{S}} \sigma^\prime$, then $\sigma \not = \sigma^\prime$;
 Reachability logic is equipped with a proof system which derives sequents of the shape
 $\mathcal{S}, A, C \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime$;
 the proof system is sound and complete: a RL claim is satisfied in $\mathcal{S}$
