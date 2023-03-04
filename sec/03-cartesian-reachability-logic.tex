@@ -11,22 +11,40 @@ Then we give CRL a sound proof system, which is the main contribution of this pa
 \subsection{Syntax and Semantics}
 
 Cartesian reachability logic is an extension of (one-path) reachability logic.
-Syntactically, we define
-\begin{itemize}
-    \item 
-A \emph{list-pattern} has the shape $[\varphi_1,\ldots,\varphi_k]$,
-          where each $\varphi_j$ (for $j \in \{ 1, \ldots, k \} $) is a matching logic pattern.
-    \item
-          A \emph{constrained list-pattern (CLP)} is a conjunction $\Psi_0 \land P$
-          of a list-pattern $\Psi_0$ and a structureless pattern $P$.
-    \item
-          An \emph{existentially-quantified constrained list-pattern (ECLP)} has the form
-          $\exists \vec{Y}.\, \Psi$, where $\Psi$ is a CLP and $\vec{Y}$ is a (possibly empty) list of variables.
-    \item
-          A \emph{One-Path Cartesian reachability claim of arity $k$} has the shape
-          $\Phi \Rightarrow^{c\exists} \Psi$,
-          where $\Phi$ is a CLP and $\Psi$ is an ECLP.
-\end{itemize}
+Its \emph{claims} have the shape
+\begin{equation*}
+  [\varphi_1,\ldots,\varphi_k] \land P
+  \Rightarrow^{c\exists} \exists \vec{Y}.\, [\varphi^\prime_1,\ldots,\varphi^\prime_k] \land P^\prime
+\end{equation*}
+with the intuition that the matching logic formulas $\varphi_i$ describe source configurations
+(including programs to be executed, as in RL),
+the formulas $\varphi_i^\prime$ describe the target configurations,
+$P$ is a formula describing the relationship between initial configurations
+and $P^\prime$ describes relationship between target configurations.
+We name the sides of the $\Rightarrow^{c\exists}$ as \emph{ECLP}s
+(existentially-quantified constrained list patterns). 
+
+
+For example, consider the same program as in \Cref{eqn:CounterProgram}; that is, let
+\begin{equation*}
+  P \equiv \texttt{while(x > 0)\{ y++; x--;\}} \, .
+\end{equation*}
+Additionally, let $C(Q, X, Y)$ represent a configuration of a program $Q$
+where the program variable $\texttt{x}$ has the value $X$
+and the program variable $\texttt{y}$ has the value $Y$;
+for example,
+\begin{equation}\label{eqn:CQXY}
+ C(Q, X, Y) \equiv \texttt{<k>} Q \texttt{</k><st>(x |-> } X \texttt{)(y |-> } Y \texttt{)</st>}    \, .
+\end{equation}
+Then, the claim $\Omega_{\textit{mono}}$, defined as
+\begin{align*}
+&[C(P, X_1, Y_1),C(P, X_2, Y_2)] \land X_1 \leq X_2 \land Y_1 \leq Y_2
+\\ \Rightarrow^{c\exists} &
+\exists X^\prime_1, Y^\prime_1, X^\prime_2, Y^\prime_2.\,  [C(\epsilon, X^\prime_1, Y^\prime_1), C(\epsilon, X^\prime_2, Y^\prime_2)] \land Y^\prime_1 \leq Y^\prime_2   
+\end{align*}
+(where $\epsilon$ denotes the empty program)
+expresses the property that the program $P$ is monotone.
+
 
 \begin{definition}[CRL semantics]\label{def:opCRLsemantics}
     A claim

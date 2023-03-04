@@ -184,6 +184,24 @@ We define reachability-logic signatures, rules, and systems as follows.
 
 \end{definition}
 
+\begin{definition}[CRL Syntax]\label{def:opCRLSyntax}
+    We define the syntax of Cartesian Reachability logic as follows:
+    \begin{itemize}
+        \item 
+    A \emph{list-pattern} has the shape $[\varphi_1,\ldots,\varphi_k]$,
+              where each $\varphi_j$ (for $j \in \{ 1, \ldots, k \} $) is a matching logic pattern.
+        \item
+              A \emph{constrained list-pattern (CLP)} is a conjunction $\Psi_0 \land P$
+              of a list-pattern $\Psi_0$ and a structureless pattern $P$.
+        \item
+              An \emph{existentially-quantified constrained list-pattern (ECLP)} has the form
+              $\exists \vec{Y}.\, \Psi$, where $\Psi$ is a CLP and $\vec{Y}$ is a (possibly empty) list of variables.
+        \item
+              A \emph{One-Path Cartesian reachability claim of arity $k$} has the shape
+              $\Phi \Rightarrow^{c\exists} \Psi$,
+              where $\Phi$ is a CLP and $\Psi$ is an ECLP.
+    \end{itemize}
+\end{definition}    
 
 \begin{definition}\label{def:starextension}
 We translate a language semantics into a semantics for lists of configurations as follows.

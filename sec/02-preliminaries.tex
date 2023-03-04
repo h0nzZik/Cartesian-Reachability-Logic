@@ -174,7 +174,10 @@ of programs in those languages.
 On the formal semantics side, a programming language is modelled as a \emph{reachability system}
 $\mathcal{S} = (\mathcal{T}, S)$, where $\mathcal{T}$ is a $\Sigma$-algebra
 and $S$ is a set of \emph{reachability rules} of the shape $\varphi \Rightarrow^\exists \varphi^\prime$,
-where $\varphi$ and $\varphi^\prime$ are matching logic patterns over $\Sigma$.
+where $\varphi$ and $\varphi^\prime$ are matching logic patterns over $\Sigma$
+describing \emph{source} and \emph{target} program configurations.
+Typically, \emph{program configurations} contain some program (or a fragment of it) that is to be executed,
+together with a state of the program.
 For example, one can have a rule
 \begin{equation}\label{eqn:ruleIfTrue}
     \begin{aligned}
@@ -184,7 +187,7 @@ For example, one can have a rule
 \end{equation}
 saying that the \texttt{if} construct of the particular language takes the first branch ($P_1$)
 whenever the condition is $\mathit{true}$.
-(Typically, there would be another rules governing evaluation of the condition.)
+(Typically, there would be additional rules governing evaluation of the condition.)
 
 The meaning of reachability rules is the following.
 A reachability system $\mathcal{S} = (\mathcal{T}, S)$ (together with a $\Sigma$-sort $\mathit{Cfg}$)
