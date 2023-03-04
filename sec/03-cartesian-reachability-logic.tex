@@ -44,8 +44,16 @@ Then, the claim $\Omega_{\textit{mono}}$, defined as
 \end{align*}
 (where $\epsilon$ denotes the empty program)
 expresses the property that the program $P$ is monotone.
+That is, when we start an execution (using the semantics of the particular language)
+from some configuration $\gamma_1$ matching $C(P, X_1, Y_1)$
+and a second execution from some configuration $\gamma_2$ matching $C(P, X_2, Y_2)$,
+if $X_1 \leq X_2$ and $Y_1 \leq Y_2$,
+we end up in configurations $\gamma_1^\prime,\gamma_2^\prime$ matching
+$C(\epsilon, X^\prime_1, Y^\prime_1)$ and $C(\epsilon, X^\prime_2, Y^\prime_2)$
+for some $X^\prime_1,Y^\prime_1,X^\prime_2,Y^\prime_2$
+satisfying $Y^\prime_1 \leq Y^\prime_2$.
 
-
+We formally define the semantics of a CRL claim as follows:
 \begin{definition}[CRL semantics]\label{def:opCRLsemantics}
     A claim
     \begin{equation*}
@@ -72,55 +80,73 @@ expresses the property that the program $P$ is monotone.
     $(\gamma_1^\prime,\rho^\prime) \vDash \varphi^\prime_1 \land P^\prime$ and \ldots and $(\gamma_k^\prime, \rho^\prime) \vDash \varphi^\prime_k \land P^\prime$.
 \end{definition}
 
+\subsection{Comparison to CHL}
+CRL is more verbose then CHL. This is partly because of the need to specify patterns matching the whole program configurations,
+and partly because of the need to existentially quantify those variables on the right side whose value is not
+determined by the left side.
+The second reason is related to the fact that in CRL, as well as in RL, a variable occuring in both sides
+has the same value in both sides.
+Therefore, in (C)RL, one does not need to introduce ghost variables for remembering values from the precondition.
+We inherit a notation commonly used in RL, that variables whose names start with a question mark are implicitly
+considered existentially quantified in the right side.
+Also, we use underscore for a variable with unknown name, different between all occurences -
+that is, to represent a variable whose value we are not interested in.
+For example, we can write the claim $\Omega_{\textit{mono}}$ as
+\begin{align*}
+[C(P, X_1, Y_1),C(P, X_2, Y_2)] \land X_1 \leq X_2 \land Y_1 \leq Y_2
+ \Rightarrow^{c\exists} [C(\epsilon, ?\_, ?Y_1), C(\epsilon, ?\_, ?Y_2)] \land ?Y_1 \leq ?Y_2 \, .
+\end{align*}
+
+A deeper distinction is that in the CRL semantics we existentially quantify over reachable configurations,
+while in CHL the target state is quantified universally.
+However, this distinction has no effect when working with deterministic languages.
+
+\subsection{Comparison to Reachability logic}
+
+
 We note here that in general, having one valid CRL claim is different from having just $k$ valid RL claims,
 because in CRL, the variables are shared across components.
-Consider, for example, a reachability system $S_{\mathit{IMP}}$ representing a simple imperative language,
-and the same program as in \Cref{eqn:CounterProgram}; that is, let
-\begin{equation*}
-  P \equiv \texttt{while(x > 0)\{ y++; x--;\}} \, .
-\end{equation*}
-We can let $C(Q, X,Y)$ represent a configuration of a program $Q$ where the program variable $\texttt{x}$ has the value $X$
-and the program variable $\texttt{y}$ has the value $Y$;
-for example,
-\begin{equation*}
- C(Q, X, Y) \equiv \texttt{<k>} Q \texttt{</k><st>(x |-> } X \texttt{)(y |-> } Y \texttt{)</st>}    \, .
-\end{equation*}
-Then, the proposition
+%Consider, for example, a reachability system $S_{\mathit{IMP}}$ representing a simple imperative language,
+%and the same program as in \Cref{eqn:CounterProgram}; that is, let
+%\begin{equation*}
+%  P \equiv \texttt{while(x > 0)\{ y++; x--;\}} \, .
+%\end{equation*}
+%We can let $C(Q, X,Y)$ represent a configuration of a program $Q$ where the program variable $\texttt{x}$ has the value $X$
+%and the program variable $\texttt{y}$ has the value $Y$;
+%for example,
+%\begin{equation*}
+% C(Q, X, Y) \equiv \texttt{<k>} Q \texttt{</k><st>(x |-> } X \texttt{)(y |-> } Y \texttt{)</st>}    \, .
+%\end{equation*}
+%Then, the proposition
+%\begin{align*}
+% S_{\mathit{IMP}} \vDash_\CRL
+%&[C(P, X_1, Y_1),C(P, X_2, Y_2)] \land X_1 \leq X_2
+%\\ \Rightarrow^{c\exists} &
+%\exists X^\prime_1, Y^\prime_1, X^\prime_2, Y^\prime_2.\,  [C(\epsilon, X^\prime_1, Y^\prime_1), C(\epsilon, X^\prime_2, Y^\prime_2)] \land Y^\prime_1 \leq Y^\prime_2   
+%\end{align*}
+%holds iff the program $P$ is monotone (when considering the variable $x$ to be an input, and $y$ to be an output; $\epsilon$ represents an empty program).
+In CRL, one can localize the ``global'' constraints; for example, the claim $\Omega_{\textit{mono}}$
+is equivalent to
 \begin{align*}
- S_{\mathit{IMP}} \vDash_\CRL
-&[C(P, X_1, Y_1),C(P, X_2, Y_2)] \land X_1 \leq X_2
-\\ \Rightarrow^{c\exists} &
-\exists X^\prime_1, Y^\prime_1, X^\prime_2, Y^\prime_2.\,  [C(\epsilon, X^\prime_1, Y^\prime_1), C(\epsilon, X^\prime_2, Y^\prime_2)] \land Y^\prime_1 \leq Y^\prime_2   
+[C(P, X_1, Y_1),C(P, X_2, Y_2) \land X_1 \leq X_2] 
+\Rightarrow^{c\exists}
+[C(\epsilon, ?\_, ?Y_1), C(\epsilon, ?\_, ?Y_2) \land ?Y_1 \leq ?Y_2] \, .
 \end{align*}
-holds iff the program $P$ is monotone (when considering the variable $x$ to be an input, and $y$ to be an output; $\epsilon$ represents an empty program).
-One can localize the ``global'' constraints; for example, the above proposition is equivalent to
-\begin{align*}
- S_{\mathit{IMP}} \vDash_\CRL
-&[C(P, X_1, Y_1),C(P, X_2, Y_2) \land X_1 \leq X_2] 
-\\ \Rightarrow^{c\exists} &
-\exists X^\prime_1, Y^\prime_1, X^\prime_2, Y^\prime_2.\, [C(\epsilon, X^\prime_1, Y^\prime_1), C(\epsilon, X^\prime_2, Y^\prime_2) \land Y^\prime_1 \leq Y^\prime_2] \, .
-\end{align*}
-However, if one were to ``split'' the CRL claim into two, the resulting claims would may say something other than monotonicity.
-For example, the propositions
-\begin{align*}
- S_{\mathit{IMP}} \vDash_\RL
-C(P^\prime, X_1, Y_1)
-\Rightarrow^{\exists}
-\exists X^\prime_1, Y^\prime_1.\, C(\epsilon, X^\prime_1, Y^\prime_1)
-\end{align*}
-and
-\begin{align*}
- S_{\mathit{IMP}} \vDash_\RL
-C(P^\prime, X_2, Y_2) \land X_1 \leq X_2] 
- \Rightarrow^{\exists}
-\exists X^\prime_2, Y^\prime_2.\, C(\epsilon, X^\prime_2, Y^\prime_2) \land Y^\prime_1 \leq Y^\prime_2
-\end{align*}
-do \emph{not} hold when $P^\prime \equiv P$: in fact, the second proposition requires the variable $\texttt{y}$ in a resulting configuration
-to have greater value then any number, since $Y_1^\prime$ is not existentially quantified in the right side of the claim,
-and therefore is implicitly universally quantified.
-On the other hand, if we existentiall quantified it, the claim would say nothing about the value of $\texttt{y}$.
+However, if one were to ``split'' the CRL claim into two, the resulting claims might express
+a different property than monotonicity.
+For example, the two claims
+\begin{align}
+& C(Q, X_1, Y_1) & \Rightarrow^{\exists} \quad & C(\epsilon, ?X_1, ?Y_1) \\
+& C(Q, X_2, Y_2) \land X_1 \leq X_2 & \Rightarrow^{\exists} \quad  & C(\epsilon, ?X_2, ?Y_2) \land ?Y_1 \leq ?Y_2
+\end{align}
+hold for any reasonable program $Q$ (meaning that $Q$ either executes fully or diverges),
+because $?Y_1$ in the second claim is unrelated to $?Y_1$ in the first claim and thus one can set it to
+the value of $?Y_2$.
+On the other hand, if in the second claim we renamed $?Y_1$ into $Y_1^\prime$ (without a question mark),
+the claim would require that $?Y_2$ is greater than or equal to \emph{any} integer (because $Y_1^\prime$ is not present in the left side),
+which clearly cannot hold.
 
-However, cartesian reachability logic does extend reachability logic:
+Still, reachability logic is a special case of CRL.
 \begin{remark}
 %\Cref{def:opCRLsemantics} extends \Cref{def:oprlSemantics} of \Cref{def:basics}:
 %if we fix $k=1$, then
