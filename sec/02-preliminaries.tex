@@ -97,8 +97,21 @@ the second (third) represent the cases when the first (second) execution termina
 To prove the second subgoal, one needs to find a (non-relational) invariant of the (single) loop;
 the third subgoal is trivial, as its precondition implies the negation of the loop condition.
 
+This lockstep reasoning is a powerful tool, because the relational invariants it requires are often very simple.
+To prove the above example without lockstep reasoning, one would need to find (non-relational) loop invariants
+strong enough to summarize the whole loop.
+However, lockstep-reasoning rules become more complicated as one adds other features into the language
+- for example, the \texttt{break} statement.
+It is not clear how to extend this approach to handle, e.g., recursion, \texttt{continue}, or \texttt{goto}.
+We also observe that a single language feature (\texttt{while} loops) needed to be considered five times
+in order for CHL to soundly support it: the semantics of \texttt{while} is present in the operational semantics of
+the target language, in the Hoare logic for that language, in the Cartesian Hoare logic for that language,
+and in the proofs of soundness of the logics.
 
 
+Our aim in this paper is to make the above ideas available for any deterministic languge.
+Therefore, in the following subsections we review some tools from recent literature
+on language-independent program verification.
 
 \subsection{($\mu$-free) Matching Logic}
 
