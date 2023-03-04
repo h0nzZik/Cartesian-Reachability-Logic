@@ -49,8 +49,30 @@ The proof system contains rules like
       { \langle \Phi \rangle (\texttt{if (c) {B1} {B2} ; S}) * R \langle \Psi \rangle }
 \end{align*}
 that replicate standard Hoare-logic reasoning, and is sound and complete.
-However, what is even more interesting, the proof system has rules that enable \emph{lockstep reasoning}.
+However, what is more interesting, the proof system allows one to perform \emph{lockstep reasoning},
+even for loops. This is achieved by means of the rule
+\begin{align*}
+  & \prftree[l]{Fusion}
+    { \prfStackPremises
+    { \langle I \land c_1 \land c_2 \rangle (\texttt{B1} * \texttt{B2}) \langle I \rangle }
+    { \{ I \land \neg c_1 \}\ \texttt{while (}c_2\texttt{) {B2}}\ \{ \Psi \} }
+    { \{ I \land \neg c_2 \}\ \texttt{while (}c_1\texttt{) {B1}}\ \{ \Psi \} }
+  }
+  { \langle \Phi \rangle ((\texttt{while (}c_1\texttt{) {B1}}) * (\texttt{while (}c_2\texttt{) {B2}}))  \langle \Psi \rangle }
+\end{align*}
+(which we present here in a simplified form, for Cartesian claims of arity 2 only).
+This rule assumes an invariant $I$, which is a \emph{relational invariant} - meaning that it can relate variables
+from both execution.
+The rule breaks reasoning about a pair of loops into three cases: the case where both loop conditions hold,
+and the two cases where one of the conditions does not hold.
+In the first case, one needs to prove that the relational invariant $I$ is preserved by execution of the two loop bodies,
+assuming that the loop condition holds.
+In the other two cases, one needs to handle the case when one of the loops finishes its execution.
+In that situation, one can assume that the loop condition of the finished loop does not hold,
+and has to prove that executing the other loop in a state satisfying the invariant results in a state
+satisfying the postcondition. This can be done by means of standard Hoare logic reasoning.
 
+For an example,
 TODO
 
 \subsection{($\mu$-free) Matching Logic}
