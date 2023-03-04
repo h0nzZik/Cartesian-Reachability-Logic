@@ -72,8 +72,33 @@ In that situation, one can assume that the loop condition of the finished loop d
 and has to prove that executing the other loop in a state satisfying the invariant results in a state
 satisfying the postcondition. This can be done by means of standard Hoare logic reasoning.
 
-For an example,
-TODO
+For an example, consider the program
+\begin{equation}\label{eqn:CounterProgram}
+P(x,y) \equiv \texttt{while(}x\texttt{ > 0)\{ }y\texttt{++; }x\texttt{--;\}}
+\end{equation}
+and the property that $P$ is monotone with respect to the initial values of $x$ and $y$ and resulting value of $y$.
+This can be formalized as the CHL triple
+\begin{equation*}
+\langle x_1 \leq x_2 \land y_1 \leq y_2  \rangle (P(x_1, y_1) * P(x_2, y_2)) \langle y_1 \leq y_2 \rangle
+\end{equation*}
+Intuitively, this hyperproperty holds because we can synchronize the two executions until the point when the first one terminates;
+then, the second execution may continue for a while, making the difference betwen $y_2$ and $y_1$ even greater.
+Formally, we can apply the Fusion rule, with the precondition being also the relational invariant.
+This results in three subgoals:
+\begin{equation*}
+    \begin{aligned}
+        & \langle x_1 \leq x_2 \land y_1 \leq y_2 \land x_1 > 0 \land x_2 > 0  \rangle\ ( (y_1\texttt{++} ; x_1\texttt{--}); * (y_2\texttt{++} ; x_2\texttt{--}))\ \langle x_1 \leq x_2 \land y_1 \leq y_2 \rangle \\
+        & \{ x_1 \leq x_2 \land y_1 \leq y_2 \land \neg (x_1 > 0) \}\ P(x_2, y_2)\ \{ y_1 \leq y_2 \} \\
+        & \{ x_1 \leq x_2 \land y_1 \leq y_2 \land \neg (x_2 > 0) \}\ P(x_1, y_1)\ \{ y_1 \leq y_2 \} \\
+    \end{aligned}
+\end{equation*}
+The first one requires one to show that the body of the loop preserves the invariant,
+the second (third) represent the cases when the first (second) execution terminated.
+To prove the second subgoal, one needs to find a (non-relational) invariant of the (single) loop;
+the third subgoal is trivial, as its precondition implies the negation of the loop condition.
+
+
+
 
 \subsection{($\mu$-free) Matching Logic}
 
