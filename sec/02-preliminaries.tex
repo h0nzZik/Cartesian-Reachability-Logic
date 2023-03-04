@@ -40,14 +40,14 @@ The main idea here is that the formulas can \emph{relate} variables from differe
 
 Cartesian Hoare logic is equipped with a proof system that allows one to prove validity of CHL triples.
 The proof system contains rules like
-\begin{align*}
+\begin{align}\label{chlRule:If}
     & \prftree[l]{If}
       { \prfStackPremises
         { \langle \Phi \land c \rangle (\texttt{B1; S}) * R \langle \Psi \rangle }
         { \langle \Phi \land \neg c \rangle (\texttt{B2; S}) * R \langle \Psi \rangle }
       }
       { \langle \Phi \rangle (\texttt{if (c) {B1} {B2} ; S}) * R \langle \Psi \rangle }
-\end{align*}
+\end{align}
 that replicate standard Hoare-logic reasoning, and is sound and complete.
 However, what is more interesting, the proof system allows one to perform \emph{lockstep reasoning},
 even for loops. This is achieved by means of the rule
@@ -114,8 +114,8 @@ Therefore, in the following subsections we review some tools from recent literat
 on language-independent program verification.
 
 \subsection{($\mu$-free) Matching Logic}
-
-We work with a variant of matching logic described in
+% This could be a footnote
+We work with the variant of matching logic described in
 \cite{StefanescuCMMSR19,RosuSCM13lics}.
 This particular variant of matching logic is used for reasoning about static properties of program configurations.
 There exist newer and more expressive variants of matching logic (\cite{MmL, MLexplained});

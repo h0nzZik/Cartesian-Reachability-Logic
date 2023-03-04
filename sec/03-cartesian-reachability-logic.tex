@@ -7,49 +7,6 @@ For that purpose we define the language of CRL and its semantics, and demonstrat
 on a couple of examples.
 Then we give CRL a sound proof system, which is the main contribution of this paper.
 
-While the intuition behind the semantics of CRL is similar to that of CHL, with only a few minor differences,
-giving CRL a proof system is not straightforward.
-One could attempt to reuse the proof system of CHL and modify it \emph{somehow} to be independent
-of the particular programming language.
-Since many CHL rules (e.g., its \texttt{Step} rule) are simply Hoare logic rules acting on a particular component of
-a tuple of formulas (that is, symbolic states),
-one could for example lift rules of reachability logic (RL) to the tuple-context and be done.
-That would indeed work, and the resulting proof system might even be complete.
-
-However, the distinguishing feature of Cartesian Hoare logic is \emph{not} its completeness,
-but its ability to simplify reasoning by performing lock-step execution of loops,
-because that can \textquote[\cite{SousaD16}]{greatly simplify the verification task (e.g., by requiring simpler invariants)}.
-Simply (re)using RL rules lifted to the tuple-context does not provide any support for that.
-And it is not entirely obvious how to support lock-step reasoning about construct with repetetive behavior:
-in order to support while-with-breaks, Cartesian Hoare logic itself uses additionally (besides the lifted Hoare logic rules)
-five fairly complex rules that need to understand the precise semantics of this construct.
-The task for us is even harder, since we do not know in advance what constructs with repetetive behavior does
-the supplied language support: \texttt{goto}s? Mutual recursion? 
-
-Yet, we provide a single proof system consisting of only eight rules which enables lockstep reasoning about such constructs.
-The rules itself are fairly simple, and none of them has the semantics of any particular language construct
-hard-wired into it.
-The key component allowing lockstep reasoning about arbitrary constructs is the Circularity rule,
-which allows user to postulate validity of the current claim by means of adding the \emph{current state}
-into the set of \emph{cutpoints}, from which a $k$-tuple of states satisfying the postcondition
-is claimed to be reachable; once progress is made (by means of the Step rule), the added cutpoints are
-\emph{enabled} and can be used to finish the proof.
-
-The idea of a Circularity rule is present already 
-in the existing literature on reachability logics \cite{RosuS12oopsla,RosuSCM13lics,StefanescuCMMSR19},
-where it was used to generalize the notion of \emph{loop invariant}.
-However, RL can not be used to reason about $k$-safety hyperproperties and does not perform lockstep execution.
-The literature on language-independent equivalence checking also contain the idea of a Circularity rule.
-In~\cite{CiobacaLRR16}, circularities are used to synchronize executions of different programs (possibly in different languages);
-however, the proof system of~\cite{CiobacaLRR16} can be used only to reason about full program equivalence
-and not about $k$-safety hyperproperties.
-What makes the proof system of~\cite{CiobacaLRR16} really unusable in our situation is the fact that its
-Circularity rule requires all the components to make progress before the circularity can be used,
-which would prohibit RL-like reasoning when one component has already finished execution.
-The need for such reasoning is there even in our simple running example, as we illustrate in ???.
-
-We believe that all the mentioned proof systems that use a variant of the Circularity rule are instances of a more general
-framework, known as \emph{Circular coinduction} in the literature~\cite{RosuL09CircularCoinduction}.
 
 \subsection{Syntax and Semantics}
 
@@ -100,7 +57,10 @@ A \emph{list-pattern} has the shape $[\varphi_1,\ldots,\varphi_k]$,
 We note here that in general, having one valid CRL claim is different from having just $k$ valid RL claims,
 because in CRL, the variables are shared across components.
 Consider, for example, a reachability system $S_{\mathit{IMP}}$ representing a simple imperative language,
-and a program $P \equiv \texttt{while(x > 0)\{ y++; x--;\}}$.
+and the same program as in \Cref{eqn:CounterProgram}; that is, let
+\begin{equation*}
+  P \equiv \texttt{while(x > 0)\{ y++; x--;\}} \, .
+\end{equation*}
 We can let $C(Q, X,Y)$ represent a configuration of a program $Q$ where the program variable $\texttt{x}$ has the value $X$
 and the program variable $\texttt{y}$ has the value $Y$;
 for example,
@@ -144,15 +104,15 @@ On the other hand, if we existentiall quantified it, the claim would say nothing
 
 However, cartesian reachability logic does extend reachability logic:
 \begin{remark}
-\Cref{def:opCRLsemantics} extends \Cref{def:oprlSemantics} of \Cref{def:basics}:
-if we fix $k=1$, then
-\begin{align*}
+%\Cref{def:opCRLsemantics} extends \Cref{def:oprlSemantics} of \Cref{def:basics}:
+%if we fix $k=1$, then
+$
     (\mathcal{T}, S) \vDash_\CRL
     [\varphi] \land \top  \Rightarrow^{c\exists}
     [\varphi^\prime] \land \top
     \iff
     (\mathcal{T}, S) \vDash_\RL \varphi \Rightarrow^{\exists} \varphi^\prime \, .
-\end{align*}
+$
 \end{remark}
 
 %\begin{definition}[All-Path Cartesian Reachability Rule]\label{def:apCRLsemantics}
@@ -198,7 +158,56 @@ such that
 \end{theorem}
 
 
+
+
+While the intuition behind the semantics of CRL is similar to that of CHL, with only a few minor differences,
+giving CRL a proof system is not straightforward.
+One could attempt to reuse the proof system of CHL and modify it \emph{somehow} to be independent
+of the particular programming language.
+Since many CHL rules (e.g., its \texttt{If} rule shown in \Cref{chlRule:If}) are simply Hoare logic rules acting on a particular component of
+a tuple of formulas (that is, symbolic states),
+one could for example lift rules of reachability logic (RL) to the tuple-context and be done.
+That would indeed work, and the resulting proof system might even be complete.
+
+However, the distinguishing feature of Cartesian Hoare logic is \emph{not} its completeness,
+but its ability to simplify reasoning by performing lock-step execution of loops,
+because that can \textquote[\cite{SousaD16}]{greatly simplify the verification task (e.g., by requiring simpler invariants)}.
+Simply (re)using RL rules lifted to the tuple-context does not provide any support for that.
+And it is not entirely obvious how to support lock-step reasoning about construct with repetetive behavior:
+in order to support while-with-breaks, Cartesian Hoare logic itself uses additionally (besides the lifted Hoare logic rules)
+five fairly complex rules that need to understand the precise semantics of this construct.
+The task for us is even harder, since we do not know in advance what constructs with repetetive behavior does
+the supplied language support: \texttt{goto}s? Mutual recursion? 
+
+Yet, we provide a single proof system consisting of only eight rules which enables lockstep reasoning about such constructs.
+The rules itself are fairly simple, and none of them has the semantics of any particular language construct
+hard-wired into it.
+The key component allowing lockstep reasoning about arbitrary constructs is the Circularity rule,
+which allows user to postulate validity of the current claim by means of adding the \emph{current state}
+into the set of \emph{cutpoints}, from which a $k$-tuple of states satisfying the postcondition
+is claimed to be reachable; once progress is made (by means of the Step rule), the added cutpoints are
+\emph{enabled} and can be used to finish the proof.
+
+The idea of a Circularity rule is present already 
+in the existing literature on reachability logics \cite{RosuS12oopsla,RosuSCM13lics,StefanescuCMMSR19},
+where it was used to generalize the notion of \emph{loop invariant}.
+However, RL can not be used to reason about $k$-safety hyperproperties and does not perform lockstep execution.
+The literature on language-independent equivalence checking also contain the idea of a Circularity rule.
+In~\cite{CiobacaLRR16}, circularities are used to synchronize executions of different programs (possibly in different languages);
+however, the proof system of~\cite{CiobacaLRR16} can be used only to reason about full program equivalence
+and not about $k$-safety hyperproperties.
+What makes the proof system of~\cite{CiobacaLRR16} really unusable in our situation is the fact that its
+Circularity rule requires all the components to make progress before the circularity can be used,
+which would prohibit RL-like reasoning when one component has already finished execution.
+The need for such reasoning is there even in our simple running example, as we illustrate in ???.
+
+We believe that all the mentioned proof systems that use a variant of the Circularity rule are instances of a more general
+framework, known as \emph{Circular coinduction} in the literature~\cite{RosuL09CircularCoinduction}.
+
 \subsection{Proof System}
+
+
+
 
 We give Cartesian Reachability Logic a proof system to faciliate mechanical reasoning.
 One may ask the question, ``why give CRL a new proof system if one can perform the same reasoning
