@@ -98,7 +98,7 @@ For example, we can write the claim $\Omega_{\textit{mono}}$ as
 \end{align*}
 
 A deeper distinction is that in the CRL semantics we existentially quantify over reachable configurations,
-while in CHL the target state is quantified universally.
+while in CHL, target states are quantified universally.
 However, this distinction has no effect when working with deterministic languages.
 
 \subsection{Comparison to Reachability logic}
@@ -178,30 +178,34 @@ $
 %$(\pi_1(i_1), \rho) \vDash \varphi_1 \land \psi$ and \ldots and $(\pi_k(i_k), \rho) \vDash \varphi_k \land \psi$.
 %\end{definition}
 
+Now we present a novel, general technique called \emph{star extension} that is reminiscent of self-composition~\cite{BartheDR11}.
+Self-composition is a technique where a program $P$ together with a $k$-safety hyperproperty is reduced to
+a sequential composition of $P$ with itself (with renamed variables) together with a safety property.
+This technique allows one to use tools and techniques for verification of safety properties
+to perform verification of $k$-safety hyperproperties.
+The challenge here is to generalize self-composition to work with any deterministic language,
+even if we do not know in advance how the language implements sequential composition, if at all.
 
-
-We now want to characterize the semantics of cartesian reachability logic in terms of semantics of reachability logic.
-To do so, we need
-\begin{itemize}
-    \item to extend a matching logic signature $\Sigma$ into some $\Sigma^*$;
-    \item to transform a reachability-system $\mathcal{S}$ into some extended system $\mathcal{S}^*$; 
-    \item to translate a cartesian reachability logic claim $\Psi \Rightarrow^{c\exists} \Psi^\prime$
-    into some reachability logic claim $\mathit{flatten}(\Psi) \Rightarrow^{c\exists} \mathit{flatten}(\Psi^\prime)$; and
-    \item make sure that the translated claim holds in the extended system iff the original claim holds in the original system.
-\end{itemize}
-Formally:
+The main idea of \emph{star extension} is to transform a CRL claim into a RL claim over an extended reachability system,
+where configurations of the extended reachability system are lists of configurations of the original system.
+The transformation is quite straightforward but technical, and we refer an interested reader to the Appendix;
+here we only present the main theorem.
 \begin{theorem}\label{thm:CRLandRLcorrespondence}
-There exist a function $\_^*$ on matching logic signatures,
-a (equally-named) function $\_^*$ from reachability systems over $\Sigma$ to reachability systems over $\Sigma^*$,
-and a function $\mathit{flatten}$ from ECLPs over $\Sigma$ to matching logic $\Sigma^*$-formulas,
-such that
-\begin{equation*}
-\mathcal{S} \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime
-  \iff \mathcal{S}^* \vDash_\RL \mathit{flatten}(\Psi) \Rightarrow^{c\exists} \mathit{flatten}(\Psi^\prime)
-\end{equation*}
+  There exist a function $\_^*$ on matching logic signatures,
+  a (equally-named) function $\_^*$ from reachability systems over $\Sigma$ to reachability systems over $\Sigma^*$,
+  and a function $\mathit{flatten}$ from ECLPs over $\Sigma$ to matching logic $\Sigma^*$-formulas,
+  such that
+  \begin{equation*}
+  \mathcal{S} \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime
+    \iff \mathcal{S}^* \vDash_\RL \mathit{flatten}(\Psi) \Rightarrow^{c\exists} \mathit{flatten}(\Psi^\prime)
+  \end{equation*}
 \end{theorem}
 
-
+The price paid for self-composition is that the property of the self-composed program is often hard to reason about.
+Therefore, in~\cite{SousaD16}, the authors do not apply self-composition directly, but only use its soundness to justify
+their technique - namely, the soundness of their proof system, which avoids explicit construction
+of the self-composed programs.
+We use the star extension for the same purpose.
 
 
 While the intuition behind the semantics of CRL is similar to that of CHL, with only a few minor differences,
