@@ -208,6 +208,31 @@ of the self-composed programs.
 We use the star extension for the same purpose.
 
 
+
+\subsection{Proof System}
+
+
+
+
+%We give Cartesian Reachability Logic a proof system to faciliate mechanical reasoning.
+%One may ask the question, ``why give CRL a new proof system if one can perform the same reasoning
+%by means of \Cref{thm:CRLandRLcorrespondence} and the existing proof system of reachability logic?''.
+%The answer is the following.
+%When one reduces a CRL goal into RL using \Cref{thm:CRLandRLcorrespondence},
+%the function $\mathit{flatten}$ appears in the goal.
+%To perform reasoning using the RL proof system, one then has to either simplify the goal
+%by unfolding the definition of $\mathit{flatten}$,
+%or use (and prove) some helper lemmas about the effect of applying RL proof rules
+%%and other frequently used steps
+%on RL goals containing $\mathit{flatten}$.
+%In the first case one lowers the abstraction level and have to reason about matching logic formulas
+%containing translations of other matching logic formulas into FOL, which then makes RL reasoning more complex.
+%In the second case, however, one may end up proving lemmas which, when combined, result in a proof system for CRL.
+%Indeed, the soundness of our proof system (\Cref{fig:CRLproofsystem})
+%is established by a (meta-)proof which constructs a RL proof from a CRL one (\Cref{lem:CRLalmostSoundness}).
+
+
+We give Cartesian Reachability Logic a proof system to faciliate mechanical reasoning.
 While the intuition behind the semantics of CRL is similar to that of CHL, with only a few minor differences,
 giving CRL a proof system is not straightforward.
 One could attempt to reuse the proof system of CHL and modify it \emph{somehow} to be independent
@@ -230,8 +255,13 @@ the supplied language support: \texttt{goto}s? Mutual recursion?
 Yet, we provide a single proof system consisting of only eight rules which enables lockstep reasoning about such constructs.
 The rules itself are fairly simple, and none of them has the semantics of any particular language construct
 hard-wired into it.
-The key component allowing lockstep reasoning about arbitrary constructs is the Circularity rule,
-which allows user to postulate validity of the current claim by means of adding the \emph{current state}
+The key component allowing lockstep reasoning about arbitrary constructs is the rule
+\begin{align*}
+  & \prftree[l]{Circularity}
+    { \mathcal{S} \vdash_\CRL \Psi \Downarrow_{C \cup \{ \Psi \} , E} \Psi^\prime}
+    { \mathcal{S} \vdash_\CRL \Psi \Downarrow_{C, E} \Psi^\prime}
+\end{align*}
+which allows the user to postulate validity of the current claim by means of adding the \emph{current state}
 into the set of \emph{cutpoints}, from which a $k$-tuple of states satisfying the postcondition
 is claimed to be reachable; once progress is made (by means of the Step rule), the added cutpoints are
 \emph{enabled} and can be used to finish the proof.
@@ -245,35 +275,21 @@ In~\cite{CiobacaLRR16}, circularities are used to synchronize executions of diff
 however, the proof system of~\cite{CiobacaLRR16} can be used only to reason about full program equivalence
 and not about $k$-safety hyperproperties.
 What makes the proof system of~\cite{CiobacaLRR16} really unusable in our situation is the fact that its
-Circularity rule requires all the components to make progress before the circularity can be used,
-which would prohibit RL-like reasoning when one component has already finished execution.
+Circularity rule
+\begin{align*}
+  & \prftree[l]{}
+    { \mathcal{S} \vDash \varphi_1 \Rightarrow^+ \varphi^\prime_1 }
+    { \mathcal{S} \vDash \varphi_2 \Rightarrow^+ \varphi^\prime_2 }
+    { \mathcal{S} \vdash_{\mathit{equiv}} \langle \varphi^\prime_1, \varphi^\prime_2 \rangle \Downarrow^{\infty} E}
+    { \mathcal{S} \vdash_{\mathit{equiv}} \langle \varphi_1, \varphi_2 \rangle \Downarrow^{\infty} E}
+\end{align*}
+requires all the components to make progress (denoted by the ``plus'' sign on top of the arrows) before the circularity can be used,
+which would prohibit RL-style reasoning when one component has already finished execution.
 The need for such reasoning is there even in our simple running example, as we illustrate in ???.
 
 We believe that all the mentioned proof systems that use a variant of the Circularity rule are instances of a more general
 framework, known as \emph{Circular coinduction} in the literature~\cite{RosuL09CircularCoinduction}.
 
-\subsection{Proof System}
-
-
-
-
-We give Cartesian Reachability Logic a proof system to faciliate mechanical reasoning.
-One may ask the question, ``why give CRL a new proof system if one can perform the same reasoning
-by means of \Cref{thm:CRLandRLcorrespondence} and the existing proof system of reachability logic?''.
-The answer is the following.
-When one reduces a CRL goal into RL using \Cref{thm:CRLandRLcorrespondence},
-the function $\mathit{flatten}$ appears in the goal.
-To perform reasoning using the RL proof system, one then has to either simplify the goal
-by unfolding the definition of $\mathit{flatten}$,
-or use (and prove) some helper lemmas about the effect of applying RL proof rules
-%and other frequently used steps
-on RL goals containing $\mathit{flatten}$.
-In the first case one lowers the abstraction level and have to reason about matching logic formulas
-containing translations of other matching logic formulas into FOL, which then makes RL reasoning more complex.
-In the second case, however, one may end up proving lemmas which, when combined, result in a proof system for CRL.
-
-Indeed, the soundness of our proof system (\Cref{fig:CRLproofsystem})
-is established by a (meta-)proof which constructs a RL proof from a CRL one (\Cref{lem:CRLalmostSoundness}).
 
 The proof system derives claims of the shape
 $\mathcal{S}, \vdash_\CRL \Phi \Downarrow_{C,E} \Psi$,
