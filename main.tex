@@ -73,12 +73,42 @@
 \maketitle
 
 \begin{abstract}
-  Crafting a program logic targeting a specific language can be a challenging and time-consuming task.
-  In this paper we introduce a program logic for reasoning about $k$-safety hyperproperties,
-  with the distinguishing feature that our logic works with any deterministic language
+  In recent years, formal verification of software hyperproperties became an important topic in the
+  formal methods community.
+  An interesting class of hyperproperties is known as $k$-safety: a $k$-safety property prohibits
+  existence of a \emph{bad} $k$-tuple of execution traces.
+  Many security policies, such as \emph{noninterference}, and functional properties, such as \emph{commutativity},
+  are $k$-safety.
+
+  One logic for reasoning about $k$-safety hyperproperties of programs is Cartesian Hoare logic (CHL).
+  CHL has a sound and complete proof system and a performant verification algorithm.
+  However, CHL targets only a specific, tiny imperative language, and in order to use it for sound verification
+  of programs in a different language $L$, one needs to either extend it with the desired features,
+  or to hand-craft a translation.
+  Both these approaches require lot of tedious, error-prone work.
+  An even worse alternative is to manually implement the verification algorithm,
+  which has been designed to work with the tiny language,
+  with ad-hoc modifications targeting $L$: that gives the user of the implementation no guarantess at all.
+
+  Therefore we introduce Cartesian Reachability logic (CRL): a new program logic for reasoning
+  about $k$-safety hyperproperties.
+  The distinguishing feature of CRL is that it can be instiantiated
+  with any deterministic language
   that has a Reachability logic-based formal semantics.
-  This powerful instrument can significantly reduce development costs of tools and techniques for k-safety verification.
+  Its soundness theorem is proved once and for all, with no need to adapt or re-prove it for different
+  languages or their variants.
+  This powerful instrument can significantly reduce development costs of tools and techniques for
+  sound k-safety verification.
 \end{abstract}
+
+
+%\begin{abstract}
+%  Crafting a program logic targeting a specific language can be a challenging and time-consuming task.
+%  In this paper we introduce a program logic for reasoning about $k$-safety hyperproperties,
+%  with the distinguishing feature that our logic works with any deterministic language
+%  that has a Reachability logic-based formal semantics.
+%  This powerful instrument can significantly reduce development costs of tools and techniques for k-safety verification.
+%\end{abstract}
 
 \input{sec/01-introduction}
 \input{sec/02-preliminaries}
