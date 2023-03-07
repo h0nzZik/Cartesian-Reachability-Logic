@@ -77,7 +77,7 @@
   We introduce Cartesian Reachability Logic (CRL):
   a language-parametric logic for reasoning about k-safety hyperproperties.
 
-  In recent years, verification of hyperproperties has become an important topic
+  In recent years, formal verification of hyperproperties has become an important topic
   in the formal methods community.
   An interesting class of hyperproperties is known as $k$-safety:
   a $k$-safety property prohibits the existence of a \emph{bad} $k$-tuple of execution traces.
@@ -87,7 +87,7 @@
   of software systems.
   CHL has a sound and complete proof system and a performant verification algorithm.
   However, CHL targets only a specific, tiny imperative language, and to use it for sound verification
-  of programs in a different language $L$, one needs to either extend it with the desired features,
+  of programs in a different language $L$, one needs to extend it with the desired features,
   or to hand-craft a translation.
   Both these approaches require a lot of tedious, error-prone work.
   An even worse alternative is to manually implement the verification algorithm,
@@ -95,7 +95,7 @@
   that gives the user of the implementation no guarantee at all.
 
   In contrast, CRL is language-parametric: it can be instantiated with any deterministic language
-  that has been modeled in a particular operational semantics formalism.
+  modeled in a particular operational semantics formalism.
   Its soundness theorem is proved once and for all, with no need to adapt or re-prove it
   for different languages or their variants.
   Therefore, this powerful instrument can significantly reduce the development costs of tools and techniques
