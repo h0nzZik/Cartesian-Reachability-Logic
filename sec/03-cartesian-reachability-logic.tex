@@ -188,7 +188,7 @@ even if we do not know in advance how the language implements sequential composi
 
 The main idea of \emph{star extension} is to transform a CRL claim into a RL claim over an extended reachability system,
 where configurations of the extended reachability system are lists of configurations of the original system.
-The transformation is quite straightforward but technical, and we refer an interested reader to the Appendix;
+The transformation is quite straightforward but technical, and we refer an interested reader to the \Cref{app:CRLandRLcorrespondence};
 here we only present the main theorem.
 \begin{theorem}\label{thm:CRLandRLcorrespondence}
   There exist a function $\_^*$ on matching logic signatures,
@@ -388,7 +388,9 @@ $\mathcal{S} \vdash_\CRL \Phi \Downarrow_{\emptyset, \emptyset} \Psi$.
 \end{figure}
 
 
-
+The following lemma says that one can generate an RL proof on a star-extended system
+from a CRL proof.
+This lemma is a major component of the soundness proof of CRL and can be found in \Cref{app:crlsoundness}.
 \begin{lemma}\label{lem:CRLalmostSoundness}
     \begin{align*}
         & (\mathcal{T}, S) \vdash_\CRL \Psi \Downarrow_{C,E} \Psi^\prime \implies \\
@@ -398,6 +400,7 @@ $\mathcal{S} \vdash_\CRL \Phi \Downarrow_{\emptyset, \emptyset} \Psi$.
     \end{align*}
 \end{lemma}
 
+Now we can state and prove the soundness theorem, which is the main result of this paper.
 \begin{theorem}[Proof system soundness]\label{thm:proofsystemSoundness}
 \begin{equation*}
     \mathcal{S} \vdash_\CRL \Psi \Downarrow_{\emptyset,\emptyset} \Psi^\prime \implies
@@ -408,7 +411,7 @@ $\mathcal{S} \vdash_\CRL \Phi \Downarrow_{\emptyset, \emptyset} \Psi$.
 Assume $\mathcal{S} \vdash_\CRL \Psi \Downarrow_{\emptyset,\emptyset} \Psi^\prime$.
 By \Cref{lem:CRLalmostSoundness}, we have $\mathcal{S} \vdash_\RL \mathit{flatten}^\exists(\Psi, \Psi^\prime)$.
 By soundness of reachability logic, we have $\mathcal{S} \vDash_\RL \mathit{flatten}^\exists(\Psi, \Psi^\prime)$.
-By \Cref{thm:correspondence}, 
+By \Cref{thm:CRLandRLcorrespondence}, 
 we have $\mathcal{S} \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime$ and we are done.
 \end{proof}
 
