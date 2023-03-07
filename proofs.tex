@@ -1,4 +1,4 @@
-\section{Matching and Reachability logic}
+\section{Matching and Reachability logic}\label{app:MLandRL}
 
 \begin{definition}[Matching logic syntax and semantics]\label{def:matchinglogic}
 We define the matching logic syntax and semantics as follows.
@@ -1418,12 +1418,65 @@ We prove each implication separately.
 
 \subsection{Proof of~\Cref{thm:proofsystemSoundness}}\label{app:crlsoundness}
 
+% \begin{figure}
+%     \centering
+%     \includegraphics[width=0.5\textwidth]{img/onepath-rl.png}
+%     \caption{One-path reachability-logic proof system.
+%     The use of $\Rightarrow^+$ in sequent means that it was derived without Reflexivity.
+%     TODO retypeset}
+%     \label{fig:RLproofsystem}
+% \end{figure}
+
 \begin{figure}
     \centering
-    \includegraphics[width=0.5\textwidth]{img/onepath-rl.png}
+    \begin{align*}
+        & \prftree[l]{Axiom}
+          { \varphi \Rightarrow^{\exists} \varphi^\prime \in \mathcal{A} }
+          { \mathcal{A}, C \vdash_\RL \varphi \Rightarrow^{\exists} \varphi^\prime }
+    \end{align*}
+    \begin{align*}
+        & \prftree[l]{Reflexivity}
+          { \mathcal{A}, \emptyset \vdash_\RL \varphi \Rightarrow^{\exists} \varphi }
+    \end{align*}
+    \begin{align*}
+        & \prftree[l]{Transitivity}
+          { (\mathcal{T}, A), C \vdash_\RL \varphi_1 \Rightarrow^{+ \exists} \varphi_2 }
+          { (\mathcal{T}, A \cup C), \emptyset \vdash_\RL \varphi_2 \Rightarrow^{\exists} \varphi_3 }
+          { (\mathcal{T}, A), C \vdash_\RL \varphi_1 \Rightarrow^{\exists} \varphi_3 }
+    \end{align*}
+    \begin{align*}
+        & \prftree[l]{Logic Framing}
+          { \mathcal{A}, C \vdash_\RL \varphi \Rightarrow^{\exists} \varphi^\prime }
+          { \psi \mbox{ is a FOL formula} }
+          { \mathcal{A}, C \vdash_\RL \varphi \land \psi \Rightarrow^{\exists} \varphi^\prime \land \psi }
+    \end{align*}
+    \begin{align*}
+        & \prftree[l]{Consequence}
+          { \mathcal{T} \vDash \varphi_1 \rightarrow \varphi_1^\prime }
+          { (\mathcal{T}, A), C \vdash_\RL \varphi_1^\prime \Rightarrow^{\exists} \varphi_2^\prime }
+          { \mathcal{T} \vDash \varphi_2^\prime \rightarrow \varphi_2 }
+          { (\mathcal{T}, A), C \vdash_\RL \varphi_1 \Rightarrow^{\exists} \varphi_2 }
+    \end{align*}
+    \begin{align*}
+        & \prftree[l]{Case Analysis}
+          { \mathcal{A}, C \vdash_\RL \varphi_1 \Rightarrow^{\exists} \varphi }
+          { \mathcal{A}, C \vdash_\RL \varphi_2 \Rightarrow^{\exists} \varphi }
+          { \mathcal{A}, C \vdash_\RL \varphi_1 \lor \varphi_2 \Rightarrow^{\exists} \varphi }
+    \end{align*}
+    \begin{align*}
+        & \prftree[l]{Abstraction}
+          { \mathcal{A}, C \vdash_\RL \varphi \Rightarrow^{\exists} \varphi^\prime }
+          { X \not\in \mathit{FV}(\varphi^\prime) }
+          { \mathcal{A}, C \vdash_\RL \exists X.\, \varphi \Rightarrow^{\exists} \varphi^\prime }
+    \end{align*}
+    \begin{align*}
+        & \prftree[l]{Circularity}
+          { A, C \cup \{ \varphi\Rightarrow^\exists \varphi^\prime \} \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime }
+          { A, C \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime }
+    \end{align*}
+
     \caption{One-path reachability-logic proof system.
-    The use of $\Rightarrow^+$ in sequent means that it was derived without Reflexivity.
-    TODO retypeset}
+    The use of $\Rightarrow^{+ \exists}$ in a sequent means that it was derived without Reflexivity.}
     \label{fig:RLproofsystem}
 \end{figure}
 
