@@ -1,4 +1,4 @@
-
+\section{Matching and Reachability logic}
 
 \begin{definition}[Matching logic syntax and semantics]\label{def:matchinglogic}
 We define the matching logic syntax and semantics as follows.
@@ -80,9 +80,6 @@ Other cases follow from the induction hypotheses.
 Admitted.
 \end{proof}
 
-
-
-
 \begin{definition}[\cite{StefanescuCMMSR19}]
     Given a  matching logic $(\Sigma, \mathit{Var})$-formula $\varphi$ of sort $\mathit{Cfg}$,
     and a fresh (with respect to $\varphi$) variable $\square$ of sort $\mathit{Cfg}$,
@@ -101,6 +98,24 @@ Admitted.
         (\mathcal{T}, \gamma, \rho) \vDash \varphi \iff (\mathcal{T}, \rho^\gamma) \vDash \varphi^\square
     \end{equation*}    
 \end{lemma}
+
+\begin{lemma}[On equivalence and FOL translation]\label{lem:equivFOLtransl}
+    Let $\varphi_1, \varphi_2$ be two matching logic formulas such that $\vDash \varphi_1 \leftrightarrow \varphi_2$.
+    Then $\vDash (\varphi_1^\square)[X/\square] \leftrightarrow (\varphi_2^\square)[X/\square]$.
+\end{lemma}
+\begin{proof}
+    Let $M$ be any matching logic model, $\gamma$ an element of $M$, and $\rho$ an $M$-valuation.
+    We have to prove that $(M, \gamma, \rho) \vDash (\varphi_1^\square)[X/\square] \leftrightarrow (\varphi_2^\square)[X/\square]$,
+    which is (by definition of the squaring function and substitution) equivalent to
+    $(M, \gamma, \rho) \vDash ((\varphi_1 \leftrightarrow \varphi_2)^\square)[X/\square]$,
+    which is
+    (by \Cref{lem:varrenamesem}, because $\rho(X) = \rho[\square := \rho(X)](\square)$)
+    equivalent to
+    $(M, \gamma, \rho[\square := \rho(X)]) \vDash (\varphi_1 \leftrightarrow \varphi_2)^\square$,
+    which is  (by \Cref{lem:patternToFOLSemantics}, because $\rho[\square := \rho(X)] = \rho^{\rho(X)}$) equivalent to
+    $(M, \rho(X), \rho) \vDash \varphi_1 \leftrightarrow \varphi_2$,
+    which holds by the assumption.
+\end{proof}
 
 \begin{definition}[\cite{StefanescuCMMSR19,RosuS12oopsla}]\label{def:basics}
 We define reachability-logic signatures, rules, and systems as follows.
@@ -184,6 +199,8 @@ We define reachability-logic signatures, rules, and systems as follows.
 
 \end{definition}
 
+\section{Cartesian Reachability logic}
+
 \begin{definition}[CRL Syntax]\label{def:opCRLSyntax}
     We define the syntax of Cartesian Reachability logic as follows:
     \begin{itemize}
@@ -202,6 +219,8 @@ We define reachability-logic signatures, rules, and systems as follows.
               where $\Phi$ is a CLP and $\Psi$ is an ECLP.
     \end{itemize}
 \end{definition}    
+
+\subsection{Proof of~\Cref{thm:CRLandRLcorrespondence}}
 
 \begin{definition}\label{def:starextension}
 We translate a language semantics into a semantics for lists of configurations as follows.
@@ -306,37 +325,38 @@ By induction on $\varphi$.
     \item $\varphi \equiv \pi$, where $\pi$ is a basic pattern (of sort $s$) - follows from \Cref{lem:rhoStarOfPi}.
     \item $\varphi \equiv \varphi_1 \land \varphi_2$ - follows from the induction hypothesis.
     \item $\varphi \equiv \neg \varphi^\prime$ - follows from the induction hypothesis.
-    \item $\varphi \equiv \exists x : s^\prime.\, \varphi^\prime$. We have
-    $ (\mathcal{T}^*, \gamma, \rho^\prime) \vDash \exists x : s^\prime.\, \varphi^\prime $
-    if and only if (by definition of $\vDash$)
-    there exists some valuation ${\rho^*}^\prime : \mathit{Var} \to \mathcal{T}^*$ such that
-    $(\mathcal{T}^*, \gamma, {\rho^*}^\prime) \vDash \varphi^\prime$
-    and ${\rho^*}^\prime(x) \in \mathcal{T}^*_{s^\prime}$\traian{you need to use $s'$ here and in the following.}
-    and ${\rho^*}^\prime(y) = \rho^*(y)$ for all $y \in \mathit{Var} \setminus \{ x \}$.
-    This holds if and only if
-    there exists some valuation $\rho^{\prime} : \mathit{Var} \to \mathcal{T}$ such that
-    $(\mathcal{T}^*, \gamma, {\rho^{\prime}}^*) \vDash \varphi^\prime$
-    and ${\rho^{\prime}}^*(x) \in \mathcal{T}^*_s$
-    and ${\rho^{\prime}}^*(y) = \rho^*(y)$ for all $y \in \mathit{Var} \setminus \{ x \}$:
-    one implication follows by letting ${\rho^*}^\prime := \rho^{\prime}$;
-    for the other implication, we let $\rho^{\prime}(v) := {\rho^*}^\prime(v)$ for all $v \in \mathit{Var}$,
-    and by the definition of star, we have ${\rho^{\prime}}^*(v) = {\rho^*}^\prime(v)$, from which the rest follows.
-    Next, by the induction hypothesis, this holds if and only if
-    there exists some valuation $\rho^{\prime} : \mathit{Var} \to \mathcal{T}$ such that
-    $(\mathcal{T}, \gamma, {\rho^{\prime}}) \vDash \varphi^\prime$
-    and ${\rho^{\prime}}^*(x) \in \mathcal{T}^*_s$
-    and ${\rho^{\prime}}^*(y) = \rho^*(y)$ for all $y \in \mathit{Var} \setminus \{ x \}$.
-    Next, by the definition of ${\rho^\prime}^*$ and $\rho^*$, this holds if and only if
-    there exists some valuation $\rho^{\prime} : \mathit{Var} \to \mathcal{T}$ such that
-    $(\mathcal{T}, \gamma, {\rho^{\prime}}) \vDash \varphi^\prime$
-    and ${\rho^{\prime}}(x) \in \mathcal{T}^*_s$
-    and ${\rho^{\prime}}(y) = \rho(y)$ for all $y \in \mathit{Var} \setminus \{ x \}$.
-    But since the star extensions interprets all sorts from $\Sigma$ as in the original model
-    (that is, $\mathcal{T}^*_s = \mathcal{T}_s$),
-    this is equivalent to the semantics of $(\mathcal{T}, \gamma, \rho) \vDash \exists x:s^\prime.\, \varphi^\prime$,
-    which is what we wanted to prove.
+    \item $\varphi \equiv \exists x : s^\prime.\, \varphi^\prime$.
+    % We have
+    % $ (\mathcal{T}^*, \gamma, \rho^\prime) \vDash \exists x : s^\prime.\, \varphi^\prime $
+    % if and only if (by definition of $\vDash$)
+    % there exists some valuation ${\rho^*}^\prime : \mathit{Var} \to \mathcal{T}^*$ such that
+    % $(\mathcal{T}^*, \gamma, {\rho^*}^\prime) \vDash \varphi^\prime$
+    % and ${\rho^*}^\prime(x) \in \mathcal{T}^*_{s^\prime}$\traian{you need to use $s'$ here and in the following.}
+    % and ${\rho^*}^\prime(y) = \rho^*(y)$ for all $y \in \mathit{Var} \setminus \{ x \}$.
+    % This holds if and only if
+    % there exists some valuation $\rho^{\prime} : \mathit{Var} \to \mathcal{T}$ such that
+    % $(\mathcal{T}^*, \gamma, {\rho^{\prime}}^*) \vDash \varphi^\prime$
+    % and ${\rho^{\prime}}^*(x) \in \mathcal{T}^*_s$
+    % and ${\rho^{\prime}}^*(y) = \rho^*(y)$ for all $y \in \mathit{Var} \setminus \{ x \}$:
+    % one implication follows by letting ${\rho^*}^\prime := \rho^{\prime}$;
+    % for the other implication, we let $\rho^{\prime}(v) := {\rho^*}^\prime(v)$ for all $v \in \mathit{Var}$,
+    % and by the definition of star, we have ${\rho^{\prime}}^*(v) = {\rho^*}^\prime(v)$, from which the rest follows.
+    % Next, by the induction hypothesis, this holds if and only if
+    % there exists some valuation $\rho^{\prime} : \mathit{Var} \to \mathcal{T}$ such that
+    % $(\mathcal{T}, \gamma, {\rho^{\prime}}) \vDash \varphi^\prime$
+    % and ${\rho^{\prime}}^*(x) \in \mathcal{T}^*_s$
+    % and ${\rho^{\prime}}^*(y) = \rho^*(y)$ for all $y \in \mathit{Var} \setminus \{ x \}$.
+    % Next, by the definition of ${\rho^\prime}^*$ and $\rho^*$, this holds if and only if
+    % there exists some valuation $\rho^{\prime} : \mathit{Var} \to \mathcal{T}$ such that
+    % $(\mathcal{T}, \gamma, {\rho^{\prime}}) \vDash \varphi^\prime$
+    % and ${\rho^{\prime}}(x) \in \mathcal{T}^*_s$
+    % and ${\rho^{\prime}}(y) = \rho(y)$ for all $y \in \mathit{Var} \setminus \{ x \}$.
+    % But since the star extensions interprets all sorts from $\Sigma$ as in the original model
+    % (that is, $\mathcal{T}^*_s = \mathcal{T}_s$),
+    % this is equivalent to the semantics of $(\mathcal{T}, \gamma, \rho) \vDash \exists x:s^\prime.\, \varphi^\prime$,
+    % which is what we wanted to prove.
 
-    Alternate attempt:
+    % Alternate attempt:
     The induction hypothesis is: for any $\mathcal{T}$, $\gamma$, $\rho$, 
         $$(\mathcal{T}, \gamma, \rho) \vDash \varphi' \iff (\mathcal{T}^*, \gamma, \rho^\ast) \vDash \varphi'$$
     We want to prove that for any $\mathcal{T}$, $\gamma$, $\rho$, 
@@ -1396,6 +1416,7 @@ We prove each implication separately.
 \end{enumerate}
 \end{proof}
 
+\subsection{Proof of~\Cref{thm:proofsystemSoundness}}
 
 \begin{figure}
     \centering
@@ -1405,24 +1426,6 @@ We prove each implication separately.
     TODO retypeset}
     \label{fig:RLproofsystem}
 \end{figure}
-
-\begin{lemma}[On equivalence and FOL translation]\label{lem:equivFOLtransl}
-    Let $\varphi_1, \varphi_2$ be two matching logic formulas such that $\vDash \varphi_1 \leftrightarrow \varphi_2$.
-    Then $\vDash (\varphi_1^\square)[X/\square] \leftrightarrow (\varphi_2^\square)[X/\square]$.
-\end{lemma}
-\begin{proof}
-    Let $M$ be any matching logic model, $\gamma$ an element of $M$, and $\rho$ an $M$-valuation.
-    We have to prove that $(M, \gamma, \rho) \vDash (\varphi_1^\square)[X/\square] \leftrightarrow (\varphi_2^\square)[X/\square]$,
-    which is (by definition of the squaring function and substitution) equivalent to
-    $(M, \gamma, \rho) \vDash ((\varphi_1 \leftrightarrow \varphi_2)^\square)[X/\square]$,
-    which is
-    (by \Cref{lem:varrenamesem}, because $\rho(X) = \rho[\square := \rho(X)](\square)$)
-    equivalent to
-    $(M, \gamma, \rho[\square := \rho(X)]) \vDash (\varphi_1 \leftrightarrow \varphi_2)^\square$,
-    which is  (by \Cref{lem:patternToFOLSemantics}, because $\rho[\square := \rho(X)] = \rho^{\rho(X)}$) equivalent to
-    $(M, \rho(X), \rho) \vDash \varphi_1 \leftrightarrow \varphi_2$,
-    which holds by the assumption.
-\end{proof}
 
 \begin{proof}[Proof of \Cref{lem:CRLalmostSoundness}]
 By induction on the structure of the CRL proof.
