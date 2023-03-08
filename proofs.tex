@@ -1773,7 +1773,11 @@ By induction on the structure of the CRL proof.
 
 \subsection{Completeness}
 
-We assume that the model $\mathcal{T}$ interprets the symbol $\alpha$ as an injective function from configurations into integers.
+We assume that the model $\mathcal{T}$ interprets
+\begin{itemize}
+    \item the symbol $\alpha$ as an injective function from configurations into integers;
+    \item the symbol $<$ as the usual ordering on integers.
+\end{itemize}
 \begin{theorem}\label{thm:oracleLifting}
 For every $\Sigma$-model $\mathcal{T}$
 satisfying the conditions above (TODO)
@@ -1784,13 +1788,35 @@ $\mathcal{T} \vDash_\ML \mathit{red}(\varphi) \iff \mathcal{T^*} \vDash_\ML \var
 \begin{proof}
 Intuitively, we perform Godelization of the formula $\varphi^\square$, using Godel's $\beta$ predicate.
 Let use consider the universal closure $\varphi_c$ of $\varphi^\square$.
-Define a function $\mathit{tr}$ which performs basic recursion on a given FOL $\Sigma^*$ formula,
+%Define a function $\mathit{length}(l, n) = \forall i.$
+Define functions $\mathit{val}$ and $\mathit{length}$ by mutual structural recursion on its second parameter:
+\begin{itemize}
+    \item $\mathit{val}(M, l, n, y) = \beta(a_{l}, b_{l}, n, \alpha(y))$ whenever $(l, a_{l}, b_{l}) \in M$;
+    \item $\mathit{val}(\_, \mathit{cfgnil}, \_, \_) = \bot$.
+    \item $\mathit{val}(M, \mathit{cfgconcat}(t_1, t_2), n, y) =$ \\
+    $\forall i:\mathit{Int}. \, \mathit{length}(M, t_1, i) \rightarrow \mathit{ite}(n < i, \mathit{val}(M, t_1, n, y), \mathit{val}(M, t_2, n-i, y))$
+    \item $\mathit{val}(M, \mathit{cfgheat}(l_1, c, l_2), n, y) =$
+    \begin{align*}
+        & \forall i:\mathit{Int}. \, \mathit{length}(M, t_1, i) \rightarrow \\
+        & \mathit{ite}(n < i, \mathit{val}(M, t_1, n, y), \mathit{ite}(n = i, y = c, \mathit{val}(M, t_2, n-i-1, y)))
+    \end{align*}    
+    \item $\mathit{length}(M, l, n) = \forall i:\mathit{Int}.\, (0 \leq i < n) \leftrightarrow (\exists v : \mathit{Cfg}. \mathit{val}(M, l, i, v))$
+\end{itemize}
+Intuitively, $\mathit{val}(M, l, n, y)$ is a predicate saying that the list $l$ of configurations
+contains the configuration $y$ on the position $n$,
+where $M$ is a mapping from list variables into the two variables representing a list in the Godel encoding.
+The predicate $\mathit{length}(M, l, n)$ holds if the lenght of $l$ is exactly $n$.
+
+
+Next, we define a function $\mathit{tr}$ which performs basic recursion on a given FOL $\Sigma^*$ formula,
 except that quantification over lists and equality of lists is handled as follows:
 \begin{itemize}
     \item $\mathit{tr}(M, \forall (l : \mathit{Cfg}^*).\, \varphi) = \forall a_l, b_l.\, \mathit{tr}(M \cup \{ (l, a_l, b_l) \}, \varphi)$
-    \item $\mathit{tr}(M, l_1 = l_2) = \forall c,d:\mathit{Cfg}.\, (\beta(a_{l_1}, b_{l_1}, \alpha(c), \alpha(d)) \leftrightarrow \beta(a_{l_2}, b_{l_2}, \alpha(c), \alpha(d)))$ whenever $(l_1, a_{l_1}, b_{l_1}) \in M$
-    and $(l_2, a_{l_2}, b_{l_2}) \in M$
-    \item TODO handle constants of sort $\mathit{Cfg}^*$
+    for some fresh $a_l,b_l$;
+    \item $\mathit{tr}(M, l_1 = l_2) = \forall c : \mathit{Int}, d:\mathit{Cfg}.\, ( \mathit{val}(M, l_1, c, d) \leftrightarrow \mathit{val}(M, l_2, c, d))$
 \end{itemize}
+
+Finally, we define $\mathit{red}(\varphi) = \mathit{tr}(\varphi_c)$; the desired equivalence holds by
+properties of the Godel $\beta$ predicate and properties lists in the extended model $\mathcal{T}^*$.
 
 \end{proof}
