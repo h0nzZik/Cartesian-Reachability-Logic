@@ -415,38 +415,65 @@ By \Cref{thm:CRLandRLcorrespondence},
 we have $\mathcal{S} \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime$ and we are done.
 \end{proof}
 
-\begin{figure}
-  \begin{align*}
-    & \prftree[l]{GenWithCirc}
-      { \prfStackPremises
-        { \vec{X} = \mathit{FV}(\Phi) \setminus \mathit{FV}(\Psi^\prime)
-        }
-        {(\mathcal{T}, S) \vdash_\CRL \Phi \Downarrow_{C \cup \{ \exists \vec{X}.\, \Phi  \}, E} \Psi^\prime}
-      }
-      {(\mathcal{T}, S) \vdash_\CRL \Phi \Downarrow_{C, E} \Psi^\prime}
-  \end{align*}
+% \begin{figure}
+%   \begin{align*}
+%     & \prftree[l]{GenWithCirc}
+%       { \prfStackPremises
+%         { \vec{X} = \mathit{FV}(\Phi) \setminus \mathit{FV}(\Psi^\prime)
+%         }
+%         {(\mathcal{T}, S) \vdash_\CRL \Phi \Downarrow_{C \cup \{ \exists \vec{X}.\, \Phi  \}, E} \Psi^\prime}
+%       }
+%       {(\mathcal{T}, S) \vdash_\CRL \Phi \Downarrow_{C, E} \Psi^\prime}
+%   \end{align*}
 
-  \begin{align*}
-    & \prftree[l]{ImplConclusion}
-      {\mathcal{T}^* \vDash_\ML \mathit{flatten}(\Phi) \rightarrow \mathit{flatten}(\Psi^\prime)}
-      {(\mathcal{T}, S) \vdash_\CRL \Phi \Downarrow_{C, E} \Psi^\prime}
-  \end{align*}
+%   \begin{align*}
+%     & \prftree[l]{ImplConclusion}
+%       {\mathcal{T}^* \vDash_\ML \mathit{flatten}(\Phi) \rightarrow \mathit{flatten}(\Psi^\prime)}
+%       {(\mathcal{T}, S) \vdash_\CRL \Phi \Downarrow_{C, E} \Psi^\prime}
+%   \end{align*}
 
-  \begin{align*}
-    & \prftree[l]{ImplEnabled}
-      { \prfStackPremises
-        { \Phi^\prime \in E }
-        {\mathcal{T}^* \vDash_\ML \mathit{flatten}(\Phi) \rightarrow \mathit{flatten}(\Phi^\prime)}
-      }
-      {(\mathcal{T}, S) \vdash_\CRL \Phi \Downarrow_{C, E} \Psi^\prime}
-  \end{align*}
+%   \begin{align*}
+%     & \prftree[l]{ImplEnabled}
+%       { \prfStackPremises
+%         { \Phi^\prime \in E }
+%         {\mathcal{T}^* \vDash_\ML \mathit{flatten}(\Phi) \rightarrow \mathit{flatten}(\Phi^\prime)}
+%       }
+%       {(\mathcal{T}, S) \vdash_\CRL \Phi \Downarrow_{C, E} \Psi^\prime}
+%   \end{align*}
 
-  \begin{align*}
-    & \prftree[l]{Contradiction}
-      {\mathcal{T}^* \vDash_\ML \mathit{flatten}(\Phi) \rightarrow \bot }
-      {(\mathcal{T}, S) \vdash_\CRL \Phi \Downarrow_{C, E} \Psi^\prime}
-  \end{align*}
+%   \begin{align*}
+%     & \prftree[l]{Contradiction}
+%       {\mathcal{T}^* \vDash_\ML \mathit{flatten}(\Phi) \rightarrow \bot }
+%       {(\mathcal{T}, S) \vdash_\CRL \Phi \Downarrow_{C, E} \Psi^\prime}
+%   \end{align*}
 
-  \caption{Selected derived rules}
-  \label{fig:CRLderivedRules}
-\end{figure}
+%   \caption{Selected derived rules}
+%   \label{fig:CRLderivedRules}
+% \end{figure}
+
+The proof system is also relatively complete (with respect to an oracle for deciding validity
+in the underlying matching logic model $\mathcal{T}$).
+\begin{theorem}[Relative completeness]\label{thm:relativeCompleteness}
+  \begin{equation*}
+      \mathcal{S} \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime \implies
+      \mathcal{S} \vdash_\CRL \Psi \Downarrow_{\emptyset,\emptyset} \Psi^\prime
+  \end{equation*}
+  \end{theorem}
+  \begin{proof}[Proof of \Cref{thm:relativeCompleteness}]
+  Assume $\mathcal{S} \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime$.
+  By \Cref{thm:CRLandRLcorrespondence}, 
+  we obtain
+  \begin{equation*}
+   \mathcal{S}^* \vDash_\RL
+    \mathit{flatten}^\exists(\Psi, \Psi^\prime) \, .
+  \end{equation*}
+  By relative completeness of reachability logic, we obtain
+  \begin{equation*}
+    \mathcal{S}^* \vdash_\RL
+    \mathit{flatten}^\exists(\Psi, \Psi^\prime) \, ,
+  \end{equation*}
+  and we conclude the proof using the Inherit rule.
+  \end{proof}
+  Note that to apply relative completeness of RL, we need have an oracle for deciding validity in the extended model.
+  A construction of such oracle from the oracle for deciding validity in $\mathcal{T}$ is in \Cref{app:completeness}.
+  
