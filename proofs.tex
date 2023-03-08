@@ -1769,3 +1769,28 @@ By induction on the structure of the CRL proof.
     \end{enumerate}
     This concludes the proof.
 \end{proof}
+
+
+\subsection{Completeness}
+
+We assume that the model $\mathcal{T}$ interprets the symbol $\alpha$ as an injective function from configurations into integers.
+\begin{theorem}\label{thm:oracleLifting}
+For every $\Sigma$-model $\mathcal{T}$
+satisfying the conditions above (TODO)
+there exists a function $\mathit{red}$ from matching logic patterns over $\Sigma^*$
+to matching logic patterns over $\Sigma$ such that
+$\mathcal{T} \vDash_\ML \mathit{red}(\varphi) \iff \mathcal{T^*} \vDash_\ML \varphi$.
+\end{theorem}
+\begin{proof}
+Intuitively, we perform Godelization of the formula $\varphi^\square$, using Godel's $\beta$ predicate.
+Let use consider the universal closure $\varphi_c$ of $\varphi^\square$.
+Define a function $\mathit{tr}$ which performs basic recursion on a given FOL $\Sigma^*$ formula,
+except that quantification over lists and equality of lists is handled as follows:
+\begin{itemize}
+    \item $\mathit{tr}(M, \forall (l : \mathit{Cfg}^*).\, \varphi) = \forall a_l, b_l.\, \mathit{tr}(M \cup \{ (l, a_l, b_l) \}, \varphi)$
+    \item $\mathit{tr}(M, l_1 = l_2) = \forall c,d:\mathit{Cfg}.\, (\beta(a_{l_1}, b_{l_1}, \alpha(c), \alpha(d)) \leftrightarrow \beta(a_{l_2}, b_{l_2}, \alpha(c), \alpha(d)))$ whenever $(l_1, a_{l_1}, b_{l_1}) \in M$
+    and $(l_2, a_{l_2}, b_{l_2}) \in M$
+    \item TODO handle constants of sort $\mathit{Cfg}^*$
+\end{itemize}
+
+\end{proof}
