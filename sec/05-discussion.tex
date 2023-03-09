@@ -70,10 +70,14 @@ TODO
 
 \subsection{Other Related Work}
 
+In \cite{DOsualdoFD22}, the authors develop a \emph{logic for hyper-triple composition (LHC)}
+that allows reasoning about $k-safety$ properties compositionally.
+Similarly to CHL, LHC targets a particular small imperative language.
+We believe that compositionality is ortogonal to language-parametericity,
+and thus we would like to generalize their work to language-parameteric settings in future work.
 
-Also, a game-based technique for verifying software hyperproperties beyond $k$-safety
+A game-based technique for verifying software hyperproperties beyond $k$-safety
 has been developed in \cite{BeutnerF22}.
 This technique works with \emph{symbolic transition systems},
 so it already is language-independent \emph{in some sense}. However, it is not clear how to use the technique
 with an arbitrary language $L$, without writing a \emph{compiler} from $L$ to symbolic transition systems first.
-
