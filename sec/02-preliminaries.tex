@@ -120,7 +120,7 @@ which implies $x_1 \leq 0$ and therefore the loop condition in $P(x_1, y_1)$ is 
 %To prove the above example without lockstep reasoning, one would need to find (non-relational) loop invariants
 %strong enough to summarize the whole loop.
 
-Unfortunately lockstep-reasoning rules become more complicated as one adds other features into the language
+Unfortunately lockstep reasoning rules become more complicated as one adds other features into the language
 -- for example, the \texttt{break} statement (as has been done in \cite{SousaD16}).
 It is not clear how to extend this approach to handle, e.g., recursion, \texttt{continue}, or \texttt{goto}.
 We also observe that a single language feature (\texttt{while} loops) needed to be considered five times
@@ -146,26 +146,55 @@ the purposes of this paper.)
 % There exist newer and more expressive variants of matching logic (\cite{MmL, MLexplained});
 % we used the older variant in order to be compatible with the literature on reachability logic which uses this variant.
 
+% Matching logic \emph{formula} (commonly known as a \emph{pattern}) is a
+% first-order logic (FOL) formula which additionally allows terms (with variables)
+% over some signature $\Sigma$ as nullary predicates.
+% A typical example of a matching logic formula is $\varphi_{\mathit{example}}$,
+% defined as
+
+% \begin{equation}\label{eqn:exampleMLPattern}
+% \texttt{<k>x--<k><st>x} \texttt{|->} X\texttt{</st>} \land (X \texttt{ >Int } 1 = \mathit{true})
+% \end{equation}
+
+% which, when interpreted in a model of a particular programming language,
+% denotes the set of program configurations in which the code \texttt{x--} is to be executed
+% and in which the program variable $\texttt{x}$ has a value $X$ that is greater than $1$.
+% In this example, the part
+% \begin{equation*}
+%     \texttt{<k>x--<k><st> x} \texttt{|->} X\texttt{ </st>}
+% \end{equation*}
+% is a nullary term used as a predicate (term-as-predicate), with $X$ being the only free FOL variable.
+% Here $\texttt{x}$ is not a FOL variable, but a constant symbol from the signature of the programming language.
+% The subterm $\texttt{<st>x} \texttt{ |-> } X\texttt{</st>}$ says that the program variable $\texttt{x}$
+% has the value $X$, and the $X \texttt{ >Int } 1 = \mathit{true}$ part then says that the realization
+% of the function symbol $\_ \texttt{ >Int } \_$ returns the boolean value $\mathit{true}$ when given $X$ and $1$
+% as arguments.
+
+%ALTERNATIVE NOTATION
+
 Matching logic \emph{formula} (commonly known as a \emph{pattern}) is a
 first-order logic (FOL) formula which additionally allows terms (with variables)
 over some signature $\Sigma$ as nullary predicates.
-A typical example of a matching logic formula is $\varphi_{\mathit{example}}$, defined as
+A typical example of a matching logic formula is $\varphi_{\mathit{example}}$,
+defined as
+
 \begin{equation}\label{eqn:exampleMLPattern}
-\texttt{<k>x--<k><st>x} \texttt{|->} X\texttt{</st>} \land (X \texttt{ >Int } 1 = \mathit{true})
+    \varphi_{\mathit{example}} \equiv\quad \tap{x--}{\texttt{x}\mapsto X}  \land (X \texttt{ >Int } 1 = \mathit{true})
 \end{equation}
+
+% TODO - remark, that in K this would look differently
+
 which, when interpreted in a model of a particular programming language,
 denotes the set of program configurations in which the code \texttt{x--} is to be executed
 and in which the program variable $\texttt{x}$ has a value $X$ that is greater than $1$.
-In this example, the part
-\begin{equation*}
-    \texttt{<k>x--<k><st> x} \texttt{|->} X\texttt{ </st>}
-\end{equation*}
-is the term-as-predicate, with $X$ being the only free FOL variable.
-The program variable $\texttt{x}$ is not a FOL variable, but a constant symbol from the signature of the programming language.
-The subterm $\texttt{x} \texttt{ |-> } X\texttt{ </st>}$ says that the program variable $\texttt{x}$
-has the value $X$, and the $X \texttt{ >Int } 1 = \mathit{true}$ part then says that the realization
-of the function symbol $\_ \texttt{ >Int } \_$ returns the boolean value $\mathit{true}$ when given $X$ and $1$
-as arguments.
+In this example, the suformula  $\tap{x--}{\mathtt{x}\mapsto X}$
+is a nullary term used as a predicate (term-as-predicate), with $X$ being the
+only free FOL variable.  Whereas $\texttt{x}$ is not a FOL variable, but a
+constant symbol from the signature of the programming language.  The subterm
+$\texttt{x}\mapsto X$ states that the program variable $\texttt{x}$ has value
+$X$, and the $X \texttt{ >Int } 1 = \mathit{true}$ part then says that the
+realization of the function symbol $\_ \texttt{ >Int } \_$ returns the boolean
+value $\mathit{true}$ when given $X$ and $1$ as arguments.
 
 The satisfaction relation $(M, \gamma, \rho) \vDash \varphi$ between a model $M$, a model element $\gamma \in M$,
 an $M$-valuation $\rho$, and a pattern $\varphi$, is defined inductively on the structure of $\varphi$.
@@ -176,9 +205,10 @@ The definition is as in FOL; the main difference is the semantics of terms-as-pr
 (where $\rho(t)$ is the homomorphic extension of $\rho$ applied to the term $t$).
 For example, we might have a matching logic model $M$ containing (concrete) program configurations
 of a particular programming language.
-One such configuration might be $\gamma_{\mathit{example}}$:
+One such configuration might be:
 \begin{equation*}
-    \texttt{<k> x--; <k><st> x} \texttt{ |-> } 3\texttt{ </st>} \, .
+  \gamma_{\mathit{example}} \equiv\quad \tap{x--}{\mathtt{x}\mapsto 3}
+    % \texttt{<k> x--; <k><st> x} \texttt{ |-> } 3\texttt{ </st>} \, .
 \end{equation*}
 Then, we have that $(M, \gamma_{\mathit{example}}, \rho) \vDash \varphi_{\mathit{example}}$
 for any valuation $\rho$ satisfying $\rho(X) = 3$, and we say that
@@ -214,10 +244,7 @@ and $(\gamma^\prime , \rho) \vDash \varphi^\prime$.
 As an example, consider the following transition rule
 
 \begin{equation}\label{eqn:ruleIfTrue}
-    \begin{aligned}
-    \texttt{<k>if (} \mathit{true} \texttt{) }P_1\texttt{ else } P_2 \texttt{</k><st>} S \texttt{</st>} 
-    \ \Rightarrow^{\exists}\ \texttt{<k>}P_1 \texttt{</k><st>} S \texttt{</st>}
-    \end{aligned}
+    \tap{if ($true$) then $P_1$ else $P_2$}{S} \ \Rightarrow^{\exists}\ \tap{$P_1$}{S}
 \end{equation}
 
 saying that the \texttt{if} construct of the particular language takes the first branch ($P_1$)
@@ -225,10 +252,8 @@ whenever the condition is $\mathit{true}$. (Typically, there would be additional
 %
 This rule induces (among others) the transition
 \begin{equation}\label{eqn:ruleIfTrue}
-    \begin{aligned}
-    \texttt{<k>if (} \mathit{true} \texttt{) x++ else x--</k><st>x} \texttt{|->} 3\texttt{</st>}
-    \ \Rightarrow_{\mathcal{S}}\  \texttt{<k>x++</k><st>x} \texttt{|->} 3\texttt{</st>} \, .
-    \end{aligned}
+  \tap{if ($true$) then x++ else x--}{\mathtt{x}\mapsto 3}\
+  \Rightarrow_{\mathcal{S}}\  \tap{x++}{\mathtt{x}\mapsto 3} \,.
 \end{equation}
 
 
@@ -290,11 +315,8 @@ can, if it terminates at all, reach a configuration
 where the program variable \texttt{x} has a non-positive value
 by means of the reachability rule
 \begin{equation*}
-    \begin{aligned}
-        \texttt{<k>while (x>0) x--</k><st>x|->} V \texttt{</st>}
-        \ \Rightarrow^\exists\  \exists V^\prime.\, \texttt{<k>.</k><st>x|->}
-        V^\prime \texttt{</st>} \land (V^\prime \texttt{ <=Int } 0 = \mathit{true})
-    \end{aligned}
+  \tap{while (x>0) x--}{\mathtt{x}\mapsto V}
+  \ \Rightarrow^\exists\  \exists V^\prime.\, \tap{$\cdot$}{\mathtt{x}\mapsto V'} \land (V^\prime \texttt{ <=Int } 0 = \mathit{true})
   \end{equation*}
 % \begin{equation*}
 %     \begin{aligned}
@@ -320,7 +342,8 @@ and $(\gamma^\prime, \rho) \vDash \varphi^\prime$.
 
 
 Reachability logic is equipped with a proof system which derives sequents of the shape
-$A, C \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime$ (where $A$ is TODO and $C$ a set of circularities, introduced below). The proof system is sound and complete: a RL claim is satisfied in $\mathcal{S}$
+$A, C \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime$ (where $A$ is a
+set of reachability rules and $C$ is introduced below). The proof system is sound and complete: a RL claim is satisfied in $\mathcal{S}$
 iff $\mathcal{S}, \emptyset \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime$.
 The set $C$, initially empty, contains so-called \emph{circularities},
 which are claims postulated to hold but not justified yet.
@@ -334,7 +357,7 @@ The proof system contains a rule
 \end{align*}
 which adds to current claim to the set of circularities.
 When progress is made (by means of other rules, essentially performing a symbolic execution),
-the claim is moved from circularities to axioms and can be reused, similarly to the way one assumes a loop invariant
+the claim is moved from circularities to rules and can be reused, similarly to the way one assumes a loop invariant
 in order to prove it again.
 We refer an interested reader to~\cite{RosuS12oopsla} for more details.
 
