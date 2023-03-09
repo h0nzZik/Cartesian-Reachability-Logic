@@ -10,19 +10,20 @@ Then we give CRL a sound proof system, which is the main contribution of this pa
 
 \subsection{Syntax and Semantics}
 
-Cartesian reachability logic is an extension of (one-path) reachability logic.
-Its \emph{claims} have the shape
+Cartesian reachability logic is an extension of (one-path) reachability
+logic. In this extension, we replace reachability rules $\varphi
+\Rightarrow^{\exists} \phi$ with  \emph{reachability claims} of the form
 \begin{equation*}
   [\varphi_1,\ldots,\varphi_k] \land P
   \Rightarrow^{c\exists} \exists \vec{Y}.\, [\varphi^\prime_1,\ldots,\varphi^\prime_k] \land P^\prime
 \end{equation*}
-with the intuition that the matching logic formulas $\varphi_i$ describe source configurations
-(including programs to be executed, as in RL),
-the formulas $\varphi_i^\prime$ describe the target configurations,
-$P$ is a formula describing the relationship between initial configurations
-and $P^\prime$ describes relationship between target configurations.
-We name the sides of the $\Rightarrow^{c\exists}$ as \emph{ECLP}s
-(existentially-quantified constrained list patterns). 
+
+The intuitive meaning of such a claim should be clear enough: There are $k$
+programs, the set of source configurations of $i$-th program matching $\phi_i$
+and target configurations matching $\phi'_i$. Additionally, the (TODO -
+matching logic) formula $P$ can relate source configurations, and $P'$ the
+target configurations. We call formulas of the form   $ [\varphi_1,\ldots,\varphi_k] \land P$
+\emph{existentially-quantified constrained list patterns} (ECLP). 
 
 
 For example, consider the same program as in \Cref{eqn:CounterProgram}; that is, let
@@ -480,3 +481,8 @@ Our completeness result is similar to the completeness result of CHL in the sens
 does not involve features used for lockstep reasoning.
 It would be interesting to investigate whether a proof system without the Reduce rule would still be complete;
 we leave this for a future work.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../main"
+%%% End:
