@@ -1,5 +1,33 @@
 
-\section{Discussion}\label{sec:discussion}
+\section{Related Work and Discussion}\label{sec:discussion}
+
+\subsection{Language-parametric verification}
+
+The idea of a Circularity rule is present already 
+in the existing literature on reachability logics \cite{RosuS12oopsla,RosuSCM13lics,StefanescuCMMSR19},
+where it was used to generalize the notion of \emph{loop invariant}.
+However, RL can not be used to reason about $k$-safety hyperproperties and does not perform lockstep execution.
+The literature on language-independent equivalence checking also contain the idea of a Circularity rule.
+In~\cite{CiobacaLRR16}, circularities are used to synchronize executions of different programs (possibly in different languages);
+however, the proof system of~\cite{CiobacaLRR16} can be used only to reason about full program equivalence
+and not about $k$-safety hyperproperties.
+What makes the proof system of~\cite{CiobacaLRR16} really unusable in our situation is the fact that its
+Circularity rule
+\begin{align*}
+  & \prftree[l]{}
+    { \mathcal{S} \vDash \varphi_1 \Rightarrow^+ \varphi^\prime_1 }
+    { \mathcal{S} \vDash \varphi_2 \Rightarrow^+ \varphi^\prime_2 }
+    { \mathcal{S} \vdash_{\mathit{equiv}} \langle \varphi^\prime_1, \varphi^\prime_2 \rangle \Downarrow^{\infty} E}
+    { \mathcal{S} \vdash_{\mathit{equiv}} \langle \varphi_1, \varphi_2 \rangle \Downarrow^{\infty} E}
+\end{align*}
+requires all the components to make progress (denoted by the ``plus'' sign on top of the arrows) before the circularity can be used,
+which would prohibit RL-style reasoning when one component has already finished execution.
+The need for such reasoning is there even in our simple running example, as we illustrate in ???.
+
+We believe that all the mentioned proof systems that use a variant of the Circularity rule are instances of a more general
+framework, known as \emph{Circular coinduction} in the literature~\cite{RosuL09CircularCoinduction}.
+
+
 
 \subsection{Relation to Cartesian Hoare logic}
 
@@ -63,10 +91,6 @@ while in our framework, lock-step reasoning is not limited to loops, but can sup
 of circular behavior - including loops, recursion, gotos.
 Therefore, while we are inspired by the \emph{idea} of lock-step execution from \cite{SousaD16},
 for the \emph{realization} of this idea we turn to the literature on \emph{equivalence checking}.
-
-\subsection{Relation to semantic-based program equivalence}
-
-TODO
 
 \subsection{Other Related Work}
 

@@ -252,60 +252,24 @@ five fairly complex rules that need to understand the precise semantics of this 
 The task for us is even harder, since we do not know in advance what constructs with repetetive behavior does
 the supplied language support: \texttt{goto}s? Mutual recursion? 
 
-Yet, we provide a single proof system consisting of only eight rules which enables lockstep reasoning about such constructs.
-The rules itself are fairly simple, and none of them has the semantics of any particular language construct
-hard-wired into it.
-The key component allowing lockstep reasoning about arbitrary constructs is the rule
-\begin{align*}
-  & \prftree[l]{Circularity}
-    { \mathcal{S} \vdash_\CRL \Psi \Downarrow_{C \cup \{ \Psi \} , E} \Psi^\prime}
-    { \mathcal{S} \vdash_\CRL \Psi \Downarrow_{C, E} \Psi^\prime}
-\end{align*}
-which allows the user to postulate validity of the current claim by means of adding the \emph{current state}
-into the set of \emph{cutpoints}, from which a $k$-tuple of states satisfying the postcondition
-is claimed to be reachable; once progress is made (by means of the Step rule), the added cutpoints are
-\emph{enabled} and can be used to finish the proof.
-
-The idea of a Circularity rule is present already 
-in the existing literature on reachability logics \cite{RosuS12oopsla,RosuSCM13lics,StefanescuCMMSR19},
-where it was used to generalize the notion of \emph{loop invariant}.
-However, RL can not be used to reason about $k$-safety hyperproperties and does not perform lockstep execution.
-The literature on language-independent equivalence checking also contain the idea of a Circularity rule.
-In~\cite{CiobacaLRR16}, circularities are used to synchronize executions of different programs (possibly in different languages);
-however, the proof system of~\cite{CiobacaLRR16} can be used only to reason about full program equivalence
-and not about $k$-safety hyperproperties.
-What makes the proof system of~\cite{CiobacaLRR16} really unusable in our situation is the fact that its
-Circularity rule
-\begin{align*}
-  & \prftree[l]{}
-    { \mathcal{S} \vDash \varphi_1 \Rightarrow^+ \varphi^\prime_1 }
-    { \mathcal{S} \vDash \varphi_2 \Rightarrow^+ \varphi^\prime_2 }
-    { \mathcal{S} \vdash_{\mathit{equiv}} \langle \varphi^\prime_1, \varphi^\prime_2 \rangle \Downarrow^{\infty} E}
-    { \mathcal{S} \vdash_{\mathit{equiv}} \langle \varphi_1, \varphi_2 \rangle \Downarrow^{\infty} E}
-\end{align*}
-requires all the components to make progress (denoted by the ``plus'' sign on top of the arrows) before the circularity can be used,
-which would prohibit RL-style reasoning when one component has already finished execution.
-The need for such reasoning is there even in our simple running example, as we illustrate in ???.
-
-We believe that all the mentioned proof systems that use a variant of the Circularity rule are instances of a more general
-framework, known as \emph{Circular coinduction} in the literature~\cite{RosuL09CircularCoinduction}.
-
-
+Yet, we provide a single proof system (consisting of only eight rules) which enables lockstep reasoning about such constructs.
 The proof system derives claims of the shape
-$\mathcal{S}, \vdash_\CRL \Phi \Downarrow_{C,E} \Psi$,
+\begin{equation*}
+\mathcal{S}, \vdash_\CRL \Phi \Downarrow_{C,E} \Psi
+\end{equation*}
 where $\Phi$ is of the shape
 $(\varphi_1, \ldots, \varphi_k) \land P$
 and $\Psi$ is of the shape
-$\exists \vec{Y}.\, (\varphi^\prime_1, \ldots, \varphi^\prime_k) \land P^\prime$,
-where $P,P^\prime$ are structureless FOL formulas
-and every $\varphi_i$ is a matching logic pattern.
-%and every $\varphi_i$ and $\varphi^\prime_i$ has the structure of
-%$\exists x_1,\ldots,x_n. (\phi_1 \land P_1) \lor \ldots (\phi_m \land P_m)$
-%and $\exists x^\prime_1,\ldots,x^\prime_{n^\prime}. (\phi^\prime_1 \land P^\prime_1) \lor \ldots (\phi^\prime_m \land P^\prime_m)$, respectively.
-The idea is that $P$ is the part of the claim that relates variables from different components.
-Initially, the proof starts with the claim
-$\mathcal{S} \vdash_\CRL \Phi \Downarrow_{\emptyset, \emptyset} \Psi$.
-
+$\exists \vec{Y}.\, (\varphi^\prime_1, \ldots, \varphi^\prime_k) \land P^\prime$.
+One can think about $\Phi$ as representing a \emph{premise}, while $\Psi$, which propagates through
+the proof rules unchanged, as representing a \emph{conclusion}.
+Every $\varphi_i, \varphi^\prime_i$ is a matching logic pattern representing a particual component,
+and $P$ and $P^\prime$ are FOL formulas (\emph{global constraints}) relating variables from different components.
+The sets $C$ and $E$ contain \emph{cutpoints} and \emph{enabled cutpoints}, respectively.
+Ttogether, they implement the concept of a \emph{relational invariant}.
+In particular, the set $C$ represents the invariants that were postulated \emph{right now},
+while the set $E$ represents those that were postulated in past and are ready to be used.
+Initially, the proof search starts with $E = C = \emptyset$.
 
 \begin{figure}
     \centering
@@ -334,7 +298,7 @@ $\mathcal{S} \vdash_\CRL \Phi \Downarrow_{\emptyset, \emptyset} \Psi$.
     { \prfStackPremises
        {\varphi \Rightarrow^\exists \varphi^\prime \in S}
        {\mathcal{T} \vDash_\ML \varphi_i \leftrightarrow \varphi \land P^\prime}
-       {P^\prime \mbox{ is a structureless FOL formula}}
+       {P^\prime \mbox{ is a FOL formula}}
        {  (\mathcal{T}, S) \vdash_\CRL [\varphi_1, \ldots, \varphi_{i-1}, \varphi^\prime \land P^\prime, \varphi_{i+1}, \ldots, \varphi_k]
           \land P
           \Downarrow_{\emptyset, (C \cup E)} \Psi^\prime
@@ -386,6 +350,42 @@ $\mathcal{S} \vdash_\CRL \Phi \Downarrow_{\emptyset, \emptyset} \Psi$.
     \caption{Proof System}
     \label{fig:CRLproofsystem}
 \end{figure}
+
+The rules itself are fairly simple, and none of them has the semantics of any particular language construct
+hard-wired into it.
+We now explain the proof rules of CRL (shown in~\Cref{fig:CRLproofsystem}) one by one.
+\begin{itemize}
+  \item The Circularity rule is the key that allows lockstep reasoning about arbitrary program constructs.
+        It allows the user to postulate validity of the current claim by means of adding the \emph{current premise}
+        into the set of \emph{cutpoints}, from which a $k$-tuple of program configurations satisfying the postcondition
+        is claimed to be reachable. Once progress is made (by means of the Step rule), the added cutpoints are
+        \emph{enabled} and can be used to finish the proof using the Axiom rule.
+  \item The Step rule performs symbolic execution on a selected component $i$ (represented by $\varphi_i$)
+        using the semantic rule $\varphi \Rightarrow^\exists \varphi^\prime \in S$.
+        For this rule to apply, its left side ($\varphi$) has to match all the program configurations matching $\varphi_i$.
+        Therefore, the rule decomposes $\varphi_i$ into $\varphi$ and an additional constraint $P^\prime$,
+        which can be thought of as a part of \emph{path condition} that is \emph{local} to the component $i$.
+        This local path condition $P^\prime$ is then used to constrain the right-side $\varphi^\prime$ of the selected rule.
+        This proof rule also enables the cutpoints from $C$ by adding them to $E$.
+  \item The Axiom rule uses an enabled cutpoint to finish the proof.
+  \item The Reflexivity rule can be used to finish a proof when the premise corresponds to the conclusion.
+  \item The Case rule implements case analysis on a selected component $i$.
+  \item The Conseq rule is used to weaken (or generalize) the premise. It can also be used
+        to propagate information between components and the global constraint.
+        TODO explain flatten
+  \item The Abstract rule can be used to remove existential quantifiers from the premise.
+        Intuitively, this corresponds to a proof step in firstorder logic that replaces
+        an existential quantifier on the left side of an implication
+        with a universal quantifier over the implication, assuming that the variable
+        bound by the existential quantifier does not occur free in the right side.
+        In our setting, the typical way of \emph{obtaining} a toplevel existential quantifier in the premise
+        is by means of the Conseq rule.
+  \item The Reduce rule is a way to get completeness into our proof system:
+        it reduces the goal to reachability logic reasoning.
+        This rule also provides a way to prove properties that do not benefit
+        from lockstep reasoning.
+
+\end{itemize}
 
 
 The following lemma says that one can generate an RL proof on a star-extended system
@@ -473,7 +473,10 @@ in the underlying matching logic model $\mathcal{T}$).
     \mathit{flatten}^\exists(\Psi, \Psi^\prime) \, ,
   \end{equation*}
   and we conclude the proof using the Inherit rule.
-  \end{proof}
   Note that to apply relative completeness of RL, we need have an oracle for deciding validity in the extended model.
   A construction of such oracle from the oracle for deciding validity in $\mathcal{T}$ is in \Cref{app:completeness}.
-  
+  \end{proof}
+Our completeness result is similar to the completeness result of CHL in the sense that the completeness
+does not involve features used for lockstep reasoning.
+It would be interesting to investigate whether a proof system without the Reduce rule would still be complete;
+we leave this for a future work.
