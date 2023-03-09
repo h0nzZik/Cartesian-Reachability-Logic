@@ -12,15 +12,15 @@ Then we give CRL a sound proof system, which is the main contribution of this pa
 
 Cartesian reachability logic is an extension of (one-path) reachability
 logic. In this extension, we replace reachability rules $\varphi
-\Rightarrow^{\exists} \phi$ with  \emph{reachability claims} of the form
+\Rightarrow^{\exists} \varphi$ with  \emph{reachability claims} of the form
 \begin{equation*}
   [\varphi_1,\ldots,\varphi_k] \land P
   \Rightarrow^{c\exists} \exists \vec{Y}.\, [\varphi^\prime_1,\ldots,\varphi^\prime_k] \land P^\prime
 \end{equation*}
 
 The intuitive meaning of such a claim should be clear enough: There are $k$
-programs, the set of source configurations of $i$-th program matching $\phi_i$
-and target configurations matching $\phi'_i$. Additionally, the (TODO -
+programs, the set of source configurations of $i$-th program matching $\varphi_i$
+and target configurations matching $\varphi'_i$. Additionally, the (TODO -
 matching logic) formula $P$ can relate source configurations, and $P'$ the
 target configurations. We call formulas of the form   $ [\varphi_1,\ldots,\varphi_k] \land P$
 \emph{existentially-quantified constrained list patterns} (ECLP). 
