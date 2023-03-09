@@ -132,26 +132,33 @@ Our aim in this paper is to make the above ideas available for any deterministic
 Therefore, in the following subsections we review some tools from recent literature
 on language-independent program verification.
 
-\subsection{($\mu$-free) Matching Logic}
-% This could be a footnote
-We work with the variant of matching logic described in
-\cite{StefanescuCMMSR19,RosuSCM13lics}.
-This particular variant of matching logic is used for reasoning about static properties of program configurations.
-There exist newer and more expressive variants of matching logic (\cite{MmL, MLexplained});
-we used the older variant in order to be compatible with the literature on reachability logic which uses this variant.
+%\subsection{($\mu$-free) Matching Logic}
+\subsection{Matching Logic}
 
-Matching logic \emph{formula} (aka \emph{pattern}) is a first-order logic (FOL) formula which allows terms,
-over a signature $\Sigma$, with variables, as nullary predicates.
+Before introducing reachability logic, we must first talk about matching
+logic, on top of which is reachability logic built. We work with the variant of matching logic described in
+\cite{StefanescuCMMSR19, RosuSCM13lics}. (Ther are other variants of matching
+logic, e.g. \cite{MmL, MLexplained}, which are of no particular interest for
+the purposes of this paper.)
+
+
+% This particular variant of matching logic is used for reasoning about static properties of program configurations.
+% There exist newer and more expressive variants of matching logic (\cite{MmL, MLexplained});
+% we used the older variant in order to be compatible with the literature on reachability logic which uses this variant.
+
+Matching logic \emph{formula} (commonly known as a \emph{pattern}) is a
+first-order logic (FOL) formula which additionally allows terms (with variables)
+over some signature $\Sigma$ as nullary predicates.
 A typical example of a matching logic formula is $\varphi_{\mathit{example}}$, defined as
 \begin{equation}\label{eqn:exampleMLPattern}
-\texttt{<k> x--; <k><st> x} \texttt{ |-> } X\texttt{ </st>} \land (X \texttt{ >Int } 1 = \mathit{true})
+\texttt{<k>x--<k><st>x} \texttt{|->} X\texttt{</st>} \land (X \texttt{ >Int } 1 = \mathit{true})
 \end{equation}
 which, when interpreted in a model of a particular programming language,
 denotes the set of program configurations in which the code \texttt{x--} is to be executed
 and in which the program variable $\texttt{x}$ has a value $X$ that is greater than $1$.
 In this example, the part
 \begin{equation*}
-    \texttt{<k> x--; <k><st> x} \texttt{ |-> } X\texttt{ </st>}
+    \texttt{<k>x--<k><st> x} \texttt{|->} X\texttt{ </st>}
 \end{equation*}
 is the term-as-predicate, with $X$ being the only free FOL variable.
 The program variable $\texttt{x}$ is not a FOL variable, but a constant symbol from the signature of the programming language.
@@ -193,55 +200,109 @@ of programs in those languages.
 On the formal semantics side, a programming language is modelled as a \emph{reachability system}
 $\mathcal{S} = (\mathcal{T}, S)$, where $\mathcal{T}$ is a $\Sigma$-algebra
 and $S$ is a set of \emph{reachability rules} of the shape $\varphi \Rightarrow^\exists \varphi^\prime$,
-where $\varphi$ and $\varphi^\prime$ are matching logic patterns over $\Sigma$
-describing \emph{source} and \emph{target} program configurations.
-Typically, \emph{program configurations} contain some program (or a fragment of it) that is to be executed,
-together with a state of the program.
-For example, one can have a rule
-\begin{equation}\label{eqn:ruleIfTrue}
-    \begin{aligned}
-    & \texttt{<k> if (} \mathit{true} \texttt{) }P_1\texttt{ else } P_2 \texttt{</k><st>} S \texttt{</st>} \\
-    & \Rightarrow \texttt{<k> }P_1 \texttt{</k><st>} S \texttt{</st>}
-    \end{aligned}
-\end{equation}
-saying that the \texttt{if} construct of the particular language takes the first branch ($P_1$)
-whenever the condition is $\mathit{true}$.
-(Typically, there would be additional rules governing evaluation of the condition.)
+where $\varphi$ and $\varphi^\prime$ are \emph{matching logic} patterns over $\Sigma$
+describing sets of \emph{source} and \emph{target} program configurations.
 
-The meaning of reachability rules is the following.
-A reachability system $\mathcal{S} = (\mathcal{T}, S)$ (together with a $\Sigma$-sort $\mathit{Cfg}$)
-induces
-a \emph{transition system}
-$(\Tcfg , \Rightarrow_{\mathcal{S}})$,
-where $\gamma \Rightarrow_{\mathcal{S}} \gamma^\prime$
-for $\gamma, \gamma^\prime \in \Tcfg$
+It is not hard to see that each reachability system naturally
+induces a \emph{trasition system} $(\Tcfg , \Rightarrow_{\mathcal{S}})$, whose states are program configurations and
+transitions  $\Rightarrow_{\mathcal{S}}$ are defined as follows: for $\gamma,
+\gamma^\prime \in \Tcfg$ we have $\gamma \Rightarrow_{\mathcal{S}} \gamma^\prime$
 iff there is some rule $\varphi \Rightarrow^\exists \varphi^\prime \in S$
-and some valuation $\rho : \Var \to \mathcal{T}$ with $(\gamma, \rho) \vDash \varphi$
+and some valuation $\rho : \Var \to \mathcal{T}$ such that $(\gamma, \rho) \vDash \varphi$
 and $(\gamma^\prime , \rho) \vDash \varphi^\prime$.
-The intuition is that when taking a transition in the resulting transition system,
-some rule $\varphi \Rightarrow^\exists \varphi^\prime \in S$ is selected,
-then the current configuration is pattern-matched against the rule's left-side pattern $\varphi$,
-resulting in a valuation $\rho$ which is then used to instantiate the right-side $\varphi^\prime$ of the rule,
-forming a new configuration.
-For example, the rule in \Cref{eqn:ruleIfTrue} induces (among others) the transition
+
+As an example, consider the following transition rule
+
 \begin{equation}\label{eqn:ruleIfTrue}
     \begin{aligned}
-    & \texttt{<k> if (} \mathit{true} \texttt{) x++; else x--; </k><st>x} \texttt{ |-> } 3\texttt{</st>} \\
-    & \Rightarrow_{\mathcal{S}} \texttt{<k> x++; </k><st>x} \texttt{ |-> } 3\texttt{</st>} \, .
+    \texttt{<k>if (} \mathit{true} \texttt{) }P_1\texttt{ else } P_2 \texttt{</k><st>} S \texttt{</st>} 
+    \ \Rightarrow^{\exists}\ \texttt{<k>}P_1 \texttt{</k><st>} S \texttt{</st>}
     \end{aligned}
 \end{equation}
 
-On the partial correctness side, RL reuses the notion of a \emph{reachability rule}.
+saying that the \texttt{if} construct of the particular language takes the first branch ($P_1$)
+whenever the condition is $\mathit{true}$. (Typically, there would be additional rules governing evaluation of the condition.)
+%
+This rule induces (among others) the transition
+\begin{equation}\label{eqn:ruleIfTrue}
+    \begin{aligned}
+    \texttt{<k>if (} \mathit{true} \texttt{) x++ else x--</k><st>x} \texttt{|->} 3\texttt{</st>}
+    \ \Rightarrow_{\mathcal{S}}\  \texttt{<k>x++</k><st>x} \texttt{|->} 3\texttt{</st>} \, .
+    \end{aligned}
+\end{equation}
+
+
+
+% Typically, \emph{program configurations} contain some program (or a fragment of it) that is to be executed,
+% together with a state of the program.
+% For example, one can have a rule
+% \begin{equation}\label{eqn:ruleIfTrue}
+%     \begin{aligned}
+%     \texttt{<k>if (} \mathit{true} \texttt{) }P_1\texttt{ else } P_2 \texttt{</k><st>} S \texttt{</st>} 
+%     \ \Rightarrow^{\exists}\ \texttt{<k>}P_1 \texttt{</k><st>} S \texttt{</st>}
+%     \end{aligned}
+% \end{equation}
+
+
+% \begin{equation}\label{eqn:ruleIfTrue}
+%     \begin{aligned}
+%     & \texttt{<k> if (} \mathit{true} \texttt{) }P_1\texttt{ else } P_2 \texttt{</k><st>} S \texttt{</st>} \\
+%     & \Rightarrow \texttt{<k> }P_1 \texttt{</k><st>} S \texttt{</st>}
+%     \end{aligned}
+% \end{equation}
+% saying that the \texttt{if} construct of the particular language takes the first branch ($P_1$)
+% whenever the condition is $\mathit{true}$.
+% (Typically, there would be additional rules governing evaluation of the condition.)
+
+% The meaning of reachability rules is the following.
+% A reachability system $\mathcal{S} = (\mathcal{T}, S)$ (together with a $\Sigma$-sort $\mathit{Cfg}$)
+% induces
+% a \emph{transition system}
+% $(\Tcfg , \Rightarrow_{\mathcal{S}})$,
+% where $\gamma \Rightarrow_{\mathcal{S}} \gamma^\prime$
+% for $\gamma, \gamma^\prime \in \Tcfg$
+% iff there is some rule $\varphi \Rightarrow^\exists \varphi^\prime \in S$
+% and some valuation $\rho : \Var \to \mathcal{T}$ with $(\gamma, \rho) \vDash \varphi$
+% and $(\gamma^\prime , \rho) \vDash \varphi^\prime$.
+% The intuition is that when taking a transition in the resulting transition system,
+% some rule $\varphi \Rightarrow^\exists \varphi^\prime \in S$ is selected,
+% then the current configuration is pattern-matched against the rule's left-side pattern $\varphi$,
+% resulting in a valuation $\rho$ which is then used to instantiate the right-side $\varphi^\prime$ of the rule,
+% forming a new configuration.
+% For example, the rule in \Cref{eqn:ruleIfTrue} induces (among others) the transition
+% \begin{equation}\label{eqn:ruleIfTrue}
+%     \begin{aligned}
+%     \texttt{<k>if (} \mathit{true} \texttt{) x++ else x--</k><st>x} \texttt{|->} 3\texttt{</st>}
+%     \ \Rightarrow_{\mathcal{S}}\  \texttt{<k>x++</k><st>x} \texttt{|->} 3\texttt{</st>} \, .
+%     \end{aligned}
+% \end{equation}
+
+% \begin{equation}\label{eqn:ruleIfTrue}
+%     \begin{aligned}
+%     & \texttt{<k> if (} \mathit{true} \texttt{) x++; else x--; </k><st>x} \texttt{ |-> } 3\texttt{</st>} \\
+%     & \Rightarrow_{\mathcal{S}} \texttt{<k> x++; </k><st>x} \texttt{ |-> } 3\texttt{</st>} \, .
+%     \end{aligned}
+% \end{equation}
+
+On the \emph{partial correctness} side, RL reuses the concept of reachability rules.
 For example, one can specify that the program \texttt{while(x > 0) x--;}
 can, if it terminates at all, reach a configuration
 where the program variable \texttt{x} has a non-positive value
 by means of the reachability rule
 \begin{equation*}
     \begin{aligned}
-        & \texttt{<k> while( x > 0 ) x--; </k> <st> x |-> } V \texttt{</st>} \\
-        & \Rightarrow^\exists \exists V^\prime.\, \texttt{<k> . </k> x |-> } V^\prime \texttt{</st>} \land (V^\prime \texttt{ <=Int } 0 = \mathit{true})
+        \texttt{<k>while (x>0) x--</k><st>x|->} V \texttt{</st>}
+        \ \Rightarrow^\exists\  \exists V^\prime.\, \texttt{<k>.</k><st>x|->}
+        V^\prime \texttt{</st>} \land (V^\prime \texttt{ <=Int } 0 = \mathit{true})
     \end{aligned}
-\end{equation*}
+  \end{equation*}
+% \begin{equation*}
+%     \begin{aligned}
+%         & \texttt{<k>while( x > 0 ) x--</k><st>x|->} V \texttt{</st>} \\
+%         & \Rightarrow^\exists \exists V^\prime.\, \texttt{<k> . </k> x |-> } V^\prime \texttt{</st>} \land (V^\prime \texttt{ <=Int } 0 = \mathit{true})
+%     \end{aligned}
+%   \end{equation*}
+  
 Assuming the language is deterministic, this is equivalent to saying that if the program terminates,
 the resulting configuration will have non-positive value of \texttt{x}.
 Formally, a rule of the shape $\varphi \Rightarrow^\exists \varphi^\prime$
@@ -259,8 +320,7 @@ and $(\gamma^\prime, \rho) \vDash \varphi^\prime$.
 
 
 Reachability logic is equipped with a proof system which derives sequents of the shape
-$A, C \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime$;
-the proof system is sound and complete: a RL claim is satisfied in $\mathcal{S}$
+$A, C \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime$ (where $A$ is TODO and $C$ a set of circularities, introduced below). The proof system is sound and complete: a RL claim is satisfied in $\mathcal{S}$
 iff $\mathcal{S}, \emptyset \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime$.
 The set $C$, initially empty, contains so-called \emph{circularities},
 which are claims postulated to hold but not justified yet.
@@ -273,7 +333,7 @@ The proof system contains a rule
       { A, C \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime }
 \end{align*}
 which adds to current claim to the set of circularities.
-When a progress is made (by means of other rules, essentially performing a symbolic execution),
+When progress is made (by means of other rules, essentially performing a symbolic execution),
 the claim is moved from circularities to axioms and can be reused, similarly to the way one assumes a loop invariant
 in order to prove it again.
 We refer an interested reader to~\cite{RosuS12oopsla} for more details.
@@ -303,7 +363,7 @@ where $\phi,\phi^\prime$ are terms-as-predicates, and $P,P^\prime$ contain no te
 We work only with $\epsilon$-free reachability systems.
 A reachability system $(\mathcal{T}, S)$ is \emph{$\epsilon$-free}
 iff for any two configurations $\sigma, \sigma^\prime \in \mathcal{T}_{\mathit{Cfg}}$, if
-$\sigma \Rightarrow_{\mathcal{S}} \sigma^\prime$, then $\sigma \not = \sigma^\prime$;
+$\sigma \Rightarrow_{\mathcal{S}} \sigma^\prime$, then $\sigma \not = \sigma^\prime$.
 \end{remark}
 
 %%% Local Variables:
