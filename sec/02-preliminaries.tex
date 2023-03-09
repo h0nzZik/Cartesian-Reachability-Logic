@@ -2,6 +2,7 @@
 
 %\subsection{$k$-safety hyperproperties}
 
+
 \subsection{Cartesian Hoare logic}
 
 Introduced in~\cite{SousaD16}, Cartesian Hoare logic is a formalism for specifying and reasoning about
@@ -16,12 +17,12 @@ in collections), associativity (important in the map/reduce paradigm), or monoto
 Cartesian Hoare logic (CHL) can be used for reasoning about these on the level of the source code,
 similarly to Hoare logic.
 
-In a Hoare logic, one specifies safety properties by means of so-called \emph{Hoare triples}.
+In Hoare logic, properties are specified by means of so-called \emph{Hoare triples}.
 These have the shape $\{ \varphi \} S \{ \psi \}$, with the meaning that
 the formula $\psi$ holds in any state after the termination (if any) of the program $S$,
 executed from a state satisfying $\varphi$.
 In Cartesian Hoare logic, the situation is similar: one can specify a triple
-$\langle \Phi \rangle (S_1 * \cdots * S_k) \langle \Psi \rangle$
+$\langle \Phi \rangle\ S_1 \st \cdots \st S_k\ \langle \Psi \rangle$
 with the following meaning: for any $k$-tuple $(\sigma_1,\ldots,\sigma_k)$ of states
 satisfying the formula $\Phi$, if we execute each program $S_i$ in the respective state $\sigma_i$ and they all terminate,
 then the $k$-tuple $(\sigma_1^\prime,\ldots,\sigma_k^\prime)$ of resulting program states satisfies $\Psi$ \footnote{An
@@ -33,81 +34,99 @@ would not be able to distinguish between program variables of different programs
 As an example, consider the program $P(x,y) \equiv \texttt{while(x > 0) \{ x--; y++; \} }$ and the 2-safety property
 of \emph{monotonicity}; that is, intuitively: with growing input $x$, the resulting $y$ also grows.
 In CHL, this can be formalized as
-\begin{equation*}
-\langle x_1 \leq x_2 \land y_1 = y_2  \rangle (P(x_1, y_1) * P(x_2, y_2)) \langle y_1 \leq y_2 \rangle \, .
-\end{equation*}
+\begin{equation}\label{eq:mono_formula}
+\langle x_1 \leq x_2 \land y_1 = y_2  \rangle\ P(x_1, y_1)\st{}P(x_2, y_2)\  \langle y_1 \leq y_2 \rangle \, .
+\end{equation}
 The main idea here is that the formulas can \emph{relate} variables from different executions.
 
 Cartesian Hoare logic is equipped with a proof system that allows one to prove validity of CHL triples.
 The proof system contains rules like
 \begin{align}\label{chlRule:If}
+    % & \prftree[l]{If}
+    %   { % \prfStackPremises
+    %     { \langle \Phi \land c \rangle (\texttt{B1; S}) \st R \langle \Psi
+    %   \rangle } \qquad
+    %     { \langle \Phi \land \neg c \rangle (\texttt{B2; S}) * R \langle \Psi \rangle }
+    %   }
+    %   { \langle \Phi \rangle (\texttt{if (c) {B1} {B2} ; S}) * R \langle \Psi \rangle }
     & \prftree[l]{If}
-      { \prfStackPremises
-        { \langle \Phi \land c \rangle (\texttt{B1; S}) * R \langle \Psi \rangle }
-        { \langle \Phi \land \neg c \rangle (\texttt{B2; S}) * R \langle \Psi \rangle }
+      { % \prfStackPremises
+        { \chl{\Phi \land c}{(\texttt{B1; S}) \st R}{\Psi} } \qquad
+        { \chl{\Phi \land \neg c}{(\texttt{B2; S}) \st R}{\Psi} }
       }
-      { \langle \Phi \rangle (\texttt{if (c) {B1} {B2} ; S}) * R \langle \Psi \rangle }
+      { \chl{\Phi}{(\texttt{if (c) {B1} {B2} ; S}) \st R}{\Psi} }
 \end{align}
 that replicate standard Hoare-logic reasoning, and is sound and complete.
 However, what is more interesting, the proof system allows one to perform \emph{lockstep reasoning},
-even for loops. This is achieved by means of the rule
+even for loops. This is achieved by means of the following rule (version for two processes):
 \begin{align*}
   & \prftree[l]{Fusion}
-    { \prfStackPremises
-    { \langle I \land c_1 \land c_2 \rangle (\texttt{B1} * \texttt{B2}) \langle I \rangle }
-    { \{ I \land \neg c_1 \}\ \texttt{while (}c_2\texttt{) {B2}}\ \{ \Psi \} }
-    { \{ I \land \neg c_2 \}\ \texttt{while (}c_1\texttt{) {B1}}\ \{ \Psi \} }
+    {
+    \chl{I \land c_1 \land c_2}{\texttt{B1} \st \texttt{B2}}{I} \quad
+    \chl{I \land \neg c_2}{\texttt{while (}c_1\texttt{) {B1}}}{\Psi} \quad
+    \chl{I \land \neg c_1}{\texttt{while (}c_2\texttt{) {B2}}}{\Psi}    
   }
-  { \langle \Phi \rangle ((\texttt{while (}c_1\texttt{) {B1}}) * (\texttt{while (}c_2\texttt{) {B2}}))  \langle \Psi \rangle }
+  { \chl{\Phi}{(\texttt{while (}c_1\texttt{) {B1}}) \st (\texttt{while (}c_2\texttt{) {B2}})} {\Psi}}
 \end{align*}
-(which we present here in a simplified form, for Cartesian claims of arity 2 only).
+%(which we present here in a simplified form, for Cartesian claims of arity 2 only).
 This rule assumes an invariant $I$, which is a \emph{relational invariant} - meaning that it can relate variables
 from both execution.
-The rule breaks reasoning about a pair of loops into three cases: the case where both loop conditions hold,
-and the two cases where one of the conditions does not hold.
-In the first case, one needs to prove that the relational invariant $I$ is preserved by execution of the two loop bodies,
-assuming that the loop condition holds.
-In the other two cases, one needs to handle the case when one of the loops finishes its execution.
-In that situation, one can assume that the loop condition of the finished loop does not hold,
-and has to prove that executing the other loop in a state satisfying the invariant results in a state
-satisfying the postcondition. This can be done by means of standard Hoare logic reasoning.
+%
+The rule breaks reasoning about a pair of loops into three cases: the case
+where both loop conditions hold, and the two cases where one of the conditions
+does not hold.  In the first case, both loops are executed ``in lockstep'',
+performing one iteration each, and their execution must preserve the
+invariant. In the remaining two cases only one of the loops executes (in a
+state satisfying the invariant and negation of the other loop condition),
+resulting in a state satisfying the postcondition.
 
-For an example, consider the program
-\begin{equation}\label{eqn:CounterProgram}
-P(x,y) \equiv \texttt{while(}x\texttt{ > 0)\{ }y\texttt{++; }x\texttt{--;\}}
-\end{equation}
-and the property that $P$ is monotone with respect to the initial values of $x$ and $y$ and resulting value of $y$.
-This can be formalized as the CHL triple
-\begin{equation*}
-\langle x_1 \leq x_2 \land y_1 \leq y_2  \rangle (P(x_1, y_1) * P(x_2, y_2)) \langle y_1 \leq y_2 \rangle
-\end{equation*}
-Intuitively, this hyperproperty holds because we can synchronize the two executions until the point when the first one terminates;
-then, the second execution may continue for a while, making the difference betwen $y_2$ and $y_1$ even greater.
-Formally, we can apply the Fusion rule, with the precondition being also the relational invariant.
-This results in three subgoals:
-\begin{equation*}
-    \begin{aligned}
-        & \langle x_1 \leq x_2 \land y_1 \leq y_2 \land x_1 > 0 \land x_2 > 0  \rangle\ ( (y_1\texttt{++} ; x_1\texttt{--}); * (y_2\texttt{++} ; x_2\texttt{--}))\ \langle x_1 \leq x_2 \land y_1 \leq y_2 \rangle \\
-        & \{ x_1 \leq x_2 \land y_1 \leq y_2 \land \neg (x_1 > 0) \}\ P(x_2, y_2)\ \{ y_1 \leq y_2 \} \\
-        & \{ x_1 \leq x_2 \land y_1 \leq y_2 \land \neg (x_2 > 0) \}\ P(x_1, y_1)\ \{ y_1 \leq y_2 \} \\
-    \end{aligned}
-\end{equation*}
-The first one requires one to show that the body of the loop preserves the invariant,
-the second (third) represent the cases when the first (second) execution terminated.
-To prove the second subgoal, one needs to find a (non-relational) invariant of the (single) loop;
-the third subgoal is trivial, as its precondition implies the negation of the loop condition.
 
-This lockstep reasoning is a powerful tool, because the relational invariants it requires are often very simple.
-To prove the above example without lockstep reasoning, one would need to find (non-relational) loop invariants
-strong enough to summarize the whole loop.
-However, lockstep-reasoning rules become more complicated as one adds other features into the language
-- for example, the \texttt{break} statement.
+% This can be done by means of standard Hoare logic reasoning.
+
+% For an example, consider the program
+% \begin{equation}\label{eqn:CounterProgram}
+% P(x,y) \equiv \texttt{while(}x\texttt{ > 0)\{ }y\texttt{++; }x\texttt{--;\}}
+% \end{equation}
+% and the property that $P$ is monotone with respect to the initial values of $x$ and $y$ and resulting value of $y$.
+% This can be formalized as the CHL triple
+% \begin{equation*}
+% \langle x_1 \leq x_2 \land y_1 \leq y_2  \rangle (P(x_1, y_1) * P(x_2, y_2)) \langle y_1 \leq y_2 \rangle
+% \end{equation*}
+% Intuitively, this hyperproperty holds because we can synchronize the two executions until the point when the first one terminates;
+% then, the second execution may continue for a while, making the difference betwen $y_2$ and $y_1$ even greater.
+% Formally, we can apply the Fusion rule, with the precondition being also the relational invariant.
+% This results in three subgoals:
+% \begin{equation*}
+%     \begin{aligned}
+%         & \langle x_1 \leq x_2 \land y_1 \leq y_2 \land x_1 > 0 \land x_2 > 0  \rangle\ ( (y_1\texttt{++} ; x_1\texttt{--}); * (y_2\texttt{++} ; x_2\texttt{--}))\ \langle x_1 \leq x_2 \land y_1 \leq y_2 \rangle \\
+%         & \{ x_1 \leq x_2 \land y_1 \leq y_2 \land \neg (x_1 > 0) \}\ P(x_2, y_2)\ \{ y_1 \leq y_2 \} \\
+%         & \{ x_1 \leq x_2 \land y_1 \leq y_2 \land \neg (x_2 > 0) \}\ P(x_1, y_1)\ \{ y_1 \leq y_2 \} \\
+%     \end{aligned}
+% \end{equation*}
+% The first one requires one to show that the body of the loop preserves the invariant,
+% the second (third) represent the cases when the first (second) execution terminated.
+% To prove the second subgoal, one needs to find a (non-relational) invariant of the (single) loop;
+% the third subgoal is trivial, as its precondition implies the negation of the loop condition.
+
+This lockstep reasoning is a powerful tool, because the relational invariants
+it requires are often very simple. For example consider the program $P(x,y)$
+and the formula \ref{eq:mono_formula} above. If one chooses the invariant $I$
+to be the precondition $x_1 \leq x_2 \land y_1 = y_2$, the precondition of the
+second premise becomes $x_1 \leq x_2 \land y_1 \leq y_2 \land \neg (x_2 > 0)$,
+which implies $x_1 \leq 0$ and therefore the loop condition in $P(x_1, y_1)$ is not satisfied.
+
+
+
+%To prove the above example without lockstep reasoning, one would need to find (non-relational) loop invariants
+%strong enough to summarize the whole loop.
+
+Unfortunately lockstep-reasoning rules become more complicated as one adds other features into the language
+-- for example, the \texttt{break} statement (as has been done in \cite{SousaD16}).
 It is not clear how to extend this approach to handle, e.g., recursion, \texttt{continue}, or \texttt{goto}.
 We also observe that a single language feature (\texttt{while} loops) needed to be considered five times
 in order for CHL to soundly support it: the semantics of \texttt{while} is present in the operational semantics of
 the target language, in the Hoare logic for that language, in the Cartesian Hoare logic for that language,
-and in the proofs of soundness of the logics.
-
+and in the proofs of soundness for both of the logics.
 
 Our aim in this paper is to make the above ideas available for any deterministic languge.
 Therefore, in the following subsections we review some tools from recent literature
@@ -286,3 +305,8 @@ A reachability system $(\mathcal{T}, S)$ is \emph{$\epsilon$-free}
 iff for any two configurations $\sigma, \sigma^\prime \in \mathcal{T}_{\mathit{Cfg}}$, if
 $\sigma \Rightarrow_{\mathcal{S}} \sigma^\prime$, then $\sigma \not = \sigma^\prime$;
 \end{remark}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../main"
+%%% End:
