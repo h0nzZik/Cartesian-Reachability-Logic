@@ -502,6 +502,30 @@ Consider again the claim $\Omega_{\mathit{mono}}$ from \Cref{sec:CRLsemanticsCom
    \Rightarrow^{c\exists} [\xi(\epsilon, ?\_, ?Y_1), \xi(\epsilon, ?\_, ?Y_2)] \land ?Y_1 \leq ?Y_2 \, .
 \end{align*}
 Let $\Psi^\prime_{\mathit{mono}}$ denote the right side of the $\Rightarrow^{c\exists}$ above.
+We want to prove
+\begin{align*}
+  \mathcal{S}_{\mathit{imp}} \vdash_\CRL [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2)] \land X_1 \leq X_2 \land Y_1 \leq Y_2
+  \Downarrow_{\emptyset, \emptyset} \Psi^\prime_{\mathit{mono}} \, .
+\end{align*}
+To do so, we first want to add the current premise as a cutpoint.
+However, we need to make the cutpoint more general than the current claim, as we will see later in the proof.
+Therefore, we first apply the Conseq rule to change the goal to
+\begin{align*}
+  \mathcal{S}_{\mathit{imp}} \vdash_\CRL \exists X_1,Y_1,X_2,Y_2.\, [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2)] \land X_1 \leq X_2 \land Y_1 \leq Y_2
+  \Downarrow_{\emptyset, \emptyset} \Psi^\prime_{\mathit{mono}} \, ,
+\end{align*}
+then apply the Circularity rule, followed by application of the Abstract rule, which basically changes the goal
+back, except that now we have a general circularity. The goal is now
+\begin{align*}
+  \mathcal{S}_{\mathit{imp}} \vdash_\CRL [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2)] \land X_1 \leq X_2 \land Y_1 \leq Y_2
+  \Downarrow_{\Phi_{\mathit{circ}}, \emptyset} \Psi^\prime_{\mathit{mono}} \, ,
+\end{align*}
+where
+\begin{align*}
+  \Phi_{\mathit{circ}} \equiv \mathcal{S}_{\mathit{imp}} \vdash_\CRL \exists X_1,Y_1,X_2,Y_2.\, [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2)] \land X_1 \leq X_2 \land Y_1 \leq Y_2 \, .
+\end{align*}
+
+
 TODO
 
 
