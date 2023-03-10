@@ -534,10 +534,10 @@ the \texttt{while} statement is defined by unroling into the \texttt{if} stateme
 we end up with a goal like
 \begin{align*}
   & \mathcal{S}_{\mathit{imp}} \vdash_\CRL
-  [ \texttt{if (}X_1 >_{\mathit{Int}} 0 \texttt{)\{y++;x--;}\xi(P, X_1, Y_1) \},  
-   \texttt{if (}X_2 >_{\mathit{Int}} 0 \texttt{)\{y++;x--;}\xi(P, X_2, Y_2) \} ] \\
+  [ \xi(\texttt{if (}X_1 >_{\mathit{Int}} 0 \texttt{)\{y++;x--;\};}P, X_1, Y_1),  
+    \xi(\texttt{if (}X_2 >_{\mathit{Int}} 0 \texttt{)\{y++;x--;\};}P, X_2, Y_2) ] \\
   & \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2
-  \Downarrow_{\Phi_{\emptyset, \mathit{circ}}} \Psi^\prime_{\mathit{mono}} \, ,
+  \Downarrow_{\emptyset, \Phi_{\mathit{circ}}} \Psi^\prime_{\mathit{mono}} \, ,
 \end{align*}
 Now we want to perform case analysis. To do so, we first use the Consequence rule to
 obtain disjunctions of patterns at the respective components, and repeatedly apply the Case rule, leading to four goals
@@ -545,37 +545,37 @@ obtain disjunctions of patterns at the respective components, and repeatedly app
 \begin{equation}\label{ex:case1}
 \begin{aligned}
   & \mathcal{S}_{\mathit{imp}} \vdash_\CRL
-  [ \texttt{if (}{\color{blue}\mathit{true}}\texttt{)\{y++;x--;}\xi(P, X_1, Y_1) \},  
-   \texttt{if (}{\color{blue}\mathit{true}}\texttt{)\{y++;x--;}\xi(P, X_2, Y_2) \} ] \\
+  [ \xi(\texttt{if (}{\color{blue}\mathit{true}}\texttt{)\{y++;x--;\};}P, X_1, Y_1),  
+    \xi(\texttt{if (}{\color{blue}\mathit{true}}\texttt{)\{y++;x--;\};}P, X_2, Y_2) ] \\
   & \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2 \land {\color{blue} X_1 >_{\mathit{Int}} 0 \land X_2 >_{\mathit{Int}} 0 }
-  \Downarrow_{\Phi_{\emptyset, \mathit{circ}}} \Psi^\prime_{\mathit{mono}} \, ,
+  \Downarrow_{\emptyset, \Phi_{\mathit{circ}}} \Psi^\prime_{\mathit{mono}} \, ,
 \end{aligned}
 \end{equation}
 \begin{equation}\label{ex:case2}
 \begin{aligned}
   & \mathcal{S}_{\mathit{imp}} \vdash_\CRL
-  [ \texttt{if (}{\color{blue}\mathit{true}}\texttt{)\{y++;x--;}\xi(P, X_1, Y_1) \},  
-   \texttt{if (}{\color{blue}\mathit{false}}\texttt{)\{y++;x--;}\xi(P, X_2, Y_2) \} ] \\
+  [ \xi(\texttt{if (}{\color{blue}\mathit{true}}\texttt{)\{y++;x--;\};P}, X_1, Y_1),  
+    \xi(\texttt{if (}{\color{blue}\mathit{false}}\texttt{)\{y++;x--;\};P}, X_2, Y_2) ] \\
   & \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2 \land {\color{blue} X_1 >_{\mathit{Int}} 0 \land X_2 \leq_{\mathit{Int}} 0 }
-  \Downarrow_{\Phi_{\emptyset, \mathit{circ}}} \Psi^\prime_{\mathit{mono}} \, ,
+  \Downarrow_{\emptyset, \Phi_{\mathit{circ}}} \Psi^\prime_{\mathit{mono}} \, ,
 \end{aligned}
 \end{equation}
 \begin{equation}\label{ex:case3}
 \begin{aligned}
   & \mathcal{S}_{\mathit{imp}} \vdash_\CRL
-  [ \texttt{if (}{\color{blue}\mathit{false}}\texttt{)\{y++;x--;}\xi(P, X_1, Y_1) \},  
-   \texttt{if (}{\color{blue}\mathit{true}}\texttt{)\{y++;x--;}\xi(P, X_2, Y_2) \} ] \\
+  [ \xi(\texttt{if (}{\color{blue}\mathit{false}}\texttt{)\{y++;x--;\};P}, X_1, Y_1),  
+    \xi(\texttt{if (}{\color{blue}\mathit{true}}\texttt{)\{y++;x--;\};P}, X_2, Y_2) ] \\
   & \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2 \land {\color{blue} X_1 \leq_{\mathit{Int}} 0 \land X_2 >_{\mathit{Int}} 0 }
-  \Downarrow_{\Phi_{\emptyset, \mathit{circ}}} \Psi^\prime_{\mathit{mono}} \, ,
+  \Downarrow_{\emptyset, \Phi_{\mathit{circ}}} \Psi^\prime_{\mathit{mono}} \, ,
 \end{aligned}
 \end{equation}
 \begin{equation}\label{ex:case4}
 \begin{aligned}
   & \mathcal{S}_{\mathit{imp}} \vdash_\CRL
-  [ \texttt{if (}{\color{blue}\mathit{false}}\texttt{)\{y++;x--;}\xi(P, X_1, Y_1) \},  
-   \texttt{if (}{\color{blue}\mathit{false}}\texttt{)\{y++;x--;}\xi(P, X_2, Y_2) \} ] \\
+  [ \xi(\texttt{if (}{\color{blue}\mathit{false}}\texttt{)\{y++;x--;\};P}, X_1, Y_1) ,  
+    \xi(\texttt{if (}{\color{blue}\mathit{false}}\texttt{)\{y++;x--;\};P}, X_2, Y_2) ] \\
   & \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2 \land {\color{blue} X_1 \leq_{\mathit{Int}} 0 \land X_2 \leq_{\mathit{Int}} 0 }
-  \Downarrow_{\Phi_{\emptyset, \mathit{circ}}} \Psi^\prime_{\mathit{mono}} \, ,
+  \Downarrow_{\emptyset, \Phi_{\mathit{circ}}} \Psi^\prime_{\mathit{mono}} \, .
 \end{aligned}
 \end{equation}
 \begin{itemize}
@@ -594,12 +594,22 @@ of the Reflexivity rule.
       We can Reduce this subgoal to simple RL reasoning. We could also prove this case without Reduce,
       using the other rules, but lockstep reasoning does not help there.
 \item The case in \Cref{ex:case1} is the one when we utilize the ability to perform lockstep reasoning.
-      We symbolically execute both components until TODO
+      We symbolically execute both components until their program parts become the \texttt{while} loops again;
+      that is, $P$.
+      The goal is now
+      \begin{align*}
+        & \mathcal{S}_{\mathit{imp}} \vdash_\CRL
+        [ \xi(P, X_1 -_{\mathit{Int}} 1, Y_1 +_{\mathit{Int}} 1 ) ,  
+          \xi(P, X_2 -_{\mathit{Int}} 1, Y_2 +_{\mathit{Int}} 1) ] \\
+        & \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2 \land {X_1 \leq_{\mathit{Int}} 0 \land X_2 \leq_{\mathit{Int}} 0 }
+        \Downarrow_{\emptyset, \Phi_{\mathit{circ}}} \Psi^\prime_{\mathit{mono}} \, .
+      \end{align*}
+      which implies the circularity $\Phi_{\mathit{circ}}$ which is already enabled.
+      We can therefore conclude the proof using Conseq and Axiom.
       %their program parts
       %become $\xi(P, X_1, Y_1)$ and $\xi(P, X_2, Y_2)$, respectively.
-      
-      
 \end{itemize}
+
 
 %%% Local Variables:
 %%% mode: latex
