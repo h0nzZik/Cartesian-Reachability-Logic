@@ -185,6 +185,8 @@ in claims are of length one:
 %$(\pi_1(i_1), \rho) \vDash \varphi_1 \land \psi$ and \ldots and $(\pi_k(i_k), \rho) \vDash \varphi_k \land \psi$.
 %\end{definition}
 
+\subsection{A language-independent alternative to self-composition}
+
 Now we present a novel, general technique called \emph{star extension} that is reminiscent of self-composition~\cite{BartheDR11}.
 Self-composition is a technique where a program $P$ together with a $k$-safety hyperproperty is reduced to
 a sequential composition of $P$ with itself (with renamed variables) together with a safety property.
@@ -195,6 +197,8 @@ even if we do not know in advance how the language implements sequential composi
 
 The main idea of \emph{star extension} is to transform a CRL claim into a RL claim over an extended reachability system,
 where configurations of the extended reachability system are lists of configurations of the original system.
+The function $\mathit{flatten}$ then converts an ECLP (which contains a meta-level list of matching logic patterns)
+into a matching logic formula (containing an object-level list) that matches lists inside the model.
 The transformation is quite straightforward but technical, and we refer an interested reader to the \Cref{app:CRLandRLcorrespondence};
 here we only present the main theorem.
 \begin{theorem}\label{thm:CRLandRLcorrespondence}
@@ -207,6 +211,7 @@ here we only present the main theorem.
     \iff \mathcal{S}^* \vDash_\RL \mathit{flatten}(\Psi) \Rightarrow^{c\exists} \mathit{flatten}(\Psi^\prime)
   \end{equation*}
 \end{theorem}
+
 
 The price paid for self-composition is that the property of the self-composed program is often hard to reason about.
 Therefore, in~\cite{SousaD16}, the authors do not apply self-composition directly, but only use its soundness to justify
