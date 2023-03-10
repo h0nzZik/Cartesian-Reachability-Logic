@@ -1773,7 +1773,8 @@ By induction on the structure of the CRL proof.
 
 \subsection{Completeness}\label{app:completeness}
 
-We assume that the model $\mathcal{T}$ interprets
+For completeness of our proof system, we assume a framework similar to that of \cite{StefanescuCMMSR19}.
+Specifically, we assume that the model $\mathcal{T}$ interprets
 \begin{itemize}
     \item the symbol $\alpha$ as an injective function from configurations into integers;
     \item the symbol $<$ as the usual ordering on integers.
@@ -1786,10 +1787,15 @@ to matching logic patterns over $\Sigma$ such that
 $\mathcal{T} \vDash_\ML \mathit{red}(\varphi) \iff \mathcal{T^*} \vDash_\ML \varphi$.
 \end{theorem}
 \begin{proof}
-Intuitively, we perform Godelization of the formula $\varphi^\square$, using Godel's $\beta$ predicate.
-Let use consider the universal closure $\varphi_c$ of $\varphi^\square$.
-%Define a function $\mathit{length}(l, n) = \forall i.$
-Define functions $\mathit{val}$ and $\mathit{length}$ by mutual structural recursion on its second parameter:
+Intuitively, we perform Gödelization of the formula $\varphi^\square$, using Gödel's $\beta$ predicate.
+The idea is that the only construct appearing in FOL formulas over $\Sigma^*$ and not in FOL formulas over $\Sigma$
+is comparison of lists of configuration for equality, and we reduce this construct to equality of the corresponding
+elements of the list.
+For this purpose, we introduce a function $\mathit{val}(M, l, n, y)$ representing a predicate saying that
+the term $l$ representing a list of configurations has at position $n$ the configuration $y$.
+%Equalities between lists are then traslated as the list having the same elements on the same indices.
+
+We define functions $\mathit{val}$ and $\mathit{length}$ by mutual structural recursion on its second parameter:
 \begin{itemize}
     \item $\mathit{val}(M, l, n, y) = \beta(a_{l}, b_{l}, n, \alpha(y))$ whenever $(l, a_{l}, b_{l}) \in M$;
     \item $\mathit{val}(\_, \mathit{cfgnil}, \_, \_) = \bot$.
@@ -1811,11 +1817,12 @@ The predicate $\mathit{length}(M, l, n)$ holds if the lenght of $l$ is exactly $
 Next, we define a function $\mathit{tr}$ which performs basic recursion on a given FOL $\Sigma^*$ formula,
 except that quantification over lists and equality of lists is handled as follows:
 \begin{itemize}
-    \item $\mathit{tr}(M, \forall (l : \mathit{Cfg}^*).\, \varphi) = \forall a_l, b_l.\, \mathit{tr}(M \cup \{ (l, a_l, b_l) \}, \varphi)$
+    \item $\mathit{tr}(M, \forall (l : \mathit{Cfg}^*).\, \varphi) = \forall a_l : \mathit{Int}, b_l : \mathit{Int}.\, \mathit{tr}(M \cup \{ (l, a_l, b_l) \}, \varphi)$
     for some fresh $a_l,b_l$;
     \item $\mathit{tr}(M, l_1 = l_2) = \forall c : \mathit{Int}, d:\mathit{Cfg}.\, ( \mathit{val}(M, l_1, c, d) \leftrightarrow \mathit{val}(M, l_2, c, d))$
 \end{itemize}
 
+Let use consider the universal closure $\varphi_c$ of $\varphi^\square$.
 Finally, we define $\mathit{red}(\varphi) = \mathit{tr}(\varphi_c)$; the desired equivalence holds by
 properties of the Godel $\beta$ predicate and properties lists in the extended model $\mathcal{T}^*$.
 
