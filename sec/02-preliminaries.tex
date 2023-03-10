@@ -374,12 +374,16 @@ We refer an interested reader to~\cite{RosuS12oopsla} for more details.
 
 
 \begin{remark}\label{rem:shapeOfReachabilityRules}
-For simplicity, we restrict the class of reachability systems we work with to those whose reachability rules
+  Following the lead of the original reachability logic papers (\cite{RosuS12oopsla,StefanescuCMMSR19}),
+  we restrict the class of reachability systems we work with to those whose reachability rules
 have the shape
 \begin{equation*}
     \phi \land P \Rightarrow^\exists \phi^\prime \land P^\prime
 \end{equation*}
 where $\phi,\phi^\prime$ are terms-as-predicates, and $P,P^\prime$ contain no terms-as-predicate.
+  As argued in these papers, such rules can support various styles of operational semantics,
+  including evaluation contexts (\cite{PLTRedex}), the chemical abstract machine (\cite{CHAM}), and \K{} (\cite{KVision}).
+  Thus, with this restriction we support all the reachability systems supported by reachability logic.
 \end{remark}
 
 \begin{remark}\label{rem:noEmptySteps}
