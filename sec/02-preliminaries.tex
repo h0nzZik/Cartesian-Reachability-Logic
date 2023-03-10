@@ -35,7 +35,7 @@ As an example, consider the program $P(x,y) \equiv \texttt{while(x > 0) \{ x--; 
 of \emph{monotonicity}; that is, intuitively: with growing input $x$, the resulting $y$ also grows.
 In CHL, this can be formalized as
 \begin{equation}\label{eq:mono_formula}
-\langle x_1 \leq x_2 \land y_1 = y_2  \rangle\ P(x_1, y_1)\st{}P(x_2, y_2)\  \langle y_1 \leq y_2 \rangle \, .
+\langle x_1 \leq x_2 \land y_1 \leq y_2  \rangle\ P(x_1, y_1)\st{}P(x_2, y_2)\  \langle y_1 \leq y_2 \rangle \, .
 \end{equation}
 The main idea here is that the formulas can \emph{relate} variables from different executions.
 
@@ -69,8 +69,7 @@ even for loops. This is achieved by means of the following rule (version for two
   { \chl{\Phi}{(\texttt{while (}c_1\texttt{) {B1}}) \st (\texttt{while (}c_2\texttt{) {B2}})} {\Psi}}
 \end{align*}
 %(which we present here in a simplified form, for Cartesian claims of arity 2 only).
-This rule assumes an invariant $I$, which is a \emph{relational invariant} - meaning that it can relate variables
-from both execution.
+Note that the invariant $I$, assumed by this rule, can relate variables from \emph{both} executions.
 %
 The rule breaks reasoning about a pair of loops into three cases: the case
 where both loop conditions hold, and the two cases where one of the conditions
@@ -108,12 +107,14 @@ resulting in a state satisfying the postcondition.
 % To prove the second subgoal, one needs to find a (non-relational) invariant of the (single) loop;
 % the third subgoal is trivial, as its precondition implies the negation of the loop condition.
 
-This lockstep reasoning is a powerful tool, because the relational invariants
-it requires are often very simple. For example consider the program $P(x,y)$
-and the formula \ref{eq:mono_formula} above. If one chooses the invariant $I$
-to be the precondition $x_1 \leq x_2 \land y_1 = y_2$, the precondition of the
-second premise becomes $x_1 \leq x_2 \land y_1 \leq y_2 \land \neg (x_2 > 0)$,
-which implies $x_1 \leq 0$ and therefore the loop condition in $P(x_1, y_1)$ is not satisfied.
+This lockstep reasoning is a powerful tool, because the invariants (relating
+different executions) required are often very simple. For example consider the
+program $P(x,y)$ and the formula \ref{eq:mono_formula} above. If one chooses
+the invariant $I$ to be the same as precondition $x_1 \leq x_2 \land y_1 \leq y_2$,
+the precondition of the second premise becomes
+$x_1 \leq x_2 \land y_1 \leq y_2 \land \neg (x_2 > 0)$, which implies
+$x_1 \leq 0$ and therefore the loop condition in $P(x_1, y_1)$ is not
+satisfied.
 
 
 
@@ -179,22 +180,23 @@ A typical example of a matching logic formula is $\varphi_{\mathit{example}}$,
 defined as
 
 \begin{equation}\label{eqn:exampleMLPattern}
-    \varphi_{\mathit{example}} \equiv\quad \tap{x--}{\texttt{x}\mapsto X}  \land (X \texttt{ >Int } 1 = \mathit{true})
+    \varphi_{\mathit{example}} \equiv\quad \tap{x--;}{\texttt{x}\mapsto X}  \land\ (X >_\text{Int} 1 = \mathit{true})
 \end{equation}
 
 % TODO - remark, that in K this would look differently
 
 which, when interpreted in a model of a particular programming language,
-denotes the set of program configurations in which the code \texttt{x--} is to be executed
-and in which the program variable $\texttt{x}$ has a value $X$ that is greater than $1$.
-In this example, the suformula  $\tap{x--}{\mathtt{x}\mapsto X}$
-is a nullary term used as a predicate (term-as-predicate), with $X$ being the
-only free FOL variable.  Whereas $\texttt{x}$ is not a FOL variable, but a
-constant symbol from the signature of the programming language.  The subterm
-$\texttt{x}\mapsto X$ states that the program variable $\texttt{x}$ has value
-$X$, and the $X \texttt{ >Int } 1 = \mathit{true}$ part then says that the
-realization of the function symbol $\_ \texttt{ >Int } \_$ returns the boolean
-value $\mathit{true}$ when given $X$ and $1$ as arguments.
+denotes the set of program configurations in which ``\texttt{x--;}'' is the code
+to be executed next and the program variable $\texttt{x}$ has a value $X$ that
+is greater than $1$.  In this example, the suformula
+$\tap{x--;}{\mathtt{x}\mapsto X}$ is a nullary term used as a predicate
+(term-as-predicate), with $X$ being the only free FOL variable.  Whereas
+$\texttt{x}$ is not a FOL variable, but a constant symbol from the signature
+of the programming language.  The subterm $\texttt{x}\mapsto X$ states that
+the program variable $\texttt{x}$ has value $X$, and the
+$X >_\text{Int} 1 = \mathit{true}$ part then says that the realization of the
+function symbol ``$>_\text{Int}$'' returns the boolean value $\mathit{true}$
+when given $X$ and $1$ as arguments.
 
 The satisfaction relation $(M, \gamma, \rho) \vDash \varphi$ between a model $M$, a model element $\gamma \in M$,
 an $M$-valuation $\rho$, and a pattern $\varphi$, is defined inductively on the structure of $\varphi$.
@@ -241,7 +243,7 @@ iff there is some rule $\varphi \Rightarrow^\exists \varphi^\prime \in S$
 and some valuation $\rho : \Var \to \mathcal{T}$ such that $(\gamma, \rho) \vDash \varphi$
 and $(\gamma^\prime , \rho) \vDash \varphi^\prime$.
 
-As an example, consider the following transition rule
+As an example, consider the following reachability rule
 
 \begin{equation}\label{eqn:ruleIfTrue}
     \tap{if ($true$) then $P_1$ else $P_2$}{S} \ \Rightarrow^{\exists}\ \tap{$P_1$}{S}
@@ -310,13 +312,13 @@ This rule induces (among others) the transition
 % \end{equation}
 
 On the \emph{partial correctness} side, RL reuses the concept of reachability rules.
-For example, one can specify that the program \texttt{while(x > 0) x--;}
+For example, one can specify that the program \texttt{while(x > 0) do x--;}
 can, if it terminates at all, reach a configuration
 where the program variable \texttt{x} has a non-positive value
 by means of the reachability rule
 \begin{equation*}
-  \tap{while (x>0) x--}{\mathtt{x}\mapsto V}
-  \ \Rightarrow^\exists\  \exists V^\prime.\, \tap{$\cdot$}{\mathtt{x}\mapsto V'} \land (V^\prime \texttt{ <=Int } 0 = \mathit{true})
+  \tap{while (x>0) do x--;}{\mathtt{x}\mapsto V}
+  \ \Rightarrow^\exists\  \exists V^\prime.\, \tap{$\cdot$}{\mathtt{x}\mapsto V'} \land (V^\prime \leq_\text{Int} 0 = \mathit{true})
   \end{equation*}
 % \begin{equation*}
 %     \begin{aligned}
@@ -342,8 +344,8 @@ and $(\gamma^\prime, \rho) \vDash \varphi^\prime$.
 
 
 Reachability logic is equipped with a proof system which derives sequents of the shape
-$A, C \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime$ (where $A$ is a
-set of reachability rules and $C$ is introduced below). The proof system is sound and complete: a RL claim is satisfied in $\mathcal{S}$
+$\mathcal{A}, C \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime$ (where $\mathcal{A}$ is a
+reachability system and $C$ is introduced below). The proof system is sound and complete: a RL claim is satisfied in $\mathcal{S}$
 iff $\mathcal{S}, \emptyset \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime$.
 The set $C$, initially empty, contains so-called \emph{circularities},
 which are claims postulated to hold but not justified yet.
@@ -352,14 +354,16 @@ enable one to reason about repetetive behavior of programs.
 The proof system contains a rule
 \begin{align*}
     & \prftree[l]{Circularity}
-      { A, C \cup \{ \varphi\Rightarrow^\exists \varphi^\prime \} \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime }
-      { A, C \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime }
+      { \mathcal{A}, C \cup \{ \varphi\Rightarrow^\exists \varphi^\prime \} \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime }
+      { \mathcal{A}, C \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime }
 \end{align*}
-which adds to current claim to the set of circularities.
-When progress is made (by means of other rules, essentially performing a symbolic execution),
-the claim is moved from circularities to rules and can be reused, similarly to the way one assumes a loop invariant
-in order to prove it again.
-We refer an interested reader to~\cite{RosuS12oopsla} for more details.
+which adds to current claim to the set of circularities.  When progress is
+made (by means of other rules, essentially performing a symbolic execution),
+the claim is moved from circularities to $\mathcal{A}$ (using the
+\emph{Transitivity} rule -- see Appendix~\ref{app:crlsoundness}) and can be
+reused, similarly to the way one assumes a loop invariant in order to prove it
+again.  We refer an interested reader to~\cite{RosuS12oopsla} for more
+details.
 
 
 %For illustration purposes, we show one rule of the RL proof system:
@@ -374,7 +378,7 @@ We refer an interested reader to~\cite{RosuS12oopsla} for more details.
 
 
 \begin{remark}\label{rem:shapeOfReachabilityRules}
-  Following the lead of the original reachability logic papers (\cite{RosuS12oopsla,StefanescuCMMSR19}),
+  Following the original reachability logic papers (\cite{RosuS12oopsla,StefanescuCMMSR19}),
   we restrict the class of reachability systems we work with to those whose reachability rules
 have the shape
 \begin{equation*}
@@ -382,7 +386,7 @@ have the shape
 \end{equation*}
 where $\phi,\phi^\prime$ are terms-as-predicates, and $P,P^\prime$ contain no terms-as-predicate.
   As argued in these papers, such rules can support various styles of operational semantics,
-  including evaluation contexts (\cite{PLTRedex}), the chemical abstract machine (\cite{CHAM}), and \K{} (\cite{KVision}).
+  including evaluation contexts \cite{PLTRedex}, the chemical abstract machine \cite{CHAM}, and \K{} \cite{KVision}.
   Thus, with this restriction we support all the reachability systems supported by reachability logic.
 \end{remark}
 

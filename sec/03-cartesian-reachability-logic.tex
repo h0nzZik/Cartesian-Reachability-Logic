@@ -23,13 +23,14 @@ the set of source configurations of $i$-th program matching $\varphi_i$ and
 target configurations matching $\varphi'_i$. Additionally, a matching logic
 formula $P$ can relate the source configurations, and $P'$ the target
 configurations. We call formulas of the form
-$ [\varphi_1,\ldots,\varphi_k] \land P$ \emph{existentially-quantified
-  constrained list patterns} (ECLP).
+$ \exists \vec{Y}.\,[\varphi_1,\ldots,\varphi_k] \land P$ (where $\vec{Y}$ may
+be an empty vector) \emph{existentially-quantified constrained list patterns}
+(ECLP).
 
 
 For example, let us again consider the following program
 \begin{equation*}
-  P \equiv \texttt{while(x > 0)\{ y++; x--;\}} \, .
+  P \equiv \texttt{while(x > 0)\{ x--; y++; \}} \, .
 \end{equation*}
 Additionally, let $\xi(Q, X, Y)$ be a pattern matching those configurations of
 program $Q$ where the program variable $\texttt{x}$ has the value $X$ and the program
@@ -53,6 +54,10 @@ we end up in configurations $\gamma_1^\prime,\gamma_2^\prime$ matching
 $\xi(\epsilon, X^\prime_1, Y^\prime_1)$ and $\xi(\epsilon, X^\prime_2, Y^\prime_2)$
 for some $X^\prime_1,Y^\prime_1,X^\prime_2,Y^\prime_2$
 satisfying $Y^\prime_1 \leq Y^\prime_2$.
+%
+Note that we need the existential quantification on the right hand side of
+claims to be able to talk about the new values of program variables (whereas
+in CHL we have original values in the precondition, and new values in the postcondition).
 
 We formally define the semantics of a CRL claim as follows:
 \begin{definition}[CRL semantics]\label{def:opCRLsemantics}
@@ -64,7 +69,7 @@ We formally define the semantics of a CRL claim as follows:
     is \emph{valid} in a reachability system $\mathcal{S} = (\mathcal{T}, S)$,
     written
     \begin{equation*}
-        \mathcal{S} \vDash_\CRL [\varphi_1,\ldots,\varphi_k] \land P
+        (\mathcal{T}, S) \vDash_\CRL [\varphi_1,\ldots,\varphi_k] \land P
      \Rightarrow^{c\exists} \exists \vec{Y}.\, [\varphi^\prime_1,\ldots,\varphi^\prime_k] \land P^\prime \, ,
     \end{equation*}
     iff for all configurations $\gamma_1,\ldots,\gamma_k \in \Tcfg$
@@ -86,12 +91,8 @@ As can be seen from the example above, CRL is more verbose then CHL. This is
 partly because of the need to specify patterns matching the whole program
 configurations, and partly because of the need to existentially quantify those
 variables on the right side whose value is not determined by the left side.
-Another reason is related to the fact that in CRL, as well as in RL, a
-variable occuring in both sides has the same value in both sides.  Therefore,
-in (C)RL, one does not need to introduce ghost variables for remembering
-values from the precondition.
 
-\begin{remark}
+\begin{notation}
 We inherit notation commonly used in RL that
 variables whose names start with a question mark are implicitly considered
 existentially quantified on the right side.  Also, we use underscore for a
@@ -102,8 +103,7 @@ can write the claim $\Omega_{\textit{mono}}$ as
 [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2)] \land X_1 \leq X_2 \land Y_1 \leq Y_2
  \Rightarrow^{c\exists} [\xi(\epsilon, ?\_, ?Y_1), \xi(\epsilon, ?\_, ?Y_2)] \land ?Y_1 \leq ?Y_2 \, .
 \end{align*}
-
-\end{remark}
+\end{notation}
 
 A deeper distinction is that in the CRL semantics we existentially quantify over reachable configurations,
 while in CHL, target states are quantified universally.
@@ -269,18 +269,19 @@ The proof system derives claims of the shape
 \begin{equation*}
 (\mathcal{T}, S) \vdash_\CRL \Phi \Downarrow_{C,E} \Psi
 \end{equation*}
-where $\Phi$ is of the shape
-$(\varphi_1, \ldots, \varphi_k) \land P$
-and $\Psi$ is of the shape
-$\exists \vec{Y}.\, (\varphi^\prime_1, \ldots, \varphi^\prime_k) \land P^\prime$.
-One can think about $\Phi$ as representing a \emph{premise}, while $\Psi$, which propagates through
-the proof rules unchanged, as representing a \emph{conclusion}.
-Every $\varphi_i, \varphi^\prime_i$ is a matching logic pattern representing a particual component,
-and $P$ and $P^\prime$ are FOL formulas (\emph{global constraints}) relating variables from different components.
-The sets $C$ and $E$ contain \emph{cutpoints} and \emph{enabled cutpoints}, respectively.
-Ttogether, they implement the concept of a \emph{relational invariant}.
-In particular, the set $C$ represents the invariants that were postulated \emph{right now},
-while the set $E$ represents those that were postulated in past and are ready to be used.
+where $\Phi$ is of the shape $(\varphi_1, \ldots, \varphi_k) \land P$ and
+$\Psi$ is of the shape
+$\exists \vec{Y}.\, (\varphi^\prime_1, \ldots, \varphi^\prime_k) \land
+P^\prime$.  One can think about $\Phi$ as representing a \emph{premise}, while
+$\Psi$, which propagates through the proof rules unchanged, as representing a
+\emph{conclusion}.  Every $\varphi_i, \varphi^\prime_i$ is a matching logic
+pattern representing a particual component, and $P$ and $P^\prime$ are FOL
+formulas (\emph{global constraints}) relating variables from different
+components.  The sets $C$ and $E$ contain \emph{cutpoints} and \emph{enabled
+  cutpoints}, respectively.  Ttogether, they implement the concept of a
+\emph{invariant} relating different components.  In particular, the set $C$
+represents the invariants that were postulated \emph{right now}, while the set
+$E$ represents those that were postulated in past and are ready to be used.
 Initially, the proof search starts with $E = C = \emptyset$.
 
 \begin{figure}
