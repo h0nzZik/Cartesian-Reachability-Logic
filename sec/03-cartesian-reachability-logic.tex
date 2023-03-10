@@ -385,7 +385,7 @@ We now explain the proof rules of CRL (shown in~\Cref{fig:CRLproofsystem}) one b
   \item The Case rule implements case analysis on a selected component $i$.
   \item The Conseq rule is used to weaken (or generalize) the premise. It can also be used
         to propagate information between components and the global constraint.
-        TODO explain flatten
+        %TODO explain flatten
   \item The Abstract rule can be used to remove existential quantifiers from the premise.
         Intuitively, this corresponds to a proof step in firstorder logic that replaces
         an existential quantifier on the left side of an implication
@@ -496,23 +496,25 @@ we leave this for a future work.
 
 \section{An example proof involving lockstep reasoning}
 
-We now present an example proof using our proof system; the proof involves lockstep reasoning.
+We now present an example proof sketch using our proof system; the proof involves lockstep reasoning.
+To ease the notation, we write simply $t_b$ instead of $t_b = \mathit{true}$ for
+bool-sorted side conditions $t_b$.
 Consider again the claim $\Omega_{\mathit{mono}}$ from \Cref{sec:CRLsemanticsComparisonToCHL}:
 \begin{align*}
-  [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2)] \land X_1 \leq X_2 \land Y_1 \leq Y_2
-   \Rightarrow^{c\exists} [\xi(\epsilon, ?\_, ?Y_1), \xi(\epsilon, ?\_, ?Y_2)] \land ?Y_1 \leq ?Y_2 \, .
+  [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2)] \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2
+   \Rightarrow^{c\exists} [\xi(\epsilon, ?\_, ?Y_1), \xi(\epsilon, ?\_, ?Y_2)] \land ?Y_1 \leq_{\mathit{Int}} ?Y_2 \, .
 \end{align*}
 Let $\Psi^\prime_{\mathit{mono}}$ denote the right side of the $\Rightarrow^{c\exists}$ above.
 We want to prove
 \begin{align*}
-  \mathcal{S}_{\mathit{imp}} \vdash_\CRL [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2)] \land X_1 \leq X_2 \land Y_1 \leq Y_2
+  \mathcal{S}_{\mathit{imp}} \vdash_\CRL [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2)] \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2
   \Downarrow_{\emptyset, \emptyset} \Psi^\prime_{\mathit{mono}} \, .
 \end{align*}
 To do so, we first want to add the current premise as a cutpoint.
 However, we need to make the cutpoint more general than the current claim, as we will see later in the proof.
 Therefore, we first apply the Conseq rule to change the goal to
 \begin{align*}
-  \mathcal{S}_{\mathit{imp}} \vdash_\CRL \exists X_1,Y_1,X_2,Y_2.\, [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2)] \land X_1 \leq X_2 \land Y_1 \leq Y_2
+  \mathcal{S}_{\mathit{imp}} \vdash_\CRL \exists X_1,Y_1,X_2,Y_2.\, [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2)] \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2
   \Downarrow_{\emptyset, \emptyset} \Psi^\prime_{\mathit{mono}} \, ,
 \end{align*}
 then apply the Circularity rule, followed by application of the Abstract rule, which basically changes the goal
@@ -523,12 +525,81 @@ back, except that now we have a general circularity. The goal is now
 \end{align*}
 where
 \begin{align*}
-  \Phi_{\mathit{circ}} \equiv \mathcal{S}_{\mathit{imp}} \vdash_\CRL \exists X_1,Y_1,X_2,Y_2.\, [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2)] \land X_1 \leq X_2 \land Y_1 \leq Y_2 \, .
+  \Phi_{\mathit{circ}} \equiv \mathcal{S}_{\mathit{imp}} \vdash_\CRL \exists X_1,Y_1,X_2,Y_2.\, [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2)] \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2 \, .
 \end{align*}
-
-
-TODO
-
+Now we perform symbolic execution on both components, using repeated applications of the Step rule,
+enabling the circularities.
+The exact details depend on the exact rules of $\mathcal{S}_{\mathit{imp}}$, but assuming that the semantics of
+the \texttt{while} statement is defined by unroling into the \texttt{if} statement,
+we end up with a goal like
+\begin{align*}
+  & \mathcal{S}_{\mathit{imp}} \vdash_\CRL
+  [ \texttt{if (}X_1 >_{\mathit{Int}} 0 \texttt{)\{y++;x--;}\xi(P, X_1, Y_1) \},  
+   \texttt{if (}X_2 >_{\mathit{Int}} 0 \texttt{)\{y++;x--;}\xi(P, X_2, Y_2) \} ] \\
+  & \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2
+  \Downarrow_{\Phi_{\emptyset, \mathit{circ}}} \Psi^\prime_{\mathit{mono}} \, ,
+\end{align*}
+Now we want to perform case analysis. To do so, we first use the Consequence rule to
+obtain disjunctions of patterns at the respective components, and repeatedly apply the Case rule, leading to four goals
+(the differences are shown in {\color{blue}blue}):
+\begin{equation}\label{ex:case1}
+\begin{aligned}
+  & \mathcal{S}_{\mathit{imp}} \vdash_\CRL
+  [ \texttt{if (}{\color{blue}\mathit{true}}\texttt{)\{y++;x--;}\xi(P, X_1, Y_1) \},  
+   \texttt{if (}{\color{blue}\mathit{true}}\texttt{)\{y++;x--;}\xi(P, X_2, Y_2) \} ] \\
+  & \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2 \land {\color{blue} X_1 >_{\mathit{Int}} 0 \land X_2 >_{\mathit{Int}} 0 }
+  \Downarrow_{\Phi_{\emptyset, \mathit{circ}}} \Psi^\prime_{\mathit{mono}} \, ,
+\end{aligned}
+\end{equation}
+\begin{equation}\label{ex:case2}
+\begin{aligned}
+  & \mathcal{S}_{\mathit{imp}} \vdash_\CRL
+  [ \texttt{if (}{\color{blue}\mathit{true}}\texttt{)\{y++;x--;}\xi(P, X_1, Y_1) \},  
+   \texttt{if (}{\color{blue}\mathit{false}}\texttt{)\{y++;x--;}\xi(P, X_2, Y_2) \} ] \\
+  & \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2 \land {\color{blue} X_1 >_{\mathit{Int}} 0 \land X_2 \leq_{\mathit{Int}} 0 }
+  \Downarrow_{\Phi_{\emptyset, \mathit{circ}}} \Psi^\prime_{\mathit{mono}} \, ,
+\end{aligned}
+\end{equation}
+\begin{equation}\label{ex:case3}
+\begin{aligned}
+  & \mathcal{S}_{\mathit{imp}} \vdash_\CRL
+  [ \texttt{if (}{\color{blue}\mathit{false}}\texttt{)\{y++;x--;}\xi(P, X_1, Y_1) \},  
+   \texttt{if (}{\color{blue}\mathit{true}}\texttt{)\{y++;x--;}\xi(P, X_2, Y_2) \} ] \\
+  & \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2 \land {\color{blue} X_1 \leq_{\mathit{Int}} 0 \land X_2 >_{\mathit{Int}} 0 }
+  \Downarrow_{\Phi_{\emptyset, \mathit{circ}}} \Psi^\prime_{\mathit{mono}} \, ,
+\end{aligned}
+\end{equation}
+\begin{equation}\label{ex:case4}
+\begin{aligned}
+  & \mathcal{S}_{\mathit{imp}} \vdash_\CRL
+  [ \texttt{if (}{\color{blue}\mathit{false}}\texttt{)\{y++;x--;}\xi(P, X_1, Y_1) \},  
+   \texttt{if (}{\color{blue}\mathit{false}}\texttt{)\{y++;x--;}\xi(P, X_2, Y_2) \} ] \\
+  & \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2 \land {\color{blue} X_1 \leq_{\mathit{Int}} 0 \land X_2 \leq_{\mathit{Int}} 0 }
+  \Downarrow_{\Phi_{\emptyset, \mathit{circ}}} \Psi^\prime_{\mathit{mono}} \, ,
+\end{aligned}
+\end{equation}
+\begin{itemize}
+\item The case in \Cref{ex:case4} represents the situation when both loops have finished their execution.
+We can solved this case by symbolically executing both programs (using the Step rule) to the end.
+It is easy to see that then the premise implies the conclusion; therefore, we finish this case
+by generalizing the premise (using the Conseq rule) to be exactly the conclusion, and a subsequent application
+of the Reflexivity rule.
+\item The case in \Cref{ex:case2} represents the situation when the first loop continue execution and the second is finished.
+      This can never happen - we see that the side condition is contradictory.
+      We finish this case using the Conseq rule followed by the Reflexivity rule (since a contradiction implies anything).
+\item The case in \Cref{ex:case3} represents the complementary situation - the first loop has finished its execution
+      and the second loop continues.
+      This requires inventing an invariant capturing the idea that the execution of the second loop can only increase
+      the difference between the values of \texttt{y}.
+      We can Reduce this subgoal to simple RL reasoning. We could also prove this case without Reduce,
+      using the other rules, but lockstep reasoning does not help there.
+\item The case in \Cref{ex:case1} is the one when we utilize the ability to perform lockstep reasoning.
+      We symbolically execute both components until TODO
+      %their program parts
+      %become $\xi(P, X_1, Y_1)$ and $\xi(P, X_2, Y_2)$, respectively.
+      
+      
+\end{itemize}
 
 %%% Local Variables:
 %%% mode: latex
