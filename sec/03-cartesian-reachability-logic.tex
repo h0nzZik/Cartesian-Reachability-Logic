@@ -5,7 +5,7 @@ aim with CRL is to make reasoning in the style of \emph{Cartesian Hoare logic
   (CHL)}~\cite{SousaD16} available for any deterministic language for which a
 reachability-logic semantics $S$ is available.  For that purpose we define the
 language of CRL and its semantics, and demonstrate the logic's expressiveness
-on a couple of examples.  Finallky we give CRL a sound proof system, which is the
+on a couple of examples.  Finally we give CRL a sound proof system, which is the
 main contribution of this paper.
 
 
@@ -159,8 +159,13 @@ On the other hand, if in the second claim we renamed $?Y_1$ to $Y_1^\prime$ (wit
 the claim would require that $?Y_2$ is greater than or equal to \emph{any} integer (because $Y_1^\prime$ is not present in the left side),
 which clearly cannot hold.
 
-Still, reachability logic is a special case of CRL, where confinguartion lists
-in claims are of length one:
+On the other hand, CRL is an extension of RL in the following natural sense:
+If we restrict configuration lista in CRL claims to contain a single
+configuration each, validity of CRL and RL claims neatly coincide.
+
+% TODO: (the proof of the follwong proposition can be found in Appendix~\ref{}):
+
+
 %\begin{remark}
 %\Cref{def:opCRLsemantics} extends \Cref{def:oprlSemantics} of \Cref{def:basics}:
 %if we fix $k=1$, then
@@ -192,20 +197,32 @@ in claims are of length one:
 
 \subsection{A language-independent alternative to self-composition}
 
-Now we present a novel, general technique called \emph{star extension} that is reminiscent of self-composition~\cite{BartheDR11}.
-Self-composition is a technique where a program $P$ together with a $k$-safety hyperproperty is reduced to
-a sequential composition of $P$ with itself (with renamed variables) together with a safety property.
-This technique allows one to use tools and techniques for verification of safety properties
-to perform verification of $k$-safety hyperproperties.
-The challenge here is to generalize self-composition to work with any deterministic language,
-even if we do not know in advance how the language implements sequential composition, if at all.
 
-The main idea of \emph{star extension} is to transform a CRL claim into a RL claim over an extended reachability system,
-where configurations of the extended reachability system are lists of configurations of the original system.
-The function $\mathit{flatten}$ then converts an ECLP (which contains a meta-level list of matching logic patterns)
-into a matching logic formula (containing an object-level list) that matches lists inside the model.
-The transformation is quite straightforward but technical, and we refer an interested reader to the \Cref{app:CRLandRLcorrespondence};
-here we only present the main theorem.
+%Now we present a novel, general technique called \emph{star extension} that is reminiscent of.
+
+% To prove the soundness of our proof system for CRL, it would be advantegous to
+% be able to apply the 
+
+Before presenting a proof system for CRL, we need to first discuss a concept
+which is crucial to proving its soundness. Self-composition~\cite{BartheDR11}
+is a technique where a program $P$ together with a $k$-safety hyperproperty is
+reduced to a sequential composition of $P$ with itself (with renamed
+variables) together with a safety property.  This technique allows one to use
+tools and techniques for verification of safety properties to perform
+verification of $k$-safety hyperproperties.  The challenge here is to
+generalize self-composition to work with any deterministic language, even if
+we do not know in advance how the language implements sequential composition,
+if at all.
+
+To address this issue, we present a novel, general technique which we call
+\emph{star extension}. The main idea is to transform a CRL claim into a RL
+claim over an extended reachability system, whose configurations are lists of
+configurations of the original system.  The function $\mathit{flatten}$ then
+converts an ECLP (which contains a meta-level list of matching logic patterns)
+into a matching logic formula (containing an object-level list) that matches
+lists inside the model.  The transformation is quite straightforward but
+technical, and we refer an interested reader to the
+\Cref{app:CRLandRLcorrespondence}; here we state the main theorem:
 \begin{theorem}\label{thm:CRLandRLcorrespondence}
   There exist a function $\_^*$ on matching logic signatures,
   a (equally-named) function $\_^*$ from reachability systems over $\Sigma$ to reachability systems over $\Sigma^*$,
@@ -226,10 +243,7 @@ We use the star extension for the same purpose.
 
 
 
-\subsection{Proof System}
-
-
-
+\subsection{Proof System for CRL}
 
 %We give Cartesian Reachability Logic a proof system to faciliate mechanical reasoning.
 %One may ask the question, ``why give CRL a new proof system if one can perform the same reasoning
@@ -249,27 +263,31 @@ We use the star extension for the same purpose.
 %is established by a (meta-)proof which constructs a RL proof from a CRL one (\Cref{lem:CRLalmostSoundness}).
 
 
-We give Cartesian Reachability Logic a proof system to faciliate mechanical reasoning.
-While the intuition behind the semantics of CRL is similar to that of CHL, with only a few minor differences,
-giving CRL a proof system is not straightforward.
-One could attempt to reuse the proof system of CHL and modify it \emph{somehow} to be independent
-of the particular programming language.
-Since many CHL rules (e.g., its \texttt{If} rule shown in \Cref{chlRule:If}) are simply Hoare logic rules acting on a particular component of
-a tuple of formulas (that is, symbolic states),
-one could for example lift rules of reachability logic (RL) to the tuple-context and be done.
-That would indeed work, and the resulting proof system might even be complete.
+We are now ready to give Cartesian Reachability Logic a proof system to
+facilitate mechanical reasoning.  While the intuition behind the semantics of
+CRL is similar to that of CHL, with only a few minor differences, comming up
+with a for CRL is not straightforward.  One could attempt to reuse the proof
+system of CHL and modify it \emph{somehow} to be independent of the particular
+programming language.  Since many CHL rules (e.g., its \texttt{If} rule shown
+in \Cref{chlRule:If}) are simply Hoare logic rules acting on a particular
+component of a tuple of formulas (that is, symbolic states), one could for
+example lift rules of reachability logic (RL) to the tuple-context and be
+done.  That would indeed work, and the resulting proof system might even be
+complete.
 
-However, the distinguishing feature of Cartesian Hoare logic is \emph{not} its completeness,
-but its ability to simplify reasoning by performing lock-step execution of loops,
-because that can \textquote[\cite{SousaD16}]{greatly simplify the verification task (e.g., by requiring simpler invariants)}.
-Simply (re)using RL rules lifted to the tuple-context does not provide any support for that.
-And it is not entirely obvious how to support lock-step reasoning about construct with repetetive behavior:
-in order to support while-with-breaks, Cartesian Hoare logic itself uses additionally (besides the lifted Hoare logic rules)
-five fairly complex rules that need to understand the precise semantics of this construct.
-The task for us is even harder, since we do not know in advance what constructs with repetetive behavior does
-the supplied language support: \texttt{goto}s? Mutual recursion? 
+However, the distinguishing feature of Cartesian Hoare Logic is \emph{not} its
+completeness, but its ability to simplify reasoning by performing lockstep
+execution of loops, because that can \textquote[\cite{SousaD16}]{greatly
+  simplify the verification task (e.g., by requiring simpler invariants)}.  We
+cannot just lift RL rules to tuple-context. And it is not entirely obvious how
+to support lockstep reasoning about construct with repetitive behaviour: in
+order to support \texttt{while} cycles with \texttt{break}, Cartesian Hoare logic itself uses
+five additionall fairly complex rules (besides the lifted Hoare logic rules) 
+that need to reflect the precise semantics of this construct.  The task for
+us is even harder, since we do not know in advance what constructs with
+repetitive behaviour does the supplied language support.
 
-Yet, we provide a single proof system (consisting of only eight rules) which enables lockstep reasoning about such constructs.
+Yet, we provide a single proof system consisting of only eight rules (Figure~\ref{fig:CRLproofsystem}) which enables lockstep reasoning about such constructs.
 The proof system derives claims of the shape
 \begin{equation*}
 (\mathcal{T}, S) \vdash_\CRL \Phi \Downarrow_{C,E} \Psi
@@ -279,11 +297,11 @@ $\Psi$ is of the shape
 $\exists \vec{Y}.\, (\varphi^\prime_1, \ldots, \varphi^\prime_k) \land
 P^\prime$.  One can think about $\Phi$ as representing a \emph{premise}, while
 $\Psi$, which propagates through the proof rules unchanged, as representing a
-\emph{conclusion}.  Every $\varphi_i, \varphi^\prime_i$ is a matching logic
-pattern representing a particual component, and $P$ and $P^\prime$ are FOL
+\emph{conclusion}.  For each $i$, $\varphi_i$ and $\varphi^\prime_i$ are matching logic
+patterns representing a particular component, and $P$ and $P^\prime$ are FOL
 formulas (\emph{global constraints}) relating variables from different
 components.  The sets $C$ and $E$ contain \emph{cutpoints} and \emph{enabled
-  cutpoints}, respectively.  Ttogether, they implement the concept of a
+  cutpoints}, respectively.  Together, they implement the concept of an
 \emph{invariant} relating different components.  In particular, the set $C$
 represents the invariants that were postulated \emph{right now}, while the set
 $E$ represents those that were postulated in past and are ready to be used.
@@ -365,21 +383,21 @@ Initially, the proof search starts with $E = C = \emptyset$.
       }
       {(\mathcal{T}, S) \vdash_\CRL \exists X, \vec{Y}.\, [\varphi_1, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
     \end{align*}
-    \caption{Proof System}
+    \caption{Proof System for CRL}
     \label{fig:CRLproofsystem}
 \end{figure}
 
-The rules itself are fairly simple, and none of them has the semantics of any particular language construct
+The rules of our system are fairly simple, and general in the sense that none of them has the semantics of any particular language construct
 hard-wired into it.
 We now explain the proof rules of CRL (shown in~\Cref{fig:CRLproofsystem}) one by one.
 \begin{itemize}
-  \item The Circularity rule is the key that allows lockstep reasoning about arbitrary program constructs.
+  \item The Circularity rule is a key rule which allows lockstep reasoning about arbitrary program constructs.
         It allows the user to postulate validity of the current claim by means of adding the \emph{current premise}
         into the set of \emph{cutpoints}, from which a $k$-tuple of program configurations satisfying the postcondition
         is claimed to be reachable. Once progress is made (by means of the Step rule), the added cutpoints are
         \emph{enabled} and can be used to finish the proof using the Axiom rule.
   \item The Step rule performs symbolic execution on a selected component $i$ (represented by $\varphi_i$)
-        using the semantic rule $\varphi \Rightarrow^\exists \varphi^\prime \in S$.
+        using the semantic reachability rule $\varphi \Rightarrow^\exists \varphi^\prime \in S$.
         For this rule to apply, its left side ($\varphi$) has to match all the program configurations matching $\varphi_i$.
         Therefore, the rule decomposes $\varphi_i$ into $\varphi$ and an additional constraint $P^\prime$,
         which can be thought of as a part of \emph{path condition} that is \emph{local} to the component $i$.
@@ -392,23 +410,33 @@ We now explain the proof rules of CRL (shown in~\Cref{fig:CRLproofsystem}) one b
         to propagate information between components and the global constraint.
         %TODO explain flatten
   \item The Abstract rule can be used to remove existential quantifiers from the premise.
-        Intuitively, this corresponds to a proof step in firstorder logic that replaces
+        Intuitively, this corresponds to a proof step in first-order logic that replaces
         an existential quantifier on the left side of an implication
         with a universal quantifier over the implication, assuming that the variable
         bound by the existential quantifier does not occur free in the right side.
-        In our setting, the typical way of \emph{obtaining} a toplevel existential quantifier in the premise
+        In our setting, the typical way of \emph{obtaining} a top-level existential quantifier in the premise
         is by means of the Conseq rule.
   \item The Reduce rule is a way to get completeness into our proof system:
         it reduces the goal to reachability logic reasoning.
         This rule also provides a way to prove properties that do not benefit
         from lockstep reasoning.
-
 \end{itemize}
 
+Soundness of the proof system, as stated by the follwoing theorem, is the main
+technical result of this paper.
 
-The following lemma says that one can generate an RL proof on a star-extended system
-from a CRL proof.
-This lemma is a major component of the soundness proof of CRL and can be found in \Cref{app:crlsoundness}.
+\begin{theorem}[Proof system soundness]\label{thm:proofsystemSoundness}
+\begin{equation*}
+    (\mathcal{T}, S) \vdash_\CRL \Psi \Downarrow_{\emptyset,\emptyset} \Psi^\prime \implies
+    (\mathcal{T}, S) \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime
+\end{equation*}
+\end{theorem}
+
+In order to  prove this theorem, we will need (beside
+Theorem~\ref{thm:CRLandRLcorrespondence}, which we discuss in previous
+section) a technical lemma stating, that one can generate an RL proof on a star-extended system
+from a CRL proof. This lemma is the second major component of the soundness
+proof of CRL and its proof can be found in \Cref{app:crlsoundness}.
 \begin{lemma}\label{lem:CRLalmostSoundness}
     \begin{align*}
         & (\mathcal{T}, S) \vdash_\CRL \Psi \Downarrow_{C,E} \Psi^\prime \implies \\
@@ -418,13 +446,7 @@ This lemma is a major component of the soundness proof of CRL and can be found i
     \end{align*}
 \end{lemma}
 
-Now we can state and prove the soundness theorem, which is the main result of this paper.
-\begin{theorem}[Proof system soundness]\label{thm:proofsystemSoundness}
-\begin{equation*}
-    (\mathcal{T}, S) \vdash_\CRL \Psi \Downarrow_{\emptyset,\emptyset} \Psi^\prime \implies
-    (\mathcal{T}, S) \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime
-\end{equation*}
-\end{theorem}
+\noindent With all the technical tools is place, the proof itself is a straightforward affair:
 \begin{proof}[Proof of \Cref{thm:proofsystemSoundness}]
 Assume $(\mathcal{T}, S) \vdash_\CRL \Psi \Downarrow_{\emptyset,\emptyset} \Psi^\prime$.
 By \Cref{lem:CRLalmostSoundness}, we have $(\mathcal{T}, S) \vdash_\RL \mathit{flatten}^\exists(\Psi, \Psi^\prime)$.
@@ -469,7 +491,7 @@ we have $(\mathcal{T}, S) \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime$
 %   \label{fig:CRLderivedRules}
 % \end{figure}
 
-The proof system is also relatively complete (with respect to an oracle for deciding validity
+The proof system, beside being sound, is also \emph{relatively complete} (with respect to an oracle deciding validity
 in the underlying matching logic model $\mathcal{T}$).
 \begin{theorem}[Relative completeness]\label{thm:relativeCompleteness}
   \begin{equation*}
@@ -503,7 +525,7 @@ we leave this for a future work.
 
 We now present an example proof sketch using our proof system; the proof involves lockstep reasoning.
 To ease the notation, we write simply $t_b$ instead of $t_b = \mathit{true}$ for
-bool-sorted side conditions $t_b$.
+boolean-sorted side conditions $t_b$.
 Consider again the claim $\Omega_{\mathit{mono}}$ from \Cref{sec:CRLsemanticsComparisonToCHL}:
 \begin{align*}
   [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2)] \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2
@@ -535,7 +557,7 @@ where
 Now we perform symbolic execution on both components, using repeated applications of the Step rule,
 enabling the circularities.
 The exact details depend on the exact rules of $\mathcal{S}_{\mathit{imp}}$, but assuming that the semantics of
-the \texttt{while} statement is defined by unroling into the \texttt{if} statement,
+the \texttt{while} statement is defined by unrolling into the \texttt{if} statement,
 we end up with a goal like
 \begin{align*}
   & \mathcal{S}_{\mathit{imp}} \vdash_\CRL
