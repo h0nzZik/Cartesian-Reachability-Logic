@@ -1,17 +1,18 @@
 \section{Cartesian Reachability Logic}
-In this section we introduce \emph{Cartesian Reachability logic (CRL)} - a language-parametric logic for reasoning
-about $k$-safety hyperproperties.
-Our aim with CRL is to make reasoning in the style of \emph{Cartesian Hoare logic (CHL)}~\cite{SousaD16} available for any
-deterministic language with given reachability-logic semantics $S$.
-For that purpose we define the language of CRL and its semantics, and demonstrate the logic's expressiveness
-on a couple of examples.
-Then we give CRL a sound proof system, which is the main contribution of this paper.
+In this section we introduce \emph{Cartesian Reachability logic (CRL)} - a
+language-parametric logic for reasoning about $k$-safety hyperproperties.  Our
+aim with CRL is to make reasoning in the style of \emph{Cartesian Hoare logic
+  (CHL)}~\cite{SousaD16} available for any deterministic language for which a
+reachability-logic semantics $S$ is available.  For that purpose we define the
+language of CRL and its semantics, and demonstrate the logic's expressiveness
+on a couple of examples.  Finallky we give CRL a sound proof system, which is the
+main contribution of this paper.
 
 
 \subsection{Syntax and Semantics}
 
 Cartesian reachability logic is an extension of (one-path) reachability
-logic. In this extension, to express k-safety properties we extend reachability rules $\varphi
+logic. To express k-safety properties we extend reachability rules $\varphi
 \Rightarrow^{\exists} \varphi'$ to  \emph{reachability claims} of the form
 \begin{equation*}
   [\varphi_1,\ldots,\varphi_k] \land P
@@ -28,15 +29,15 @@ be an empty vector) \emph{existentially-quantified constrained list patterns}
 (ECLP).
 
 
-For example, let us again consider the following program
+For example, let us again consider the program
 \begin{equation*}
   P \equiv \texttt{while(x > 0)\{ x--; y++; \}} \, .
 \end{equation*}
 Additionally, let $\xi(Q, X, Y)$ be a pattern matching those configurations of
-program $Q$ where the program variable $\texttt{x}$ has the value $X$ and the program
-variable $\texttt{y}$ has the value $Y$:
+program $Q$ where the program variable $\texttt{x}$ has value $X$ and the program
+variable $\texttt{y}$ has value $Y$:
 \begin{equation}\label{eqn:CQXY}
- \xi(Q, X, Y) \equiv \tap{$Q$}{\texttt{x}\mapsto X, \texttt{y}\mapsto Y }  \, .
+ \xi(Q, X, Y) \equiv\ \tap{$Q$}{\texttt{x}\mapsto X, \texttt{y}\mapsto Y }  \, .
 \end{equation}
 Then, the claim $\Omega_{\textit{mono}}$, defined as
 \begin{align*}
@@ -45,7 +46,7 @@ Then, the claim $\Omega_{\textit{mono}}$, defined as
 \exists X^\prime_1, Y^\prime_1, X^\prime_2, Y^\prime_2.\,  [\xi(\epsilon, X^\prime_1, Y^\prime_1), \xi(\epsilon, X^\prime_2, Y^\prime_2)] \land Y^\prime_1 \leq Y^\prime_2   
 \end{align*}
 (where $\epsilon$ denotes the empty program)
-expresses the property that the program $P$ is monotone.
+expresses the property that the program $P$ is \emph{monotone}.
 That is, when we start an execution (using the semantics of the particular language)
 from some configuration $\gamma_1$ matching $\xi(P, X_1, Y_1)$
 and a second execution from some configuration $\gamma_2$ matching $\xi(P, X_2, Y_2)$,
@@ -86,34 +87,38 @@ We formally define the semantics of a CRL claim as follows:
     $(\gamma_1^\prime,\rho^\prime) \vDash \varphi^\prime_1 \land P^\prime$ and \ldots and $(\gamma_k^\prime, \rho^\prime) \vDash \varphi^\prime_k \land P^\prime$.
 \end{definition}
 
-\subsection{Comparison to CHL}\label{sec:CRLsemanticsComparisonToCHL}
+%\subsection{Comparison to CHL}\label{sec:CRLsemanticsComparisonToCHL}
+
 As can be seen from the example above, CRL is more verbose then CHL. This is
 partly because of the need to specify patterns matching the whole program
 configurations, and partly because of the need to existentially quantify those
-variables on the right side whose value is not determined by the left side.
+variables on the right side whose value is not determined by the left side. To
+alleviate this problem, we introduce the following notation, which we inherit
+from RL:
 
-\begin{notation}
-We inherit notation commonly used in RL that
-variables whose names start with a question mark are implicitly considered
-existentially quantified on the right side.  Also, we use underscore for a
-variable with unknown name, different between all occurences - that is, to
-represent a variable whose value we are not interested in.  For example, we
-can write the claim $\Omega_{\textit{mono}}$ as
+\paragraph{Notation}
+Variables whose names start with a question mark are implicitly considered
+existentially quantified on the right side.  Also, underscore is used to
+denote anonymous variables, whose values we are not interested in.  For
+example, we can write the claim $\Omega_{\textit{mono}}$ as
 \begin{align*}
 [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2)] \land X_1 \leq X_2 \land Y_1 \leq Y_2
  \Rightarrow^{c\exists} [\xi(\epsilon, ?\_, ?Y_1), \xi(\epsilon, ?\_, ?Y_2)] \land ?Y_1 \leq ?Y_2 \, .
 \end{align*}
-\end{notation}
 
-A deeper distinction is that in the CRL semantics we existentially quantify over reachable configurations,
-while in CHL, target states are quantified universally.
-However, this distinction has no effect when working with deterministic languages.
+% TODO move this to a more appropriate place!
+A deeper distinction is that in the CRL semantics we existentially quantify
+over reachable configurations, while in CHL, target states are quantified
+universally. However, this distinction has no effect when working with
+deterministic languages.
 
 \subsection{CRL as an extension of Reachability Logic}
 
+We would like to point out that we cannot  handle k-safety properties directly
+in RL, by simply replacing a CRL claim with $k$ components by $k$ RL
+claims. The reason is that in CRL formulas cab relate variables from different components. 
 
-We note here that in general, having one valid CRL claim is different from having just $k$ valid RL claims,
-because in CRL, the variables are shared across components.
+
 %Consider, for example, a reachability system $S_{\mathit{IMP}}$ representing a simple imperative language,
 %and the same program as in \Cref{eqn:CounterProgram}; that is, let
 %\begin{equation*}
