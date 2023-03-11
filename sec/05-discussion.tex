@@ -40,7 +40,7 @@ However, we would still want to prove the following theorem.
 CRL extends CHL on the deterministic fragment of the CHL-supported language.
 That is, given any program $P$ in the deterministic fragment of the CHL's imperative language,
 a sound reachability-logic formalization (that is, a reachability system) $\mathcal{S}_{\mathit{IMP}}$ of the CHL's imperative language,
-and firstorder formulas $\Phi, \Psi$ over variables $\vec{x}_1,\ldots,\vec{x}_k$,
+and first order formulas $\Phi, \Psi$ over variables $\vec{x}_1,\ldots,\vec{x}_k$,
 \begin{equation*}
     \vDash_{\mathit{CHL}} ||\Phi||\ P\ ||\Psi||
     \iff
@@ -88,7 +88,7 @@ semantics to it.
 
 Third, in CHL the support for lockstep reasoning is hard-wired into the rules for loops,
 while in our framework, lockstep reasoning is not limited to loops, but can support arbitrary sources
-of circular behavior - including loops, recursion, gotos.
+of circular behaviour - including loops, recursion, gotos.
 Therefore, while we are inspired by the \emph{idea} of lockstep execution from \cite{SousaD16},
 for the \emph{realization} of this idea we turn to the literature on \emph{equivalence checking}.
 
@@ -97,8 +97,8 @@ for the \emph{realization} of this idea we turn to the literature on \emph{equiv
 In \cite{DOsualdoFD22}, the authors develop a \emph{logic for hyper-triple composition (LHC)}
 that allows reasoning about $k-safety$ properties compositionally.
 Similarly to CHL, LHC targets a particular small imperative language.
-We believe that compositionality is ortogonal to language-parametericity,
-and thus we would like to generalize their work to language-parameteric settings in future work.
+We believe that compositionality is orthogonal to language-parametricity,
+and thus we would like to generalize their work to language-parametric settings in future work.
 
 A game-based technique for verifying software hyperproperties beyond $k$-safety
 has been developed in \cite{BeutnerF22}.

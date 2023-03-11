@@ -5,30 +5,24 @@
 
 \subsection{Cartesian Hoare logic}
 
-Introduced in~\cite{SousaD16}, Cartesian Hoare logic is a formalism for specifying and reasoning about
-a class of hyperproperties known as \emph{$k$-safety hyperproperties}, or simply
-\emph{$k$-safety properties}.
-A $k$-safety property is a hyperproperty whose violation can be witnessed by a $k$-tuple of execution traces.
-Many \emph{security policies} - for example, noninterference (requiring that sensitive or privileged data
-do not influence insensitive or unprivileged computations) - are $k$-safety hyperproperties.
-Similarly, many functional correctness properties are actually $k$-safety hyperproperties;
-for example, \emph{transitivity} (which needs to by satisfied e.g. by comparators when managing data
-in collections), associativity (important in the map/reduce paradigm), or monotonicity.
-Cartesian Hoare logic (CHL) can be used for reasoning about these on the level of the source code,
-similarly to Hoare logic.
-
-In Hoare logic, properties are specified by means of so-called \emph{Hoare triples}.
-These have the shape $\{ \varphi \} S \{ \psi \}$, with the meaning that
-the formula $\psi$ holds in any state after the termination (if any) of the program $S$,
-executed from a state satisfying $\varphi$.
-In Cartesian Hoare logic, the situation is similar: one can specify a triple
-$\langle \Phi \rangle\ S_1 \st \cdots \st S_k\ \langle \Psi \rangle$
-with the following meaning: for any $k$-tuple $(\sigma_1,\ldots,\sigma_k)$ of states
-satisfying the formula $\Phi$, if we execute each program $S_i$ in the respective state $\sigma_i$ and they all terminate,
-then the $k$-tuple $(\sigma_1^\prime,\ldots,\sigma_k^\prime)$ of resulting program states satisfies $\Psi$ \footnote{An
-important technical assumption here is that every program $S_i$ operates on its own set of program variables,
-distinct from variables of other programs $S_j$ (for $i \not = j$) - otherwise the formulas $\Phi$ and $\Psi$
-would not be able to distinguish between program variables of different programs.}.
+Introduced in~\cite{SousaD16}, Cartesian Hoare Logic is a formalism for
+specifying and reasoning about k-safety properties, in a similar way as Hoare
+logic is used to reason about (safety) properties. In Hoare logic, properties are
+specified by means of so-called \emph{Hoare triples}.  These have the shape
+$\{ \varphi \} S \{ \psi \}$, with the meaning that the formula $\psi$ holds
+in any state after the termination (if any) of the program $S$, executed from
+a state satisfying $\varphi$.  In Cartesian Hoare logic, the situation is
+similar: one can specify a triple
+$\langle \Phi \rangle\ S_1 \st \cdots \st S_k\ \langle \Psi \rangle$ with the
+following meaning: for any $k$-tuple $(\sigma_1,\ldots,\sigma_k)$ of states
+satisfying the formula $\Phi$, if we execute each program $S_i$ in the
+respective state $\sigma_i$ and they all terminate, then the $k$-tuple
+$(\sigma_1^\prime,\ldots,\sigma_k^\prime)$ of resulting program states
+satisfies $\Psi$ \footnote{An important technical assumption here is that
+  every program $S_i$ operates on its own set of program variables, distinct
+  from variables of other programs $S_j$ (for $i \not = j$) - otherwise the
+  formulas $\Phi$ and $\Psi$ would not be able to distinguish between program
+  variables of different programs.}.
 %To make specifications more compact, one can also consider triples $|| \Phi ||\ S \ || \Psi ||$ 
 
 As an example, consider the program $P(x,y) \equiv \texttt{while(x > 0) \{ x--; y++; \} }$ and the 2-safety property
@@ -131,7 +125,7 @@ in order for CHL to soundly support it: the semantics of \texttt{while} is prese
 the target language, in the Hoare logic for that language, in the Cartesian Hoare logic for that language,
 and in the proofs of soundness for both of the logics.
 
-Our aim in this paper is to make the above ideas available for any deterministic languge.
+Our aim in this paper is to make the above ideas available for any deterministic language.
 Therefore, in the following subsections we review some tools from recent literature
 on language-independent program verification.
 
@@ -192,7 +186,7 @@ defined as\footnote{In the syntax of system \K\ this formula would look more lik
 which, when interpreted in a model of a particular programming language,
 denotes the set of program configurations in which ``\texttt{x--;}'' is the
 code to be executed next and the program variable $\texttt{x}$ has a value $X$
-that is greater than $1$.  In this example, the suformula
+that is greater than $1$.  In this example, the subformula
 $\tap{x--;}{\mathtt{x}\mapsto X}$ is a nullary term used as a predicate
 (term-as-predicate), with $X$ being the only free FOL variable.  ($\texttt{x}$
 is not a FOL variable, but a constant symbol from the signature of the
@@ -240,7 +234,7 @@ and $S$ is a set of \emph{reachability rules} of the shape $\varphi \Rightarrow^
 where $\varphi$ and $\varphi^\prime$ are \emph{matching logic} patterns over $\Sigma$
 describing sets of \emph{source} and \emph{target} program configurations.
 
-Each reachability system naturally induces a \emph{trasition system}
+Each reachability system naturally induces a \emph{transition system}
 $(\Tcfg , \Rightarrow_{\mathcal{S}})$, whose states are program configurations
 and transitions $\Rightarrow_{\mathcal{S}}$ are defined as follows: for
 $\gamma, \gamma^\prime \in \Tcfg$ we have
@@ -356,7 +350,7 @@ iff $\mathcal{S}, \emptyset \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prim
 The set $C$, initially empty, contains so-called \emph{circularities},
 which are claims postulated to hold but not justified yet.
 Circularities, which correspond to the notion of \emph{loop invariants} of Hoare logic,
-enable one to reason about repetetive behavior of programs.
+enable one to reason about repetitive behaviour of programs.
 The proof system contains a rule
 \begin{align*}
     & \prftree[l]{Circularity}
