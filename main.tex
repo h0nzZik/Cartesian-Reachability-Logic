@@ -94,32 +94,43 @@
 
 
 \begin{abstract}
-  We introduce Cartesian Reachability Logic (CRL):
-  a language-parametric logic for reasoning about k-safety hyperproperties.
 
-  In recent years, formal verification of hyperproperties has become an important topic
-  in the formal methods community.
-  An interesting class of hyperproperties is known as $k$-safety:
-  a $k$-safety property prohibits the existence of a \emph{bad} $k$-tuple of execution traces.
-  Many security policies, such as \emph{noninterference}, 
-  and functional properties, such as \emph{commutativity}, are $k$-safety.
-  Previously, Cartesian Hoare logic (CHL) has been used for reasoning about $k$-safety hyperproperties
-  of software systems.
-  CHL has a sound and complete proof system and a performant verification algorithm.
-  However, CHL targets only a specific, tiny imperative language, and to use it for sound verification
-  of programs in a different language $L$, one needs to extend it with the desired features,
-  or to hand-craft a translation.
-  Both these approaches require a lot of tedious, error-prone work.
-  An even worse alternative is to manually implement the verification algorithm,
-  designed to work with the tiny language, with ad-hoc modifications targeting $L$:
-  that gives the user of the implementation no guarantee at all.
+  In recent years, formal verification of hyperproperties has become an
+  important topic in the formal methods community.  An interesting class of
+  hyperproperties is known as $k$-safety properties, which express the absence
+  of a \emph{bad} $k$-tuple of execution traces.  Many security policies, such
+  as \emph{noninterference}, and functional properties, such as commutativity,
+  monotonicity or transitivity are $k$-safety properties. A prominent example
+  of a logic which can reason about $k$-safety properties of software systems
+  is Cartesian Hoare logic (CHL). However CHL targets a specific, small
+  imperative language. In order to use it for sound verification of programs
+  in a different language, one needs to extend it with the desired features,
+  or to hand-craft a translation. Both these approaches require a lot of
+  tedious, error-prone work.
 
-  In contrast, CRL is language-parametric: it can be instantiated with any deterministic language
-  modelled in a particular operational semantics formalism.
-  Its soundness theorem is proved once and for all, with no need to adapt or re-prove it
-  for different languages or their variants.
-  Therefore, this powerful instrument can significantly reduce the development costs of tools and techniques
-  for sound $k$-safety verification.
+  In this paper we introduce a sound and relatively complete calculus called
+  Cartesian Reachabiliy Logic, a proper extesion of Reachability logic.
+  Unlike CHL, Cartesian Reachability Logic is language-parametric: it can be
+  instantiated with any deterministic language whose operational semantics is
+  given by Reachability logic rules. (Examples of such languages include e.g. C.)
+  % TODO - add other  examples of  such languages, including smart contracts
+  This approach, used by tools like \K{} framework, can significantly reduce
+  the development costs of tools and techniques for sound $k$-safety
+  verification.
+  
+    %Its soundness theorem is proved once and for all, with no need to adapt or re-prove it
+  % for different languages or their variants.
+
+  
+  % Uhas a sound and complete proof system and a performant verification algorithm.
+  % However, CHL targets only a specific, tiny imperative language, and to use it for sound verification
+  % of programs in a different language $L$, one needs to extend it with the desired features,
+  % or to hand-craft a translation.
+  % Both these approaches require a lot of tedious, error-prone work.
+  % An even worse alternative is to manually implement the verification algorithm,
+  % designed to work with the tiny language, with ad-hoc modifications targeting $L$:
+  % that gives the user of the implementation no guarantee at all.
+
 \end{abstract}
 
 % \begin{abstract}
