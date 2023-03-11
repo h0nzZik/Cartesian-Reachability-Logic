@@ -1827,3 +1827,30 @@ Finally, we define $\mathit{red}(\varphi) = \mathit{tr}(\varphi_c)$; the desired
 properties of the Godel $\beta$ predicate and properties lists in the extended model $\mathcal{T}^*$.
 
 \end{proof}
+
+\subsection{Relation to CHL}\label{app:reltoCHL}
+
+In order to tie (one-path) CRL to CHL, we first define an all-path variant of CRL.
+\begin{definition}[All-Path CRL semantics]\label{def:apCRLsemantics}
+    A claim
+    \begin{equation*}
+     [\varphi_1,\ldots,\varphi_k] \land P
+     \Rightarrow^{c\forall} \exists \vec{Y}.\, [\varphi^\prime_1,\ldots,\varphi^\prime_k] \land P^\prime
+    \end{equation*}
+    is \emph{valid} in a reachability system $\mathcal{S} = (\mathcal{T}, S)$,
+    written
+    \begin{equation*}
+        (\mathcal{T}, S) \vDash_\CRL [\varphi_1,\ldots,\varphi_k] \land P
+     \Rightarrow^{c\forall} \exists \vec{Y}.\, [\varphi^\prime_1,\ldots,\varphi^\prime_k] \land P^\prime \, ,
+    \end{equation*}
+    iff for all configurations $\gamma_1,\ldots,\gamma_k \in \Tcfg$
+    and any $\mathcal{T}$-valuation $\rho$,
+    whenever $(\gamma_1,\rho) \vDash \varphi_1 \land P$ and \ldots
+    and $(\gamma_k,\rho) \vDash \varphi_k \land P$,
+    then for all complete $\Rightarrow_{\mathcal{S}}$-paths $\pi_1,\ldots,\pi_k$
+    satisfying $\pi_i[0] = \gamma_i$ for any $i \in \{ 1, \ldots, k \}$
+    there exist natural numbers $j_1, \ldots, j_k$
+    such that $\gamma_1 \Rightarrow^{*}_{\mathcal{S}} \pi_1[j_1]$
+    and \ldots and $\gamma_k \Rightarrow^{*}_{\mathcal{S}} \pi_k[j_k]$,
+    and $(\pi_1[j_1], \rho) \vDash \varphi^\prime_1 \land P^\prime$ and \ldots and $(\pi_k[j_k], \rho) \vDash \varphi^\prime_k \land P^\prime$.
+\end{definition}
