@@ -1847,7 +1847,8 @@ In order to tie (one-path) CRL to CHL, we first define an all-path variant of CR
     and any $\mathcal{T}$-valuation $\rho$,
     whenever $(\gamma_1,\rho) \vDash \varphi_1 \land P$ and \ldots
     and $(\gamma_k,\rho) \vDash \varphi_k \land P$,
-    then for all complete $\Rightarrow_{\mathcal{S}}$-paths $\pi_1,\ldots,\pi_k$
+    then for all complete $\Rightarrow_{\mathcal{S}}$-paths (that is, finite paths which cannot be extended further)
+    $\pi_1,\ldots,\pi_k$
     satisfying $\pi_i[0] = \gamma_i$ for any $i \in \{ 1, \ldots, k \}$
     there exist natural numbers $j_1, \ldots, j_k$
     such that $\gamma_1 \Rightarrow^{*}_{\mathcal{S}} \pi_1[j_1]$
@@ -1871,8 +1872,8 @@ and $\Phi^\prime \equiv \exists \vec{Y}.\, [\varphi^\prime_1,\ldots,\varphi^\pri
 For the ``if'' part, assume $\mathcal{S} \vDash \Phi \Rightarrow^{c\forall} \Phi^\prime$.
 Assume some configurations $\gamma_1,\ldots,\gamma_k$ which terminate, and some valuation $\rho$
 satisfying $(\gamma_1,\rho) \vDash \varphi_1 \land P$ and \ldots and $(\gamma_k,\rho) \vDash \varphi_k \land P$.
-Let $pi_1$ be some finite and complete path $\gamma_1 = \gamma_1^1,\gamma_1^2,\ldots,\gamma_1^{l_1}$
-and \ldots and $pi_k$ be some finite and complete path $\gamma_k = \gamma_k^1,\gamma_k^2,\ldots,\gamma_k^{l_k}$.
+Let $\pi_1$ be some complete path $\gamma_1 = \gamma_1^1,\gamma_1^2,\ldots,\gamma_1^{l_1}$
+and \ldots and $pi_k$ be some complete path $\gamma_k = \gamma_k^1,\gamma_k^2,\ldots,\gamma_k^{l_k}$.
 Such paths exist, because $\gamma_i$ (for $i \in \{1, \ldots, k \}$) are terminating
 - we can start with a path consisting of $\gamma_j$ only and repeatedly extend the path until the last element has no successor.
 Now, since every $\phi_i^\prime$ is terminal, all the $j_i$s that exist by \Cref{def:apCRLsemantics}
@@ -1884,6 +1885,26 @@ and $(\gamma_k^{l_k}, \rho^\prime) \vDash \varphi^\prime_k \land P$,
 as required by \Cref{def:opCRLsemantics}.
 
 For the ``only if'' part, assume $\mathcal{S} \vDash \Phi \Rightarrow^{c\exists} \Phi^\prime$.
-TODO
+Assume some configurations $\gamma_1,\ldots,\gamma_k$ and some valuation $\rho$
+satisfying $(\gamma_1,\rho) \vDash \varphi_1 \land P$ and \ldots and $(\gamma_k,\rho) \vDash \varphi_k \land P$.
+Let $\pi_1, \ldots, \pi_k$ be complete paths
+$\gamma_1^1,\gamma_1^2,\ldots,\gamma_1^{l_1}$ and \ldots and $\gamma_k^1,\gamma_k^2,\ldots,\gamma_k^{l_k}$
+starting with $\gamma_1,\ldots,\gamma_k$, respectively.
+By \Cref{def:opCRLsemantics}, there exist configurations $\gamma_1^\prime,\ldots,\gamma_k^\prime$
+such that $\gamma_1 \Rightarrow_{\mathcal{S}}^* \gamma^\prime_1$
+and \ldots
+and $\gamma_k \Rightarrow_{\mathcal{S}}^* \gamma^\prime_k$,
+and there also exists a valuation $\rho^\prime$
+that agrees with $\rho$ on all variables outside $\vec{Y}$
+such that
+$(\gamma^\prime_1, \rho^\prime) \vDash \varphi^\prime_1 \land P$
+and \ldots and
+$(\gamma^\prime_k, \rho^\prime) \vDash \varphi^\prime_k \land P$.
+Now by determinism and the fact that $\gamma^\prime_i$ are terminating (because $\varphi^\prime_i$ are terminating), we have
+$\gamma^{l_i}_i = \gamma^\prime_i$.
+Thus,
+$(\pi_1[j_1], \rho^\prime) \vDash \varphi^\prime_1 \land P^\prime$
+and \ldots and $(\pi_k[j_k], \rho^\prime) \vDash \varphi^\prime_k \land P^\prime$,
+which concludes the proof.
 
 \end{proof}
