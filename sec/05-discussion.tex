@@ -36,11 +36,13 @@ We base our work on the \emph{one-path} variant of reachability logic.
 Consequently, CRL inherits a known limitation of one-path reachability logic: that the tight correspondence between
 one-path RL and Hoare logics is limited to deterministic languages.
 However, we would still want to prove the following theorem.
-\begin{theorem}
-CRL extends CHL on the deterministic fragment of the CHL-supported language.
-That is, given any program $P$ in the deterministic fragment of the CHL's imperative language,
-a sound reachability-logic formalization (that is, a reachability system) $\mathcal{S}_{\mathit{IMP}}$ of the CHL's imperative language,
-and first order formulas $\Phi, \Psi$ over variables $\vec{x}_1,\ldots,\vec{x}_k$,
+\begin{theorem}\label{thm:chlCRLrelation}
+  CRL extends CHL on the deterministic fragment of the CHL-supported language.
+  That is, assume a sound reachability-logic formalization (that is, a reachability system) $\mathcal{S}_{\mathit{IMP}}$ of the CHL's imperative language.
+  The there exists a translation function $\mathit{tr}$ such that
+  given any statement $P$ in the deterministic fragment of the CHL's imperative language,
+  where $P$ is over variables $\vec{x} = x_1,\ldots,x_n$,
+  and any first order formulas $\Phi, \Psi$ over variables $\vec{x}_1,\ldots,\vec{x}_k$,
 \begin{equation*}
     \vDash_{\mathit{CHL}} ||\Phi||\ P\ ||\Psi||
     \iff
