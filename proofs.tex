@@ -1940,15 +1940,14 @@ which concludes the proof.
 \end{assumption}
 
 \begin{definition}
-    Let $f_{\mathit{inj}}$ be an injective function from program variables of $L_{\mathit{CHL}}$
-    into matching logic variables of $\Sigma_{L_{\mathit{CHL}}}$.
+    Let $f$ be an injective function on program variables of $L_{\mathit{CHL}}$.
     We define a function $\mathit{tr}_{\mathit{sym}}$ by
     \begin{equation*}
         \mathit{tr}_{\mathit{sym}}(P, f_{\mathit{inj}}) \quad \equiv \quad
         \impConfig{P}{
-            \mathit{sym}_\mathit{var}(x_1) \mapsto f_{\mathit{inj}}(x_1),
+            \mathit{sym}_\mathit{var}(x_1) \mapsto \mathit{var}_{\mathit{inj}}(f(x_1)),
             \ldots,
-            \mathit{sym}_\mathit{var}(x_n) \mapsto f_{\mathit{inj}}(x_n)
+            \mathit{sym}_\mathit{var}(x_n) \mapsto \mathit{var}_{\mathit{inj}}(f(x_n))
         }% \land f_{\mathit{inj}}(\varphi)
     \end{equation*}
     where $P$ is a statement of $L_{\mathit{CHL}}$ over variables $x_1,\ldots,x_n$.
@@ -1956,12 +1955,12 @@ which concludes the proof.
 \end{definition}
 
 \begin{lemma}[Symbolic and concrete match]\label{lem:symConcreteTranslationMatch}
-    For any statement $P$ and any injective function $f$ from program variables of $L_{\mathit{CHL}}$
-    into matching logic variables of $\Sigma_{L_{\mathit{CHL}}}$, the following holds:
+    For any statement $P$ and any injective function $f$ on program variables of $L_{\mathit{CHL}}$,
+    the following holds:
     \begin{equation*}
         (\mathit{tr}_{\mathit{con}}(P, \sigma[f]), \rho) \vDash_{\ML} \mathit{tr}_{\mathit{sym}}(P, f)
         \iff
-        \forall j \in \{ 1, \ldots, n \}.\, \rho(f(x_j)) = (\sigma[f])(x_j)
+        \forall j \in \{ 1, \ldots, n \}.\, \rho(\mathit{var}_{\mathit{inj}}(f(x_j))) = (\sigma[f])(x_j)
     \end{equation*}
     (where $x_1,\ldots,x_n$ are program variables occurring in $P$).
 \end{lemma}
@@ -1972,33 +1971,32 @@ which concludes the proof.
 \begin{lemma}[Static reasoning in CHL vs CRL]
     Let $\sigma_1,\ldots,\sigma_k$ be program states over $\vec{x}$.
     Let $r_i(x) = x_i$ for any $x \in \vec{x}$ and any $i \in \{ 1, \ldots, k \}$.
-    Let $f_{r_i}()$
+    Let $P$ be a statement over variables $r_1(\vec{x}), \ldots, r_k(\vec{x})$.
+    %Let $f_{r_i}()$
     Let $\sigma = \biguplus_{1 \leq i \leq k} \sigma_i[r_i]$.
-    Let $\rho_\sigma$ be a matching logic valuation sending matching logic variables $x$
-    to $\sigma(x)$, whenever defined.
+    Let $\rho_\sigma$ be a matching logic valuation sending matching logic variables
+    $\mathit{var}_{\mathit{inj}}(x)$ to $\sigma(x)$.
     Then:
     \begin{equation*}
         \sigma \vDash_{\FOL} \varphi
         \iff \forall P.\, \forall i \in \{ 1, \ldots, k \} . \,
-        (\mathit{tr}_{\mathit{con}}(P, \sigma_i[r_i]), \rho_\sigma) \vDash_{\ML} \mathit{tr}_{\mathit{sym}}(P, f_{r_i}) \land \varphi
+        (\mathit{tr}_{\mathit{con}}(P, \sigma_i[r_i]), \rho_\sigma)
+        \vDash_{\ML} \mathit{tr}_{\mathit{sym}}(P, r_i) \land \varphi
     \end{equation*}
 \end{lemma}
 \begin{proof}
-    By the disjointness of the union, the left side is equivalent to
-    \begin{equation*}
-        \forall i \in \{ 1, \ldots, k \} .\, \sigma_i[r_i] \vDash_{\FOL} \varphi
-    \end{equation*}
-    which is, since $\varphi$ can be thought of as a structureless ML formula, equivalent to
-    \begin{equation*}
-        \forall i \in \{ 1, \ldots, k \} .\, \sigma_i[r_i] \vDash_{\ML} \varphi
-    \end{equation*}
-    which is by \Cref{lem:symConcreteTranslationMatch} equivalent to
-    \begin{equation*}
-        \forall P.\, \forall i \in \{ 1, \ldots, k \} . \,
-        ((\mathit{tr}_{\mathit{con}}(P, \sigma_i[r_i]), \sigma_i) \vDash_{\ML} \mathit{tr}_{\mathit{sym}}(P, r_i))
-        \mbox{ and } (\sigma_i[r] \vDash_{\ML} \varphi)
-    \end{equation*}
-    which is equivalent to the right side by properties of matching logic conjunction and structureless formulas.
+    By \Cref{lem:symConcreteTranslationMatch} and properties of matching logic conjunction and structureless formulas,
+    the RHS is equivalent to
+    \begin{proofenv}
+        \begin{itemize}
+            \item for any $j \in \{ 1,\ldots,n \}$,
+            $\rho_{\sigma}(\mathit{var}_{\mathit{inj}}(r_i(x_j))) = (\sigma_i[r_i])(x_j)$; and
+            \item $\rho_\sigma \vDash_{\ML} \varphi$.
+        \end{itemize}
+    \end{proofenv}
+    The first item is always true: by the defining property of $\rho_{\sigma}$,
+    it is enough to show that $\sigma(r_i(x_j)) = (\sigma_i[r_i])(x_j)$, which is trivially true.
+    The second item is then equivalent to the LHS.
 \end{proof}
 
 
