@@ -1945,6 +1945,17 @@ which concludes the proof.
         \sigma, S \Downarrow \sigma^\prime
     \end{equation*}
     (where $\Downarrow$ denotes the relation defined by the original big-step semantics of $L_{\mathit{CHL}}$).
+    Furthermore, we assume that $S_{L_{\mathit{CHL}}}$ ignores the state of program variables not mentioned in the program
+    being executed - a property that is easy to satisfy by the implementation.
+    Formally, for any finite maps $m_1,m_2,m_f$ such that $m_1$ and $m_f$ are disjoint, and for any program $P$,
+    if
+    \begin{equation*}
+        \impConfig{P}{m_1} \quad \Rightarrow^*_{S_{L_{\mathit{CHL}}}} \quad \impConfig{P}{m_2} \, ,
+    \end{equation*}
+    then
+    \begin{equation*}
+        \impConfig{P}{m_1 \cup m_f} \quad \Rightarrow^*_{S_{L_{\mathit{CHL}}}} \quad \impConfig{P}{m_2 \cup m_f} \, .
+    \end{equation*}
 \end{assumption}
 
 \begin{definition}
@@ -2079,8 +2090,8 @@ which concludes the proof.
         we also have
         \begin{equation*}
             \forall P.\, \forall i \in \{ 1, \ldots, k \} . \,
-            (\mathit{tr}_{\mathit{con}}(P, \sigma_i[r_i]), \rho_{\sigma^\prime})
-            \vDash_{\ML} \mathit{tr}_{\mathit{sym}}(P, r_i) \land \psi
+            (\mathit{end}_{\mathit{con}}(P, \sigma_i[r_i]), \rho_{\sigma^\prime})
+            \vDash_{\ML} \mathit{end}_{\mathit{sym}}(P, r_i) \land \psi
         \end{equation*}
         (where $\sigma = \biguplus_{1 \leq i \leq k} \sigma_i[r_i]$
         and $\sigma^\prime = \biguplus_{1 \leq i \leq k} \sigma^\prime_i[r_i]$)
