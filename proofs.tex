@@ -1983,20 +1983,23 @@ which concludes the proof.
 \end{definition}
 
 \begin{lemma}[Symbolic and concrete match]\label{lem:symConcreteTranslationMatch}
-    For any statements $P,Q$ and any injective function $f$ on program variables of $L_{\mathit{CHL}}$,
-    the following holds:
+    For any statement $P$, any injective function $f$ on program variables of $L_{\mathit{CHL}}$,
+    any finite map $\sigma$ and any configuration $\gamma$,
+    we have
     \begin{equation*}
-        (\mathit{tr}_{\mathit{con}}(Q, \sigma[f]), \rho) \vDash_{\ML} \mathit{tr}_{\mathit{sym}}(P, f)
-        \iff
-        \forall j \in \{ 1, \ldots, n \}.\, \rho(\mathit{var}_{\mathit{inj}}(f(x_j))) = (\sigma[f])(x_j)
-        \land Q = P
+        (\gamma, \rho) \vDash_{\ML} \mathit{tr}_{\mathit{sym}}(P, f)
     \end{equation*}
-    and
+    iff there exists a finite map $h$ that is disjoint with $\sigma$ such that
     \begin{equation*}
-        (\mathit{end}_{\mathit{con}}(Q, \sigma[f]), \rho) \vDash_{\ML} \mathit{end}_{\mathit{sym}}(P, f)
-        \iff
-        \forall j \in \{ 1, \ldots, n \}.\, \rho(\mathit{var}_{\mathit{inj}}(f(x_j))) = (\sigma[f])(x_j)
-        \land Q = P
+        (\gamma = \mathit{tr}_{\mathit{con}}(P, \sigma[f] \cup h[f])) \land (\forall j \in \{ 1, \ldots, n \}.\, \rho(\mathit{var}_{\mathit{inj}}(f(x_j))) = (\sigma[f])(x_j)) \, ;
+    \end{equation*}
+    similarly, we have
+    \begin{equation*}
+        (\gamma, \rho) \vDash_{\ML} \mathit{end}_{\mathit{sym}}(P, f)
+    \end{equation*}
+    iff there exists a finite map $h$ that is disjoint with $\sigma$ such that
+    \begin{equation*}
+        (\gamma = \mathit{end}_{\mathit{con}}(P, \sigma[f] \cup h[f])) \land (\forall j \in \{ 1, \ldots, n \}.\, \rho(\mathit{var}_{\mathit{inj}}(f(x_j))) = (\sigma[f])(x_j))
     \end{equation*}
     (where $x_1,\ldots,x_n$ are program variables occurring in $P$).
     %Also,
