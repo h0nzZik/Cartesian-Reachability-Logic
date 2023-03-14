@@ -1938,21 +1938,21 @@ which concludes the proof.
 
 \begin{assumption}\label{a:sf}
     We assume a sound formalization of $L_{\mathit{CHL}}$ in the form of a reachability system
-    $S_{L_{\mathit{CHL}}}$ that for any $P,\sigma$ satisfies
+    $S_{L_{\mathit{CHL}}}$ that for any $P,\sigma$ and any terminal $\gamma^\prime$ satisfies
     \begin{equation*}
-        \mathit{tr}_{\mathit{con}}(P, \sigma) \Rightarrow^*_{S_{L_{\mathit{CHL}}}} \mathit{tr}_{\mathit{end}}(P, \sigma^\prime)
+        \mathit{tr}_{\mathit{con}}(P, \sigma) \Rightarrow^*_{S_{L_{\mathit{CHL}}}} \gamma^\prime
         \iff
-        \sigma, S \Downarrow \sigma^\prime
+        (\sigma, S \Downarrow \sigma^\prime) \land (\gamma^\prime = \mathit{end}_{\mathit{con}}(P, \sigma^\prime))
     \end{equation*}
     (where $\Downarrow$ denotes the relation defined by the original big-step semantics of $L_{\mathit{CHL}}$).
     Furthermore, we assume that $S_{L_{\mathit{CHL}}}$ ignores the state of program variables not mentioned in the program
     being executed - a property that is easy to satisfy by the implementation.
     Formally, for any finite maps $m_1,m_2,m_f$ such that $m_1$ and $m_f$ are disjoint, and for any program $P$,
-    if
+    we have
     \begin{equation*}
         \impConfig{P}{m_1} \quad \Rightarrow^*_{S_{L_{\mathit{CHL}}}} \quad \impConfig{P}{m_2} \, ,
     \end{equation*}
-    then
+    iff
     \begin{equation*}
         \impConfig{P}{m_1 \cup m_f} \quad \Rightarrow^*_{S_{L_{\mathit{CHL}}}} \quad \impConfig{P}{m_2 \cup m_f} \, .
     \end{equation*}
@@ -2033,7 +2033,7 @@ which concludes the proof.
 \end{lemma}
 \begin{proof}
     We show proof of the first equivalence only, since the second is similar.
-    By \Cref{lem:symConcreteTranslationMatch} and properties of matching logic conjunction and structureless formulas,
+    By \Cref{lem:symConcreteTranslationMatch} (with $h$ being empty) and properties of matching logic conjunction and structureless formulas,
     the RHS is equivalent to
     \begin{proofenv}
         \begin{itemize}
@@ -2053,10 +2053,11 @@ which concludes the proof.
     Let $P$ be a statement of $L_{\mathit{CHL}}$ over variables $\vec{x} = x_1,\ldots,x_n$,
     and let $\Phi,\Psi$ be FOL formulas over variables
     $\vec{x}_1,\ldots,\vec{x}_k$.
+    Let $\vec{Y} = \mathit{var}_{\mathit{inj}}(\vec{x}_1, \ldots, \vec{x}_k)$.
     Then $||\varphi||\ P\ ||\psi||$ if and only if
     \begin{equation*}
         [\mathit{tr}_{\mathit{sym}}(P, r_1),\ldots,\mathit{tr}_{\mathit{sym}}(P, r_k)] \land \varphi
-        \Rightarrow^{c\forall} [\mathit{end}_{\mathit{sym}}(P, r_1),\ldots,\mathit{end}_{\mathit{sym}}(P, r_k)] \land \psi \, .
+        \Rightarrow^{c\forall} \exists \vec{Y}.\, [\mathit{end}_{\mathit{sym}}(P, r_1),\ldots,\mathit{end}_{\mathit{sym}}(P, r_k)] \land \psi \, .
     \end{equation*}
 \end{lemma}
 \begin{proof}
@@ -2099,4 +2100,54 @@ which concludes the proof.
         (where $\sigma = \biguplus_{1 \leq i \leq k} \sigma_i[r_i]$
         and $\sigma^\prime = \biguplus_{1 \leq i \leq k} \sigma^\prime_i[r_i]$)
     \end{proofenv}
+
+    We want to show this to be equivalent with
+    \begin{proofenv}
+        for all configurations $\gamma_1,\ldots,\gamma_k \in \Tcfg$
+        and any $\mathcal{T}$-valuation $\rho$,
+        whenever $(\gamma_1,\rho) \vDash \mathit{tr}_{\mathit{sym}}(P, r_1) \land \varphi$ and \ldots
+        and $(\gamma_k,\rho) \vDash \mathit{tr}_{\mathit{sym}}(P, r_k) \land \varphi$,
+        then for all complete $\Rightarrow_{\mathcal{S}}$-paths (that is, finite paths which cannot be extended further)
+        $\pi_1,\ldots,\pi_k$
+        satisfying $\pi_i[0] = \gamma_i$ for any $i \in \{ 1, \ldots, k \}$
+        there exist natural numbers $j_1, \ldots, j_k$
+        such that $\gamma_1 \Rightarrow^{*}_{S_{L_{\mathit{CHL}}}} \pi_1[j_1]$
+        and \ldots and $\gamma_k \Rightarrow^{*}_{S_{L_{\mathit{CHL}}}} \pi_k[j_k]$,
+        and $(\pi_1[j_1], \rho^\prime) \vDash \mathit{end}_{\mathit{sym}}(P, r_1) \land \psi$
+        and \ldots and $(\pi_k[j_k], \rho^\prime) \vDash \mathit{end}_{\mathit{sym}}(P, r_k) \land \psi$
+        for some $\rho^\prime$ that agrees with $\rho$ on all variables except $\vec{Y}$.
+    \end{proofenv}
+    \begin{enumerate}
+        \item For the top-down implication, assume such configurations and such complete paths.
+            Let $l_1,\ldots,l_k$ denote the lengths of the paths $\pi_1,\ldots,\pi_k$.
+            By \Cref{lem:symConcreteTranslationMatch},
+            we have for every $j \in \{ 1, \ldots, k \} $ and some $h_j$:
+            \begin{equation*}
+                \gamma_j = \mathit{tr}_{\mathit{con}}(P, \sigma[r_j] \cup h_j[r_j])
+            \end{equation*}
+            and therefore
+            \begin{equation*}
+                \mathit{tr}_{\mathit{con}}(P, \sigma[r_j] \cup h_j[r_j])
+                \Rightarrow^*_{S_{L_{\mathit{CHL}}}}
+                \pi_j[l_j] \, .
+            \end{equation*}
+            %Let us destruct $\pi_j[l_j]$ into some $\impConfig{P^\prime_i}{}$
+            By Assumption~\ref{a:sf}, we have
+            \begin{equation*}
+                \pi_j[l_j] = \mathit{end}_{\mathit{con}}(P, \sigma[r_j]) \, .
+            \end{equation*}
+            Because we have
+            \begin{equation*}
+                \forall P.\, \forall i \in \{ 1, \ldots, k \} . \,
+                (\mathit{end}_{\mathit{con}}(P, \sigma_i[r_i]), \rho_{\sigma^\prime})
+                \vDash_{\ML} \mathit{end}_{\mathit{sym}}(P, r_i) \land \psi \, ,
+            \end{equation*}
+            it follows that
+            \begin{equation*}
+                (\pi_j[l_j], \rho_{\sigma^\prime}) \vDash_{\ML} \mathit{end}_{\mathit{sym}}(P, r_i) \land \psi \, ,
+            \end{equation*}
+            which is what we needed to prove.
+        \item For the bottom-up implication, TODO.
+    \end{enumerate}
+
 \end{proof}
