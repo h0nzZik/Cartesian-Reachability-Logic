@@ -35,23 +35,20 @@ framework, known as \emph{Circular coinduction} in the literature~\cite{RosuL09C
 We base our work on the \emph{one-path} variant of reachability logic.
 Consequently, CRL inherits a known limitation of one-path reachability logic: that the tight correspondence between
 one-path RL and Hoare logics is limited to deterministic languages.
-However, we would still want to prove the following theorem.
+However, we can prove the following theorem (the proof is technical and can be found in \Cref{app:reltoCHL}).
 \begin{theorem}\label{thm:chlCRLrelation}
   CRL extends CHL on the deterministic fragment of the CHL-supported language.
   That is, assume a sound reachability-logic formalization (that is, a reachability system) $\mathcal{S}_{\mathit{IMP}}$ of the CHL's imperative language.
-  The there exists a translation function $\mathit{tr}$ such that
-  given any statement $P$ in the deterministic fragment of the CHL's imperative language,
-  where $P$ is over variables $\vec{x} = x_1,\ldots,x_n$,
-  and any first order formulas $\Phi, \Psi$ over variables $\vec{x}_1,\ldots,\vec{x}_k$,
-\begin{equation*}
-    \vDash_{\mathit{CHL}} ||\Phi||\ P\ ||\Psi||
+  The there exist a translation functions $\mathit{tr}$ and $\mathit{end}$ such that
+  given any statement $P$ in the deterministic fragment of the CHL's imperative language
+  and any first order formulas $\varphi, \psi$,
+  \begin{equation*}
+    \vDash_{\mathit{CHL}} ||\varphi||\ P\ ||\psi||
     \iff
-    \mathcal{S}_{\mathit{IMP}} \vDash_\CRL \mathit{tr}(P, \Phi) \Rightarrow^{c\exists} \mathit{tr}(\texttt{skip}, \Psi) \, .
-\end{equation*}
+    \mathcal{S}_{\mathit{IMP}} \vDash_\CRL \mathit{tr}(P, \varphi) \Rightarrow^{c\exists} \mathit{end}(P, \psi) \, .
+  \end{equation*}
 \end{theorem}
-\begin{proof}
-Admitted. Use the relationship between one-path CRL and all-path CRL on deterministic languages (TODO).
-\end{proof}
+
 
 \subsubsection{Main Idea and Proof Technique}
 

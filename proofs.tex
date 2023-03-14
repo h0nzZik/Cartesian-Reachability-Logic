@@ -1860,7 +1860,7 @@ In order to tie (one-path) CRL to CHL, we first define an all-path variant of CR
 
 All-path CRL and one-path CRL have the same semantics on deterministic languages, assuming the RHS of the claim is terminal.
 
-\begin{lemma}[One-path / All-path CRL correspondence]
+\begin{lemma}[One-path / All-path CRL correspondence]\label{crlOPAPcorrespondence}
     Let $\Phi$ be a CLP and $\Phi^\prime$ an ECLP such that $\Phi^\prime$ is terminal
     (that is, configurations matching $\Phi^\prime$ cannot take a step).
     Then $\mathcal{S} \vDash \Phi \Rightarrow^{c\exists} \Phi^\prime$
@@ -2063,7 +2063,7 @@ which concludes the proof.
 \begin{proof}
     The left side is true iff (by definition)
     \begin{proofenv}
-        for every set of valuation pars $\{ (\sigma_1,\sigma_1^\prime),\ldots,(\sigma_k,\sigma_k^\prime) \}$
+        for every set of valuation pairs $\{ (\sigma_1,\sigma_1^\prime),\ldots,(\sigma_k,\sigma_k^\prime) \}$
         satisfying
         \begin{equation*}
             \left( \biguplus_{1 \leq i \leq k} \sigma_i[r_i] \vDash_{\FOL} \varphi \right)
@@ -2079,7 +2079,7 @@ which concludes the proof.
     \end{proofenv}
     which is (by \Cref{lem:chlCRLstatic} and Assumption~\ref{a:sf}) equivalent to
     \begin{proofenv}
-        for every set of valuation pars $\{ (\sigma_1,\sigma_1^\prime),\ldots,(\sigma_k,\sigma_k^\prime) \}$
+        for every set of valuation pairs $\{ (\sigma_1,\sigma_1^\prime),\ldots,(\sigma_k,\sigma_k^\prime) \}$
         satisfying
         \begin{equation*}
             \forall P.\, \forall i \in \{ 1, \ldots, k \} . \,
@@ -2147,7 +2147,79 @@ which concludes the proof.
                 (\pi_j[l_j], \rho_{\sigma^\prime}) \vDash_{\ML} \mathit{end}_{\mathit{sym}}(P, r_i) \land \psi \, ,
             \end{equation*}
             which is what we needed to prove.
-        \item For the bottom-up implication, TODO.
+        \item For the bottom-up implication,
+            assume a set of valuation pairs $\{ (\sigma_1,\sigma_1^\prime),\ldots,(\sigma_k,\sigma_k^\prime) \}$
+            satisfying
+            \begin{equation*}
+                \forall P.\, \forall i \in \{ 1, \ldots, k \} . \,
+                    (\mathit{tr}_{\mathit{con}}(P, \sigma_i[r_i]), \rho_\sigma)
+                    \vDash_{\ML} \mathit{tr}_{\mathit{sym}}(P, r_i) \land \varphi
+            \end{equation*}
+            and
+            \begin{equation*}
+                \forall i \in \{ 1, \ldots, k \}.\,
+                \mathit{tr}_{\mathit{con}}(P, \sigma_i) \Rightarrow^*_{S_{L_{\mathit{CHL}}}} \mathit{end}_{\mathit{con}}(P, \sigma^\prime_i)
+            \end{equation*}
+            The second means we have for every $i$ some complete trace $\pi_i$ of length $l_i$
+            starting in $\mathit{tr}_{\mathit{con}}(P, \sigma_i)$ and ending in $\mathit{end}_{\mathit{con}}(P, \sigma^\prime_i)$.
+            We need to prove:
+            \begin{equation*}
+                \forall P.\, \forall i \in \{ 1, \ldots, k \} . \,
+                (\mathit{end}_{\mathit{con}}(P, \sigma_i[r_i]), \rho_{\sigma^\prime})
+                \vDash_{\ML} \mathit{end}_{\mathit{sym}}(P, r_i) \land \psi
+            \end{equation*}
+            (where $\sigma = \biguplus_{1 \leq i \leq k} \sigma_i[r_i]$
+            and $\sigma^\prime = \biguplus_{1 \leq i \leq k} \sigma^\prime_i[r_i]$).
+            Let $P^\prime$ be some program and let $i$ be in $\{ 1, \ldots, k \}$.
+            We need to show that 
+            \begin{equation*}
+                (\mathit{end}_{\mathit{con}}(P^\prime, \sigma_i[r_i]), \rho_{\sigma^\prime})
+                \vDash_{\ML} \mathit{end}_{\mathit{sym}}(P^\prime, r_i) \land \psi \, .
+            \end{equation*}
+            By \Cref{lem:symConcreteTranslationMatch}, it is enough to show that
+            \begin{equation*}
+                (\forall j \in \{ 1, \ldots, n \}.\, \rho_{\sigma^\prime}(\mathit{var}_{\mathit{inj}}(f(x_j))) = (\sigma^\prime[f])(x_j))
+            \end{equation*}
+            (which holds by definition of $\rho_{\sigma^\prime}$) and that
+            \begin{equation*}
+                \rho_{\sigma^\prime} \vDash_{\ML} \psi \, .
+            \end{equation*}
+            It is enough to show that
+            $(\pi_i[l_i], \rho^\prime) \vDash \mathit{end}_{\mathit{sym}}(P, r_i) \land \psi$
+            which follows from the assumptions by firstorder reasoning.
     \end{enumerate}
 
 \end{proof}
+
+    Now we can combine the above into the following result:
+
+    \begin{theorem}[One-path CRL vs CHL]\label{thm:chlOPCRLrelation}
+        Let $P$ be a \emph{deterministic} statement of $L_{\mathit{CHL}}$ over variables $\vec{x} = x_1,\ldots,x_n$,
+        and let $\varphi,\psi$ be FOL formulas over variables
+        $\vec{x}_1,\ldots,\vec{x}_k$.
+        Let $\vec{Y} = \mathit{var}_{\mathit{inj}}(\vec{x}_1, \ldots, \vec{x}_k)$.
+        Then $||\varphi||\ P\ ||\psi||$ if and only if
+        \begin{equation*}
+            [\mathit{tr}_{\mathit{sym}}(P, r_1),\ldots,\mathit{tr}_{\mathit{sym}}(P, r_k)] \land \varphi
+            \Rightarrow^{c\exists} \exists \vec{Y}.\, [\mathit{end}_{\mathit{sym}}(P, r_1),\ldots,\mathit{end}_{\mathit{sym}}(P, r_k)] \land \psi \, .
+        \end{equation*}
+    \end{theorem}
+    \begin{proof}
+        Use \Cref{thm:chlAPCRLrelation} and \Cref{crlOPAPcorrespondence}.
+    \end{proof}
+
+
+    \begin{proof}[Proof of \Cref{thm:chlCRLrelation}]
+        We define
+        \begin{align*}
+            & \mathit{tr}(P, \varphi) \equiv [\mathit{tr}_{\mathit{sym}}(P, r_1),\ldots,\mathit{tr}_{\mathit{sym}}(P, r_k)] \land \varphi \\
+            & \mathit{end}(P, \psi) \equiv \exists \vec{Y}.\, [\mathit{end}_{\mathit{sym}}(P, r_1),\ldots,\mathit{end}_{\mathit{sym}}(P, r_k)] \land \psi \,
+        \end{align*}
+        (where $P$ is a deterministic statement over $\vec{x} = x_1,\ldots,x_n$, 
+        and $\varphi,\psi$ are FOL formulas over variables
+        $\vec{x}_1,\ldots,\vec{x}_k$,
+        and $\vec{Y} = \mathit{var}_{\mathit{inj}}(\vec{x}_1, \ldots, \vec{x}_k)$
+        )
+        and apply \Cref{thm:chlOPCRLrelation}.
+    \end{proof}
+
