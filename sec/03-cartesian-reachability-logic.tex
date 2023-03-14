@@ -268,7 +268,7 @@ We use the star extension for the same purpose.
 We are now ready to give Cartesian Reachability Logic a proof system to
 facilitate mechanical reasoning.  While the intuition behind the semantics of
 CRL is similar to that of CHL, with only a few minor differences, coming up
-with a for CRL is not straightforward.  One could attempt to reuse the proof
+with a proof system for CRL is not straightforward.  One could attempt to reuse the proof
 system of CHL and modify it \emph{somehow} to be independent of the particular
 programming language.  Since many CHL rules (e.g., its \texttt{If} rule shown
 in \Cref{chlRule:If}) are simply Hoare logic rules acting on a particular
@@ -385,7 +385,7 @@ Initially, the proof search starts with $E = C = \emptyset$.
       }
       {(\mathcal{T}, S) \vdash_\CRL \exists X, \vec{Y}.\, [\varphi_1, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
     \end{align*}
-    \caption{Proof System for CRL}
+    \caption{A proof system for CRL}
     \label{fig:CRLproofsystem}
 \end{figure}
 
@@ -436,7 +436,7 @@ technical result of this paper.
 
 In order to  prove this theorem, we will need (beside
 Theorem~\ref{thm:CRLandRLcorrespondence}, which we discuss in previous
-section) a technical lemma stating, that one can generate an RL proof on a star-extended system
+section) a technical lemma stating that one can generate an RL proof on a star-extended system
 from a CRL proof. This lemma is the second major component of the soundness
 proof of CRL and its proof can be found in \Cref{app:crlsoundness}.
 \begin{lemma}\label{lem:CRLalmostSoundness}
@@ -547,7 +547,7 @@ Therefore, we first apply the Conseq rule to change the goal to
   \Downarrow_{\emptyset, \emptyset} \Psi^\prime_{\mathit{mono}} \, ,
 \end{align*}
 then apply the Circularity rule, followed by application of the Abstract rule, which basically changes the goal
-back, except that now we have a general circularity. The goal is now
+back, except that now we have a general cutpoint. The goal is now
 \begin{align*}
   \mathcal{S}_{\mathit{imp}} \vdash_\CRL [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2)] \land X_1 \leq X_2 \land Y_1 \leq Y_2
   \Downarrow_{\Phi_{\mathit{circ}}, \emptyset} \Psi^\prime_{\mathit{mono}} \, ,

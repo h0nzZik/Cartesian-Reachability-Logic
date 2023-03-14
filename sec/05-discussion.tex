@@ -22,7 +22,7 @@ Circularity rule
 \end{align*}
 requires all the components to make progress (denoted by the ``plus'' sign on top of the arrows) before the circularity can be used,
 which would prohibit RL-style reasoning when one component has already finished execution.
-The need for such reasoning is there even in our simple running example, as we illustrate in ???.
+%The need for such reasoning is there even in our simple running example, as we illustrate in ???.
 
 We believe that all the mentioned proof systems that use a variant of the Circularity rule are instances of a more general
 framework, known as \emph{Circular coinduction} in the literature~\cite{RosuL09CircularCoinduction}.
@@ -50,7 +50,7 @@ However, we can prove the following theorem (the proof is technical and can be f
 \end{theorem}
 
 
-\subsubsection{Main Idea and Proof Technique}
+\subsubsection{Similarities}
 
 Our understanding of the inner workings of CHL is based on the extended, unpublished version (\cite{SousaD16Extended})
 of \cite{SousaD16}.
@@ -64,10 +64,10 @@ the "only if" implication corresponds to our \Cref{lem:CRLalmostSoundness}, wher
 an RL proof from a CRL proof,
 while the "if" implication corresponds to our Reduce rule.
 Furthermore, in the proof of soundness of CHL, the authors assume soundness of the self-composition technique;
-self-composition corresponds to our \emph{star extension} and its soundness to our \Cref{thm:correspondence}.
+self-composition corresponds to our \emph{star extension} and its soundness to our \Cref{thm:CRLandRLcorrespondence}.
 Finally \cite{SousaD16Extended} assumes soundness and relative completeness of the underling Hoare logic;
 similarly, we assume soundness and relative completeness of reachability logic.
-However, for completeness, we have to prove that \emph{star extension} preserves decidability.
+However, for completeness, we had to prove that \emph{star extension} preserves decidability of validity.
 
 \subsubsection{Differences}
 There are also differences between the CHL and CRL techniques.
