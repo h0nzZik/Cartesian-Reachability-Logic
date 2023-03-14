@@ -199,7 +199,7 @@ We define reachability-logic signatures, rules, and systems as follows.
 
 \end{definition}
 
-\section{Cartesian Reachability logic}
+\section{Cartesian Reachability logic}\label{app:CRL}
 
 \begin{definition}[CRL Syntax]\label{def:opCRLSyntax}
     We define the syntax of Cartesian Reachability logic as follows:
@@ -219,6 +219,11 @@ We define reachability-logic signatures, rules, and systems as follows.
               where $\Phi$ is a CLP and $\Psi$ is an ECLP.
     \end{itemize}
 \end{definition}    
+
+\begin{proof}[Proof of \Cref{prop:opCRLopRL}]
+    Follows by firstorder reasoning from the definitions of semantics of CRL (\Cref{def:opCRLsemantics}) and RL
+    (\Cref{def:basics}).
+\end{proof}
 
 \subsection{Proof of~\Cref{thm:CRLandRLcorrespondence}}\label{app:CRLandRLcorrespondence}
 

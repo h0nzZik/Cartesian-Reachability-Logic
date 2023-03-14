@@ -26,7 +26,7 @@ satisfies $\Psi$ \footnote{An important technical assumption here is that
 %To make specifications more compact, one can also consider triples $|| \Phi ||\ S \ || \Psi ||$ 
 
 As an example, consider the program $P(x,y) \equiv \texttt{while(x > 0) \{ x--; y++; \} }$ and the 2-safety property
-of \emph{monotonicity} stating, intuitively: with growing input $x$, the resulting $y$ also grows.
+of \emph{monotonicity} stating, intuitively: with growing inputs $x$ and $y$, the resulting $y$ also grows.
 In CHL, this can be formalized as
 \begin{equation}\label{eq:mono_formula}
 \langle x_1 \leq x_2 \land y_1 \leq y_2  \rangle\ P(x_1, y_1)\st{}P(x_2, y_2)\  \langle y_1 \leq y_2 \rangle \, .
@@ -54,7 +54,7 @@ This proof system contains rules\footnote{We have changed the notation
 \end{align}
 that replicate standard Hoare-logic reasoning, and is sound and complete. 
 However, what is more interesting, the proof system allows one to perform \emph{lockstep reasoning},
-even for loops. This is achieved by means of the following rule (version for two processes):
+even for loops. This is achieved by means of the following rule (version for two executions):
 \begin{align*}
   & \prftree[l]{Fusion}
     {
@@ -105,17 +105,16 @@ resulting in a state satisfying the postcondition.
 
 This lockstep reasoning is a powerful tool, because the required invariants (relating
 different executions) are often very simple. For example consider the
-program $P(x,y)$ and the formula (\ref{eq:mono_formula}) above. If one chooses
-the invariant to be the same as the precondition (i.e. $I \equiv x_1 \leq x_2 \land y_1 \leq y_2$),
-the precondition of the second premise becomes
-$\langle x_1 \leq x_2 \land y_1 \leq y_2 \land \neg (x_2 > 0) \rangle$, which implies
-$x_1 \leq 0$ and therefore the loop condition in $P(x_1, y_1)$ is not
-satisfied.
-
-
-
-%To prove the above example without lockstep reasoning, one would need to find (non-relational) loop invariants
-%strong enough to summarize the whole loop.
+program $P(x,y)$ and the formula (\ref{eq:mono_formula}) above.
+% If one chooses
+%the invariant to be the same as the precondition (i.e. $I \equiv x_1 \leq x_2 \land y_1 \leq y_2$),
+%the precondition of the second premise becomes
+%$\langle x_1 \leq x_2 \land y_1 \leq y_2 \land \neg (x_2 > 0) \rangle$, which implies
+%$x_1 \leq 0$ and therefore the loop condition in $P(x_1, y_1)$ is not
+%satisfied.
+In this case it is enough to choose the invariant to be the same as the precondition (i.e. $I \equiv x_1 \leq x_2 \land y_1 \leq y_2$).
+To prove the above example without lockstep reasoning, one would need to find (non-relational) loop invariants
+strong enough to summarize the whole loop.
 
 Unfortunately lockstep reasoning rules become more complicated as one adds other features into the language
 -- for example, the \texttt{break} statement (as has been done in \cite{SousaD16}).
@@ -127,7 +126,7 @@ and in the proofs of soundness for both of the logics.
 
 Our aim in this paper is to make the above ideas available for any deterministic language.
 Therefore, in the following subsections we review some tools from recent literature
-on language-independent program verification.
+on language-parametric program verification.
 
 %\subsection{($\mu$-free) Matching Logic}
 \subsection{Matching Logic}

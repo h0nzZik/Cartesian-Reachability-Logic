@@ -104,9 +104,9 @@
   hyperproperties is known as $k$-safety properties, which express the absence
   of a \emph{bad} $k$-tuple of execution traces.  Many security policies, such
   as \emph{noninterference}, and functional properties, such as commutativity,
-  monotonicity or transitivity are $k$-safety properties. A prominent example
+  monotonicity, and transitivity, are $k$-safety properties. A prominent example
   of a logic which can reason about $k$-safety properties of software systems
-  is Cartesian Hoare logic (CHL). However CHL targets a specific, small
+  is Cartesian Hoare logic (CHL). However, CHL targets a specific, small
   imperative language. In order to use it for sound verification of programs
   in a different language, one needs to extend it with the desired features,
   or to hand-craft a translation. Both these approaches require a lot of
@@ -118,8 +118,11 @@
   instantiated with any deterministic language whose operational semantics is
   given by Reachability logic rules. (Examples of such languages include e.g.
   EVM - the language powering the Ethereum blockchain.)
-  % TODO - add other  examples of  such languages, including smart contracts
-  This approach, used by tools like \K{} framework, can significantly reduce
+  This approach
+  % JT: I would not mention K in such way, since it might suggest that we have implemented
+  % CRL in K. (We have, but we do not want to draw attention to it yet.)
+  %, used by tools like \K{} framework,
+  can significantly reduce
   the development costs of tools and techniques for sound $k$-safety
   verification.
   

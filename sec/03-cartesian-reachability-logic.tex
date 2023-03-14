@@ -20,10 +20,10 @@ logic. To express k-safety properties we extend reachability rules $\varphi
   \Rightarrow^{c\exists} \exists \vec{Y}.\, [\varphi^\prime_1,\ldots,\varphi^\prime_k] \land P^\prime
 \end{equation*}
 
-The intuitive meaning of such a claim is as follows: There are $k$ programs,
-the set of source configurations of $i$-th program matching $\varphi_i$ and
-target configurations matching $\varphi'_i$. Additionally, a matching logic
-formula $P$ can relate the source configurations, and $P'$ the target
+The intuitive meaning of such a claim is as follows: there are $k$ programs
+embedded into $k$ source configurations, with $i$-th source configuration matching $\varphi_i$,
+and $k$ target configurations matching $\varphi'_i$. Additionally, a FOL
+formula $P$ can relate the source configurations, and a FOL formula $P'$ the target
 configurations. We call formulas of the form
 $ \exists \vec{Y}.\,[\varphi_1,\ldots,\varphi_k] \land P$ (where $\vec{Y}$ may
 be an empty vector) \emph{existentially-quantified constrained list patterns}
@@ -115,9 +115,9 @@ deterministic languages.
 
 \subsection{CRL as an extension of Reachability Logic}
 
-We would like to point out that we cannot  handle k-safety properties directly
+We would like to point out that one cannot handle k-safety properties directly
 in RL, by simply replacing a CRL claim with $k$ components by $k$ RL
-claims. The reason is that in CRL formulas cab relate variables from different components. 
+claims. The reason is that in CRL formulas, one can relate variables from different components. 
 
 
 %Consider, for example, a reachability system $S_{\mathit{IMP}}$ representing a simple imperative language,
@@ -162,15 +162,14 @@ which clearly cannot hold.
 
 On the other hand, CRL is an extension of RL in the following natural sense:
 If we restrict configuration lists in CRL claims to contain a single
-configuration each, validity of CRL and RL claims neatly coincide.
-
-% TODO: (the proof of the follwong proposition can be found in Appendix~\ref{}):
+configuration each, validity of CRL and RL claims neatly coincide
+(the proof of the follwong proposition can be found in Appendix~\ref{app:CRL}):
 
 
 %\begin{remark}
 %\Cref{def:opCRLsemantics} extends \Cref{def:oprlSemantics} of \Cref{def:basics}:
 %if we fix $k=1$, then
-\begin{proposition}
+\begin{proposition}\label{prop:opCRLopRL}
   $ (\mathcal{T}, S) \vDash_\CRL [\varphi] \land \top \Rightarrow^{c\exists}
   [\varphi^\prime] \land \top \iff (\mathcal{T}, S) \vDash_\RL \varphi
   \Rightarrow^{\exists} \varphi^\prime \, .  $
