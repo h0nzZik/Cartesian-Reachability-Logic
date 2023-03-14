@@ -1906,7 +1906,6 @@ Thus,
 $(\pi_1[j_1], \rho^\prime) \vDash \varphi^\prime_1 \land P^\prime$
 and \ldots and $(\pi_k[j_k], \rho^\prime) \vDash \varphi^\prime_k \land P^\prime$,
 which concludes the proof.
-
 \end{proof}
 
 \begin{definition}
@@ -1925,14 +1924,23 @@ which concludes the proof.
             \mathit{sym}_\mathit{var}(x_n) \mapsto \sigma(x_n)
         }
     \end{equation*}
+    and a function $\mathit{end}_{\mathit{con}}$ by
+    \begin{equation*}
+        \mathit{end}_{\mathit{con}}(P, \sigma) \quad \equiv \quad
+        \impConfig{\texttt{skip}}{
+            \mathit{sym}_\mathit{var}(x_1) \mapsto \sigma(x_1),
+            \ldots,
+            \mathit{sym}_\mathit{var}(x_n) \mapsto \sigma(x_n)
+        }
+    \end{equation*}
     (where $x_1,\ldots,x_n$ are program variables occurring in $P$).
 \end{definition}
 
-\begin{assumption}
+\begin{assumption}\label{a:sf}
     We assume a sound formalization of $L_{\mathit{CHL}}$ in the form of a reachability system
     $S_{L_{\mathit{CHL}}}$ that for any $P,\sigma$ satisfies
     \begin{equation*}
-        \mathit{tr}_{\mathit{con}}(P, \sigma) \Rightarrow^*_{S_{L_{\mathit{CHL}}}} \mathit{tr}_{\mathit{concr}}(\texttt{skip}, \sigma^\prime)
+        \mathit{tr}_{\mathit{con}}(P, \sigma) \Rightarrow^*_{S_{L_{\mathit{CHL}}}} \mathit{tr}_{\mathit{end}}(P, \sigma^\prime)
         \iff
         \sigma, S \Downarrow \sigma^\prime
     \end{equation*}
@@ -1950,25 +1958,47 @@ which concludes the proof.
             \mathit{sym}_\mathit{var}(x_n) \mapsto \mathit{var}_{\mathit{inj}}(f(x_n))
         }% \land f_{\mathit{inj}}(\varphi)
     \end{equation*}
+    and a function $\mathit{end}_{\mathit{sym}}$ by
+    \begin{equation*}
+       \mathit{end}_{\mathit{sym}}(P, f_{\mathit{inj}}) \quad \equiv \quad
+       \impConfig{\texttt{skip}}{
+           \mathit{sym}_\mathit{var}(x_1) \mapsto \mathit{var}_{\mathit{inj}}(f(x_1)),
+           \ldots,
+           \mathit{sym}_\mathit{var}(x_n) \mapsto \mathit{var}_{\mathit{inj}}(f(x_n))
+       }
+    \end{equation*}
     where $P$ is a statement of $L_{\mathit{CHL}}$ over variables $x_1,\ldots,x_n$.
     %and $f_{\mathit{inj}}$ is homomorphically extended to FOL formulas.
 \end{definition}
 
 \begin{lemma}[Symbolic and concrete match]\label{lem:symConcreteTranslationMatch}
-    For any statement $P$ and any injective function $f$ on program variables of $L_{\mathit{CHL}}$,
+    For any statements $P,Q$ and any injective function $f$ on program variables of $L_{\mathit{CHL}}$,
     the following holds:
     \begin{equation*}
-        (\mathit{tr}_{\mathit{con}}(P, \sigma[f]), \rho) \vDash_{\ML} \mathit{tr}_{\mathit{sym}}(P, f)
+        (\mathit{tr}_{\mathit{con}}(Q, \sigma[f]), \rho) \vDash_{\ML} \mathit{tr}_{\mathit{sym}}(P, f)
         \iff
         \forall j \in \{ 1, \ldots, n \}.\, \rho(\mathit{var}_{\mathit{inj}}(f(x_j))) = (\sigma[f])(x_j)
+        \land Q = P
+    \end{equation*}
+    and
+    \begin{equation*}
+        (\mathit{end}_{\mathit{con}}(Q, \sigma[f]), \rho) \vDash_{\ML} \mathit{end}_{\mathit{sym}}(P, f)
+        \iff
+        \forall j \in \{ 1, \ldots, n \}.\, \rho(\mathit{var}_{\mathit{inj}}(f(x_j))) = (\sigma[f])(x_j)
+        \land Q = P
     \end{equation*}
     (where $x_1,\ldots,x_n$ are program variables occurring in $P$).
+    %Also,
+    %\begin{equation*}
+    %    
+    %    TODO \, .
+    %\end{equation*}
 \end{lemma}
 \begin{proof}
     Follows by simple pattern matching.
 \end{proof}
 
-\begin{lemma}[Static reasoning in CHL vs CRL]
+\begin{lemma}[Static reasoning in CHL vs CRL]\label{lem:chlCRLstatic}
     Let $\sigma_1,\ldots,\sigma_k$ be program states over $\vec{x}$.
     Let $r_i(x) = x_i$ for any $x \in \vec{x}$ and any $i \in \{ 1, \ldots, k \}$.
     Let $P$ be a statement over variables $r_1(\vec{x}), \ldots, r_k(\vec{x})$.
@@ -1977,14 +2007,18 @@ which concludes the proof.
     Let $\rho_\sigma$ be a matching logic valuation sending matching logic variables
     $\mathit{var}_{\mathit{inj}}(x)$ to $\sigma(x)$.
     Then:
-    \begin{equation*}
+    \begin{align*}
         \sigma \vDash_{\FOL} \varphi
-        \iff \forall P.\, \forall i \in \{ 1, \ldots, k \} . \,
+        & \iff \forall P.\, \forall i \in \{ 1, \ldots, k \} . \,
         (\mathit{tr}_{\mathit{con}}(P, \sigma_i[r_i]), \rho_\sigma)
-        \vDash_{\ML} \mathit{tr}_{\mathit{sym}}(P, r_i) \land \varphi
-    \end{equation*}
+        \vDash_{\ML} \mathit{tr}_{\mathit{sym}}(P, r_i) \land \varphi \\
+        & \iff \forall P.\, \forall i \in \{ 1, \ldots, k \} . \,
+        (\mathit{end}_{\mathit{con}}(P, \sigma_i[r_i]), \rho_\sigma)
+        \vDash_{\ML} \mathit{end}_{\mathit{sym}}(P, r_i) \land \varphi
+    \end{align*}
 \end{lemma}
 \begin{proof}
+    We show proof of the first equivalence only, since the second is similar.
     By \Cref{lem:symConcreteTranslationMatch} and properties of matching logic conjunction and structureless formulas,
     the RHS is equivalent to
     \begin{proofenv}
@@ -2000,10 +2034,55 @@ which concludes the proof.
 \end{proof}
 
 
+
 \begin{lemma}[All-path CRL vs CHL]\label{thm:chlAPCRLrelation}
     Let $P$ be a statement of $L_{\mathit{CHL}}$ over variables $\vec{x} = x_1,\ldots,x_n$,
     and let $\Phi,\Psi$ be FOL formulas over variables
     $\vec{x}_1,\ldots,\vec{x}_k$.
-    Then $||\Phi||\ P\ ||\Psi||$ if and only if
-
+    Then $||\varphi||\ P\ ||\psi||$ if and only if
+    \begin{equation*}
+        [\mathit{tr}_{\mathit{sym}}(P, r_1),\ldots,\mathit{tr}_{\mathit{sym}}(P, r_k)] \land \varphi
+        \Rightarrow^{c\forall} [\mathit{end}_{\mathit{sym}}(P, r_1),\ldots,\mathit{end}_{\mathit{sym}}(P, r_k)] \land \psi \, .
+    \end{equation*}
 \end{lemma}
+\begin{proof}
+    The left side is true iff (by definition)
+    \begin{proofenv}
+        for every set of valuation pars $\{ (\sigma_1,\sigma_1^\prime),\ldots,(\sigma_k,\sigma_k^\prime) \}$
+        satisfying
+        \begin{equation*}
+            \left( \biguplus_{1 \leq i \leq k} \sigma_i[r_i] \vDash_{\FOL} \varphi \right)
+        \end{equation*}
+        and
+        \begin{equation*}
+            \forall i \in \{ 1, \ldots, k \}.\, \sigma_i, P  \Downarrow \sigma^\prime_i
+        \end{equation*}
+        we also have
+        \begin{equation*}
+            \left( \biguplus_{1 \leq i \leq k} \sigma^\prime_i[r_i] \vDash_{\FOL} \psi \right)
+        \end{equation*}
+    \end{proofenv}
+    which is (by \Cref{lem:chlCRLstatic} and Assumption~\ref{a:sf}) equivalent to
+    \begin{proofenv}
+        for every set of valuation pars $\{ (\sigma_1,\sigma_1^\prime),\ldots,(\sigma_k,\sigma_k^\prime) \}$
+        satisfying
+        \begin{equation*}
+            \forall P.\, \forall i \in \{ 1, \ldots, k \} . \,
+                (\mathit{tr}_{\mathit{con}}(P, \sigma_i[r_i]), \rho_\sigma)
+                \vDash_{\ML} \mathit{tr}_{\mathit{sym}}(P, r_i) \land \varphi
+        \end{equation*}
+        and
+        \begin{equation*}
+            \forall i \in \{ 1, \ldots, k \}.\,
+            \mathit{tr}_{\mathit{con}}(P, \sigma_i) \Rightarrow^*_{S_{L_{\mathit{CHL}}}} \mathit{end}_{\mathit{con}}(P, \sigma^\prime_i)
+        \end{equation*}
+        we also have
+        \begin{equation*}
+            \forall P.\, \forall i \in \{ 1, \ldots, k \} . \,
+            (\mathit{tr}_{\mathit{con}}(P, \sigma_i[r_i]), \rho_{\sigma^\prime})
+            \vDash_{\ML} \mathit{tr}_{\mathit{sym}}(P, r_i) \land \psi
+        \end{equation*}
+        (where $\sigma = \biguplus_{1 \leq i \leq k} \sigma_i[r_i]$
+        and $\sigma^\prime = \biguplus_{1 \leq i \leq k} \sigma^\prime_i[r_i]$)
+    \end{proofenv}
+\end{proof}
