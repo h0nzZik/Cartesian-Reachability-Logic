@@ -7,7 +7,7 @@ The idea of a Circularity rule is present already
 in the existing literature on reachability logics \cite{RosuS12oopsla,RosuSCM13lics,StefanescuCMMSR19},
 where it was used to generalize the notion of \emph{loop invariant}.
 However, RL can not be used to reason about $k$-safety hyperproperties and does not perform lockstep execution.
-The literature on language-independent equivalence checking also contain the idea of a Circularity rule.
+The literature on language-independent equivalence checking also contains the idea of a Circularity rule.
 In~\cite{CiobacaLRR16}, circularities are used to synchronize executions of different programs (possibly in different languages);
 however, the proof system of~\cite{CiobacaLRR16} can be used only to reason about full program equivalence
 and not about $k$-safety hyperproperties.
@@ -67,7 +67,7 @@ Furthermore, in the proof of soundness of CHL, the authors assume soundness of t
 self-composition corresponds to our \emph{star extension} and its soundness to our \Cref{thm:CRLandRLcorrespondence}.
 Finally \cite{SousaD16Extended} assumes soundness and relative completeness of the underling Hoare logic;
 similarly, we assume soundness and relative completeness of reachability logic.
-However, for completeness, we had to prove that \emph{star extension} preserves decidability of validity.
+However, for completeness, we had to prove that the \emph{star extension} preserves decidability of validity.
 
 \subsubsection{Differences}
 There are also differences between the CHL and CRL techniques.
@@ -82,8 +82,7 @@ We consider this to be highly uneconomical
 - and the situation
 is even worse for the looping construct ("while-with-breaks"), which is supported using additional CHL rules.
 In contrast, in the CRL/RL framework, it is enough to design each language construct once - when giving
-semantics to it.
-
+its operational semantics.
 
 Third, in CHL the support for lockstep reasoning is hard-wired into the rules for loops,
 while in our framework, lockstep reasoning is not limited to loops, but can support arbitrary sources
