@@ -106,18 +106,18 @@
   as \emph{noninterference}, and functional properties, such as commutativity,
   monotonicity, and transitivity, are $k$-safety properties. A prominent example
   of a logic which can reason about $k$-safety properties of software systems
-  is Cartesian Hoare logic (CHL). However, CHL targets a specific, small
+  is Cartesian Hoare Logic (CHL). However, CHL targets a specific, small
   imperative language. In order to use it for sound verification of programs
   in a different language, one needs to extend it with the desired features,
   or to hand-craft a translation. Both these approaches require a lot of
   tedious, error-prone work.
 
   In this paper we introduce a sound and relatively complete calculus called
-  Cartesian Reachability Logic, a proper extension of Reachability logic.
+  Cartesian Reachability Logic, a proper extension of Reachability Logic.
   Unlike CHL, Cartesian Reachability Logic is language-parametric: it can be
   instantiated with any deterministic language whose operational semantics is
-  given by Reachability logic rules. (Examples of such languages include e.g.
-  EVM - the language powering the Ethereum blockchain.)
+  given by Reachability Logic rules such as, e.g.,
+  EVM --- the language powering the Ethereum blockchain.
   This approach
   % JT: I would not mention K in such way, since it might suggest that we have implemented
   % CRL in K. (We have, but we do not want to draw attention to it yet.)

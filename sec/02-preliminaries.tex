@@ -36,7 +36,7 @@ postcondition can \emph{relate} variables from different executions.
 %
 Cartesian Hoare logic is equipped with a proof system that allows one to prove validity of CHL triples.
 This proof system contains rules\footnote{We have changed the notation
-  slightly compared to the original paper.} like
+  slightly compared to the original paper.} like\traian{People might be asking ``why?'' about footnote}
 \begin{align}\label{chlRule:If}
     % & \prftree[l]{If}
     %   { % \prfStackPremises
@@ -227,7 +227,7 @@ Reachability logic \cite{RosuS12oopsla, StefanescuCMMSR19} (RL) is a formalism f
 both a) defining formal semantics of programming languages,
 and b) specifying and reasoning about partial correctness properties
 of programs in those languages.
-On the formal semantics side, a programming language is modelled as a \emph{reachability system}
+On the formal semantics side, the operational semantics of a programming language is modelled as a \emph{reachability system}
 $\mathcal{S} = (\mathcal{T}, S)$, where $\mathcal{T}$ is a $\Sigma$-algebra
 and $S$ is a set of \emph{reachability rules} of the shape $\varphi \Rightarrow^\exists \varphi^\prime$,
 where $\varphi$ and $\varphi^\prime$ are \emph{matching logic} patterns over $\Sigma$
@@ -344,7 +344,7 @@ and $(\gamma^\prime, \rho) \vDash \varphi^\prime$.
 
 Reachability logic is equipped with a proof system which derives sequents of the shape
 $\mathcal{A}, C \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime$ (where $\mathcal{A}$ is a
-reachability system and $C$ is introduced below). The proof system is sound and complete: a RL claim is satisfied in $\mathcal{S}$
+reachability system and $C$ is introduced below). The proof system is sound and complete:\traian{relatively?} a RL claim is satisfied in $\mathcal{S}$
 iff $\mathcal{S}, \emptyset \vdash_\RL \varphi \Rightarrow^\exists \varphi^\prime$.
 The set $C$, initially empty, contains so-called \emph{circularities},
 which are claims postulated to hold but not justified yet.
@@ -390,7 +390,7 @@ where $\phi,\phi^\prime$ are terms-as-predicates, and $P,P^\prime$ contain no te
 \end{remark}
 
 \begin{remark}\label{rem:noEmptySteps}
-We work only with $\epsilon$-free reachability systems.
+We work only with $\epsilon$-free reachability systems.\traian{Why $\epsilon$-free and not loop-free?}
 A reachability system $(\mathcal{T}, S)$ is \emph{$\epsilon$-free}
 iff for any two configurations $\sigma, \sigma^\prime \in \mathcal{T}_{\mathit{Cfg}}$, if
 $\sigma \Rightarrow_{\mathcal{S}} \sigma^\prime$, then $\sigma \not = \sigma^\prime$.

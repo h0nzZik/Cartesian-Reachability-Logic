@@ -111,7 +111,7 @@ example, we can write the claim $\Omega_{\textit{mono}}$ as
 A deeper distinction is that in the CRL semantics we existentially quantify
 over reachable configurations, while in CHL, target states are quantified
 universally. However, this distinction has no effect when working with
-deterministic languages.
+deterministic languages.\traian{People might be asking why? I'm also asking why.}
 
 \subsection{CRL as an extension of Reachability Logic}
 
@@ -140,7 +140,7 @@ claims. The reason is that in CRL formulas, one can relate variables from differ
 %\end{align*}
 %holds iff the program $P$ is monotone (when considering the variable $x$ to be an input, and $y$ to be an output; $\epsilon$ represents an empty program).
 In CRL, one can localize the ``global'' constraints; for example, the claim $\Omega_{\textit{mono}}$
-is equivalent to
+is equivalent to\traian{Here and below you seem to have forgotten $Y_1 \leq Y_2$}
 \begin{align*}
 [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2) \land X_1 \leq X_2] 
 \Rightarrow^{c\exists}
@@ -282,11 +282,11 @@ completeness, but its ability to simplify reasoning by performing lockstep
 execution of loops, because that can \textquote[\cite{SousaD16}]{greatly
   simplify the verification task (e.g., by requiring simpler invariants)}.  We
 cannot just lift RL rules to tuple-context. And it is not entirely obvious how
-to support lockstep reasoning about construct with repetitive behaviour: in
+to support lockstep reasoning involving constructs with repetitive behaviour: in
 order to support \texttt{while} cycles with \texttt{break}, Cartesian Hoare logic itself uses
 five additional fairly complex rules (besides the lifted Hoare logic rules) 
 that need to reflect the precise semantics of this construct.  The task for
-us is even harder, since we do not know in advance what constructs with
+us is even harder, since we do not know in advance what types of constructs with
 repetitive behaviour does the supplied language support.
 
 Yet, we provide a single proof system consisting of only eight rules (Figure~\ref{fig:CRLproofsystem}) which enables lockstep reasoning about such constructs.
@@ -448,7 +448,7 @@ proof of CRL and its proof can be found in \Cref{app:crlsoundness}.
     \end{align*}
 \end{lemma}
 
-\noindent With all the technical tools is place, the proof itself is a straightforward affair:
+\noindent With all the technical tools in place, the proof itself is a straightforward affair:
 \begin{proof}[Proof of \Cref{thm:proofsystemSoundness}]
 Assume $(\mathcal{T}, S) \vdash_\CRL \Psi \Downarrow_{\emptyset,\emptyset} \Psi^\prime$.
 By \Cref{lem:CRLalmostSoundness}, we have $(\mathcal{T}, S) \vdash_\RL \mathit{flatten}^\exists(\Psi, \Psi^\prime)$.
@@ -541,7 +541,7 @@ We want to prove
 \end{align*}
 To do so, we first want to add the current premise as a cutpoint.
 However, we need to make the cutpoint more general than the current claim, as we will see later in the proof.
-Therefore, we first apply the Conseq rule to change the goal to
+Therefore, we first apply the Conseq rule to change the goal to\traian{Why not using ? variables}
 \begin{align*}
   \mathcal{S}_{\mathit{imp}} \vdash_\CRL \exists X_1,Y_1,X_2,Y_2.\, [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2)] \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2
   \Downarrow_{\emptyset, \emptyset} \Psi^\prime_{\mathit{mono}} \, ,
@@ -560,7 +560,7 @@ Now we perform symbolic execution on both components, using repeated application
 enabling the circularities.
 The exact details depend on the exact rules of $\mathcal{S}_{\mathit{imp}}$, but assuming that the semantics of
 the \texttt{while} statement is defined by unrolling into the \texttt{if} statement,
-we end up with a goal like
+we end up with a goal like\traian{you need something like $\{\texttt{\{y++;x--;\};}P\}$}
 \begin{align*}
   & \mathcal{S}_{\mathit{imp}} \vdash_\CRL
   [ \xi(\texttt{if (}X_1 >_{\mathit{Int}} 0 \texttt{)\{y++;x--;\};}P, X_1, Y_1),  
@@ -609,11 +609,11 @@ obtain disjunctions of patterns at the respective components, and repeatedly app
 \end{equation}
 \begin{itemize}
 \item The case in \Cref{ex:case4} represents the situation when both loops have finished their execution.
-We can solved this case by symbolically executing both programs (using the Step rule) to the end.
+We can solve this case by symbolically executing both programs (using the Step rule) to the end.
 It is easy to see that then the premise implies the conclusion; therefore, we finish this case
-by generalizing the premise (using the Conseq rule) to be exactly the conclusion, and a subsequent application
-of the Reflexivity rule.
-\item The case in \Cref{ex:case2} represents the situation when the first loop continue execution and the second is finished.
+by generalizing the premise (using the Conseq rule) to be exactly the conclusion, and then applying
+the Reflexivity rule.
+\item The case in \Cref{ex:case2} represents the situation when the first loop continues execution and the second is finished.
       This can never happen - we see that the side condition is contradictory.
       We finish this case using the Conseq rule followed by the Reflexivity rule (since a contradiction implies anything).
 \item The case in \Cref{ex:case3} represents the complementary situation - the first loop has finished its execution

@@ -22,10 +22,10 @@ Techniques and tools for verifying hyperproperties of (finite-state) hardware
 systems have been developed.  For verification of software systems in
 particular, \emph{Cartesian Hoare logic} (CHL), introduced in \cite{SousaD16},
 extends Hoare logic in order to allow reasoning about \emph{$k$-safety
-  hyperproperties}. In \cite{SousaD16} the authors not only managed to give
-CHL a sound and relatively complete proof system, but also successfully used
-their logic to analyse several natural $k$-safety properties of Java
-programs. (The verification algorithm was even implemented in a fully automated
+  hyperproperties}. In \cite{SousaD16} the authors give
+CHL a sound and relatively complete proof system and use it
+to analyse several natural $k$-safety properties of Java
+programs. (Additionally, the verification algorithm is implemented in a fully automated
 tool.) To formalize Cartesian Hoare Logic, \cite{SousaD16} uses a simple
 imperative language, whose looping constructs are while loops with
 breaks. However, extending the approach of~\cite{SousaD16} to
@@ -79,8 +79,8 @@ language-independent verification of partial correctness
   original and RL validity of the composed system.
 \item We give CHL sound and relatively complete \emph{proof system}
   (Section~\ref{sec:proof-system}). The proofs in this proof system can be
-  translated to ordinary RL proofs of the composed system (for soundness), but
-  also such that it allows relatively high-level reasoning about
+  translated to ordinary RL proofs of the composed system (for soundness), while
+  also allowing relatively high-level reasoning about
   \emph{circular behaviour} and \emph{lockstep execution} (for ease of
   verification and simplicity of invariants).
 \end{itemize}
