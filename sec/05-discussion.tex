@@ -35,7 +35,11 @@ framework, known as \emph{Circular coinduction} in the literature~\cite{RosuL09C
 We base our work on the \emph{one-path} variant of reachability logic.
 Consequently, CRL inherits a known limitation of one-path reachability logic: that the tight correspondence between
 one-path RL and Hoare logics is limited to deterministic languages.
-However, we can prove the following theorem (the proof is technical and can be found in \Cref{app:reltoCHL}).
+This is because the CRL semantics we existentially quantify
+over reachable configurations, while in CHL, target states are quantified
+universally. %However, this distinction has no effect when working with
+%deterministic languages
+Despite that, we can prove the following theorem (the proof is technical and can be found in \Cref{app:reltoCHL}).
 \begin{theorem}\label{thm:chlCRLrelation}
   CRL extends CHL on the deterministic fragment of the CHL-supported language.
   That is, assume a sound reachability-logic formalization (that is, a reachability system) $\mathcal{S}_{\mathit{IMP}}$ of the CHL's imperative language.

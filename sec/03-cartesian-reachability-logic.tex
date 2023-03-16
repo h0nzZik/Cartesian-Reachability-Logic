@@ -107,12 +107,6 @@ example, we can write the claim $\Omega_{\textit{mono}}$ as
  \Rightarrow^{c\exists} [\xi(\epsilon, ?\_, ?Y_1), \xi(\epsilon, ?\_, ?Y_2)] \land ?Y_1 \leq ?Y_2 \, .
 \end{align*}
 
-% TODO move this to a more appropriate place!
-A deeper distinction is that in the CRL semantics we existentially quantify
-over reachable configurations, while in CHL, target states are quantified
-universally. However, this distinction has no effect when working with
-deterministic languages.
-
 \subsection{CRL as an extension of Reachability Logic}
 
 We would like to point out that one cannot handle k-safety properties directly
@@ -410,7 +404,6 @@ We now explain the proof rules of CRL (shown in~\Cref{fig:CRLproofsystem}) one b
   \item The Case rule implements case analysis on a selected component $i$.
   \item The Conseq rule is used to weaken (or generalize) the premise. It can also be used
         to propagate information between components and the global constraint.
-        %TODO explain flatten
   \item The Abstract rule can be used to remove existential quantifiers from the premise.
         Intuitively, this corresponds to a proof step in first-order logic that replaces
         an existential quantifier on the left side of an implication
