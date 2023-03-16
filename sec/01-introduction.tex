@@ -6,15 +6,15 @@ particularly interesting class of hyperproperties are \emph{$k$-safety
   (hyper-)properties}~\cite{FinkbeinerHT19CanonicalKsafety,SousaD16,AgrawalB16RuntimeKSafetyHLTL,ClarksonS08}.
 A $k$-safety property is a hyperproperty whose violation can be witnessed by a
 $k$-tuple of execution traces.  Many \emph{security policies} - for example,
-\emph{noninterference} (requiring that sensitive or privileged data do not influence
-insensitive or unprivileged computations)
-or \emph{observational determinism}
-- are $k$-safety hyperproperties~\cite{}.
+%\emph{noninterference} (requiring that sensitive or privileged data do not influence
+%insensitive or unprivileged computations)
+%or
+\emph{observational determinism} 
+- are $k$-safety hyperproperties~\cite{ClarksonFKMRS14,ClarksonS08}.
 Similarly, many functional correctness properties are actually $k$-safety
 hyperproperties; for example, \emph{transitivity} (which needs to by satisfied
 e.g. by comparators when managing data in collections), associativity
 (important in the map/reduce paradigm), or monotonicity~\cite{SousaD16}.
-% TODO - give references to literature justifying the preceding paragraph
 
 
 Techniques and tools for verifying hyperproperties of (finite-state) hardware
