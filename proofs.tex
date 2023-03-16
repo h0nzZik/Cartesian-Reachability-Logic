@@ -1941,17 +1941,17 @@ which concludes the proof.
         (\sigma, S \Downarrow \sigma^\prime) \land (\gamma^\prime = \mathit{end}_{\mathit{con}}(P, \sigma^\prime))
     \end{equation*}
     (where $\Downarrow$ denotes the relation defined by the original big-step semantics of $L_{\mathit{CHL}}$).
-    Furthermore, we assume that $S_{L_{\mathit{CHL}}}$ ignores the state of program variables not mentioned in the program
-    being executed - a property that is easy to satisfy by the implementation.
-    Formally, for any finite maps $m_1,m_2,m_f$ such that $m_1$ and $m_f$ are disjoint, and for any program $P$,
-    we have
-    \begin{equation*}
-        \impConfig{P}{m_1} \quad \Rightarrow^*_{S_{L_{\mathit{CHL}}}} \quad \impConfig{P}{m_2} \, ,
-    \end{equation*}
-    iff
-    \begin{equation*}
-        \impConfig{P}{m_1 \cup m_f} \quad \Rightarrow^*_{S_{L_{\mathit{CHL}}}} \quad \impConfig{P}{m_2 \cup m_f} \, .
-    \end{equation*}
+    % Furthermore, we assume that $S_{L_{\mathit{CHL}}}$ ignores the state of program variables not mentioned in the program
+    % being executed - a property that is easy to satisfy by the implementation.
+    % Formally, for any finite maps $m_1,m_2,m_f$ such that $m_1$ and $m_f$ are disjoint, and for any program $P$,
+    % we have
+    % \begin{equation*}
+    %     \impConfig{P}{m_1} \quad \Rightarrow^*_{S_{L_{\mathit{CHL}}}} \quad \impConfig{P}{m_2} \, ,
+    % \end{equation*}
+    % iff
+    % \begin{equation*}
+    %     \impConfig{P}{m_1 \cup m_f} \quad \Rightarrow^*_{S_{L_{\mathit{CHL}}}} \quad \impConfig{P}{m_2 \cup m_f} \, .
+    % \end{equation*}
 \end{assumption}
 
 \begin{definition}
@@ -1985,17 +1985,17 @@ which concludes the proof.
     \begin{equation*}
         (\gamma, \rho) \vDash_{\ML} \mathit{tr}_{\mathit{sym}}(P, f)
     \end{equation*}
-    iff there exists a finite map $h$ that is disjoint with $\sigma$ such that
+    iff %there exists a finite map $h$ that is disjoint with $\sigma$ such that
     \begin{equation*}
-        (\gamma = \mathit{tr}_{\mathit{con}}(P, \sigma[f] \cup h[f])) \land (\forall j \in \{ 1, \ldots, n \}.\, \rho(\mathit{var}_{\mathit{inj}}(f(x_j))) = (\sigma[f])(x_j)) \, ;
+        (\gamma = \mathit{tr}_{\mathit{con}}(P, \sigma[f])) \land (\forall j \in \{ 1, \ldots, n \}.\, \rho(\mathit{var}_{\mathit{inj}}(f(x_j))) = (\sigma[f])(x_j)) \, ;
     \end{equation*}
     similarly, we have
     \begin{equation*}
         (\gamma, \rho) \vDash_{\ML} \mathit{end}_{\mathit{sym}}(P, f)
     \end{equation*}
-    iff there exists a finite map $h$ that is disjoint with $\sigma$ such that
+    iff %there exists a finite map $h$ that is disjoint with $\sigma$ such that
     \begin{equation*}
-        (\gamma = \mathit{end}_{\mathit{con}}(P, \sigma[f] \cup h[f])) \land (\forall j \in \{ 1, \ldots, n \}.\, \rho(\mathit{var}_{\mathit{inj}}(f(x_j))) = (\sigma[f])(x_j))
+        (\gamma = \mathit{end}_{\mathit{con}}(P, \sigma[f])) \land (\forall j \in \{ 1, \ldots, n \}.\, \rho(\mathit{var}_{\mathit{inj}}(f(x_j))) = (\sigma[f])(x_j))
     \end{equation*}
     (where $x_1,\ldots,x_n$ are program variables occurring in $P$).
 \end{lemma}
@@ -2024,7 +2024,7 @@ which concludes the proof.
 \end{lemma}
 \begin{proof}
     We show proof of the first equivalence only, since the second is similar.
-    By \Cref{lem:symConcreteTranslationMatch} (with $h$ being empty) and properties of matching logic conjunction and structureless formulas,
+    By \Cref{lem:symConcreteTranslationMatch} and properties of matching logic conjunction and structureless formulas,
     the RHS is equivalent to
     \begin{proofenv}
         \begin{itemize}
@@ -2112,13 +2112,13 @@ which concludes the proof.
         \item For the top-down implication, assume such configurations and such complete paths.
             Let $l_1,\ldots,l_k$ denote the lengths of the paths $\pi_1,\ldots,\pi_k$.
             By \Cref{lem:symConcreteTranslationMatch},
-            we have for every $j \in \{ 1, \ldots, k \} $ and some $h_j$:
+            we have for every $j \in \{ 1, \ldots, k \}$:
             \begin{equation*}
-                \gamma_j = \mathit{tr}_{\mathit{con}}(P, \sigma[r_j] \cup h_j[r_j])
+                \gamma_j = \mathit{tr}_{\mathit{con}}(P, \sigma[r_j])
             \end{equation*}
             and therefore
             \begin{equation*}
-                \mathit{tr}_{\mathit{con}}(P, \sigma[r_j] \cup h_j[r_j])
+                \mathit{tr}_{\mathit{con}}(P, \sigma[r_j])
                 \Rightarrow^*_{S_{L_{\mathit{CHL}}}}
                 \pi_j[l_j] \, .
             \end{equation*}
