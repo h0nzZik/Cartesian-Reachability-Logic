@@ -60,7 +60,11 @@ hyperproperties. Similarly to CHL, CRL has a sound and relatively complete
 proof system. A major advantage of CRL against CHL is that it works with any
 deterministic
 language for which RL works; that is, with any deterministic language which has a RL-based
-formal semantics. 
+formal semantics.
+This makes CRL applicable for programs (aka ``smart contracts'') running on a blockchain,
+since the languages used there are typically deterministic
+and many of them (e.g., EVM~\cite{HildenbrandtSRZ18} powering the Ethereum blockchain, IELE~\cite{KasampalisGMSZF19} integrated into the Cardano blockchain)
+already have a RL-based formal semantics.
 
 CRL does \emph{not} extend CHL, because the two
 logics give different semantics to properties of nondeterministic programs;

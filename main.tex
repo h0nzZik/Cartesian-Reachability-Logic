@@ -99,6 +99,9 @@
 
 \begin{abstract}
 
+  We introduce a language-parametric calculus
+  for $k$-safety verification - Cartesian Reachability logic (CRL).
+
   In recent years, formal verification of hyperproperties has become an
   important topic in the formal methods community.  An interesting class of
   hyperproperties is known as $k$-safety properties, which express the absence
@@ -112,19 +115,16 @@
   or to hand-craft a translation. Both these approaches require a lot of
   tedious, error-prone work.
 
-  In this paper we introduce a sound and relatively complete calculus called
-  Cartesian Reachability Logic, a proper extension of Reachability logic.
-  Unlike CHL, Cartesian Reachability Logic is language-parametric: it can be
-  instantiated with any deterministic language whose operational semantics is
-  given by Reachability logic rules. (Examples of such languages include e.g.
-  EVM - the language powering the Ethereum blockchain.)
+  Unlike CHL, CRL is language-parametric:
+  it can be instantiated with an operational semantics (of a certain kind) of any
+  deterministic language. % (such as EVM - the language powering the Ethereum blockchain).
+  Its soundness theorem is proved once and for all, with no need to adapt or re-prove it
+  for different languages or their variants.
   This approach
-  % JT: I would not mention K in such way, since it might suggest that we have implemented
-  % CRL in K. (We have, but we do not want to draw attention to it yet.)
-  %, used by tools like \K{} framework,
   can significantly reduce
   the development costs of tools and techniques for sound $k$-safety
-  verification.
+  verification of programs in deterministic languages - for example,
+  of smart contracts written for EVM - the language powering the Ethereum blockchain.
   
     %Its soundness theorem is proved once and for all, with no need to adapt or re-prove it
   % for different languages or their variants.
