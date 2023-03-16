@@ -142,7 +142,7 @@ claims. The reason is that in CRL formulas, one can relate variables from differ
 In CRL, one can localize the ``global'' constraints; for example, the claim $\Omega_{\textit{mono}}$
 is equivalent to
 \begin{align*}
-[\xi(P, X_1, Y_1),\xi(P, X_2, Y_2) \land X_1 \leq X_2] 
+[\xi(P, X_1, Y_1),\xi(P, X_2, Y_2) \land X_1 \leq X_2 \land Y_1 \leq Y_2] 
 \Rightarrow^{c\exists}
 [\xi(\epsilon, ?\_, ?Y_1), \xi(\epsilon, ?\_, ?Y_2) \land ?Y_1 \leq ?Y_2] \, .
 \end{align*}
@@ -150,8 +150,8 @@ However, if one were to ``split'' the CRL claim into two, the resulting claims m
 a different property than monotonicity.
 For example, the two claims
 \begin{align}
-& \xi(Q, X_1, Y_1) & \Rightarrow^{\exists} \quad & \xi(\epsilon, ?X_1, ?Y_1) \\
-& \xi(Q, X_2, Y_2) \land X_1 \leq X_2 & \Rightarrow^{\exists} \quad  & \xi(\epsilon, ?X_2, ?Y_2) \land ?Y_1 \leq ?Y_2
+& \xi(Q, X_1, Y_1) \land X_1 \leq X_2 \land Y_1 \leq Y_2 & \Rightarrow^{\exists} \quad & \xi(\epsilon, ?X_1, ?Y_1) \\
+& \xi(Q, X_2, Y_2) \land X_1 \leq X_2 \land Y_1 \leq Y_2 & \Rightarrow^{\exists} \quad  & \xi(\epsilon, ?X_2, ?Y_2) \land ?Y_1 \leq ?Y_2
 \end{align}
 hold for any reasonable program $Q$ (meaning that $Q$ either executes fully or diverges),
 because $?Y_1$ in the second claim is unrelated to $?Y_1$ in the first claim and thus one can set it to
@@ -282,11 +282,11 @@ completeness, but its ability to simplify reasoning by performing lockstep
 execution of loops, because that can \textquote[\cite{SousaD16}]{greatly
   simplify the verification task (e.g., by requiring simpler invariants)}.  We
 cannot just lift RL rules to tuple-context. And it is not entirely obvious how
-to support lockstep reasoning about construct with repetitive behaviour: in
+to support lockstep reasoning involving construct with repetitive behaviour: in
 order to support \texttt{while} cycles with \texttt{break}, Cartesian Hoare logic itself uses
 five additional fairly complex rules (besides the lifted Hoare logic rules) 
 that need to reflect the precise semantics of this construct.  The task for
-us is even harder, since we do not know in advance what constructs with
+us is even harder, since we do not know in advance types of constructs with
 repetitive behaviour does the supplied language support.
 
 Yet, we provide a single proof system consisting of only eight rules (Figure~\ref{fig:CRLproofsystem}) which enables lockstep reasoning about such constructs.
@@ -609,11 +609,11 @@ obtain disjunctions of patterns at the respective components, and repeatedly app
 \end{equation}
 \begin{itemize}
 \item The case in \Cref{ex:case4} represents the situation when both loops have finished their execution.
-We can solved this case by symbolically executing both programs (using the Step rule) to the end.
+We can solve this case by symbolically executing both programs (using the Step rule) to the end.
 It is easy to see that then the premise implies the conclusion; therefore, we finish this case
-by generalizing the premise (using the Conseq rule) to be exactly the conclusion, and a subsequent application
-of the Reflexivity rule.
-\item The case in \Cref{ex:case2} represents the situation when the first loop continue execution and the second is finished.
+by generalizing the premise (using the Conseq rule) to be exactly the conclusion, and then applying
+the Reflexivity rule.
+\item The case in \Cref{ex:case2} represents the situation when the first loop continues execution and the second is finished.
       This can never happen - we see that the side condition is contradictory.
       We finish this case using the Conseq rule followed by the Reflexivity rule (since a contradiction implies anything).
 \item The case in \Cref{ex:case3} represents the complementary situation - the first loop has finished its execution
