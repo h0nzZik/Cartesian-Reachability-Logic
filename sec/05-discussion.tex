@@ -3,7 +3,7 @@
 
 \subsection{Language-parametric verification}
 
-The idea of a Circularity rule is present already 
+The idea of a Circularity rule is already present 
 in the existing literature on reachability logics \cite{RosuS12oopsla,RosuSCM13lics,StefanescuCMMSR19},
 where it was used to generalize the notion of \emph{loop invariant}.
 However, RL can not be used to reason about $k$-safety hyperproperties and does not perform lockstep execution.
@@ -43,7 +43,7 @@ Despite that, we can prove the following theorem (the proof is technical and can
 \begin{theorem}\label{thm:chlCRLrelation}
   CRL extends CHL on the deterministic fragment of the CHL-supported language.
   That is, assume a sound reachability-logic formalization (that is, a reachability system) $\mathcal{S}_{\mathit{IMP}}$ of the CHL's imperative language.
-  The there exist a translation functions $\mathit{tr}$ and $\mathit{end}$ such that
+  Then there exist translation functions $\mathit{tr}$ and $\mathit{end}$ such that
   given any statement $P$ in the deterministic fragment of the CHL's imperative language
   and any first order formulas $\varphi, \psi$,
   \begin{equation*}
@@ -63,13 +63,13 @@ There, the authors define a \emph{linearization operation} on lists of programs,
 Then, the authors prove lemmas saying that a CHL triple with a list of programs inside is derivable
 in the CHL proof system
 if and only if 
-a Hoare triple having the same list of programs, but linearized, inside, is derivable;
+a Hoare triple having the same list of programs but linearized inside, is derivable;
 the "only if" implication corresponds to our \Cref{lem:CRLalmostSoundness}, where we construct
 an RL proof from a CRL proof,
 while the "if" implication corresponds to our Reduce rule.
 Furthermore, in the proof of soundness of CHL, the authors assume soundness of the self-composition technique;
 self-composition corresponds to our \emph{star extension} and its soundness to our \Cref{thm:CRLandRLcorrespondence}.
-Finally \cite{SousaD16Extended} assumes soundness and relative completeness of the underling Hoare logic;
+Finally, \cite{SousaD16Extended} assumes soundness and relative completeness of the underling Hoare logic;
 similarly, we assume soundness and relative completeness of reachability logic.
 However, for completeness, we had to prove that the \emph{star extension} preserves decidability of validity.
 
@@ -79,9 +79,9 @@ First, our proof system has only 8 rules, and they do not mention any programmin
 while CHL has 17 rules (not counting the Expand rule), half of which are specific to the underlying language.
 
 Second, there is a redundancy between the language-specific CHL rules and the Hoare logic rules of the
-programming language: for example, conditional statement ("if") has (1) a rule in the formal semantics of the language,
+programming language: for example, the conditional statement ("if") has (1) a rule in the formal semantics of the language,
 (2) a rule in the Hoare logic (not shown in the paper), and (3) a rule in CHL.
-When considering that the three rules have to play nice together (that is, CHL and Hoare logic rules have to be sound with respect to the semantics), someone had to think about the conditional statement at least five times .
+When considering that the three rules have to play nice together (that is, CHL and Hoare logic rules have to be sound with respect to the semantics), someone had to think about the conditional statement at least five times.
 We consider this to be highly uneconomical
 - and the situation
 is even worse for the looping construct ("while-with-breaks"), which is supported using additional CHL rules.
@@ -91,7 +91,7 @@ its operational semantics.
 
 Third, in CHL the support for lockstep reasoning is hard-wired into the rules for loops,
 while in our framework, lockstep reasoning is not limited to loops, but can support arbitrary sources
-of circular behaviour - including loops, recursion, gotos.
+of circular behavior - including loops, recursion, gotos.
 %Therefore, while we are inspired by the \emph{idea} of lockstep execution from \cite{SousaD16},
 %for the \emph{realization} of this idea we turn to the literature on \emph{equivalence checking}.
 

@@ -1,9 +1,9 @@
 \section{Cartesian Reachability Logic}
-In this section we introduce \emph{Cartesian Reachability logic (CRL)} - a
+This section introduces \emph{Cartesian Reachability logic (CRL)} - a
 language-parametric logic for reasoning about $k$-safety hyperproperties.  Our
 aim with CRL is to make reasoning in the style of \emph{Cartesian Hoare logic
   (CHL)}~\cite{SousaD16} available for any deterministic language for which a
-reachability-logic semantics $S$ is available.  For that purpose we define the
+reachability-logic semantics $S$ is available.  For that purpose, we define the
 language of CRL and its semantics, and demonstrate the logic's expressiveness
 on a couple of examples.  Finally, we give CRL a sound proof system, which is the
 main contribution of this paper.
@@ -22,8 +22,8 @@ logic. To express k-safety properties we extend reachability rules $\varphi
 
 The intuitive meaning of such a claim is as follows: there are $k$ programs
 embedded into $k$ source configurations, with $i$-th source configuration matching $\varphi_i$,
-and $k$ target configurations matching $\varphi'_i$s. Additionally, a FOL
-formula $P$ can relate the source configurations, and a FOL formula $P'$ the target
+and $k$ target configurations matching $\varphi'_i$s. Additionally, the FOL
+formula $P$ can relate the source configurations, and the FOL formula $P'$ the target
 configurations. We call formulas of the form
 $ \exists \vec{Y}.\,[\varphi_1,\ldots,\varphi_k] \land P$ (where $\vec{Y}$ may
 be an empty vector) \emph{existentially-quantified constrained list patterns}
@@ -57,9 +57,9 @@ $\xi(\epsilon, X^\prime_1, Y^\prime_1)$ and $\xi(\epsilon, X^\prime_2, Y^\prime_
 for some $X^\prime_1,Y^\prime_1,X^\prime_2,Y^\prime_2$
 satisfying $Y^\prime_1 \leq Y^\prime_2$.
 %
-Note that we need the existential quantification on the right hand side of
+Note that we need the existential quantification on the right-hand side of
 claims to be able to talk about the new values of program variables (whereas
-in CHL we have original values in the precondition, and new values in the postcondition).
+in CHL, we have original values in the precondition and new values in the postcondition).
 
 We formally define the semantics of a CRL claim as follows:
 \begin{definition}[CRL semantics]\label{def:opCRLsemantics}
@@ -90,16 +90,16 @@ We formally define the semantics of a CRL claim as follows:
 
 %\subsection{Comparison to CHL}\label{sec:CRLsemanticsComparisonToCHL}
 
-As can be seen from the example above, CRL is more verbose then CHL. This is
+As can be seen from the example above, CRL is more verbose than CHL. This is
 partly because of the need to specify patterns matching the whole program
-configurations, and partly because of the need to existentially quantify those
+configurations and partly because of the need to existentially quantify those
 variables on the right side whose value is not determined by the left side. To
 alleviate this problem, we introduce the following notation, which we inherit
 from RL:
 
 \paragraph{Notation}
 Variables whose names start with a question mark are implicitly considered
-existentially quantified on the right side.  Also, underscore is used to
+existentially quantified on the right side.  Also, an underscore is used to
 denote anonymous variables, whose values we are not interested in.  For
 example, we can write the claim $\Omega_{\textit{mono}}$ as
 \begin{align*}
@@ -109,7 +109,7 @@ example, we can write the claim $\Omega_{\textit{mono}}$ as
 
 \subsection{CRL as an extension of Reachability Logic}
 
-We would like to point out that one cannot handle k-safety properties directly
+We want to point out that one cannot handle k-safety properties directly
 in RL, by simply replacing a CRL claim with $k$ components by $k$ RL
 claims. The reason is that in CRL formulas, one can relate variables from different components. 
 
@@ -151,13 +151,13 @@ hold for any reasonable program $Q$ (meaning that $Q$ either executes fully or d
 because $?Y_1$ in the second claim is unrelated to $?Y_1$ in the first claim and thus one can set it to
 the value of $?Y_2$.
 On the other hand, if in the second claim we renamed $?Y_1$ to $Y_1^\prime$ (without a question mark),
-the claim would require that $?Y_2$ is greater than or equal to \emph{any} integer (because $Y_1^\prime$ is not present in the left side),
+the claim would require that $?Y_2$ is greater than or equal to \emph{any} integer (because $Y_1^\prime$ is not present on the left side),
 which clearly cannot hold.
 
 On the other hand, CRL is an extension of RL in the following natural sense:
 If we restrict configuration lists in CRL claims to contain a single
 configuration each, validity of CRL and RL claims neatly coincide
-(the proof of the follwong proposition can be found in Appendix~\ref{app:CRL}):
+(the proof of the following proposition can be found in Appendix~\ref{app:CRL}):
 
 
 %\begin{remark}
@@ -198,8 +198,8 @@ configuration each, validity of CRL and RL claims neatly coincide
 % To prove the soundness of our proof system for CRL, it would be advantegous to
 % be able to apply the 
 
-Before presenting a proof system for CRL, we need to first discuss a concept
-which is crucial to proving its soundness. Self-composition~\cite{BartheDR11}
+Before presenting a proof system for CRL, we must first discuss a concept
+crucial to proving its soundness. Self-composition~\cite{BartheDR11}
 is a technique where a program $P$ together with a $k$-safety hyperproperty is
 reduced to a sequential composition of $P$ with itself (with renamed
 variables) together with a safety property.  This technique allows one to use
@@ -209,7 +209,7 @@ generalize self-composition to work with any deterministic language, even if
 we do not know in advance how the language implements sequential composition,
 if at all.
 
-To address this issue, we present a novel, general technique which we call
+To address this issue, we present a novel, general technique, which we call
 \emph{star extension}. The main idea is to transform a CRL claim into a RL
 claim over an extended reachability system, whose configurations are lists of
 configurations of the original system.  The function $\mathit{flatten}$ then
@@ -232,8 +232,8 @@ technical, and we refer an interested reader to the
 
 The price paid for self-composition is that the property of the self-composed program is often hard to reason about.
 Therefore, in~\cite{SousaD16}, the authors do not apply self-composition directly, but only use its soundness to justify
-their technique - namely, the soundness of their proof system, which avoids explicit construction
-of the self-composed programs.
+their technique - namely, the soundness of their proof system, which avoids the explicit construction
+of self-composed programs.
 We use the star extension for the same purpose.
 
 
@@ -266,25 +266,26 @@ with a proof system for CRL is not straightforward.  One could attempt to reuse 
 system of CHL and modify it \emph{somehow} to be independent of the particular
 programming language.  Since many CHL rules (e.g., its \texttt{If} rule shown
 in \Cref{chlRule:If}) are simply Hoare logic rules acting on a particular
-component of a tuple of formulas (that is, symbolic states), one could for
-example lift rules of reachability logic (RL) to the tuple-context and be
+component of a tuple of formulas (that is, symbolic states), one could, for
+example, lift rules of reachability logic (RL) to the tuple-context and be
 done.  That would indeed work, and the resulting proof system might even be
 complete.
 
 However, the distinguishing feature of Cartesian Hoare Logic is \emph{not} its
-completeness, but its ability to simplify reasoning by performing lockstep
+completeness but its ability to simplify reasoning by performing lockstep
 execution of loops, because that can \textquote[\cite{SousaD16}]{greatly
   simplify the verification task (e.g., by requiring simpler invariants)}.
-To achieve that, it is no enough to 
+To achieve that, it is not enough to 
 just lift RL rules to tuple-context. And it is not entirely obvious how
-to support lockstep reasoning involving construct with repetitive behaviour: in
+to support lockstep reasoning involving construct with repetitive behavior: in
 order to support \texttt{while} cycles with \texttt{break}, Cartesian Hoare logic itself uses
 five additional fairly complex rules (besides the lifted Hoare logic rules) 
 that need to reflect the precise semantics of this construct.  The task for
-us is even harder, since we do not know in advance what kinds of constructs with
-repetitive behaviour does the supplied language support.
+us is even harder since we do not know in advance what kinds of constructs with
+repetitive behavior does the supplied language support.
 
-Yet, we provide a single proof system consisting of only eight rules (Figure~\ref{fig:CRLproofsystem}) which enables lockstep reasoning about such constructs.
+Yet, we provide a single proof system consisting of only eight rules (Figure~\ref{fig:CRLproofsystem}),
+enabling lockstep reasoning about such constructs.
 The proof system derives claims of the shape
 \begin{equation*}
 (\mathcal{T}, S) \vdash_\CRL \Phi \Downarrow_{C,E} \Psi
@@ -299,9 +300,9 @@ patterns representing a particular component, and $P$ and $P^\prime$ are FOL
 formulas (\emph{global constraints}) relating variables from different
 components.  The sets $C$ and $E$ contain \emph{cutpoints} and \emph{enabled
   cutpoints}, respectively.  Together, they implement the concept of an
-\emph{invariant} relating different components.  In particular, the set $C$
-represents the invariants that were postulated \emph{right now}, while the set
-$E$ represents those that were postulated in past and are ready to be used.
+\emph{invariant} relating different components.  In particular, set $C$
+represents the invariants that were postulated \emph{right now}, while set
+$E$ represents those postulated in the past and ready to be used.
 Initially, the proof search starts with $E = C = \emptyset$.
 
 \begin{figure}
@@ -389,7 +390,7 @@ hard-wired into it.
 We now explain the proof rules of CRL (shown in~\Cref{fig:CRLproofsystem}) one by one.
 \begin{itemize}
   \item The Circularity rule is a key rule which allows lockstep reasoning about arbitrary program constructs.
-        It allows the user to postulate validity of the current claim by means of adding the \emph{current premise}
+        It allows the user to postulate the validity of the current claim by means of adding the \emph{current premise}
         into the set of \emph{cutpoints}, from which a $k$-tuple of program configurations satisfying the postcondition
         is claimed to be reachable. Once progress is made (by means of the Step rule), the added cutpoints are
         \emph{enabled} and can be used to finish the proof using the Axiom rule.
@@ -418,7 +419,7 @@ We now explain the proof rules of CRL (shown in~\Cref{fig:CRLproofsystem}) one b
         from lockstep reasoning.
 \end{itemize}
 
-Soundness of the proof system, as stated by the following theorem, is the main
+The soundness of the proof system, as stated by the following theorem, is the main
 technical result of this paper.
 
 \begin{theorem}[Proof system soundness]\label{thm:proofsystemSoundness}
@@ -429,7 +430,7 @@ technical result of this paper.
 \end{theorem}
 
 In order to  prove this theorem, we will need (beside
-Theorem~\ref{thm:CRLandRLcorrespondence}, which we discuss in previous
+Theorem~\ref{thm:CRLandRLcorrespondence}, which we discuss in the previous
 section) a technical lemma stating that one can generate an RL proof on a star-extended system
 from a CRL proof. This lemma is the second major component of the soundness
 proof of CRL and its proof can be found in \Cref{app:crlsoundness}.
@@ -487,7 +488,7 @@ we have $(\mathcal{T}, S) \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime$
 %   \label{fig:CRLderivedRules}
 % \end{figure}
 
-The proof system, beside being sound, is also \emph{relatively complete} (with respect to an oracle deciding validity
+The proof system is also \emph{relatively complete} (with respect to an oracle deciding validity
 in the underlying matching logic model $\mathcal{T}$).
 \begin{theorem}[Relative completeness]\label{thm:relativeCompleteness}
   \begin{equation*}
@@ -509,13 +510,13 @@ in the underlying matching logic model $\mathcal{T}$).
     \mathit{flatten}^\exists(\Psi, \Psi^\prime) \, ,
   \end{equation*}
   and we conclude the proof using the Inherit rule.
-  Note that to apply relative completeness of RL, we need have an oracle for deciding validity in the extended model.
+  Note that to apply relative completeness of RL, we need to have an oracle for deciding validity in the extended model.
   A construction of such oracle from the oracle for deciding validity in $\mathcal{T}$ is in \Cref{app:completeness}.
   \end{proof}
 Our completeness result is similar to the completeness result of CHL in the sense that the completeness
 does not involve features used for lockstep reasoning.
 It would be interesting to investigate whether a proof system without the Reduce rule would still be complete;
-we leave this for a future work.
+we leave this for future work.
 
 \section{An example proof involving lockstep reasoning}\label{sec:example}
 
@@ -610,8 +611,8 @@ the Reflexivity rule.
 \item The case in \Cref{ex:case2} represents the situation when the first loop continues execution and the second is finished.
       This can never happen - we see that the side condition is contradictory.
       We finish this case using the Conseq rule followed by the Reflexivity rule (since a contradiction implies anything).
-\item The case in \Cref{ex:case3} represents the complementary situation - the first loop has finished its execution
-      and the second loop continues.
+\item The case in \Cref{ex:case3} represents the complementary situation - the first loop has finished its execution,
+      while the second loop continues.
       This requires inventing an invariant capturing the idea that the execution of the second loop can only increase
       the difference between the values of \texttt{y}.
       We can Reduce this subgoal to simple RL reasoning. We could also prove this case without Reduce,
