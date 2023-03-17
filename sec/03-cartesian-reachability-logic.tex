@@ -5,7 +5,7 @@ aim with CRL is to make reasoning in the style of \emph{Cartesian Hoare logic
   (CHL)}~\cite{SousaD16} available for any deterministic language for which a
 reachability-logic semantics $S$ is available.  For that purpose we define the
 language of CRL and its semantics, and demonstrate the logic's expressiveness
-on a couple of examples.  Finally we give CRL a sound proof system, which is the
+on a couple of examples.  Finally, we give CRL a sound proof system, which is the
 main contribution of this paper.
 
 
@@ -22,7 +22,7 @@ logic. To express k-safety properties we extend reachability rules $\varphi
 
 The intuitive meaning of such a claim is as follows: there are $k$ programs
 embedded into $k$ source configurations, with $i$-th source configuration matching $\varphi_i$,
-and $k$ target configurations matching $\varphi'_i$. Additionally, a FOL
+and $k$ target configurations matching $\varphi'_i$s. Additionally, a FOL
 formula $P$ can relate the source configurations, and a FOL formula $P'$ the target
 configurations. We call formulas of the form
 $ \exists \vec{Y}.\,[\varphi_1,\ldots,\varphi_k] \land P$ (where $\vec{Y}$ may
@@ -274,13 +274,14 @@ complete.
 However, the distinguishing feature of Cartesian Hoare Logic is \emph{not} its
 completeness, but its ability to simplify reasoning by performing lockstep
 execution of loops, because that can \textquote[\cite{SousaD16}]{greatly
-  simplify the verification task (e.g., by requiring simpler invariants)}.  We
-cannot just lift RL rules to tuple-context. And it is not entirely obvious how
+  simplify the verification task (e.g., by requiring simpler invariants)}.
+To achieve that, it is no enough to 
+just lift RL rules to tuple-context. And it is not entirely obvious how
 to support lockstep reasoning involving construct with repetitive behaviour: in
 order to support \texttt{while} cycles with \texttt{break}, Cartesian Hoare logic itself uses
 five additional fairly complex rules (besides the lifted Hoare logic rules) 
 that need to reflect the precise semantics of this construct.  The task for
-us is even harder, since we do not know in advance types of constructs with
+us is even harder, since we do not know in advance what kinds of constructs with
 repetitive behaviour does the supplied language support.
 
 Yet, we provide a single proof system consisting of only eight rules (Figure~\ref{fig:CRLproofsystem}) which enables lockstep reasoning about such constructs.
