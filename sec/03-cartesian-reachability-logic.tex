@@ -296,8 +296,8 @@ $\Psi$, which propagates through the proof rules unchanged, as representing a
 \emph{conclusion}.  For each $i$, $\varphi_i$ is a matching logic
 pattern representing a particular component, and $P$ is a FOL
 formula (\emph{global constraint}) relating variables from different
-components.  The sets $C$ and $E$ contain \emph{cutpoints} and \emph{enabled
-  cutpoints}, respectively.  Together, they implement the concept of an
+components.  The sets $C$ and $E$ contain \emph{synchronization points} and \emph{enabled
+  synchronization points}, respectively.  Together, they implement the concept of an
 \emph{invariant} relating different components.  In particular, set $C$
 represents the invariants that were postulated \emph{right now}, while set
 $E$ represents those postulated in the past and ready to be used.
@@ -389,8 +389,8 @@ We now explain the proof rules of CRL (shown in~\Cref{fig:CRLproofsystem}) one b
 \begin{itemize}
   \item The Circularity rule is a key rule which allows lockstep reasoning about arbitrary program constructs.
         It allows the user to postulate the validity of the current claim by means of adding the \emph{current premise}
-        into the set of \emph{cutpoints}, from which a $k$-tuple of program configurations satisfying the postcondition
-        is claimed to be reachable. Once progress is made (by means of the Step rule), the added cutpoints are
+        into the set of \emph{synchronization points}, from which a $k$-tuple of program configurations satisfying the postcondition
+        is claimed to be reachable. Once progress is made (by means of the Step rule), the added synchronization points are
         \emph{enabled} and can be used to finish the proof using the Axiom rule.
   \item The Step rule performs symbolic execution on a selected component $i$ (represented by $\varphi_i$)
         using the semantic reachability rule $\varphi \Rightarrow^\exists \varphi^\prime \in S$.
@@ -398,8 +398,8 @@ We now explain the proof rules of CRL (shown in~\Cref{fig:CRLproofsystem}) one b
         Therefore, the rule decomposes $\varphi_i$ into $\varphi$ and an additional constraint $P^\prime$,
         which can be thought of as a part of \emph{path condition} that is \emph{local} to the component $i$.
         This local path condition $P^\prime$ is then used to constrain the right-side $\varphi^\prime$ of the selected rule.
-        This proof rule also enables the cutpoints from $C$ by adding them to $E$.
-  \item The Axiom rule uses an enabled cutpoint to finish the proof.
+        This proof rule also enables the synchronization points from $C$ by adding them to $E$.
+  \item The Axiom rule uses an enabled synchronization point to finish the proof.
   \item The Reflexivity rule can be used to finish a proof when the premise corresponds to the conclusion.
   \item The Case rule implements case analysis on a selected component $i$.
   \item The Conseq rule is used to weaken (or generalize) the premise. It can also be used
@@ -532,25 +532,25 @@ We want to prove
   \mathcal{S}_{\mathit{imp}} \vdash_\CRL [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2)] \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2
   \Downarrow_{\emptyset, \emptyset} \Psi^\prime_{\mathit{mono}} \, .
 \end{align*}
-To do so, we first want to add the current premise as a cutpoint.
-However, we need to make the cutpoint more general than the current claim, as we will see later in the proof.
+To do so, we first want to add the current premise as a synchronization point.
+However, we need to make the synchronization point more general than the current claim, as we will see later in the proof.
 Therefore, we first apply the Conseq rule to change the goal to
 \begin{align*}
   \mathcal{S}_{\mathit{imp}} \vdash_\CRL \exists X_1,Y_1,X_2,Y_2.\, [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2)] \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2
   \Downarrow_{\emptyset, \emptyset} \Psi^\prime_{\mathit{mono}} \, ,
 \end{align*}
 then apply the Circularity rule, followed by application of the Abstract rule, which basically changes the goal
-back, except that now we have a general cutpoint. The goal is now
+back, except that now we have a general synchronization point. The goal is now
 \begin{align*}
   \mathcal{S}_{\mathit{imp}} \vdash_\CRL [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2)] \land X_1 \leq X_2 \land Y_1 \leq Y_2
-  \Downarrow_{\Phi_{\mathit{circ}}, \emptyset} \Psi^\prime_{\mathit{mono}} \, ,
+  \Downarrow_{\Phi_{\mathit{sync}}, \emptyset} \Psi^\prime_{\mathit{mono}} \, ,
 \end{align*}
 where
 \begin{align*}
-  \Phi_{\mathit{circ}} \equiv \mathcal{S}_{\mathit{imp}} \vdash_\CRL \exists X_1,Y_1,X_2,Y_2.\, [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2)] \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2 \, .
+  \Phi_{\mathit{sync}} \equiv \mathcal{S}_{\mathit{imp}} \vdash_\CRL \exists X_1,Y_1,X_2,Y_2.\, [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2)] \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2 \, .
 \end{align*}
 Now we perform symbolic execution on both components, using repeated applications of the Step rule,
-enabling the circularities.
+enabling the synchronization points.
 The exact details depend on the exact rules of $\mathcal{S}_{\mathit{imp}}$, but assuming that the semantics of
 the \texttt{while} statement is defined by unrolling into the \texttt{if} statement,
 we end up with a goal like
@@ -559,7 +559,7 @@ we end up with a goal like
   [ \xi(\texttt{if (}X_1 >_{\mathit{Int}} 0 \texttt{)\{y++;x--;\};}P, X_1, Y_1),  
     \xi(\texttt{if (}X_2 >_{\mathit{Int}} 0 \texttt{)\{y++;x--;\};}P, X_2, Y_2) ] \\
   & \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2
-  \Downarrow_{\emptyset, \Phi_{\mathit{circ}}} \Psi^\prime_{\mathit{mono}} \, ,
+  \Downarrow_{\emptyset, \Phi_{\mathit{sync}}} \Psi^\prime_{\mathit{mono}} \, ,
 \end{align*}
 Now we want to perform case analysis. To do so, we first use the Consequence rule to
 obtain disjunctions of patterns at the respective components, and repeatedly apply the Case rule, leading to four goals
@@ -570,7 +570,7 @@ obtain disjunctions of patterns at the respective components, and repeatedly app
   [ \xi(\texttt{if (}{\color{blue}\mathit{true}}\texttt{)\{y++;x--;\};}P, X_1, Y_1),  
     \xi(\texttt{if (}{\color{blue}\mathit{true}}\texttt{)\{y++;x--;\};}P, X_2, Y_2) ] \\
   & \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2 \land {\color{blue} X_1 >_{\mathit{Int}} 0 \land X_2 >_{\mathit{Int}} 0 }
-  \Downarrow_{\emptyset, \Phi_{\mathit{circ}}} \Psi^\prime_{\mathit{mono}} \, ,
+  \Downarrow_{\emptyset, \Phi_{\mathit{sync}}} \Psi^\prime_{\mathit{mono}} \, ,
 \end{aligned}
 \end{equation}
 \begin{equation}\label{ex:case2}
@@ -579,7 +579,7 @@ obtain disjunctions of patterns at the respective components, and repeatedly app
   [ \xi(\texttt{if (}{\color{blue}\mathit{true}}\texttt{)\{y++;x--;\};P}, X_1, Y_1),  
     \xi(\texttt{if (}{\color{blue}\mathit{false}}\texttt{)\{y++;x--;\};P}, X_2, Y_2) ] \\
   & \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2 \land {\color{blue} X_1 >_{\mathit{Int}} 0 \land X_2 \leq_{\mathit{Int}} 0 }
-  \Downarrow_{\emptyset, \Phi_{\mathit{circ}}} \Psi^\prime_{\mathit{mono}} \, ,
+  \Downarrow_{\emptyset, \Phi_{\mathit{sync}}} \Psi^\prime_{\mathit{mono}} \, ,
 \end{aligned}
 \end{equation}
 \begin{equation}\label{ex:case3}
@@ -588,7 +588,7 @@ obtain disjunctions of patterns at the respective components, and repeatedly app
   [ \xi(\texttt{if (}{\color{blue}\mathit{false}}\texttt{)\{y++;x--;\};P}, X_1, Y_1),  
     \xi(\texttt{if (}{\color{blue}\mathit{true}}\texttt{)\{y++;x--;\};P}, X_2, Y_2) ] \\
   & \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2 \land {\color{blue} X_1 \leq_{\mathit{Int}} 0 \land X_2 >_{\mathit{Int}} 0 }
-  \Downarrow_{\emptyset, \Phi_{\mathit{circ}}} \Psi^\prime_{\mathit{mono}} \, ,
+  \Downarrow_{\emptyset, \Phi_{\mathit{sync}}} \Psi^\prime_{\mathit{mono}} \, ,
 \end{aligned}
 \end{equation}
 \begin{equation}\label{ex:case4}
@@ -597,7 +597,7 @@ obtain disjunctions of patterns at the respective components, and repeatedly app
   [ \xi(\texttt{if (}{\color{blue}\mathit{false}}\texttt{)\{y++;x--;\};P}, X_1, Y_1) ,  
     \xi(\texttt{if (}{\color{blue}\mathit{false}}\texttt{)\{y++;x--;\};P}, X_2, Y_2) ] \\
   & \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2 \land {\color{blue} X_1 \leq_{\mathit{Int}} 0 \land X_2 \leq_{\mathit{Int}} 0 }
-  \Downarrow_{\emptyset, \Phi_{\mathit{circ}}} \Psi^\prime_{\mathit{mono}} \, .
+  \Downarrow_{\emptyset, \Phi_{\mathit{sync}}} \Psi^\prime_{\mathit{mono}} \, .
 \end{aligned}
 \end{equation}
 \begin{itemize}
@@ -624,9 +624,9 @@ the Reflexivity rule.
         [ \xi(P, X_1 -_{\mathit{Int}} 1, Y_1 +_{\mathit{Int}} 1 ) ,  
           \xi(P, X_2 -_{\mathit{Int}} 1, Y_2 +_{\mathit{Int}} 1) ] \\
         & \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2 \land {X_1 \leq_{\mathit{Int}} 0 \land X_2 \leq_{\mathit{Int}} 0 }
-        \Downarrow_{\emptyset, \Phi_{\mathit{circ}}} \Psi^\prime_{\mathit{mono}} \, .
+        \Downarrow_{\emptyset, \Phi_{\mathit{sync}}} \Psi^\prime_{\mathit{mono}} \, .
       \end{align*}
-      which implies the circularity $\Phi_{\mathit{circ}}$ which is already enabled.
+      which implies the synchronization point $\Phi_{\mathit{sync}}$ which is already enabled.
       We can therefore conclude the proof using Conseq and Axiom.
       %their program parts
       %become $\xi(P, X_1, Y_1)$ and $\xi(P, X_2, Y_2)$, respectively.
