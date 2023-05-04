@@ -327,7 +327,10 @@ by means of the following reachability rule
   
 Assuming the language is deterministic, this is equivalent to saying that if the program terminates,
 the resulting configuration will have a non-positive value of \texttt{x}.
-Formally, a rule of the shape $\varphi \Rightarrow^\exists \varphi^\prime$
+Formally, we say that a configuration $\gamma \in \Tcfg$ terminates in $(\Tcfg, \Rightarrow_{\mathcal{S}})$
+iff there is no infinite chain
+$\gamma \Rightarrow_{\mathcal{S}} \gamma_1 \Rightarrow_{\mathcal{S}} \gamma_2 \Rightarrow_{\mathcal{S}} \ldots$.
+A rule of the shape $\varphi \Rightarrow^\exists \varphi^\prime$
 is \emph{satisfied}
 in a reachability system $\mathcal{S} = (\mathcal{T}, S)$,
 written $\mathcal{S} \vDash_\RL \varphi \Rightarrow^\exists \varphi^\prime$,
