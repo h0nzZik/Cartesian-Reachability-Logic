@@ -77,7 +77,41 @@ Other cases follow from the induction hypotheses.
     \end{equation*}
 \end{lemma}
 \begin{proof}
-Admitted.
+    By induction on the structore of $\varphi$.
+    The base case where $\varphi$ is a term is proved by induction on the term.
+    The conjunction and negation cases follow from the induction hypothesis.
+    For the case of existential quantification,
+    we assume that $\rho^\prime(y) = \rho(y)$ for any $y \in \mathit{FV}(\exists x : s.\, \varphi)$;
+    the induction hypothesis says that for any two valuations $\rho_1,\rho_2$ satisfying $\rho_1(y) = \rho_2(y)$
+    for all $y \in \mathit{FV}(\varphi)$, we have
+    \begin{equation*}
+        (\mathcal{T}, \gamma, \rho_1) \vDash \varphi \iff (\mathcal{T}, \gamma, \rho_2) \vDash \varphi
+    \end{equation*}
+    for any $\gamma$;
+    and have to prove that
+    %\begin{proofenv}
+        there exists some $\rho_3$ such that (1) $\rho_3(y) = \rho(y)$ for all $y \in \mathit{Var} \setminus \{ x \}$,
+        (2) $\rho_3(x) \in \mathcal{T}_s$, and (3) $(\mathcal{T}, \gamma, \rho_3) \vDash \varphi$,
+        if and only if
+        there exists some $\rho_4$ such that (4) $\rho_4(y) = \rho^\prime(y)$ for all $y \in \mathit{Var} \setminus \{ x \}$,
+        (5) $\rho_4(x) \in \mathcal{T}_s$, and (6) $(\mathcal{T}, \gamma, \rho_4) \vDash \varphi$.
+    %\end{proofenv}
+    We show here only the proof of the ``only if'' implication, since the ``if'' one is similar.
+    Assume there exists such $\rho_3$.
+    Choose
+    \begin{equation*}
+        \rho_4(y)=
+            \begin{cases}
+                \rho^\prime(y) & \text{if } y \not = x \\
+                \rho_3(y) & \text{if } y = x
+            \end{cases}
+    \end{equation*}
+    from which (4),(5) trivially follows. The point (6) follows from (3) and the induction hypothesis
+    after proving $\rho_3(y) = \rho_4(y)$ for all $y \in \mathit{FV}(\varphi)$:
+    either $y = x$, in which case $\rho_3(y) = \rho_4(y)$ holds by the definition of $\rho_4$,
+    or $y \not = x$, in which case we reduce the goal using the definition of $\rho_4$
+    to $\rho_3(y) = \rho^\prime(y)$. By (1), it is enough to show that $\rho(y) = \rho^\prime(y)$,
+    which follows from the initial assumption.
 \end{proof}
 
 \begin{definition}[\cite{StefanescuCMMSR19}]
