@@ -290,14 +290,12 @@ The proof system derives claims of the shape
 \begin{equation*}
 (\mathcal{T}, S) \vdash_\CRL \Phi \Downarrow_{C,E} \Psi
 \end{equation*}
-where $\Phi$ is of the shape $(\varphi_1, \ldots, \varphi_k) \land P$ and
-$\Psi$ is of the shape
-$\exists \vec{Y}.\, (\varphi^\prime_1, \ldots, \varphi^\prime_k) \land
-P^\prime$.  One can think about $\Phi$ as representing a \emph{premise}, while
+where $\Phi,\Psi$ are of the shape $\exists \vec{X}.\, (\varphi_1, \ldots, \varphi_k) \land P$.
+One can think about $\Phi$ as representing a \emph{premise}, while
 $\Psi$, which propagates through the proof rules unchanged, as representing a
-\emph{conclusion}.  For each $i$, $\varphi_i$ and $\varphi^\prime_i$ are matching logic
-patterns representing a particular component, and $P$ and $P^\prime$ are FOL
-formulas (\emph{global constraints}) relating variables from different
+\emph{conclusion}.  For each $i$, $\varphi_i$ is a matching logic
+pattern representing a particular component, and $P$ is a FOL
+formula (\emph{global constraint}) relating variables from different
 components.  The sets $C$ and $E$ contain \emph{cutpoints} and \emph{enabled
   cutpoints}, respectively.  Together, they implement the concept of an
 \emph{invariant} relating different components.  In particular, set $C$
