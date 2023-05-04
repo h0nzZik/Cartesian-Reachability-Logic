@@ -303,6 +303,11 @@ represents the invariants that were postulated \emph{right now}, while set
 $E$ represents those postulated in the past and ready to be used.
 Initially, the proof search starts with $E = C = \emptyset$.
 
+The notion of \emph{synchronization points} corresponds to the notion of \emph{circularities} of reachability logic.
+One can introduce them at any point of the proof, but they can be used only after progress has been made
+by means of symbolic execution.
+The progress requirements resemble the concept of \emph{productivity} of co-recursive definitions.
+
 \begin{figure}
     \centering
     \begin{align*}
