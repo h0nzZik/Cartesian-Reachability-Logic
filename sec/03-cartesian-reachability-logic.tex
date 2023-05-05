@@ -280,12 +280,14 @@ just lift RL rules to tuple-context. And it is not entirely obvious how
 to support lockstep reasoning involving construct with repetitive behavior: in
 order to support \texttt{while} cycles with \texttt{break}, Cartesian Hoare logic itself uses
 five additional fairly complex rules (besides the lifted Hoare logic rules) 
-that need to reflect the precise semantics of this construct.  The task for
-us is even harder since we do not know in advance what kinds of constructs with
-repetitive behavior does the supplied language support.
+that need to reflect the precise semantics of this construct.
+% The task for
+%us is even harder since we do not know in advance what kinds of constructs with
+%repetitive behavior does the supplied language support.
 
-Yet, we provide a single proof system consisting of only eight rules (Figure~\ref{fig:CRLproofsystem}),
-enabling lockstep reasoning about such constructs.
+We provide a single proof system consisting of only eight rules (Figure~\ref{fig:CRLproofsystem});
+the proof system is agnostic about the kinds of constructs with repetetive behavior that the supplied language supports,
+but enables lockstep reasoning about such constructs.
 The proof system derives claims of the shape
 \begin{equation*}
 (\mathcal{T}, S) \vdash_\CRL \Phi \Downarrow_{C,E} \Psi
