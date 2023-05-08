@@ -169,7 +169,9 @@ logic, e.g. \cite{MmL, MLexplained}, which are of no particular interest for thi
 
 A matching logic \emph{formula} (commonly known as a \emph{pattern}) is a
 first-order logic (FOL) formula which additionally allows terms (with variables)
-over some signature $\Sigma$ as nullary predicates.
+over some signature $\Sigma$ as nullary predicates (we refer to these as ``terms-as-predicates'').
+To enable reasoning about programming language syntax and semantics,
+the signature often contains the syntactical constructs of a programming language of interest.
 A typical example of a matching logic formula is $\varphi_{\mathit{example}}$,
 defined as\footnote{In the syntax of the \K{} framework this formula would look more like
 $\texttt{<k>x--<k><st>x |-> X</st> } \land \texttt{ (X >Int  1 = true)}$.}
@@ -311,8 +313,8 @@ This rule induces (among others) the transition
 
 On the \emph{partial correctness} side, RL reuses the concept of reachability rules.
 For example, one can specify that the program \texttt{while(x > 0) do x--;}
-can, if it terminates at all, reach a configuration
-where the program variable \texttt{x} has a non-positive value
+may, if it terminates at all, reach a configuration
+where nothing remains to be executed (represented by ``$\cdot$'') and where the program variable \texttt{x} has a non-positive value,
 by means of the following reachability rule
 \begin{equation*}
   \tap{while (x>0) do x--;}{\mathtt{x}\mapsto V}

@@ -3,10 +3,18 @@
 \begin{definition}[Matching logic syntax and semantics]\label{def:matchinglogic}
 We define the matching logic syntax and semantics as follows.
 \begin{enumerate}
-    \item A matching logic \emph{signature} $\mathbf{\Sigma} = (\Sigma, \mathit{Var})$ is a many-sorted algebraic signature $\Sigma$ together with a sort-wise infinite set of variables $\mathit{Var}$.
+    \item A matching logic \emph{signature} $\mathbf{\Sigma} = (\Sigma, \mathit{Var})$ is a many-sorted algebraic signature $\Sigma$
+          together with a sort-wise infinite set of variables $\mathit{Var}$;
+          we let $\mathit{Var}_s$ denote the set of variables of sort $s$.
     \item Let $T_{\Sigma}(\mathit{Var})$ denote the free $\Sigma$-algebra of terms with variables 
           in $\mathit{Var}$.
           Let $T_{\Sigma, s}(\mathit{Var})$ denote the set of $\Sigma$-terms (with variables in $\mathit{Var})$ of sort $s$.
+          More precisely, the syntax of terms of sort $s$ is defined by the following grammar:
+          \begin{equation}
+            t_s \Coloneqq x \mid f(t_{s_1}, \ldots, t_{s_n})
+          \end{equation}
+          where $x \in \mathit{Var}_s$ ranges over variables of of sort $s$ and $f$ over $n$-ary function symbols
+          of arity $s_1 \times \ldots \times s_n \rightarrow s$.
     \item Let $\mathcal{T}$ be a $\Sigma$-algebra, and $f$ be a symbol from $\Sigma$.
           We use the notation $\mathcal{T}_f$ to denote the interpretation of $f$ in $\mathcal{T}$.
     \item A function $\rho : \mathit{Var} \to \mathcal{T}$, where $\mathcal{T}$ is a $\Sigma$-algebra,
@@ -22,6 +30,10 @@ We define the matching logic syntax and semantics as follows.
           terms $\phi \in T_{\Sigma, s}(\mathit{Var})$, without any $k$-ary predicate symbols for $k > 0$).
           We let $\Pattern(\mathbf{\Sigma})$ (or just $\Pattern$ when $\mathbf{\Sigma}$ is known from the context)
           denote the set of all $\mathbf{\Sigma}$-patterns.
+          More precisely, the syntax of patterns is defined by the following grammar:
+          \begin{equation}
+            \varphi \Coloneqq t \mid t_s = t_s \mid \varphi_1 \land \varphi_2 \mid \neg \varphi \mid \exists x : s.\, \varphi
+          \end{equation}
     \item Let $\mathit{FV}(\varphi)$ denote the set of all free variables of $\varphi$.
     \item A matching logic pattern is \emph{structureless} if it contains
           no terms $\phi \in T_{\Sigma, s}(\mathit{Var})$ used as predicates.
@@ -33,6 +45,7 @@ We define the matching logic syntax and semantics as follows.
           a model element, and a valuation,
           defined inductively as
           \begin{itemize}
+              \item $(\mathcal{T}, \gamma, \rho) \vDash t_1 = t_2$ iff $\rho(t_1) = \rho(t_2)$, where $t_1,t_2 \in T_{\Sigma, s}(\mathit{Var})$ (for some sort $s$);
               \item $(\mathcal{T}, \gamma, \rho) \vDash \phi$ iff $\gamma = \rho(\phi)$, where $\phi \in T_{\Sigma, s}(\mathit{Var})$;
               \item $(\mathcal{T}, \gamma, \rho) \vDash \varphi_1 \land \varphi_2$ iff
                 $(\mathcal{T}, \gamma, \rho) \vDash \varphi_1$ and
@@ -62,9 +75,20 @@ $(\mathcal{T}, \gamma, \rho) \vDash P$ for \emph{some} $\gamma \in \mathcal{T}$.
 \begin{proof}[Proof of \Cref{lem:structurelessSemantics}]
 Let $P$ be a structureless pattern.
 We perform induction on $P$.
-If $P = \phi$, we get contradiction with the assumption that $P$ is structureless;
+If $P \equiv t_1 = t_2$, the equivalence holds trivially, since the semantics does not mention $\gamma$.
+If $P \equiv \phi$, we get contradiction with the assumption that $P$ is structureless;
 therefore, the conclusion holds by \emph{ex falso quodlibet}.
 Other cases follow from the induction hypotheses.
+\end{proof}
+
+\begin{lemma}\label{lem:unusedVariablesTerm}
+    Let $\mathcal{T}$ be a matching logic model and $t$ a term.
+    Then for any two $\mathcal{T}$-valuations $\rho,\rho^\prime$
+    satisfying $\rho^\prime(y) = \rho(y)$ for any $y \in \mathit{FV}(t)$,
+    we have $\rho(t) = \rho^\prime(t)$.
+\end{lemma}
+\begin{proof}
+  By induction on $t$.
 \end{proof}
 
 \begin{lemma}\label{lem:unusedVariables}
@@ -78,7 +102,8 @@ Other cases follow from the induction hypotheses.
 \end{lemma}
 \begin{proof}
     By induction on the structure of $\varphi$.
-    The base case where $\varphi$ is a term is proved by induction on the term.
+    The base case where $\varphi$ is a term is proved by \Cref{lem:unusedVariablesTerm}.
+    The case of $t_1 = t_2$ also follows from \Cref{lem:unusedVariablesTerm}.
     The conjunction and negation cases follow from the induction hypothesis.
     For the case of existential quantification,
     we assume that $\rho^\prime(y) = \rho(y)$ for any $y \in \mathit{FV}(\exists x : s.\, \varphi)$;
