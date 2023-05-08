@@ -346,27 +346,27 @@ We translate a language semantics into a semantics for lists of configurations a
 \end{enumerate}
 \end{definition}
 
-\begin{lemma}\label{lem:rhoStarOfPi}
+\begin{lemma}\label{lem:rhoStarOfTerm}
     Let $(\Sigma, \mathit{Var})$ be a matching logic signature, $\mathcal{T}$ be a configuration model,
-    and $\rho$ be a $\mathcal{T}$-valuation. Then for any basic $(\Sigma, \mathit{Var})$-pattern $\pi$,
+    and $\rho$ be a $\mathcal{T}$-valuation. Then for any $(\Sigma, \mathit{Var})$-term $t$,
     \begin{equation}
-        \rho^*(\pi) = \rho(\pi) \, .
+        \rho^*(t) = \rho(t) \, .
     \end{equation}
 \end{lemma}
 
-\begin{proof}[Proof of \Cref{lem:rhoStarOfPi}]
-    By induction on the term $\pi$.
+\begin{proof}[Proof of \Cref{lem:rhoStarOfTerm}]
+    By induction on the term $t$.
     \begin{itemize}
-        \item $\pi = v$ for $v \in \mathit{Var}$ - follows from the definition of $\rho^*$.
-        \item $\pi = f(\pi_1, \ldots, \pi_k)$ - we have $\rho(\pi_i) = \rho^*(\pi_i)$ for any $i \in \{ 1, \ldots, k \}$
+        \item $t \equiv v$ for $v \in \mathit{Var}$ - follows from the definition of $\rho^*$.
+        \item $t \equiv f(t_1, \ldots, t_k)$ - we have $\rho(t_i) = \rho^*(t_i)$ for any $i \in \{ 1, \ldots, k \}$
               by the induction hypothesis.
               Then
               \begin{align*}
-                  \rho^*(f(\pi_1, \ldots, \pi_k)) 
-                  = & {\mathcal{T}^*}_f(\rho^*(\pi_1), \ldots, \rho^*(\pi_k)) \\
-                  = & {\mathcal{T}^*}_f(\rho(\pi_1), \ldots, \rho(\pi_k)) \\
-                  = & \mathcal{T}_f(\rho(\pi_1), \ldots, \rho(\pi_k)) \\
-                  = & \rho(f(\pi_1, \ldots, \pi_k))
+                  \rho^*(f(t_1, \ldots, t_k)) 
+                  = & {\mathcal{T}^*}_f(\rho^*(t_1), \ldots, \rho^*(t_k)) \\
+                  = & {\mathcal{T}^*}_f(\rho(t_1), \ldots, \rho(t_k)) \\
+                  = & \mathcal{T}_f(\rho(t_1), \ldots, \rho(t_k)) \\
+                  = & \rho(f(t_1, \ldots, t_k))
               \end{align*}
               where the second-to-last equality holds by definition of $\mathcal{T}^*$.
     \end{itemize}
@@ -386,7 +386,8 @@ We translate a language semantics into a semantics for lists of configurations a
 \begin{proof}[Proof of \Cref{lem:starConservative}]
 By induction on $\varphi$.
 \begin{itemize}
-    \item $\varphi \equiv \pi$, where $\pi$ is a basic pattern (of sort $s$) - follows from \Cref{lem:rhoStarOfPi}.
+    \item $\varphi \equiv t_1 = t_2$ - follows from \Cref{lem:rhoStarOfTerm}
+    \item $\varphi \equiv t$, where $\pi$ is a term (of sort $s$) - follows from \Cref{lem:rhoStarOfTerm}.
     \item $\varphi \equiv \varphi_1 \land \varphi_2$ - follows from the induction hypothesis.
     \item $\varphi \equiv \neg \varphi^\prime$ - follows from the induction hypothesis.
     \item $\varphi \equiv \exists x : s^\prime.\, \varphi^\prime$.
@@ -1046,7 +1047,8 @@ We prove each implication separately.
     if $t$ is a function application, then we use the induction hypothesis and the fact that function application preserves equality.
     Now we prove the lemma by induction on the size of $\varphi$, generalizing over $\rho_1$ and $\rho_2$.
     \begin{itemize}
-        \item If $\varphi \equiv \phi$ for some $\phi \in T_{\Sigma, s}(\mathit{Var})$, we apply the above property.
+        \item If $\varphi \equiv t$ for some $t \in T_{\Sigma, s}(\mathit{Var})$, we apply the above property.
+        \item If $\varphi \equiv t_1 = t_2$, we also apply the above property.
         \item If $\varphi$ is a conjunction or negation, the desired property follows directly from the induction hypothesis.
         \item If $\varphi \equiv \exists Z : s.\, \varphi^\prime$.
         \begin{itemize}
