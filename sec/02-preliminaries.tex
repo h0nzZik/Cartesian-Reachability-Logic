@@ -192,15 +192,17 @@ is not a FOL variable but a constant symbol from the signature of the
 programming language.)  The subterm $\texttt{x}\mapsto X$ states that the
 program variable $\texttt{x}$ has value $X$, and the
 $X >_\text{Int} 1 = \mathit{true}$ part then says that the realization of the
-function symbol ``$>_\text{Int}$'' returns the boolean value $\mathit{true}$
+function symbol ``$>_\text{Int}$'' returns the boolean value $\mathit{true}$ (another constant symbol from the signature)
 when given $X$ and $1$ as arguments.
 
-The satisfaction relation $(M, \gamma, \rho) \vDash \varphi$ for a model $M$, a model element $\gamma \in M$,
+A matching logic $\Sigma$-\emph{model} $\mathcal{T}$ is a $\Sigma$-algebra with non-empty carrier sets.
+The satisfaction relation $(M, \gamma, \rho) \modelsML \varphi$ for a model $M$, a model element $\gamma \in M$,
 an $M$-valuation $\rho : \mathit{Var} \to M$, and a pattern $\varphi$, is defined inductively on the structure of $\varphi$.
+%(We do not write $M$ explicitly in some cases when it is clear from the context.)
 The definition is as in FOL; the main difference is the semantics of
 terms-as-predicates, which is given as
 \begin{equation*}
-    (M, \gamma, \rho) \vDash t \iff \gamma = \rho(t) \text{ if t is a term}
+    (M, \gamma, \rho) \modelsML t \iff \gamma = \rho(t) \text{ if t is a term}
 \end{equation*}
 (where $\rho(t)$ is the homomorphic extension of $\rho$ applied to the term $t$).
 For example, we might have a matching logic model $M$ containing (concrete) program configurations
@@ -210,12 +212,12 @@ One such configuration might be:
   \gamma_{\mathit{example}} \equiv\quad \tap{x--;}{\mathtt{x}\mapsto 3}
     % \texttt{<k> x--; <k><st> x} \texttt{ |-> } 3\texttt{ </st>} \, .
 \end{equation*}
-Then, we have that $(M, \gamma_{\mathit{example}}, \rho) \vDash \varphi_{\mathit{example}}$
+Then, we have that $(M, \gamma_{\mathit{example}}, \rho) \modelsML \varphi_{\mathit{example}}$
 for any valuation $\rho$ satisfying $\rho(X) = 3$, and we say that
 $\varphi_{\mathit{example}}$ \emph{matches} $\gamma_{\mathit{example}}$ in $\rho$.
 
 
-A pattern $\varphi$ is \emph{valid in $M$}, written $M \vDash \varphi$, iff $(M, \gamma, \rho) \vDash \varphi$
+A pattern $\varphi$ is \emph{valid in $M$}, written $M \modelsML \varphi$, iff $(M, \gamma, \rho) \modelsML \varphi$
 for every $\gamma$ and $\rho$.
 We observe that the validity of a structureless pattern (a pattern without terms-as-predicates) does not depend on the selected model element.
 Also, the validity of any pattern does not depend on those variables the pattern does not mention.
@@ -228,7 +230,7 @@ both a) defining formal semantics of programming languages,
 and b) specifying and reasoning about partial correctness properties
 of programs in those languages.
 On the formal semantics side, a programming language is modeled as a \emph{reachability system}
-$\mathcal{S} = (\mathcal{T}, S)$, where $\mathcal{T}$ is a $\Sigma$-algebra
+$\mathcal{S} = (\mathcal{T}, S)$, where $\mathcal{T}$ is a matching logic model (that is, a $\Sigma$-algebra)
 and $S$ is a set of \emph{reachability rules} of the shape $\varphi \Rightarrow^\exists \varphi^\prime$,
 where $\varphi$ and $\varphi^\prime$ are \emph{matching logic} patterns over $\Sigma$
 describing sets of \emph{source} and \emph{target} program configurations.
@@ -239,8 +241,8 @@ and transitions $\Rightarrow_{\mathcal{S}}$ are defined as follows: for
 $\gamma, \gamma^\prime \in \Tcfg$ we have
 $\gamma \Rightarrow_{\mathcal{S}} \gamma^\prime$ iff there is some rule
 $\varphi \Rightarrow^\exists \varphi^\prime \in S$ and some valuation
-$\rho : \Var \to \mathcal{T}$ such that $(\gamma, \rho) \vDash \varphi$ and
-$(\gamma^\prime , \rho) \vDash \varphi^\prime$.
+$\rho : \Var \to \mathcal{T}$ such that $(\mathcal{T}, \gamma, \rho) \modelsML \varphi$ and
+$(\mathcal{T}, \gamma^\prime , \rho) \modelsML \varphi^\prime$.
 
 As an example, consider the following reachability rule
 
@@ -335,15 +337,15 @@ $\gamma \Rightarrow_{\mathcal{S}} \gamma_1 \Rightarrow_{\mathcal{S}} \gamma_2 \R
 A rule of the shape $\varphi \Rightarrow^\exists \varphi^\prime$
 is \emph{satisfied}
 in a reachability system $\mathcal{S} = (\mathcal{T}, S)$,
-written $\mathcal{S} \vDash_\RL \varphi \Rightarrow^\exists \varphi^\prime$,
+written $\mathcal{S} \modelsRL \varphi \Rightarrow^\exists \varphi^\prime$,
 iff for every $\gamma \in \Tcfg$
 such that $\gamma$ terminates in $(\Tcfg, \Rightarrow_{\mathcal{S}})$
 and for any valuation $\rho : \Var \to \mathcal{T}$
-such that $(\gamma, \rho) \vDash \varphi$,
+such that $(\mathcal{T}, \gamma, \rho) \modelsML \varphi$,
 there exists some $\gamma^\prime \in \Tcfg$
 such that
 $\gamma \Rightarrow^{*}_{\mathcal{S}} \gamma^\prime$
-and $(\gamma^\prime, \rho) \vDash \varphi^\prime$.
+and $(\mathcal{T}, \gamma^\prime, \rho) \modelsML \varphi^\prime$.
 
 
 Reachability logic is equipped with a proof system that derives sequents of the shape
