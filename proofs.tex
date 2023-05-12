@@ -43,19 +43,19 @@ We define the matching logic syntax and semantics as follows.
     \item Given a matching logic $(\Sigma, \mathit{Var})$ signature and a $\Sigma$-\emph{model} $\mathcal{T}$,
           a $\mathcal{T}$-valuation $\rho$ is a function from $\mathit{Var}$ to $\mathcal{T}$ respecting sorts.
     \item A matching logic \emph{semantics} is given by means of
-          the satisfaction relation $\vDash_{\ML}$ between a matching logic $\Sigma$-model,
+          the satisfaction relation $\modelsML$ between a matching logic $\Sigma$-model,
           a model element, and a valuation,
           defined inductively as
           \begin{itemize}
-              \item $(\mathcal{T}, \gamma, \rho) \vDash t_1 = t_2$ iff $\rho(t_1) = \rho(t_2)$, where $t_1,t_2 \in T_{\Sigma, s}(\mathit{Var})$ (for some sort $s$);
-              \item $(\mathcal{T}, \gamma, \rho) \vDash \phi$ iff $\gamma = \rho(\phi)$, where $\phi \in T_{\Sigma, s}(\mathit{Var})$;
-              \item $(\mathcal{T}, \gamma, \rho) \vDash \varphi_1 \land \varphi_2$ iff
-                $(\mathcal{T}, \gamma, \rho) \vDash \varphi_1$ and
-                $(\mathcal{T}, \gamma, \rho) \vDash \varphi_2$;
-              \item $(\mathcal{T}, \gamma, \rho) \vDash \neg \varphi$ iff
-                $(\mathcal{T}, \gamma, \rho) \not\vDash \varphi$;
-              \item $(\mathcal{T}, \gamma, \rho) \vDash \exists x : s.\, \varphi$ iff
-                $(\mathcal{T}, \gamma, \rho^\prime) \vDash \varphi$ for some $\rho^\prime$ such that
+              \item $(\mathcal{T}, \gamma, \rho) \modelsML t_1 = t_2$ iff $\rho(t_1) = \rho(t_2)$, where $t_1,t_2 \in T_{\Sigma, s}(\mathit{Var})$ (for some sort $s$);
+              \item $(\mathcal{T}, \gamma, \rho) \modelsML \phi$ iff $\gamma = \rho(\phi)$, where $\phi \in T_{\Sigma, s}(\mathit{Var})$;
+              \item $(\mathcal{T}, \gamma, \rho) \modelsML \varphi_1 \land \varphi_2$ iff
+                $(\mathcal{T}, \gamma, \rho) \modelsML \varphi_1$ and
+                $(\mathcal{T}, \gamma, \rho) \modelsML \varphi_2$;
+              \item $(\mathcal{T}, \gamma, \rho) \modelsML \neg \varphi$ iff
+                $(\mathcal{T}, \gamma, \rho) \not\modelsML \varphi$;
+              \item $(\mathcal{T}, \gamma, \rho) \modelsML \exists x : s.\, \varphi$ iff
+                $(\mathcal{T}, \gamma, \rho^\prime) \modelsML \varphi$ for some $\rho^\prime$ such that
                 $\rho^\prime(y) = \rho(y)$ for all $y \in \mathit{Var} \setminus \{ x \}$
                 and $\rho^\prime(x) \in \mathcal{T}_s$;
           \end{itemize}
@@ -69,10 +69,10 @@ We define the matching logic syntax and semantics as follows.
 Let $\mathcal{T}$ be a matching logic $\Sigma$-model, $\gamma,\gamma^\prime \in \mathcal{T}$ model elements,
 and $\rho$ a $\mathcal{T}$-valuation. Then for any structureless pattern $P$,
 \begin{equation*}
-    (\mathcal{T}, \gamma, \rho) \vDash P \iff (\mathcal{T}, \gamma^\prime, \rho) \vDash P \, .
+    (\mathcal{T}, \gamma, \rho) \modelsML P \iff (\mathcal{T}, \gamma^\prime, \rho) \modelsML P \, .
 \end{equation*}
-Therefore, when $P$ is structureless, we may sometimes write $(\mathcal{T}, \rho) \vDash P$ to mean that 
-$(\mathcal{T}, \gamma, \rho) \vDash P$ for \emph{some} $\gamma \in \mathcal{T}$.
+Therefore, when $P$ is structureless, we may sometimes write $(\mathcal{T}, \rho) \modelsML P$ to mean that 
+$(\mathcal{T}, \gamma, \rho) \modelsML P$ for \emph{some} $\gamma \in \mathcal{T}$.
 \end{lemma}
 \begin{proof}[Proof of \Cref{lem:structurelessSemantics}]
 Let $P$ be a structureless pattern.
@@ -99,7 +99,7 @@ Other cases follow from the induction hypotheses.
     Then for any two $\mathcal{T}$-valuations $\rho,\rho^\prime$
     satisfying $\rho^\prime(y) = \rho(y)$ for any $y \in \mathit{FV}(\varphi)$,
     \begin{equation*}
-        (\mathcal{T}, \gamma, \rho) \vDash \varphi \iff (\mathcal{T}, \gamma, \rho^\prime) \vDash \varphi \, .
+        (\mathcal{T}, \gamma, \rho) \modelsML \varphi \iff (\mathcal{T}, \gamma, \rho^\prime) \modelsML \varphi \, .
     \end{equation*}
 \end{lemma}
 \begin{proof}
@@ -112,16 +112,16 @@ Other cases follow from the induction hypotheses.
     the induction hypothesis says that for any two valuations $\rho_1,\rho_2$ satisfying $\rho_1(y) = \rho_2(y)$
     for all $y \in \mathit{FV}(\varphi)$, we have
     \begin{equation*}
-        (\mathcal{T}, \gamma, \rho_1) \vDash \varphi \iff (\mathcal{T}, \gamma, \rho_2) \vDash \varphi
+        (\mathcal{T}, \gamma, \rho_1) \modelsML \varphi \iff (\mathcal{T}, \gamma, \rho_2) \modelsML \varphi
     \end{equation*}
     for any $\gamma$;
     and have to prove that
     %\begin{proofenv}
         there exists some $\rho_3$ such that (1) $\rho_3(y) = \rho(y)$ for all $y \in \mathit{Var} \setminus \{ x \}$,
-        (2) $\rho_3(x) \in \mathcal{T}_s$, and (3) $(\mathcal{T}, \gamma, \rho_3) \vDash \varphi$,
+        (2) $\rho_3(x) \in \mathcal{T}_s$, and (3) $(\mathcal{T}, \gamma, \rho_3) \modelsML \varphi$,
         if and only if
         there exists some $\rho_4$ such that (4) $\rho_4(y) = \rho^\prime(y)$ for all $y \in \mathit{Var} \setminus \{ x \}$,
-        (5) $\rho_4(x) \in \mathcal{T}_s$, and (6) $(\mathcal{T}, \gamma, \rho_4) \vDash \varphi$.
+        (5) $\rho_4(x) \in \mathcal{T}_s$, and (6) $(\mathcal{T}, \gamma, \rho_4) \modelsML \varphi$.
     %\end{proofenv}
     We show here only the proof of the ``only if'' implication, since the ``if'' one is similar.
     Assume there exists such $\rho_3$.
@@ -156,25 +156,25 @@ Other cases follow from the induction hypotheses.
 \begin{lemma}[\cite{StefanescuCMMSR19}]\label{lem:patternToFOLSemantics}
     Whenever $\square$ is fresh in $\varphi$, we have
     \begin{equation*}
-        (\mathcal{T}, \gamma, \rho) \vDash \varphi \iff (\mathcal{T}, \rho^\gamma) \vDash \varphi^\square
+        (\mathcal{T}, \gamma, \rho) \modelsML \varphi \iff (\mathcal{T}, \rho^\gamma) \modelsML \varphi^\square
     \end{equation*}    
 \end{lemma}
 
 \begin{lemma}[On equivalence and FOL translation]\label{lem:equivFOLtransl}
-    Let $\varphi_1, \varphi_2$ be two matching logic formulas such that $\vDash \varphi_1 \leftrightarrow \varphi_2$.
-    Then $\vDash (\varphi_1^\square)[X/\square] \leftrightarrow (\varphi_2^\square)[X/\square]$.
+    Let $\varphi_1, \varphi_2$ be two matching logic formulas such that $\modelsML \varphi_1 \leftrightarrow \varphi_2$.
+    Then $\modelsML (\varphi_1^\square)[X/\square] \leftrightarrow (\varphi_2^\square)[X/\square]$.
 \end{lemma}
 \begin{proof}
     Let $M$ be any matching logic model, $\gamma$ an element of $M$, and $\rho$ an $M$-valuation.
-    We have to prove that $(M, \gamma, \rho) \vDash (\varphi_1^\square)[X/\square] \leftrightarrow (\varphi_2^\square)[X/\square]$,
+    We have to prove that $(M, \gamma, \rho) \modelsML (\varphi_1^\square)[X/\square] \leftrightarrow (\varphi_2^\square)[X/\square]$,
     which is (by definition of the squaring function and substitution) equivalent to
-    $(M, \gamma, \rho) \vDash ((\varphi_1 \leftrightarrow \varphi_2)^\square)[X/\square]$,
+    $(M, \gamma, \rho) \modelsML ((\varphi_1 \leftrightarrow \varphi_2)^\square)[X/\square]$,
     which is
     (by \Cref{lem:varrenamesem}, because $\rho(X) = \rho[\square := \rho(X)](\square)$)
     equivalent to
-    $(M, \gamma, \rho[\square := \rho(X)]) \vDash (\varphi_1 \leftrightarrow \varphi_2)^\square$,
+    $(M, \gamma, \rho[\square := \rho(X)]) \modelsML (\varphi_1 \leftrightarrow \varphi_2)^\square$,
     which is  (by \Cref{lem:patternToFOLSemantics}, because $\rho[\square := \rho(X)] = \rho^{\rho(X)}$) equivalent to
-    $(M, \rho(X), \rho) \vDash \varphi_1 \leftrightarrow \varphi_2$,
+    $(M, \rho(X), \rho) \modelsML \varphi_1 \leftrightarrow \varphi_2$,
     which holds by the assumption.
 \end{proof}
 
@@ -197,8 +197,8 @@ We define reachability-logic signatures, rules, and systems as follows.
           with respect to $\Sigma$-algebra $\mathcal{T}$
           iff
           for any $\gamma \in \Tcfg$ and $\rho : \Var \to \mathcal{T}$
-          with $(\gamma, \rho) \vDash \varphi$,
-          there exists $\gamma^\prime \in \Tcfg$ with $(\gamma^\prime , \rho) \vDash \varphi^\prime$.
+          with $(\mathcal{T}, \gamma, \rho) \modelsML \varphi$,
+          there exists $\gamma^\prime \in \Tcfg$ with $(\mathcal{T}, \gamma^\prime , \rho) \modelsML \varphi^\prime$.
           
     \item A reachability system $\mathcal{S}$ is \emph{weakly well-defined} iff each its rule is weakly     
           well-defined.
@@ -209,8 +209,8 @@ We define reachability-logic signatures, rules, and systems as follows.
           where $\gamma \Rightarrow_{\mathcal{S}} \gamma^\prime$
           for $\gamma, \gamma^\prime \in \Tcfg$
           iff there is some rule \\ $\varphi \Rightarrow^\exists \varphi^\prime \in S$
-          and some valuation $\rho : \Var \to \mathcal{T}$ with $(\gamma, \rho) \vDash \varphi$
-          and $(\gamma^\prime , \rho) \vDash \varphi^\prime$.
+          and some valuation $\rho : \Var \to \mathcal{T}$ with $(\mathcal{T}, \gamma, \rho) \modelsML \varphi$
+          and $(\mathcal{T}, \gamma^\prime , \rho) \modelsML \varphi^\prime$.
 
     \item A reachability system $(\mathcal{T}, S)$ is \emph{deterministic} iff the induced transition system
           is deterministic.
@@ -234,15 +234,15 @@ We define reachability-logic signatures, rules, and systems as follows.
     \item \label{def:oprlSemantics}
           A one-path reachability rule $\varphi \Rightarrow^\exists \varphi^\prime$ is \emph{satisfied}
           in a reachability system $\mathcal{S} = (\mathcal{T}, S)$,
-          written $\mathcal{S} \vDash_\RL \varphi \Rightarrow^\exists \varphi^\prime$,
+          written $\mathcal{S} \modelsRL \varphi \Rightarrow^\exists \varphi^\prime$,
           iff for every $\gamma \in \Tcfg$
           such that $\gamma$ terminates in $(\Tcfg, \Rightarrow_{\mathcal{S}})$
           and for any valuation $\rho : \Var \to \mathcal{T}$
-          such that $(\gamma, \rho) \vDash \varphi$,
+          such that $(\mathcal{T}, \gamma, \rho) \modelsML \varphi$,
           there exists some $\gamma^\prime \in \Tcfg$
           such that
           $\gamma \Rightarrow^{*}_{\mathcal{S}} \gamma^\prime$
-          and $(\gamma^\prime, \rho) \vDash \varphi^\prime$.
+          and $(\mathcal{T}, \gamma^\prime, \rho) \modelsML \varphi^\prime$.
           
           
 %    \item An \emph{all-path reachability rule} is a pair
@@ -250,12 +250,12 @@ We define reachability-logic signatures, rules, and systems as follows.
 %    
 %    \item \label{def:aprlSemantics}
 %          An all-path reachability rule $\varphi \Rightarrow^\forall \varphi^\prime$ is \emph{satisfied},
-%          written $\mathcal{S} \vDash_\RL \varphi \Rightarrow^\forall \varphi^\prime$,
+%          written $\mathcal{S} \modelsRL \varphi \Rightarrow^\forall \varphi^\prime$,
 %          iff for all complete $\Rightarrow_{\mathcal{S}}$-paths $\tau$
 %          starting with $\gamma \in \Tcfg$ and for all $\rho : \Var \to \mathcal{T}$
-%          such that $(\gamma, \rho) \vDash \varphi$,
+%          such that $(\gamma, \rho) \modelsML \varphi$,
 %          there exists some $\gamma^\prime \in \tau$
-%          such that $(\gamma^\prime, \rho) \vDash \varphi^\prime$.
+%          such that $(\gamma^\prime, \rho) \modelsML \varphi^\prime$.
 \end{enumerate}
 
 \end{definition}
@@ -381,7 +381,7 @@ We translate a language semantics into a semantics for lists of configurations a
     any $\gamma \in \mathcal{T}_s$,
     and any matching logic $s$-pattern $\varphi$,
     \begin{equation*}
-        (\mathcal{T}, \gamma, \rho) \vDash \varphi \iff (\mathcal{T}^*, \gamma, \rho^*) \vDash \varphi
+        (\mathcal{T}, \gamma, \rho) \modelsML \varphi \iff (\mathcal{T}^*, \gamma, \rho^*) \modelsML \varphi
     \end{equation*}
 \end{lemma}
 
@@ -394,15 +394,15 @@ By induction on $\varphi$.
     \item $\varphi \equiv \neg \varphi^\prime$ - follows from the induction hypothesis.
     \item $\varphi \equiv \exists x : s^\prime.\, \varphi^\prime$.
     % We have
-    % $ (\mathcal{T}^*, \gamma, \rho^\prime) \vDash \exists x : s^\prime.\, \varphi^\prime $
-    % if and only if (by definition of $\vDash$)
+    % $ (\mathcal{T}^*, \gamma, \rho^\prime) \modelsML \exists x : s^\prime.\, \varphi^\prime $
+    % if and only if (by definition of $\modelsML$)
     % there exists some valuation ${\rho^*}^\prime : \mathit{Var} \to \mathcal{T}^*$ such that
-    % $(\mathcal{T}^*, \gamma, {\rho^*}^\prime) \vDash \varphi^\prime$
+    % $(\mathcal{T}^*, \gamma, {\rho^*}^\prime) \modelsML \varphi^\prime$
     % and ${\rho^*}^\prime(x) \in \mathcal{T}^*_{s^\prime}$\traian{you need to use $s'$ here and in the following.}
     % and ${\rho^*}^\prime(y) = \rho^*(y)$ for all $y \in \mathit{Var} \setminus \{ x \}$.
     % This holds if and only if
     % there exists some valuation $\rho^{\prime} : \mathit{Var} \to \mathcal{T}$ such that
-    % $(\mathcal{T}^*, \gamma, {\rho^{\prime}}^*) \vDash \varphi^\prime$
+    % $(\mathcal{T}^*, \gamma, {\rho^{\prime}}^*) \modelsML \varphi^\prime$
     % and ${\rho^{\prime}}^*(x) \in \mathcal{T}^*_s$
     % and ${\rho^{\prime}}^*(y) = \rho^*(y)$ for all $y \in \mathit{Var} \setminus \{ x \}$:
     % one implication follows by letting ${\rho^*}^\prime := \rho^{\prime}$;
@@ -410,38 +410,38 @@ By induction on $\varphi$.
     % and by the definition of star, we have ${\rho^{\prime}}^*(v) = {\rho^*}^\prime(v)$, from which the rest follows.
     % Next, by the induction hypothesis, this holds if and only if
     % there exists some valuation $\rho^{\prime} : \mathit{Var} \to \mathcal{T}$ such that
-    % $(\mathcal{T}, \gamma, {\rho^{\prime}}) \vDash \varphi^\prime$
+    % $(\mathcal{T}, \gamma, {\rho^{\prime}}) \modelsML \varphi^\prime$
     % and ${\rho^{\prime}}^*(x) \in \mathcal{T}^*_s$
     % and ${\rho^{\prime}}^*(y) = \rho^*(y)$ for all $y \in \mathit{Var} \setminus \{ x \}$.
     % Next, by the definition of ${\rho^\prime}^*$ and $\rho^*$, this holds if and only if
     % there exists some valuation $\rho^{\prime} : \mathit{Var} \to \mathcal{T}$ such that
-    % $(\mathcal{T}, \gamma, {\rho^{\prime}}) \vDash \varphi^\prime$
+    % $(\mathcal{T}, \gamma, {\rho^{\prime}}) \modelsML \varphi^\prime$
     % and ${\rho^{\prime}}(x) \in \mathcal{T}^*_s$
     % and ${\rho^{\prime}}(y) = \rho(y)$ for all $y \in \mathit{Var} \setminus \{ x \}$.
     % But since the star extensions interprets all sorts from $\Sigma$ as in the original model
     % (that is, $\mathcal{T}^*_s = \mathcal{T}_s$),
-    % this is equivalent to the semantics of $(\mathcal{T}, \gamma, \rho) \vDash \exists x:s^\prime.\, \varphi^\prime$,
+    % this is equivalent to the semantics of $(\mathcal{T}, \gamma, \rho) \modelsML \exists x:s^\prime.\, \varphi^\prime$,
     % which is what we wanted to prove.
 
     % Alternate attempt:
     The induction hypothesis is: for any $\mathcal{T}$, $\gamma$, $\rho$, 
-        $$(\mathcal{T}, \gamma, \rho) \vDash \varphi' \iff (\mathcal{T}^*, \gamma, \rho^\ast) \vDash \varphi'$$
+        $$(\mathcal{T}, \gamma, \rho) \modelsML \varphi' \iff (\mathcal{T}^*, \gamma, \rho^\ast) \modelsML \varphi'$$
     We want to prove that for any $\mathcal{T}$, $\gamma$, $\rho$, 
-        $$(\mathcal{T}, \gamma, \rho) \vDash \exists x:s'. \varphi' \iff (\mathcal{T}^*, \gamma, \rho^\ast) \vDash \exists x:s'.\varphi'$$
+        $$(\mathcal{T}, \gamma, \rho) \modelsML \exists x:s'. \varphi' \iff (\mathcal{T}^*, \gamma, \rho^\ast) \modelsML \exists x:s'.\varphi'$$
     
     First, let us prove the left-to-right implication.
     The left-hand-side of the claim is equivalent with
-    $$\exists \rho'. (\forall y. y \neq x \to \rho'(y) = \rho(y)) \wedge (T, \gamma, \rho') \vDash \varphi'$$
+    $$\exists \rho'. (\forall y. y \neq x \to \rho'(y) = \rho(y)) \wedge (T, \gamma, \rho') \modelsML \varphi'$$
     From the induction hypothesis, this is further equivalent with
-    $$\exists \rho'. (\forall y. y \neq x \to \rho'(y) = \rho(y)) \wedge (T^\ast, \gamma, {\rho'}^\ast) \vDash \varphi'$$
+    $$\exists \rho'. (\forall y. y \neq x \to \rho'(y) = \rho(y)) \wedge (T^\ast, \gamma, {\rho'}^\ast) \modelsML \varphi'$$
     
-    Since $\forall y. y \neq x \to {\rho'}^\ast(y) = \rho'(y) = \rho(y) = \rho^\ast(y)$, we deduce $(\mathcal{T}^*, \gamma, \rho^\ast) \vDash \exists x:s'.\varphi'$.
+    Since $\forall y. y \neq x \to {\rho'}^\ast(y) = \rho'(y) = \rho(y) = \rho^\ast(y)$, we deduce $(\mathcal{T}^*, \gamma, \rho^\ast) \modelsML \exists x:s'.\varphi'$.
     
     Conversely, the right-hand-side of the claim is equivalent with
-    $$\exists \rho''. (\forall y. y \neq x \to \rho'(y) = \rho\ast(y)) \wedge (T^\ast, \gamma, \rho'') \vDash \varphi'$$
+    $$\exists \rho''. (\forall y. y \neq x \to \rho'(y) = \rho\ast(y)) \wedge (T^\ast, \gamma, \rho'') \modelsML \varphi'$$
     Let $\rho'$ be defined by $\rho'(y) = \rho(y)$ if $y\neq x$ and $\rho'(x) = \rho''(x)$. Then it is
     easy to see that ${\rho'}^\ast = \rho''$, whence by the induction hypothesis we obtain that
-    $(T, \gamma, \rho') \vDash \varphi'$, and by the definition of $\rho'$, $(T, \gamma, \rho) \vDash \exists x:s'. \varphi'$.
+    $(T, \gamma, \rho') \modelsML \varphi'$, and by the definition of $\rho'$, $(T, \gamma, \rho) \modelsML \exists x:s'. \varphi'$.
  \end{itemize}
 \end{proof}
 
@@ -457,8 +457,8 @@ We have
     there exists a rule $\phi \land P \Rightarrow^\exists \phi^\prime \land P^\prime \in S$
     and valuation $\rho : \mathit{Var}^* \to \mathcal{T}^*$ such that
     \begin{itemize}
-        \item $(\mathcal{T}^*, \rho) \vDash P$; and
-        \item $(\mathcal{T}^*, \rho) \vDash P^\prime$; and
+        \item $(\mathcal{T}^*, \rho) \modelsML P$; and
+        \item $(\mathcal{T}^*, \rho) \modelsML P^\prime$; and
         \item $C = \rho(L) \texttt{++} [\rho(\phi)] \texttt{++} \rho(R)$; and
         \item $C^\prime = \rho(L) \texttt{++} [\rho(\phi^\prime)] 
         \texttt{++} \rho(R)$,
@@ -476,8 +476,8 @@ iff (by \Cref{def:basics})
 \begin{proofenv}
     there exists a rule $\varphi \Rightarrow^\exists \varphi^\prime \in S^*$
     and valuation $\rho : \mathit{Var}^* \to \mathcal{T}^*$ such that
-    $(\mathcal{T}^*, C, \rho) \vDash \varphi$
-    and $(\mathcal{T}^*, C^\prime, \rho) \vDash \varphi^\prime$,
+    $(\mathcal{T}^*, C, \rho) \modelsML \varphi$
+    and $(\mathcal{T}^*, C^\prime, \rho) \modelsML \varphi^\prime$,
 \end{proofenv}
 iff (by
 %\Cref{def:matchinglogic} and
@@ -486,11 +486,11 @@ iff (by
     there exists a rule $\phi \land P \Rightarrow^\exists \phi^\prime \land P^\prime \in S$
     and valuation $\rho : \mathit{Var}^* \to \mathcal{T}^*$ such that
     \begin{equation*}
-    (\mathcal{T}^*, C, \rho) \vDash \mathit{cfgheat}(L, \phi, R) \land P
+    (\mathcal{T}^*, C, \rho) \modelsML \mathit{cfgheat}(L, \phi, R) \land P
     \end{equation*}
     and
     \begin{equation*}
-        (\mathcal{T}^*, C^\prime, \rho) \vDash
+        (\mathcal{T}^*, C^\prime, \rho) \modelsML
         \mathit{cfgheat}(L, \phi^\prime, R) \land P^\prime \, ,
     \end{equation*}
 \end{proofenv}
@@ -498,13 +498,13 @@ iff (by \Cref{def:matchinglogic} and \Cref{lem:structurelessSemantics})
 \begin{proofenv}
     there exists a rule $\phi \land P \Rightarrow^\exists \phi^\prime \land P^\prime \in S$
     and valuation $\rho : \mathit{Var}^* \to \mathcal{T}^*$ such that
-    $(\mathcal{T}^*, \rho) \vDash P$ and $(\mathcal{T}^*, \rho) \vDash P^\prime$ and
+    $(\mathcal{T}^*, \rho) \modelsML P$ and $(\mathcal{T}^*, \rho) \modelsML P^\prime$ and
     \begin{equation*}
-        (\mathcal{T}^*, C, \rho) \vDash \mathit{cfgheat}(L, \phi_l, R)
+        (\mathcal{T}^*, C, \rho) \modelsML \mathit{cfgheat}(L, \phi_l, R)
     \end{equation*}
     and
     \begin{equation*}
-        (\mathcal{T}^*, C^\prime, \rho) \vDash
+        (\mathcal{T}^*, C^\prime, \rho) \modelsML
         \mathit{cfgheat}(L, \phi^\prime_j, R) \, ,
     \end{equation*}
 \end{proofenv}
@@ -513,8 +513,8 @@ iff (by \Cref{def:matchinglogic} and \Cref{def:starextension})
     there exists a rule $\phi \land P \Rightarrow^\exists \phi^\prime \land P^\prime \in S$
     and valuation $\rho : \mathit{Var}^* \to \mathcal{T}^*$ such that
     \begin{itemize}
-        \item $(\mathcal{T}^*, \rho) \vDash P$; and
-        \item $(\mathcal{T}^*, \rho) \vDash P^\prime$; and
+        \item $(\mathcal{T}^*, \rho) \modelsML P$; and
+        \item $(\mathcal{T}^*, \rho) \modelsML P^\prime$; and
         \item $C = \rho(L) \texttt{++} [\rho(\phi)] \texttt{++} \rho(R)$; and
         \item $C^\prime = \rho(L)
         \texttt{++} [\rho(\phi^\prime)] \texttt{++} \rho(R)$.
@@ -546,8 +546,8 @@ iff (by \Cref{lem:simplifyComposite})
 there exists a rule $\phi \land P \Rightarrow^\exists \phi^\prime \land P^\prime \in S$
 and valuation $\rho : \mathit{Var}^* \to \mathcal{T}^*$ such that
 \begin{itemize}
-    \item $(\mathcal{T}^*, \rho) \vDash P$; and
-    \item $(\mathcal{T}^*, \rho) \vDash P^\prime$; and
+    \item $(\mathcal{T}^*, \rho) \modelsML P$; and
+    \item $(\mathcal{T}^*, \rho) \modelsML P^\prime$; and
     \item $[c_1,\ldots,c_k] = \rho(L) \texttt{++} [\rho(\phi_l)] \texttt{++} \rho(R)$; and
     \item $[c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k] = \rho(L) \texttt{++} [\rho(\phi_j)] 
     \texttt{++} \rho(R)$.
@@ -572,8 +572,8 @@ Therefore, we can use \Cref{lem:unusedVariables} to change the goal to one sayin
 there exists a rule $\phi \land P \Rightarrow^\exists \phi^\prime \land P^\prime \in S$
 and valuation $\rho_0 : \mathit{Var} \to \mathcal{T}$ such that
 \begin{itemize}
-    \item $(\mathcal{T}^*, (\rho_0)^*) \vDash P$; and
-    \item $(\mathcal{T}^*, (\rho_0)^*) \vDash P^\prime$; and
+    \item $(\mathcal{T}^*, (\rho_0)^*) \modelsML P$; and
+    \item $(\mathcal{T}^*, (\rho_0)^*) \modelsML P^\prime$; and
     \item $[c_1,\ldots,c_k] = ((\rho_0)^*)(L) \texttt{++} [((\rho_0)^*)(\phi_l)] \texttt{++} ((\rho_0)^*)(R)$; and
     \item $[c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k] = ((\rho_0)^*)(L)
     \texttt{++} [((\rho_0)^*)(\phi_j)] 
@@ -586,8 +586,8 @@ Now, we use \Cref{lem:starConservative} and definition of starred valuation to c
 there exists a rule $\phi \land P \Rightarrow^\exists \phi^\prime \land P^\prime \in S$
 and valuation $\rho_0 : \mathit{Var} \to \mathcal{T}$ such that
 \begin{itemize}
-    \item $(\mathcal{T}, \rho_0) \vDash P$; and
-    \item $(\mathcal{T}, \rho_0) \vDash P^\prime$; and
+    \item $(\mathcal{T}, \rho_0) \modelsML P$; and
+    \item $(\mathcal{T}, \rho_0) \modelsML P^\prime$; and
     \item $[c_1,\ldots,c_k] = \rho_0(L) \texttt{++} [\rho_0(\phi_l)] \texttt{++} \rho_0(R)$; and
     \item $[c_1, \ldots, c_{i-1}, c^\prime, c_{i+1}, \ldots, c_k] = \rho_0(L)
     \texttt{++} [\rho_0(\phi_j)] 
@@ -602,8 +602,8 @@ and valuation $\rho_0 : \mathit{Var} \to \mathcal{T}$ such that
 there exists some $i^\prime$ satisfying $1 \leq i^\prime \leq k$
 such that
 \begin{itemize}
-    \item $(\mathcal{T}, \rho_0) \vDash P_l$; and
-    \item $(\mathcal{T}, \rho_0) \vDash P_j$; and
+    \item $(\mathcal{T}, \rho_0) \modelsML P_l$; and
+    \item $(\mathcal{T}, \rho_0) \modelsML P_j$; and
     \item $[c_1,\ldots, c_{i^\prime-1}] = \rho_0(L)$; and
     \item $c_{i^\prime} = \rho_0(\phi_l)$; and
     \item $[c_{i^\prime+1},\ldots,c_k] = \rho_0(R)$; and
@@ -626,8 +626,8 @@ there exists a rule $\phi \land P \Rightarrow^\exists \phi^\prime \land P^\prime
 and valuation $\rho_0 : \mathit{Var} \to \mathcal{T}$ such that
 there exists some $i^\prime$ satisfying $1 \leq i^\prime \leq k$ such that
 \begin{itemize}
-    \item $(\mathcal{T}, \rho_0) \vDash P$; and
-    \item $(\mathcal{T}, \rho_0) \vDash P^\prime$; and
+    \item $(\mathcal{T}, \rho_0) \modelsML P$; and
+    \item $(\mathcal{T}, \rho_0) \modelsML P^\prime$; and
     \item $[c_1,\ldots, c_{i^\prime-1}] = \rho_0(L)$; and
     \item $c_{i^\prime} = \rho_0(\phi)$; and
     \item $[c_{i^\prime+1},\ldots,c_k] = \rho_0(R)$; and
@@ -644,8 +644,8 @@ and valuation $\rho_0 : \mathit{Var} \to \mathcal{T}$ such that
 there exists some $i^\prime$ satisfying $1 \leq i^\prime \leq k$
 such that
 \begin{itemize}
-    \item $(\mathcal{T}, \rho_0) \vDash P$; and
-    \item $(\mathcal{T}, \rho_0) \vDash P^\prime$; and
+    \item $(\mathcal{T}, \rho_0) \modelsML P$; and
+    \item $(\mathcal{T}, \rho_0) \modelsML P^\prime$; and
     \item $c_{i^\prime} = \rho_0(\phi_l)$; and
     \item $c^\prime_{i^\prime} = \rho_0(\phi_j)$.
 \end{itemize}
@@ -658,8 +658,8 @@ there exists a rule $\phi \land P \Rightarrow^\exists \phi^\prime \land P^\prime
 and there exists some $i^\prime$ satisfying $1 \leq i^\prime \leq k$
 and valuation $\rho_0 : \mathit{Var} \to \mathcal{T}$ such that
 \begin{itemize}
-    \item $(\mathcal{T}, c_{i^\prime}, \rho_0) \vDash \phi \land P$; and
-    \item $(\mathcal{T}, c^\prime_{i^\prime}, \rho_0) \vDash \phi^\prime \land P^\prime$
+    \item $(\mathcal{T}, c_{i^\prime}, \rho_0) \modelsML \phi \land P$; and
+    \item $(\mathcal{T}, c^\prime_{i^\prime}, \rho_0) \modelsML \phi^\prime \land P^\prime$
     .
 \end{itemize}
 \end{proofenv}
@@ -680,22 +680,22 @@ which contradicts \Cref{rem:noEmptySteps}.
 \end{proof}
 
 \begin{lemma}\label{lem:mkListSemantics}
-$(\mathcal{T}^*, C, \rho) \vDash \mathit{mkList}(\phi_1,\ldots,\phi_k)$
+$(\mathcal{T}^*, C, \rho) \modelsML \mathit{mkList}(\phi_1,\ldots,\phi_k)$
 iff there exists $c_1, \ldots, c_k \in \Tcfg$ such that $C = [c_1, \ldots, c_k]$ and for every $\rho^\prime : \mathit{Var} \to \mathcal{T}$ satisfying
 $\rho^\prime(v) = \rho(v)$ for any \\
 $v \in \mathit{FV}(\mathit{mkList}(\phi_1, \ldots, \phi_k))$,
 it holds that 
-$(\mathcal{T}, c_1, \rho^\prime) \vDash \phi_1$ and \ldots and $(\mathcal{T}, c_k, \rho^\prime) \vDash \phi_k$.
+$(\mathcal{T}, c_1, \rho^\prime) \modelsML \phi_1$ and \ldots and $(\mathcal{T}, c_k, \rho^\prime) \modelsML \phi_k$.
 \end{lemma}
 \begin{proof}
 By induction on $k$.
 \begin{itemize}
     \item If $k = 1$, then we have to prove that
     \begin{proofenv}
-    $(\mathcal{T}^*, C, \rho) \vDash \mathit{cfgitem}(\phi_1)$
+    $(\mathcal{T}^*, C, \rho) \modelsML \mathit{cfgitem}(\phi_1)$
     iff there exists $c_1 \in \Tcfg$ such that $C = [c_1]$ and for every $\rho^\prime : \mathit{Var} \to \mathcal{T}$ satisfying
     $\rho^\prime(v) = \rho(v)$ for any $v \in \mathit{FV}(\mathit{cfgitem}(\phi_1))$, it holds that
-    $(\mathcal{T}, c, \rho^\prime) \vDash \phi_1$.
+    $(\mathcal{T}, c, \rho^\prime) \modelsML \phi_1$.
     \end{proofenv}
     By \cref{def:matchinglogic}, this is equivalent to
     \begin{proofenv}
@@ -719,23 +719,23 @@ By induction on $k$.
     \item If $k = k^\prime + 1$, we assume the induction hypothesis saying that
     \begin{proofenv}
     for every $C, \phi_1, \ldots, \phi_{k^\prime}$,
-    $(\mathcal{T}^*, C, \rho) \vDash \mathit{mkList}(\phi_1,\ldots,\phi_{k^\prime})$
+    $(\mathcal{T}^*, C, \rho) \modelsML \mathit{mkList}(\phi_1,\ldots,\phi_{k^\prime})$
     iff there exists $c_1, \ldots, c_{k^\prime} \in \Tcfg$ such that $C = [c_1, \ldots, c_{k^\prime}]$
     and for every $\rho^\prime : \mathit{Var} \to \mathcal{T}$ satisfying
     $\rho^\prime(v) = \rho(v)$ for any
     $v \in \mathit{FV}(\mathit{mkList}(\phi_1, \ldots, \phi_{k^\prime}))$,
     it holds that
-    $(\mathcal{T}, c_1, \rho^\prime) \vDash \phi_1$ and \ldots and $(\mathcal{T}, c_{k^\prime}, \rho^\prime) \vDash \phi_k$,
+    $(\mathcal{T}, c_1, \rho^\prime) \modelsML \phi_1$ and \ldots and $(\mathcal{T}, c_{k^\prime}, \rho^\prime) \modelsML \phi_k$,
     \end{proofenv}
     and have to prove that
     \begin{proofenv}
-    $(\mathcal{T}^*, C, \rho) \vDash \mathit{mkList}(\phi_1,\ldots,\phi_{k^\prime + 1})$
+    $(\mathcal{T}^*, C, \rho) \modelsML \mathit{mkList}(\phi_1,\ldots,\phi_{k^\prime + 1})$
     iff there exists $c_1, \ldots, c_{k^\prime + 1} \in \Tcfg$ such that $C = [c_1, \ldots, c_{k^\prime + 1}]$ and 
     for every $\rho^\prime : \mathit{Var} \to \mathcal{T}$ satisfying
     $\rho^\prime(v) = \rho(v)$ for any
     $v \in \mathit{FV}(\mathit{mkList}(\phi_1, \ldots, \phi_{k^\prime + 1}))$,
     it holds that
-    $(\mathcal{T}, c_1, \rho^\prime) \vDash \phi_1$ and \ldots and $(\mathcal{T}, c_{k^\prime + 1}, \rho^\prime) \vDash \phi_{k^\prime + 1}$,
+    $(\mathcal{T}, c_1, \rho^\prime) \modelsML \phi_1$ and \ldots and $(\mathcal{T}, c_{k^\prime + 1}, \rho^\prime) \modelsML \phi_{k^\prime + 1}$,
     \end{proofenv}
     which is (by \Cref{def:matchinglogic}) equivalent to
     \begin{proofenv}
@@ -767,7 +767,7 @@ By induction on $k$.
     $\rho^\prime(v) = \rho(v)$ for any
     $v \in \mathit{FV}(\mathit{mkList}(\phi_2, \ldots, \phi_{k^\prime+1}))$,
     it holds that
-    $(\mathcal{T}, c_2, \rho^\prime) \vDash \phi_2$ and \ldots and $(\mathcal{T}, c_{k^\prime+1}, \rho^\prime) \vDash \phi_{k^\prime + 1}$,
+    $(\mathcal{T}, c_2, \rho^\prime) \modelsML \phi_2$ and \ldots and $(\mathcal{T}, c_{k^\prime+1}, \rho^\prime) \modelsML \phi_{k^\prime + 1}$,
     iff there exists $c_1, \ldots, c_{k^\prime + 1} \in \Tcfg$ such that $C = [c_1, \ldots, c_{k^\prime + 1}]$
     and for every $\rho^\prime : \mathit{Var} \to \mathcal{T}$ satisfying
     $\rho^\prime(v) = \rho(v)$ for any
@@ -783,7 +783,7 @@ By induction on $k$.
     $\rho^\prime(v) = \rho(v)$ for any
     $v \in \mathit{FV}(\mathit{mkList}(\phi_2, \ldots, \phi_{k^\prime+1}))$,
     it holds that
-    $(\mathcal{T}, c_2, \rho^\prime) \vDash \phi_2$ and \ldots and $(\mathcal{T}, c_{k^\prime+1}, \rho^\prime) \vDash \phi_{k^\prime+1}$,
+    $(\mathcal{T}, c_2, \rho^\prime) \modelsML \phi_2$ and \ldots and $(\mathcal{T}, c_{k^\prime+1}, \rho^\prime) \modelsML \phi_{k^\prime+1}$,
     iff there exists $c_1, \ldots, c_{k^\prime + 1} \in \Tcfg$ such that $C = [c_1, \ldots, c_{k^\prime + 1}]$
     and for every $\rho^\prime : \mathit{Var} \to \mathcal{T}$ satisfying
     $\rho^\prime(v) = \rho(v)$ for any
@@ -868,8 +868,8 @@ Then by \Cref{lem:simplifyComposite},
     there exists a rule $\phi \land P_l \Rightarrow^\exists \phi^\prime \land P^\prime \in S$
     and valuation $\rho : \mathit{Var}^* \to \mathcal{T}^*$ such that
     \begin{itemize}
-        \item $(\mathcal{T}^*, \rho) \vDash P$; and
-        \item $(\mathcal{T}^*, \rho) \vDash P^\prime$; and
+        \item $(\mathcal{T}^*, \rho) \modelsML P$; and
+        \item $(\mathcal{T}^*, \rho) \modelsML P^\prime$; and
         \item $C = \rho(L) \texttt{++} [\rho(\phi)] \texttt{++} \rho(R)$; and
         \item $C^\prime = \rho(L) \texttt{++} [\rho(\phi^\prime)] 
         \texttt{++} \rho(R)$.
@@ -892,8 +892,8 @@ Then by \Cref{lem:simplifyComposite},
     there exists a rule $\phi \land P \Rightarrow^\exists \phi^\prime \land P^\prime \in S$
     and valuation $\rho : \mathit{Var}^* \to \mathcal{T}^*$ such that
     \begin{itemize}
-        \item $(\mathcal{T}^*, \rho) \vDash P_l$; and
-        \item $(\mathcal{T}^*, \rho) \vDash P_j$; and
+        \item $(\mathcal{T}^*, \rho) \modelsML P_l$; and
+        \item $(\mathcal{T}^*, \rho) \modelsML P_j$; and
         \item $C = \rho(L) \texttt{++} [\rho(\phi)] \texttt{++} \rho(R)$; and
         \item $C^\prime = \rho(L) \texttt{++} [\rho(\phi^\prime)] 
         \texttt{++} \rho(R)$.
@@ -1039,7 +1039,7 @@ We prove each implication separately.
   which agree on all variables other than $X,Y$, if $\rho_1(X) = \rho_2(Y)$, then for any matching logic formula
   $\varphi$ in which $Y$ does not occur free,
   \begin{equation*}
-      (\mathcal{T}, \gamma, \rho_1) \vDash \varphi \iff (\mathcal{T}, \gamma, \rho_2) \vDash \varphi[Y/X] \, .
+      (\mathcal{T}, \gamma, \rho_1) \modelsML \varphi \iff (\mathcal{T}, \gamma, \rho_2) \modelsML \varphi[Y/X] \, .
   \end{equation*}
 \end{lemma}
 \begin{proof}[Proof of \Cref{lem:varrenamesem}]
@@ -1054,12 +1054,12 @@ We prove each implication separately.
         \item If $\varphi$ is a conjunction or negation, the desired property follows directly from the induction hypothesis.
         \item If $\varphi \equiv \exists Z : s.\, \varphi^\prime$.
         \begin{itemize}
-            \item If $X = Z$, then we have to prove that $(\mathcal{T}, \gamma, \rho^\prime) \vDash \varphi^\prime$
-            for some $\rho^\prime$ satisfying $\rho^\prime(y) = \rho_1(y)$ for all $y \in \mathit{Var} \setminus \{ Z \}$, iff $(\mathcal{T}, \gamma, \rho^{\prime\prime}) \vDash \varphi^\prime$
+            \item If $X = Z$, then we have to prove that $(\mathcal{T}, \gamma, \rho^\prime) \modelsML \varphi^\prime$
+            for some $\rho^\prime$ satisfying $\rho^\prime(y) = \rho_1(y)$ for all $y \in \mathit{Var} \setminus \{ Z \}$, iff $(\mathcal{T}, \gamma, \rho^{\prime\prime}) \modelsML \varphi^\prime$
             for some $\rho^{\prime\prime}$ satisfying $\rho^{\prime\prime}(y) = \rho_2(y)$ for all $y \in \mathit{Var} \setminus \{ Z \}$ - which is easy.
             \item If $X \not = Z$, then we have to prove that
-            $(\mathcal{T}, \gamma, \rho^\prime) \vDash \varphi^\prime$
-            for some $\rho^\prime$ satisfying $\rho^\prime(y) = \rho_1(y)$ for all $y \in \mathit{Var} \setminus \{ Z \}$, iff $(\mathcal{T}, \gamma, \rho^{\prime\prime}) \vDash \varphi^\prime[Y/X]$ for some $\rho^{\prime\prime}$ satisfying $\rho^{\prime\prime}(y) = \rho_2(y)$ for all $y \in \mathit{Var} \setminus \{ Z \}$.
+            $(\mathcal{T}, \gamma, \rho^\prime) \modelsML \varphi^\prime$
+            for some $\rho^\prime$ satisfying $\rho^\prime(y) = \rho_1(y)$ for all $y \in \mathit{Var} \setminus \{ Z \}$, iff $(\mathcal{T}, \gamma, \rho^{\prime\prime}) \modelsML \varphi^\prime[Y/X]$ for some $\rho^{\prime\prime}$ satisfying $\rho^{\prime\prime}(y) = \rho_2(y)$ for all $y \in \mathit{Var} \setminus \{ Z \}$.
             Since the size of $\varphi^\prime$ is smaller then the size of $\varphi$,
             and since $\rho^{\prime}(X) = \rho_1(X) = \rho_2(Y) = \rho^{\prime\prime}(Y)$,
             we can use the induction hypothesis and finish the proof using firstorder reasoning.
@@ -1099,7 +1099,7 @@ We define $\mathit{mkList}$ by letting
     and any $\mathcal{T}^*$-valuation $\rho$, we have
     %\begin{proofenv}
         \begin{equation*}
-            (\mathcal{T}^*, C, \rho) \vDash \mathit{flatten}(\exists \vec{X}.\, [\varphi_1,\ldots,\varphi_k] \land P)
+            (\mathcal{T}^*, C, \rho) \modelsML \mathit{flatten}(\exists \vec{X}.\, [\varphi_1,\ldots,\varphi_k] \land P)
         \end{equation*}
     %\end{proofenv}
     if and only if
@@ -1108,7 +1108,7 @@ We define $\mathit{mkList}$ by letting
         $C = [c_1, \ldots, c_k]$ and there exists a $\mathcal{T}$-valuation $\rho_0$
         satisfying $\rho_0(v) = \rho(v)$ for any $v \in \mathit{Var} \setminus \vec{X}$
         such that for any $j \in \{ 1, \ldots, k \}$,
-        $(\mathcal{T}, c_j, \rho_0) \vDash \varphi_j \land P$.
+        $(\mathcal{T}, c_j, \rho_0) \modelsML \varphi_j \land P$.
     %\end{proofenv}
 \end{lemma}
 
@@ -1117,16 +1117,16 @@ We define $\mathit{mkList}$ by letting
     We have
     \begin{proofenv}
         \begin{equation*}
-            (\mathcal{T}^*, C, \rho) \vDash \mathit{flatten}(\exists \vec{X}.\, (\varphi_1,\ldots,\varphi_k) \land P)
+            (\mathcal{T}^*, C, \rho) \modelsML \mathit{flatten}(\exists \vec{X}.\, (\varphi_1,\ldots,\varphi_k) \land P)
         \end{equation*}
     \end{proofenv}
     if and only if (by unfolding the definition of $\mathit{flatten}$ and \Cref{def:matchinglogic})
     \begin{proofenv}
         there exists a $\mathcal{T}^*$-valuation $\rho^\prime$ satisfying $\rho^\prime(v) = \rho(v)$
         for any $v \in \mathit{Var}^* \setminus \vec{X}$ such that
-        $(\mathcal{T}^*, C, \rho^\prime) \vDash \mathit{mkList}(Y_1,\ldots,Y_k)$
+        $(\mathcal{T}^*, C, \rho^\prime) \modelsML \mathit{mkList}(Y_1,\ldots,Y_k)$
         and for any $j \in \{ 1, \ldots, k \}$,
-        $(\mathcal{T}^*, C, \rho^\prime) \vDash (\varphi_j^{\square})[Y_j/\square] \land P$ \, ,
+        $(\mathcal{T}^*, C, \rho^\prime) \modelsML (\varphi_j^{\square})[Y_j/\square] \land P$ \, ,
     \end{proofenv}
     if and only if (by \Cref{lem:mkListSemantics})
     \begin{proofenv}
@@ -1138,9 +1138,9 @@ We define $\mathit{mkList}$ by letting
                     and for every $\mathcal{T}$-valuation $\rho^{\prime\prime}$
                     satisfying $\rho^{\prime\prime}(Y_j) = \rho^\prime(Y_j)$ for any $j \in \{ 1, \ldots, k \}$,
                     it holds that for any $j \in \{ 1, \ldots, k \}$,
-                    $(\mathcal{T}, c_j, \rho^{\prime\prime}) \vDash Y_j$; and
+                    $(\mathcal{T}, c_j, \rho^{\prime\prime}) \modelsML Y_j$; and
             \item for any $j \in \{ 1, \ldots, k \}$,
-                    $(\mathcal{T}^*, C, \rho^\prime) \vDash (\varphi_j^{\square})[Y_j/\square] \land P$ ,
+                    $(\mathcal{T}^*, C, \rho^\prime) \modelsML (\varphi_j^{\square})[Y_j/\square] \land P$ ,
         \end{itemize}
     \end{proofenv}
     if and only if (by \Cref{def:matchinglogic} and firstorder reasoning)
@@ -1152,7 +1152,7 @@ We define $\mathit{mkList}$ by letting
                     $C = [c_1, \ldots, c_k]$ and for any $j \in \{ 1, \ldots, k \}$,
                     $\rho^{\prime}(Y_j) = c_j$; and
             \item for any $j \in \{ 1, \ldots, k \}$,
-                    $(\mathcal{T}^*, C, \rho^\prime) \vDash (\varphi_j^{\square})[Y_j/\square] \land P$ ,
+                    $(\mathcal{T}^*, C, \rho^\prime) \modelsML (\varphi_j^{\square})[Y_j/\square] \land P$ ,
         \end{itemize}
     \end{proofenv}
     if and only if (by firstorder reasoning, \Cref{def:matchinglogic}, and \Cref{lem:structurelessSemantics})
@@ -1162,8 +1162,8 @@ We define $\mathit{mkList}$ by letting
         for any $v \in \mathit{Var}^* \setminus \vec{X}$ such that for any $j \in \{ 1, \ldots, k \}$,
         \begin{itemize}
             \item $\rho^{\prime}(Y_j) = c_j$;
-            \item $(\mathcal{T}^*, \rho^\prime) \vDash (\varphi_j^{\square})[Y_j/\square]$ ; and
-            \item $(\mathcal{T}^*, \rho^\prime) \vDash P$,
+            \item $(\mathcal{T}^*, \rho^\prime) \modelsML (\varphi_j^{\square})[Y_j/\square]$ ; and
+            \item $(\mathcal{T}^*, \rho^\prime) \modelsML P$,
         \end{itemize}
     \end{proofenv}
     if and only if (by \Cref{lem:starConservative} and firstorder reasoning)
@@ -1173,8 +1173,8 @@ We define $\mathit{mkList}$ by letting
         for any $v \in \mathit{Var} \setminus \vec{X}$ such that for any $j \in \{ 1, \ldots, k \}$,
         \begin{itemize}
             \item $\rho^{\prime}(Y_j) = c_j$;
-            \item $(\mathcal{T}, \rho^\prime) \vDash (\varphi_j^{\square})[Y_j/\square]$ ; and
-            \item $(\mathcal{T}, \rho^\prime) \vDash P$,
+            \item $(\mathcal{T}, \rho^\prime) \modelsML (\varphi_j^{\square})[Y_j/\square]$ ; and
+            \item $(\mathcal{T}, \rho^\prime) \modelsML P$,
         \end{itemize}
     \end{proofenv}
     if and only if (by \Cref{lem:varrenamesem},
@@ -1188,8 +1188,8 @@ We define $\mathit{mkList}$ by letting
         satisfying $\rho_0(v) = \rho(v)$ for any $v \in \mathit{Var} \setminus \vec{X}$
         such that for any $j \in \{ 1, \ldots, k \}$,
         \begin{itemize}
-            \item $(\mathcal{T}, \rho_0^{c_j}) \vDash \varphi_j^{\square}$ ; and
-            \item $(\mathcal{T}, \rho_0) \vDash P$ ,
+            \item $(\mathcal{T}, \rho_0^{c_j}) \modelsML \varphi_j^{\square}$ ; and
+            \item $(\mathcal{T}, \rho_0) \modelsML P$ ,
         \end{itemize}
     \end{proofenv}
     if and only if (by \Cref{lem:patternToFOLSemantics}, \Cref{def:matchinglogic}, and \Cref{lem:structurelessSemantics})
@@ -1198,7 +1198,7 @@ We define $\mathit{mkList}$ by letting
         $C = [c_1, \ldots, c_k]$ and there exists a $\mathcal{T}$-valuation $\rho_0$
         satisfying $\rho_0(v) = \rho(v)$ for any $v \in \mathit{Var} \setminus \vec{X}$
         such that for any $j \in \{ 1, \ldots, k \}$,
-        $(\mathcal{T}, c_j, \rho_0) \vDash \varphi_j \land P$ \, ,
+        $(\mathcal{T}, c_j, \rho_0) \modelsML \varphi_j \land P$ \, ,
     \end{proofenv}
     which is what we wanted to prove.
 \end{proof}
@@ -1206,8 +1206,8 @@ We define $\mathit{mkList}$ by letting
 
 \begin{lemma}\label{thm:correspondence}
 \begin{equation*}
-\mathcal{S} \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime
-  \iff \mathcal{S}^* \vDash_\RL \mathit{flatten}(\Psi) \Rightarrow^{c\exists} \mathit{flatten}(\Psi^\prime)
+\mathcal{S} \modelsCRL \Psi \Rightarrow^{c\exists} \Psi^\prime
+  \iff \mathcal{S}^* \modelsRL \mathit{flatten}(\Psi) \Rightarrow^{c\exists} \mathit{flatten}(\Psi^\prime)
 \end{equation*}
 \end{lemma}
 
@@ -1223,7 +1223,7 @@ We prove each implication separately.
     and assume that
     \begin{proofenv}
         \begin{equation*}
-            \mathcal{S} \vDash_\CRL \Psi \Rightarrow^{c\exists} \Psi^\prime \, ;
+            \mathcal{S} \modelsCRL \Psi \Rightarrow^{c\exists} \Psi^\prime \, ;
         \end{equation*}
     \end{proofenv}
     that is, (i)
@@ -1231,46 +1231,46 @@ We prove each implication separately.
         for all configurations $c_1,\ldots,c_k \in \Tcfg$
         which terminate in $(\Tcfg, \Rightarrow_{\mathcal{S}})$
         and any $\mathcal{T}$-valuation $\rho_1$,
-        whenever $(\mathcal{T}, c_1,\rho_1) \vDash \varphi_1 \land P$ and \ldots
-        and $(\mathcal{T}, c_k,\rho_1) \vDash \varphi_k \land P$,
+        whenever $(\mathcal{T}, c_1,\rho_1) \modelsML \varphi_1 \land P$ and \ldots
+        and $(\mathcal{T}, c_k,\rho_1) \modelsML \varphi_k \land P$,
         then there exist configurations $c_1^\prime,\ldots,c_k^\prime \in \Tcfg$
         such that $c_1 \Rightarrow^{*}_{\mathcal{S}} c_1^\prime$
         and \ldots and $c_k \Rightarrow^{*}_{\mathcal{S}} c_k^\prime$,
         and there also exists an $\mathcal{T}$-valuation $\rho_2$
         satisfying $\rho_1(v) = \rho_2(v)$ for any $v \in \mathit{Var} \setminus \vec{Y}$,
         and
-        $(\mathcal{T}, c_1^\prime,\rho_2) \vDash \varphi^\prime_1 \land P^\prime$ and \ldots
-        and $(\mathcal{T}, c_k^\prime, \rho_2) \vDash \varphi^\prime_k \land P^\prime$.
+        $(\mathcal{T}, c_1^\prime,\rho_2) \modelsML \varphi^\prime_1 \land P^\prime$ and \ldots
+        and $(\mathcal{T}, c_k^\prime, \rho_2) \modelsML \varphi^\prime_k \land P^\prime$.
     \end{proofenv}
     We have to prove that
     \begin{proofenv}
     for every $C \in \mathcal{T}^*_{\mathit{Cfg}^*}$
     such that $C$ terminates in $(\mathcal{T}^*_{\mathit{Cfg}^*}, \Rightarrow_{\mathcal{S}^*})$
     and for any valuation $\rho : \Var^* \to \mathcal{T}^*$
-    such that $(\mathcal{T}^*, C, \rho) \vDash \mathit{flatten}(\Psi)$,
+    such that $(\mathcal{T}^*, C, \rho) \modelsML \mathit{flatten}(\Psi)$,
     there exists some $C^\prime \in \mathcal{T}^*_{\mathit{Cfg}^*}$
     such that
     $C \Rightarrow^{*}_{\mathcal{S}^*} C^\prime$
-    and $(\mathcal{T}^*, C^\prime, \rho) \vDash \mathit{flatten}(\Psi^\prime)$.
+    and $(\mathcal{T}^*, C^\prime, \rho) \modelsML \mathit{flatten}(\Psi^\prime)$.
     \end{proofenv}
     Let us then have some $C \in \mathcal{T}^*_{\mathit{Cfg}^*}$
     such that $C$ terminates in $(\mathcal{T}^*_{\mathit{Cfg}^*}, \Rightarrow_{\mathcal{S}^*})$,
     and a valuation $\rho : \Var^* \to \mathcal{T}^*$
-    such that $(\mathcal{T}^*, C, \rho) \vDash \mathit{flatten}(\Psi)$.
+    such that $(\mathcal{T}^*, C, \rho) \modelsML \mathit{flatten}(\Psi)$.
     We have to prove that
     \begin{proofenv}
     there exists some $C^\prime \in \mathcal{T}^*_{\mathit{Cfg}^*}$
     such that
     $C \Rightarrow^{*}_{\mathcal{S}^*} C^\prime$
-    and $(\mathcal{T}^*, C^\prime, \rho) \vDash \mathit{flatten}(\Psi^\prime)$.
+    and $(\mathcal{T}^*, C^\prime, \rho) \modelsML \mathit{flatten}(\Psi^\prime)$.
     \end{proofenv}
     We will proceed in five steps:
     \begin{enumerate}
         \item \label{item:corr:step1} We prove that there exists $c_1,\ldots,c_k$ such that $C = [c_1,\ldots, c_k]$.
         \item \label{item:corr:step2} We prove that $c_1,\ldots,c_k$ are terminating.
         \item \label{item:corr:step3} We find appropriate valuation $\rho_1 : \mathit{Var} \to \mathcal{T}$
-              and prove the premise of the assumption (i): that $(\mathcal{T}, c_1, \rho_1) \vDash \varphi_1 \land P$
-        and \ldots and $(\mathcal{T}, c_k, \rho_1) \vDash \varphi_k \land P$.
+              and prove the premise of the assumption (i): that $(\mathcal{T}, c_1, \rho_1) \modelsML \varphi_1 \land P$
+        and \ldots and $(\mathcal{T}, c_k, \rho_1) \modelsML \varphi_k \land P$.
         \item \label{item:corr:step4} From the assumption (i) we get the appropriate $c_1^\prime,\ldots,c_k^\prime$,
         as well as a valuation $\rho_2 : \mathit{Var} \to \mathcal{T}$ satisfying $\rho_1(v) = \rho_2(v)$ for any $v \in \mathit{Var} \setminus \vec{Y}$, and 
         \item \label{item:corr:step5} We let $C^\prime := [c_1^\prime,\ldots,c_k^\prime]$ and prove that it is reachable from $C$,
@@ -1278,11 +1278,11 @@ We prove each implication separately.
     \end{enumerate}
     We have
     \begin{proofenv}
-    $(\mathcal{T}^*, C, \rho) \vDash \mathit{flatten}(\Psi)$;
+    $(\mathcal{T}^*, C, \rho) \modelsML \mathit{flatten}(\Psi)$;
     \end{proofenv}
     that is,
     \begin{proofenv}
-    $(\mathcal{T}^*, C, \rho) \vDash \mathit{flatten}((\varphi_1, \ldots, \varphi_k) \land P)$;
+    $(\mathcal{T}^*, C, \rho) \modelsML \mathit{flatten}((\varphi_1, \ldots, \varphi_k) \land P)$;
     \end{proofenv}
     which is by \Cref{lem:flatten} equivalent to (ii)
     \begin{proofenv}
@@ -1290,7 +1290,7 @@ We prove each implication separately.
         $C = [c_1, \ldots, c_k ]$, and
         there exists a $\mathcal{T}$-valuation $\rho_0$ satisfying $\rho_0(v) = \rho(v)$
         for any $v \in \mathit{Var}$,
-        such that for any $j \in \{ 1, \ldots, k \}$, $(\mathcal{T} , c_j , \rho_0 ) \vDash  \varphi_j \land P$.
+        such that for any $j \in \{ 1, \ldots, k \}$, $(\mathcal{T} , c_j , \rho_0 ) \modelsML  \varphi_j \land P$.
     \end{proofenv}
     Now, let $\rho_0$ be such valuation,
     and let $c_1,\ldots,c_k$ be such configurations. We have just proved Item~\ref{item:corr:step1}.
@@ -1305,14 +1305,14 @@ We prove each implication separately.
         and there also exists an $\mathcal{T}$-valuation $\rho_2$
         satisfying $\rho_1(v) = \rho_2(v)$ for any $v \in \mathit{Var} \setminus \vec{Y}$,
         and
-        $(\mathcal{T}, c_1^\prime,\rho_2) \vDash \varphi^\prime_1 \land P^\prime$ and \ldots
-        and $(\mathcal{T}, c_k^\prime, \rho_2) \vDash \varphi^\prime_k \land P^\prime$.
+        $(\mathcal{T}, c_1^\prime,\rho_2) \modelsML \varphi^\prime_1 \land P^\prime$ and \ldots
+        and $(\mathcal{T}, c_k^\prime, \rho_2) \modelsML \varphi^\prime_k \land P^\prime$.
     \end{proofenv}
     Let us have such configurations $c_1^\prime,\ldots,c_k^\prime$ and valuation $\rho_2$.
     We choose $C^\prime := [ c_1^\prime,\ldots,c_k^\prime ]$,
     and it remains to be proven that
     \begin{proofenv}
-        $C \Rightarrow^*_{\mathcal{S}^*} C^\prime$ and $(\mathcal{T}^*, C^\prime, \rho) \vDash \mathit{flatten}(\Psi^\prime)$ \,
+        $C \Rightarrow^*_{\mathcal{S}^*} C^\prime$ and $(\mathcal{T}^*, C^\prime, \rho) \modelsML \mathit{flatten}(\Psi^\prime)$ \,
     \end{proofenv}
     (where $\rho$ is the valuation that we started with).
     The part saying that $C \Rightarrow^*_{\mathcal{S}^*} C^\prime$ holds
@@ -1322,7 +1322,7 @@ We prove each implication separately.
         $C^\prime = [c^\prime_1, \ldots, c^\prime_k]$ and there exists a $\mathcal{T}$-valuation $\rho^\prime_0$
         satisfying $\rho^\prime_0(v) = \rho(v)$ for any $v \in \mathit{Var} \setminus \vec{Y}$
         such that for any $j \in \{ 1, \ldots, k \}$,
-        $(\mathcal{T}, c^\prime_j, \rho^\prime_0) \vDash \varphi^\prime_j \land P$.
+        $(\mathcal{T}, c^\prime_j, \rho^\prime_0) \modelsML \varphi^\prime_j \land P$.
     \end{proofenv}
     Since we have constructed $C^\prime$ as a list of smaller configurations,
     it remains to be proven that
@@ -1330,7 +1330,7 @@ We prove each implication separately.
         there exists a $\mathcal{T}$-valuation $\rho^\prime_0$
         satisfying $\rho^\prime_0(v) = \rho(v)$ for any $v \in \mathit{Var} \setminus \vec{Y}$
         such that for any $j \in \{ 1, \ldots, k \}$,
-        $(\mathcal{T}, c^\prime_j, \rho^\prime_0) \vDash \varphi^\prime_j \land P$.
+        $(\mathcal{T}, c^\prime_j, \rho^\prime_0) \modelsML \varphi^\prime_j \land P$.
     \end{proofenv}
     Let us choose $\rho^\prime_0$ defined by
     $\rho_0^\prime(v) = \rho_2(v)$ for any $v \in \mathit{Var}$.
@@ -1345,7 +1345,7 @@ We prove each implication separately.
     and assume that
     \begin{proofenv}
         \begin{equation*}
-            \mathcal{S}^* \vDash_\RL \mathit{flatten}(\Psi) \Rightarrow^\exists \mathit{flatten}(\Psi^\prime) \, ;
+            \mathcal{S}^* \modelsRL \mathit{flatten}(\Psi) \Rightarrow^\exists \mathit{flatten}(\Psi^\prime) \, ;
         \end{equation*}
     \end{proofenv}
     that is (i),
@@ -1353,15 +1353,15 @@ We prove each implication separately.
         for every $C \in \mathcal{T}^*_{\mathit{Cfg}^*}$ such that $C$ terminates in
         $(\mathcal{T}_{\mathit{Cfg}^*}, \Rightarrow_{\mathcal{S}^*})$
         and for any valuation $\rho : \mathit{Var}^* \to \mathcal{T}^*$ such that
-        $(\mathcal{T}^*, C, \rho) \vDash \mathit{flatten}(\Psi)$,
+        $(\mathcal{T}^*, C, \rho) \modelsML \mathit{flatten}(\Psi)$,
         there exists some $C^\prime \in \mathcal{T}^*_{\mathit{Cfg}^*}$ such that
         $C \Rightarrow_{\mathcal{S}^*}^* C^\prime$
-        and $(\mathcal{T}^*, C^\prime, \rho) \vDash \mathit{flatten}(\Psi^\prime)$;
+        and $(\mathcal{T}^*, C^\prime, \rho) \modelsML \mathit{flatten}(\Psi^\prime)$;
     \end{proofenv}
     we have to prove that
     \begin{proofenv}
         \begin{equation*}
-            \mathcal{S} \vDash_\CRL \Psi \Rightarrow^{c\exists} \Psi^\prime \, ;
+            \mathcal{S} \modelsCRL \Psi \Rightarrow^{c\exists} \Psi^\prime \, ;
         \end{equation*}
     \end{proofenv}
     that is,
@@ -1369,16 +1369,16 @@ We prove each implication separately.
         for all configurations $c_1,\ldots,c_k \in \Tcfg$
         which terminate in $(\Tcfg, \Rightarrow_{\mathcal{S}})$
         and any $\mathcal{T}$-valuation $\rho_1$,
-        whenever $(\mathcal{T}, c_1,\rho_1) \vDash \varphi_1 \land P$ and \ldots
-        and $(\mathcal{T}, c_k,\rho_1) \vDash \varphi_k \land P$,
+        whenever $(\mathcal{T}, c_1,\rho_1) \modelsML \varphi_1 \land P$ and \ldots
+        and $(\mathcal{T}, c_k,\rho_1) \modelsML \varphi_k \land P$,
         then there exist configurations $c_1^\prime,\ldots,c_k^\prime \in \Tcfg$
         such that $c_1 \Rightarrow^{*}_{\mathcal{S}} c_1^\prime$
         and \ldots and $c_k \Rightarrow^{*}_{\mathcal{S}} c_k^\prime$,
         and there also exists an $\mathcal{T}$-valuation $\rho_2$
         satisfying $\rho_1(v) = \rho_2(v)$ for any $v \in \mathit{Var} \setminus \vec{Y}$,
         and
-        $(\mathcal{T}, c_1^\prime,\rho_2) \vDash \varphi^\prime_1 \land P^\prime$ and \ldots
-        and $(\mathcal{T}, c_k^\prime, \rho_2) \vDash \varphi^\prime_k \land P^\prime$.
+        $(\mathcal{T}, c_1^\prime,\rho_2) \modelsML \varphi^\prime_1 \land P^\prime$ and \ldots
+        and $(\mathcal{T}, c_k^\prime, \rho_2) \modelsML \varphi^\prime_k \land P^\prime$.
     \end{proofenv}
     Let us then have such terminating configurations $c_1,\ldots,c_k \in \mathcal{T}_{\mathit{Cfg}}$
     and such valuation $\rho_1 : \mathit{Var} \to \mathcal{T}$.
@@ -1390,15 +1390,15 @@ We prove each implication separately.
         and there also exists an $\mathcal{T}$-valuation $\rho_2$
         satisfying $\rho_1(v) = \rho_2(v)$ for any $v \in \mathit{Var} \setminus \vec{Y}$,
         and
-        $(\mathcal{T}, c_1^\prime,\rho_2) \vDash \psi_1 \land P^\prime$ and \ldots
-        and $(\mathcal{T}, c_k^\prime, \rho_2) \vDash \psi_k \land P^\prime$.
+        $(\mathcal{T}, c_1^\prime,\rho_2) \modelsML \psi_1 \land P^\prime$ and \ldots
+        and $(\mathcal{T}, c_k^\prime, \rho_2) \modelsML \psi_k \land P^\prime$.
     \end{proofenv}
     We will proceed in the following steps.
     \begin{enumerate}
         \item We prove the premise of (i) for $C := [c_1,\ldots,c_k]$, that is:
         \begin{enumerate}
             \item $[c_1,\ldots,c_k]$ terminates in $(\mathcal{T}_{\mathit{Cfg}^*}, \Rightarrow_{\mathcal{S}^*})$; and
-            \item $(\mathcal{T}^*, [c_1,\ldots,c_k], \rho) \vDash \mathit{flatten}(\Psi)$ for some constructed valuation $\rho$.
+            \item $(\mathcal{T}^*, [c_1,\ldots,c_k], \rho) \modelsML \mathit{flatten}(\Psi)$ for some constructed valuation $\rho$.
         \end{enumerate}
         \item We ``destruct'' the obtained $C^\prime$ into $[c^\prime_1,\ldots,c^\prime_k]$;
         \item We prove the desired properties of $c^\prime_j$ from the properties of $C^\prime$.
@@ -1407,7 +1407,7 @@ We prove each implication separately.
     Next, we have to show that
     \begin{proofenv}
         \begin{equation*}
-            (\mathcal{T}^*, [c_1,\ldots,c_k], \rho) \vDash \mathit{flatten}((\varphi_1,\ldots,\varphi_k) \land P) \, ;
+            (\mathcal{T}^*, [c_1,\ldots,c_k], \rho) \modelsML \mathit{flatten}((\varphi_1,\ldots,\varphi_k) \land P) \, ;
         \end{equation*}
     \end{proofenv}
     where $\rho(v) = \rho_1(v)$ for any $v \in \mathit{Var}$ (and $\rho(v)$ has arbitrary value for $v$ outside of $\mathit{Var}$).
@@ -1416,25 +1416,25 @@ We prove each implication separately.
         there exist configurations $c_1, \ldots, c_k \in \mathcal{T}_{\mathit{Cfg}}$ such that
         $[c_1, \ldots, c_k] = [c_1, \ldots, c_k]$ and there exists a $\mathcal{T}$-valuation $\rho_0$
         satisfying $\rho_0(v) = \rho(v)$ for any $v \in \mathit{Var}$
-        such that for any $j \in \{ 1, \ldots, k \}$, $(\mathcal{T}, c_j, \rho_0) \vDash \varphi_j \land P$.
+        such that for any $j \in \{ 1, \ldots, k \}$, $(\mathcal{T}, c_j, \rho_0) \modelsML \varphi_j \land P$.
     \end{proofenv}
     We choose $c_j := c_j$ and $\rho_0 := \rho_1$; it remains to be proven that
     \begin{proofenv}
-        $(\mathcal{T}, c_j, \rho_1) \vDash \varphi_j \land P$.    
+        $(\mathcal{T}, c_j, \rho_1) \modelsML \varphi_j \land P$.    
     \end{proofenv}
     which holds by assumption.
     Now we have obtained the following:
     \begin{proofenv}
         there exists some $C^\prime \in \mathcal{T}_{\mathit{Cfg}}^*$ such that
         $[c_1,\ldots,c_k] \Rightarrow_{\mathcal{S}^*}^* C^\prime$
-        and $(\mathcal{T}^*, C^\prime, \rho) \vDash \mathit{flaten}(\Psi^\prime)$.
+        and $(\mathcal{T}^*, C^\prime, \rho) \modelsML \mathit{flaten}(\Psi^\prime)$.
     \end{proofenv}
     Now, by \Cref{lem:transitionOnlyBetweenListsOfSameLength} (and using induction on the length of the
     sequence witnessing the reachability),
     we get some $c^\prime_1,\ldots,c^\prime_k \in \Tcfg$ such that
     \begin{proofenv}
         $[c_1,\ldots,c_k] \Rightarrow_{\mathcal{S}^*}^* [c^\prime_1,\ldots,c^\prime_k]$
-        and $(\mathcal{T}^*, [c^\prime_1,\ldots,c^\prime_k], \rho) \vDash \mathit{flaten}(\Psi^\prime)$.
+        and $(\mathcal{T}^*, [c^\prime_1,\ldots,c^\prime_k], \rho) \modelsML \mathit{flaten}(\Psi^\prime)$.
     \end{proofenv}
     Our goal is to prove that
     \begin{proofenv}
@@ -1444,8 +1444,8 @@ We prove each implication separately.
         and there also exists an $\mathcal{T}$-valuation $\rho_2$
         satisfying $\rho_1(v) = \rho_2(v)$ for any $v \in \mathit{Var} \setminus \vec{Y}$,
         and
-        $(\mathcal{T}, c_1^\prime,\rho_2) \vDash \psi_1 \land P^\prime$ and \ldots
-        and $(\mathcal{T}, c_k^\prime, \rho_2) \vDash \psi_k \land P^\prime$,
+        $(\mathcal{T}, c_1^\prime,\rho_2) \modelsML \psi_1 \land P^\prime$ and \ldots
+        and $(\mathcal{T}, c_k^\prime, \rho_2) \modelsML \psi_k \land P^\prime$,
     \end{proofenv}
     so we choose $c^\prime_j := c^\prime_j$ and have to prove that
     \begin{proofenv}
@@ -1454,8 +1454,8 @@ We prove each implication separately.
         and there also exists an $\mathcal{T}$-valuation $\rho_2$
         satisfying $\rho_1(v) = \rho_2(v)$ for any $v \in \mathit{Var} \setminus \vec{Y}$,
         and
-        $(\mathcal{T}, c_1^\prime,\rho_2) \vDash \psi_1 \land P^\prime$ and \ldots
-        and $(\mathcal{T}, c_k^\prime, \rho_2) \vDash \psi_k \land P^\prime$.
+        $(\mathcal{T}, c_1^\prime,\rho_2) \modelsML \psi_1 \land P^\prime$ and \ldots
+        and $(\mathcal{T}, c_k^\prime, \rho_2) \modelsML \psi_k \land P^\prime$.
     \end{proofenv}
     The first part follows from \Cref{lem:reachComposite};
     it remains to be proven that
@@ -1463,18 +1463,18 @@ We prove each implication separately.
         there also exists an $\mathcal{T}$-valuation $\rho_2$
         satisfying $\rho_1(v) = \rho_2(v)$ for any $v \in \mathit{Var} \setminus \vec{Y}$,
         and
-        $(\mathcal{T}, c_1^\prime,\rho_2) \vDash \psi_1 \land P^\prime$ and \ldots
-        and $(\mathcal{T}, c_k^\prime, \rho_2) \vDash \psi_k \land P^\prime$.
+        $(\mathcal{T}, c_1^\prime,\rho_2) \modelsML \psi_1 \land P^\prime$ and \ldots
+        and $(\mathcal{T}, c_k^\prime, \rho_2) \modelsML \psi_k \land P^\prime$.
     \end{proofenv}
     and we already have
     \begin{proofenv}
-        $(\mathcal{T}^*, [c^\prime_1,\ldots,c^\prime_k], \rho) \vDash \mathit{flaten}(\Psi^\prime)$ \, ;
+        $(\mathcal{T}^*, [c^\prime_1,\ldots,c^\prime_k], \rho) \modelsML \mathit{flaten}(\Psi^\prime)$ \, ;
     \end{proofenv}
     that is, by \Cref{lem:flatten} we know that
     \begin{proofenv}
         there exists a $\mathcal{T}$-valuation $\rho_0$ satisfying $\rho_0(v) = \rho(v)$
         for any $v \in \mathit{Var} \setminus \vec{Y}$ such that for any $j \in \{ 1, \ldots, k \}$,
-        $(\mathcal{T}, c^\prime_j, \rho_0) \vDash \varphi^\prime$.
+        $(\mathcal{T}, c^\prime_j, \rho_0) \modelsML \varphi^\prime$.
     \end{proofenv}
     Let $\rho_0^\prime$ be such valuation.
     In the goal, we let $\rho_2(v) := \rho_0^\prime(v)$ for any $v \in \mathit{Var}$;
@@ -1511,9 +1511,9 @@ We prove each implication separately.
     \end{align*}
     \begin{align*}
         & \prftree[l]{Consequence}
-          { \mathcal{T} \vDash \varphi_1 \rightarrow \varphi_1^\prime }
+          { \mathcal{T} \modelsML \varphi_1 \rightarrow \varphi_1^\prime }
           { (\mathcal{T}, A), C \vdash_\RL \varphi_1^\prime \Rightarrow^{\exists} \varphi_2^\prime }
-          { \mathcal{T} \vDash \varphi_2^\prime \rightarrow \varphi_2 }
+          { \mathcal{T} \modelsML \varphi_2^\prime \rightarrow \varphi_2 }
           { (\mathcal{T}, A), C \vdash_\RL \varphi_1 \Rightarrow^{\exists} \varphi_2 }
     \end{align*}
     \begin{align*}
@@ -1632,7 +1632,7 @@ By induction on the structure of the CRL proof.
         
     \item If the proof ends with \emph{Step},
       we can assume a structureless FOL formula $P^\prime$, a rule $\varphi \Rightarrow^\exists \varphi^\prime \in S$ such that
-      $\mathcal{T} \vDash_\ML \varphi_i \leftrightarrow \varphi \land P^\prime$,
+      $\mathcal{T} \modelsML \varphi_i \leftrightarrow \varphi \land P^\prime$,
       and an induction hypothesis
       \begin{align*}
         (&\mathcal{T}^*, S^* \cup \mathit{flatten}^\exists(C \cup E, \Psi^\prime)), \emptyset \vdash_\RL
@@ -1666,7 +1666,7 @@ By induction on the structure of the CRL proof.
         \mathit{mkList}(X_1, \ldots, X_k) \land \left( \bigwedge_{j=1, j \not = i}^{k} (\varphi_j^\square)[X_j/\square] \right) \land ((\varphi^\prime \land P^\prime)^\square)[X_i/\square] \land P
         \, .
     \end{align*}
-    By \Cref{lem:equivFOLtransl}, our assumption that $\mathcal{T} \vDash_\ML \varphi_i \leftrightarrow (\varphi \land P^\prime)$,
+    By \Cref{lem:equivFOLtransl}, our assumption that $\mathcal{T} \modelsML \varphi_i \leftrightarrow (\varphi \land P^\prime)$,
     and conservativeness,
     we can apply the Consequence rule, and the goal changes to
     \begin{align*}
@@ -1710,7 +1710,7 @@ By induction on the structure of the CRL proof.
     where $\varphi \equiv \phi \land Q$ and $\varphi^\prime \equiv \phi^\prime \land Q^\prime$.
     By semantic reasoning we can prove that
     \begin{align*}
-        \mathcal{T}^* \vDash & ((\varphi^\square)[X_i/\square] \land \mathit{mkList}(X_1, \ldots, X_k))
+        \mathcal{T}^* \modelsML & ((\varphi^\square)[X_i/\square] \land \mathit{mkList}(X_1, \ldots, X_k))
         \\ \leftrightarrow  &
         \mathit{cfgheat}(L, X_i, R)
         \\ & \land L = \mathit{mkList}(X_1, \ldots, X_{i-1})
@@ -1719,7 +1719,7 @@ By induction on the structure of the CRL proof.
     \end{align*}
     and that
     \begin{align*}
-        \mathcal{T}^* \vDash & (((\varphi^\prime)^\square)[X_i/\square] \land \mathit{mkList}(X_1, \ldots, X_k))
+        \mathcal{T}^* \modelsML & (((\varphi^\prime)^\square)[X_i/\square] \land \mathit{mkList}(X_1, \ldots, X_k))
         \\ \leftrightarrow  &
         \mathit{cfgheat}(L, X_i, R)
         \\ & \land L = \mathit{mkList}(X_1, \ldots, X_{i-1})
@@ -1770,7 +1770,7 @@ By induction on the structure of the CRL proof.
         
     \item If the proof ends with \emph{Conseq}, we can assume
     \begin{align*}
-        \mathcal{T}^* \vDash_\ML \mathit{flatten}(\Phi) \rightarrow \mathit{flatten}(\Phi^\prime)
+        \mathcal{T}^* \modelsML \mathit{flatten}(\Phi) \rightarrow \mathit{flatten}(\Phi^\prime)
     \end{align*}
     and
     \begin{align*}
@@ -1843,7 +1843,7 @@ For every $\Sigma$-model $\mathcal{T}$
 satisfying the conditions above
 there exists a function $\mathit{red}$ from matching logic patterns over $\Sigma^*$
 to matching logic patterns over $\Sigma$ such that
-$\mathcal{T} \vDash_\ML \mathit{red}(\varphi) \iff \mathcal{T^*} \vDash_\ML \varphi$.
+$\mathcal{T} \modelsML \mathit{red}(\varphi) \iff \mathcal{T^*} \modelsML \varphi$.
 \end{theorem}
 \begin{proof}
 Intuitively, we perform Gödelization of the formula $\varphi^\square$, using Gödel's $\beta$ predicate.
@@ -1899,21 +1899,21 @@ In order to tie (one-path) CRL to CHL, we first define an all-path variant of CR
     is \emph{valid} in a reachability system $\mathcal{S} = (\mathcal{T}, S)$,
     written
     \begin{equation*}
-        (\mathcal{T}, S) \vDash_\CRL [\varphi_1,\ldots,\varphi_k] \land P
+        (\mathcal{T}, S) \modelsCRL [\varphi_1,\ldots,\varphi_k] \land P
      \Rightarrow^{c\forall} \exists \vec{Y}.\, [\varphi^\prime_1,\ldots,\varphi^\prime_k] \land P^\prime \, ,
     \end{equation*}
     iff for all configurations $\gamma_1,\ldots,\gamma_k \in \Tcfg$
     and any $\mathcal{T}$-valuation $\rho$,
-    whenever $(\gamma_1,\rho) \vDash \varphi_1 \land P$ and \ldots
-    and $(\gamma_k,\rho) \vDash \varphi_k \land P$,
+    whenever $(\mathcal{T}, \gamma_1,\rho) \modelsML \varphi_1 \land P$ and \ldots
+    and $(\mathcal{T}, \gamma_k,\rho) \modelsML \varphi_k \land P$,
     then for all complete $\Rightarrow_{\mathcal{S}}$-paths (that is, finite paths which cannot be extended further)
     $\pi_1,\ldots,\pi_k$
     satisfying $\pi_i[0] = \gamma_i$ for any $i \in \{ 1, \ldots, k \}$
     there exist natural numbers $j_1, \ldots, j_k$
     such that $\gamma_1 \Rightarrow^{*}_{\mathcal{S}} \pi_1[j_1]$
     and \ldots and $\gamma_k \Rightarrow^{*}_{\mathcal{S}} \pi_k[j_k]$,
-    and $(\pi_1[j_1], \rho^\prime) \vDash \varphi^\prime_1 \land P^\prime$
-    and \ldots and $(\pi_k[j_k], \rho^\prime) \vDash \varphi^\prime_k \land P^\prime$
+    and $(\mathcal{T}, \pi_1[j_1], \rho^\prime) \modelsML \varphi^\prime_1 \land P^\prime$
+    and \ldots and $(\mathcal{T}, \pi_k[j_k], \rho^\prime) \modelsML \varphi^\prime_k \land P^\prime$
     for some $\rho^\prime$ that agrees with $\rho$ on all variables except $\vec{Y}$.
 \end{definition}
 
@@ -1922,15 +1922,16 @@ All-path CRL and one-path CRL have the same semantics on deterministic languages
 \begin{lemma}[One-path / All-path CRL correspondence]\label{crlOPAPcorrespondence}
     Let $\Phi$ be a CLP and $\Phi^\prime$ an ECLP such that $\Phi^\prime$ is terminal
     (that is, configurations matching $\Phi^\prime$ cannot take a step).
-    Then $\mathcal{S} \vDash \Phi \Rightarrow^{c\exists} \Phi^\prime$
-    if and only if $\mathcal{S} \vDash \Phi \Rightarrow^{c\forall} \Phi^\prime$.
+    Then $\mathcal{S} \modelsCRL \Phi \Rightarrow^{c\exists} \Phi^\prime$
+    if and only if $\mathcal{S} \modelsCRL \Phi \Rightarrow^{c\forall} \Phi^\prime$.
 \end{lemma}
 \begin{proof}
+Let $\mathcal{S} = (\mathcal{T}, S)$.
 Assume $\Phi \equiv [\varphi_1,\ldots,\varphi_k] \land P$
 and $\Phi^\prime \equiv \exists \vec{Y}.\, [\varphi^\prime_1,\ldots,\varphi^\prime_k] \land P^\prime$.
-For the ``if'' part, assume $\mathcal{S} \vDash \Phi \Rightarrow^{c\forall} \Phi^\prime$.
+For the ``if'' part, assume $\mathcal{S} \modelsCRL \Phi \Rightarrow^{c\forall} \Phi^\prime$.
 Assume some configurations $\gamma_1,\ldots,\gamma_k$ which terminate, and some valuation $\rho$
-satisfying $(\gamma_1,\rho) \vDash \varphi_1 \land P$ and \ldots and $(\gamma_k,\rho) \vDash \varphi_k \land P$.
+satisfying $(\mathcal{T}, \gamma_1,\rho) \modelsML \varphi_1 \land P$ and \ldots and $(\mathcal{T}, \gamma_k,\rho) \modelsML \varphi_k \land P$.
 Let $\pi_1$ be some complete path $\gamma_1 = \gamma_1^1,\gamma_1^2,\ldots,\gamma_1^{l_1}$
 and \ldots and $pi_k$ be some complete path $\gamma_k = \gamma_k^1,\gamma_k^2,\ldots,\gamma_k^{l_k}$.
 Such paths exist, because $\gamma_i$ (for $i \in \{1, \ldots, k \}$) are terminating
@@ -1939,13 +1940,13 @@ Now, since every $\phi_i^\prime$ is terminal, all the $j_i$s that exist by \Cref
 refer to the last configurations in the paths, because only those are terminal.
 That is, we have $j_i = l_i$ for any $i \in \{ 1, \ldots, k \}$.
 Therefore, we have some $\rho^\prime$ and $\gamma_1^{l_1}, \ldots, \gamma_k^{l_k}$ satisfying
-$(\gamma_1^{l_1}, \rho^\prime) \vDash \varphi^\prime_1 \land P$ and \ldots
-and $(\gamma_k^{l_k}, \rho^\prime) \vDash \varphi^\prime_k \land P$,
+$(\mathcal{T}, \gamma_1^{l_1}, \rho^\prime) \modelsML \varphi^\prime_1 \land P$ and \ldots
+and $(\mathcal{T}, \gamma_k^{l_k}, \rho^\prime) \modelsML \varphi^\prime_k \land P$,
 as required by \Cref{def:opCRLsemantics}.
 
-For the ``only if'' part, assume $\mathcal{S} \vDash \Phi \Rightarrow^{c\exists} \Phi^\prime$.
+For the ``only if'' part, assume $\mathcal{S} \modelsCRL \Phi \Rightarrow^{c\exists} \Phi^\prime$.
 Assume some configurations $\gamma_1,\ldots,\gamma_k$ and some valuation $\rho$
-satisfying $(\gamma_1,\rho) \vDash \varphi_1 \land P$ and \ldots and $(\gamma_k,\rho) \vDash \varphi_k \land P$.
+satisfying $(\mathcal{T}, \gamma_1,\rho) \modelsML \varphi_1 \land P$ and \ldots and $(\mathcal{T}, \gamma_k,\rho) \modelsML \varphi_k \land P$.
 Let $\pi_1, \ldots, \pi_k$ be complete paths
 $\gamma_1^1,\gamma_1^2,\ldots,\gamma_1^{l_1}$ and \ldots and $\gamma_k^1,\gamma_k^2,\ldots,\gamma_k^{l_k}$
 starting with $\gamma_1,\ldots,\gamma_k$, respectively.
@@ -1956,14 +1957,14 @@ and $\gamma_k \Rightarrow_{\mathcal{S}}^* \gamma^\prime_k$,
 and there also exists a valuation $\rho^\prime$
 that agrees with $\rho$ on all variables outside $\vec{Y}$
 such that
-$(\gamma^\prime_1, \rho^\prime) \vDash \varphi^\prime_1 \land P$
+$(\mathcal{T}, \gamma^\prime_1, \rho^\prime) \modelsML \varphi^\prime_1 \land P$
 and \ldots and
-$(\gamma^\prime_k, \rho^\prime) \vDash \varphi^\prime_k \land P$.
+$(\mathcal{T}, \gamma^\prime_k, \rho^\prime) \modelsML \varphi^\prime_k \land P$.
 Now by determinism and the fact that $\gamma^\prime_i$ are terminating (because $\varphi^\prime_i$ are terminating), we have
 $\gamma^{l_i}_i = \gamma^\prime_i$.
 Thus,
-$(\pi_1[j_1], \rho^\prime) \vDash \varphi^\prime_1 \land P^\prime$
-and \ldots and $(\pi_k[j_k], \rho^\prime) \vDash \varphi^\prime_k \land P^\prime$,
+$(\mathcal{T}, \pi_1[j_1], \rho^\prime) \modelsML \varphi^\prime_1 \land P^\prime$
+and \ldots and $(\mathcal{T}, \pi_k[j_k], \rho^\prime) \modelsML \varphi^\prime_k \land P^\prime$,
 which concludes the proof.
 \end{proof}
 
@@ -2046,7 +2047,7 @@ which concludes the proof.
     any finite map $\sigma$ and any configuration $\gamma$,
     we have
     \begin{equation*}
-        (\gamma, \rho) \vDash_{\ML} \mathit{tr}_{\mathit{sym}}(P, f)
+        (\gamma, \rho) \modelsML \mathit{tr}_{\mathit{sym}}(P, f)
     \end{equation*}
     iff %there exists a finite map $h$ that is disjoint with $\sigma$ such that
     \begin{equation*}
@@ -2054,7 +2055,7 @@ which concludes the proof.
     \end{equation*}
     similarly, we have
     \begin{equation*}
-        (\gamma, \rho) \vDash_{\ML} \mathit{end}_{\mathit{sym}}(P, f)
+        (\gamma, \rho) \modelsML \mathit{end}_{\mathit{sym}}(P, f)
     \end{equation*}
     iff %there exists a finite map $h$ that is disjoint with $\sigma$ such that
     \begin{equation*}
@@ -2076,13 +2077,13 @@ which concludes the proof.
     $\mathit{var}_{\mathit{inj}}(x)$ to $\sigma(x)$.
     Then:
     \begin{align*}
-        \sigma \vDash_{\FOL} \varphi
+        \sigma \modelsFOL \varphi
         & \iff \forall P.\, \forall i \in \{ 1, \ldots, k \} . \,
         (\mathit{tr}_{\mathit{con}}(P, \sigma_i[r_i]), \rho_\sigma)
-        \vDash_{\ML} \mathit{tr}_{\mathit{sym}}(P, r_i) \land \varphi \\
+        \modelsML \mathit{tr}_{\mathit{sym}}(P, r_i) \land \varphi \\
         & \iff \forall P.\, \forall i \in \{ 1, \ldots, k \} . \,
         (\mathit{end}_{\mathit{con}}(P, \sigma_i[r_i]), \rho_\sigma)
-        \vDash_{\ML} \mathit{end}_{\mathit{sym}}(P, r_i) \land \varphi
+        \modelsML \mathit{end}_{\mathit{sym}}(P, r_i) \land \varphi
     \end{align*}
 \end{lemma}
 \begin{proof}
@@ -2093,7 +2094,7 @@ which concludes the proof.
         \begin{itemize}
             \item for any $j \in \{ 1,\ldots,n \}$,
             $\rho_{\sigma}(\mathit{var}_{\mathit{inj}}(r_i(x_j))) = (\sigma_i[r_i])(x_j)$; and
-            \item $\rho_\sigma \vDash_{\ML} \varphi$.
+            \item $\rho_\sigma \modelsML \varphi$.
         \end{itemize}
     \end{proofenv}
     The first item is always true: by the defining property of $\rho_{\sigma}$,
@@ -2120,7 +2121,7 @@ which concludes the proof.
         for every set of valuation pairs $\{ (\sigma_1,\sigma_1^\prime),\ldots,(\sigma_k,\sigma_k^\prime) \}$
         satisfying
         \begin{equation*}
-            \left( \biguplus_{1 \leq i \leq k} \sigma_i[r_i] \vDash_{\FOL} \varphi \right)
+            \left( \biguplus_{1 \leq i \leq k} \sigma_i[r_i] \modelsFOL \varphi \right)
         \end{equation*}
         and
         \begin{equation*}
@@ -2128,7 +2129,7 @@ which concludes the proof.
         \end{equation*}
         we also have
         \begin{equation*}
-            \left( \biguplus_{1 \leq i \leq k} \sigma^\prime_i[r_i] \vDash_{\FOL} \psi \right)
+            \left( \biguplus_{1 \leq i \leq k} \sigma^\prime_i[r_i] \modelsFOL \psi \right)
         \end{equation*}
     \end{proofenv}
     which is (by \Cref{lem:chlCRLstatic} and Assumption~\ref{a:sf}) equivalent to
@@ -2138,7 +2139,7 @@ which concludes the proof.
         \begin{equation*}
             \forall P.\, \forall i \in \{ 1, \ldots, k \} . \,
                 (\mathit{tr}_{\mathit{con}}(P, \sigma_i[r_i]), \rho_\sigma)
-                \vDash_{\ML} \mathit{tr}_{\mathit{sym}}(P, r_i) \land \varphi
+                \modelsML \mathit{tr}_{\mathit{sym}}(P, r_i) \land \varphi
         \end{equation*}
         and
         \begin{equation*}
@@ -2149,7 +2150,7 @@ which concludes the proof.
         \begin{equation*}
             \forall P.\, \forall i \in \{ 1, \ldots, k \} . \,
             (\mathit{end}_{\mathit{con}}(P, \sigma_i[r_i]), \rho_{\sigma^\prime})
-            \vDash_{\ML} \mathit{end}_{\mathit{sym}}(P, r_i) \land \psi
+            \modelsML \mathit{end}_{\mathit{sym}}(P, r_i) \land \psi
         \end{equation*}
         (where $\sigma = \biguplus_{1 \leq i \leq k} \sigma_i[r_i]$
         and $\sigma^\prime = \biguplus_{1 \leq i \leq k} \sigma^\prime_i[r_i]$)
@@ -2159,16 +2160,16 @@ which concludes the proof.
     \begin{proofenv}
         for all configurations $\gamma_1,\ldots,\gamma_k \in \Tcfg$
         and any $\mathcal{T}$-valuation $\rho$,
-        whenever $(\gamma_1,\rho) \vDash \mathit{tr}_{\mathit{sym}}(P, r_1) \land \varphi$ and \ldots
-        and $(\gamma_k,\rho) \vDash \mathit{tr}_{\mathit{sym}}(P, r_k) \land \varphi$,
+        whenever $(\mathcal{T}, \gamma_1,\rho) \modelsML \mathit{tr}_{\mathit{sym}}(P, r_1) \land \varphi$ and \ldots
+        and $(\mathcal{T}, \gamma_k,\rho) \modelsML \mathit{tr}_{\mathit{sym}}(P, r_k) \land \varphi$,
         then for all complete $\Rightarrow_{\mathcal{S}}$-paths (that is, finite paths which cannot be extended further)
         $\pi_1,\ldots,\pi_k$
         satisfying $\pi_i[0] = \gamma_i$ for any $i \in \{ 1, \ldots, k \}$
         there exist natural numbers $j_1, \ldots, j_k$
         such that $\gamma_1 \Rightarrow^{*}_{S_{L_{\mathit{CHL}}}} \pi_1[j_1]$
         and \ldots and $\gamma_k \Rightarrow^{*}_{S_{L_{\mathit{CHL}}}} \pi_k[j_k]$,
-        and $(\pi_1[j_1], \rho^\prime) \vDash \mathit{end}_{\mathit{sym}}(P, r_1) \land \psi$
-        and \ldots and $(\pi_k[j_k], \rho^\prime) \vDash \mathit{end}_{\mathit{sym}}(P, r_k) \land \psi$
+        and $(\mathcal{T}, \pi_1[j_1], \rho^\prime) \modelsML \mathit{end}_{\mathit{sym}}(P, r_1) \land \psi$
+        and \ldots and $(\mathcal{T}, \pi_k[j_k], \rho^\prime) \modelsML \mathit{end}_{\mathit{sym}}(P, r_k) \land \psi$
         for some $\rho^\prime$ that agrees with $\rho$ on all variables except $\vec{Y}$.
     \end{proofenv}
     \begin{enumerate}
@@ -2194,11 +2195,11 @@ which concludes the proof.
             \begin{equation*}
                 \forall P.\, \forall i \in \{ 1, \ldots, k \} . \,
                 (\mathit{end}_{\mathit{con}}(P, \sigma_i[r_i]), \rho_{\sigma^\prime})
-                \vDash_{\ML} \mathit{end}_{\mathit{sym}}(P, r_i) \land \psi \, ,
+                \modelsML \mathit{end}_{\mathit{sym}}(P, r_i) \land \psi \, ,
             \end{equation*}
             it follows that
             \begin{equation*}
-                (\pi_j[l_j], \rho_{\sigma^\prime}) \vDash_{\ML} \mathit{end}_{\mathit{sym}}(P, r_i) \land \psi \, ,
+                (\pi_j[l_j], \rho_{\sigma^\prime}) \modelsML \mathit{end}_{\mathit{sym}}(P, r_i) \land \psi \, ,
             \end{equation*}
             which is what we needed to prove.
         \item For the bottom-up implication,
@@ -2207,7 +2208,7 @@ which concludes the proof.
             \begin{equation*}
                 \forall P.\, \forall i \in \{ 1, \ldots, k \} . \,
                     (\mathit{tr}_{\mathit{con}}(P, \sigma_i[r_i]), \rho_\sigma)
-                    \vDash_{\ML} \mathit{tr}_{\mathit{sym}}(P, r_i) \land \varphi
+                    \modelsML \mathit{tr}_{\mathit{sym}}(P, r_i) \land \varphi
             \end{equation*}
             and
             \begin{equation*}
@@ -2220,7 +2221,7 @@ which concludes the proof.
             \begin{equation*}
                 \forall P.\, \forall i \in \{ 1, \ldots, k \} . \,
                 (\mathit{end}_{\mathit{con}}(P, \sigma_i[r_i]), \rho_{\sigma^\prime})
-                \vDash_{\ML} \mathit{end}_{\mathit{sym}}(P, r_i) \land \psi
+                \modelsML \mathit{end}_{\mathit{sym}}(P, r_i) \land \psi
             \end{equation*}
             (where $\sigma = \biguplus_{1 \leq i \leq k} \sigma_i[r_i]$
             and $\sigma^\prime = \biguplus_{1 \leq i \leq k} \sigma^\prime_i[r_i]$).
@@ -2228,7 +2229,7 @@ which concludes the proof.
             We need to show that 
             \begin{equation*}
                 (\mathit{end}_{\mathit{con}}(P^\prime, \sigma_i[r_i]), \rho_{\sigma^\prime})
-                \vDash_{\ML} \mathit{end}_{\mathit{sym}}(P^\prime, r_i) \land \psi \, .
+                \modelsML \mathit{end}_{\mathit{sym}}(P^\prime, r_i) \land \psi \, .
             \end{equation*}
             By \Cref{lem:symConcreteTranslationMatch}, it is enough to show that
             \begin{equation*}
@@ -2236,10 +2237,10 @@ which concludes the proof.
             \end{equation*}
             (which holds by definition of $\rho_{\sigma^\prime}$) and that
             \begin{equation*}
-                \rho_{\sigma^\prime} \vDash_{\ML} \psi \, .
+                \rho_{\sigma^\prime} \modelsML \psi \, .
             \end{equation*}
             It is enough to show that
-            $(\pi_i[l_i], \rho^\prime) \vDash \mathit{end}_{\mathit{sym}}(P, r_i) \land \psi$
+            $(\mathcal{T}, \pi_i[l_i], \rho^\prime) \modelsML \mathit{end}_{\mathit{sym}}(P, r_i) \land \psi$
             which follows from the assumptions by firstorder reasoning.
     \end{enumerate}
 
