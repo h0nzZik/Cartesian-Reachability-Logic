@@ -77,15 +77,13 @@ We formally define the semantics of a CRL claim as follows:
     iff for all configurations $\gamma_1,\ldots,\gamma_k \in \Tcfg$
     which terminate in $(\Tcfg, \Rightarrow_{\mathcal{S}})$
     and any $\mathcal{T}$-valuation $\rho$,
-    whenever $(\mathcal{T}, \gamma_1,\rho) \modelsML \varphi_1 \land P$ and \ldots
-    and $(\mathcal{T}, \gamma_k,\rho) \modelsML \varphi_k \land P$,
+    whenever $(\mathcal{T}, \gamma_i,\rho) \modelsML \varphi_i \land P$ for all $i \in \{ 1, \ldots, k \}$,
     then there exist configurations $\gamma_1^\prime,\ldots,\gamma_k^\prime \in \Tcfg$
-    such that $\gamma_1 \Rightarrow^{*}_{\mathcal{S}} \gamma_1^\prime$
-    and \ldots and $\gamma_k \Rightarrow^{*}_{\mathcal{S}} \gamma_k^\prime$,
+    such that $\gamma_i \Rightarrow^{*}_{\mathcal{S}} \gamma_i^\prime$ for all $i \in \{ 1, \ldots, k \}$,
     and there also exists an $\mathcal{T}$-valuation $\rho^\prime$
     satisfying $\rho(v) = \rho^\prime(v)$ for any $v \in \mathit{Var} \setminus \vec{Y}$,
     and
-    $(\mathcal{T}, \gamma_1^\prime,\rho^\prime) \modelsML \varphi^\prime_1 \land P^\prime$ and \ldots and $(\gamma_k^\prime, \rho^\prime) \vDash \varphi^\prime_k \land P^\prime$.
+    $(\mathcal{T}, \gamma_i^\prime,\rho^\prime) \modelsML \varphi^\prime_i \land P^\prime$ for all $i \in \{ 1, \ldots, k \}$.
 \end{definition}
 
 %\subsection{Comparison to CHL}\label{sec:CRLsemanticsComparisonToCHL}
