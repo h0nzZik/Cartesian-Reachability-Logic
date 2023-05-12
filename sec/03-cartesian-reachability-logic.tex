@@ -125,7 +125,7 @@ claims. The reason is that in CRL formulas, one can relate variables from differ
 %\end{equation*}
 %Then, the proposition
 %\begin{align*}
-% S_{\mathit{IMP}} \vDash_\CRL
+% S_{\mathit{IMP}} \modelsCRL
 %&[C(P, X_1, Y_1),C(P, X_2, Y_2)] \land X_1 \leq X_2
 %\\ \Rightarrow^{c\exists} &
 %\exists X^\prime_1, Y^\prime_1, X^\prime_2, Y^\prime_2.\,  [C(\epsilon, X^\prime_1, Y^\prime_1), C(\epsilon, X^\prime_2, Y^\prime_2)] \land Y^\prime_1 \leq Y^\prime_2   
@@ -162,8 +162,8 @@ configuration each, validity of CRL and RL claims neatly coincide
 %\Cref{def:opCRLsemantics} extends \Cref{def:oprlSemantics} of \Cref{def:basics}:
 %if we fix $k=1$, then
 \begin{proposition}\label{prop:opCRLopRL}
-  $ (\mathcal{T}, S) \vDash_\CRL [\varphi] \land \top \Rightarrow^{c\exists}
-  [\varphi^\prime] \land \top \iff (\mathcal{T}, S) \vDash_\RL \varphi
+  $ (\mathcal{T}, S) \modelsCRL [\varphi] \land \top \Rightarrow^{c\exists}
+  [\varphi^\prime] \land \top \iff (\mathcal{T}, S) \modelsRL \varphi
   \Rightarrow^{\exists} \varphi^\prime \, .  $
 \end{proposition}
 %\end{remark}
@@ -174,17 +174,17 @@ configuration each, validity of CRL and RL claims neatly coincide
 %of arity $k$
 %is \emph{valid} in a reachability system $\mathcal{S} = (\mathcal{T}, S)$,
 %written
-%$\mathcal{S} \vDash_\CRL (\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\forall}
+%$\mathcal{S} \modelsCRL (\varphi_1,\ldots,\varphi_k) \land \varphi \Rightarrow^{c\forall}
 %(\psi_1,\ldots,\psi_k) \land \psi$,
 %iff for all configurations $\sigma_1,\ldots,\sigma_k \in \Tcfg$ \traian{Why $\sigma$ instead of $\gamma$?}
 %and any $\mathcal{T}$-valuation $\rho$,
-%whenever $(\sigma_1, \rho) \vDash \varphi_1 \land \varphi$ and \ldots
-%and $(\sigma_k, \rho) \vDash \varphi_k \land \varphi$,
+%whenever $(\sigma_1, \rho) \modelsML \varphi_1 \land \varphi$ and \ldots
+%and $(\sigma_k, \rho) \modelsML \varphi_k \land \varphi$,
 %then for every $k$-tuple of complete paths $(\pi_1, \ldots, \pi_k)$
 %such that
 %$\sigma_1 = \pi_1(0) \land \ldots \land \sigma_k = \pi_k(0)$,
 %there exist indices $i_1, \ldots, i_k$ such that
-%$(\pi_1(i_1), \rho) \vDash \varphi_1 \land \psi$ and \ldots and $(\pi_k(i_k), \rho) \vDash \varphi_k \land \psi$.
+%$(\pi_1(i_1), \rho) \modelsML \varphi_1 \land \psi$ and \ldots and $(\pi_k(i_k), \rho) \modelsML \varphi_k \land \psi$.
 %\end{definition}
 
 \subsection{A language-independent alternative to self-composition}
@@ -222,8 +222,8 @@ technical, and we refer an interested reader to the
   and a function $\mathit{flatten}$ from ECLPs over $\Sigma$ to matching logic $\Sigma^*$-formulas,
   such that
   \begin{equation*}
-  \mathcal{S} \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime
-    \iff \mathcal{S}^* \vDash_\RL \mathit{flatten}(\Psi) \Rightarrow^{c\exists} \mathit{flatten}(\Psi^\prime)
+  \mathcal{S} \modelsCRL \Psi \Rightarrow^{c\exists} \Psi^\prime
+    \iff \mathcal{S}^* \modelsRL \mathit{flatten}(\Psi) \Rightarrow^{c\exists} \mathit{flatten}(\Psi^\prime)
   \end{equation*}
 \end{theorem}
 
@@ -288,7 +288,7 @@ the proof system is agnostic about the kinds of constructs with repetetive behav
 but enables lockstep reasoning about such constructs.
 The proof system derives claims of the shape
 \begin{equation*}
-(\mathcal{T}, S) \vdash_\CRL \Phi \Downarrow_{C,E} \Psi
+(\mathcal{T}, S) \provesCRL \Phi \Downarrow_{C,E} \Psi
 \end{equation*}
 where $\Phi,\Psi$ are of the shape $\exists \vec{X}.\, (\varphi_1, \ldots, \varphi_k) \land P$.
 One can think about $\Phi$ as representing a \emph{premise}, while
@@ -313,58 +313,58 @@ The progress requirements resemble the concept of \emph{productivity} of co-recu
 \begin{figure}
     \centering
     \begin{align*}
-    & \prftree[l]{Reflexivity}{(\mathcal{T}, S) \vdash_\CRL \Psi \Downarrow_{\emptyset,E} \Psi}
+    & \prftree[l]{Reflexivity}{(\mathcal{T}, S) \provesCRL \Psi \Downarrow_{\emptyset,E} \Psi}
     \end{align*}
     \begin{align*}
-    & \prftree[l]{Axiom}{\Psi \in E}{(\mathcal{T}, S) \vdash_\CRL \Psi \Downarrow_{C,E} \Psi^\prime}
+    & \prftree[l]{Axiom}{\Psi \in E}{(\mathcal{T}, S) \provesCRL \Psi \Downarrow_{C,E} \Psi^\prime}
     \end{align*}
     \begin{align*}
     & \prftree[l]{Reduce}
       {(\mathcal{T}^*, S^* \cup \mathit{flatten}^\exists(E, \Psi^\prime)), \emptyset \vdash_\RL
         \mathit{flatten}^\exists(\Psi, \Psi^\prime) }
-      {(\mathcal{T}, S) \vdash_\CRL \Psi \Downarrow_{C,E} \Psi^\prime}
+      {(\mathcal{T}, S) \provesCRL \Psi \Downarrow_{C,E} \Psi^\prime}
     \end{align*}
     \begin{align*}
     & \prftree[l]{Case}
     { \prfStackPremises
-      {(\mathcal{T}, S) \vdash_\CRL [\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k] \land P^\prime \Downarrow_{C, E} \Psi^\prime }
-      {(\mathcal{T}, S) \vdash_\CRL [\varphi_1, \ldots, \varphi_{i-1}, \psi_i, \varphi_{i+1}, \ldots, \varphi_k] \land P^\prime \Downarrow_{C, E} \Psi^\prime }
+      {(\mathcal{T}, S) \provesCRL [\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k] \land P^\prime \Downarrow_{C, E} \Psi^\prime }
+      {(\mathcal{T}, S) \provesCRL [\varphi_1, \ldots, \varphi_{i-1}, \psi_i, \varphi_{i+1}, \ldots, \varphi_k] \land P^\prime \Downarrow_{C, E} \Psi^\prime }
     }
-    {(\mathcal{T}, S) \vdash_\CRL [\varphi_1, \ldots, \varphi_{i-1}, (\varphi_i \lor \psi_i), \varphi_{i+1}, \ldots, \varphi_k] \land P^\prime \Downarrow_{C, E} \Psi^\prime}
+    {(\mathcal{T}, S) \provesCRL [\varphi_1, \ldots, \varphi_{i-1}, (\varphi_i \lor \psi_i), \varphi_{i+1}, \ldots, \varphi_k] \land P^\prime \Downarrow_{C, E} \Psi^\prime}
     \end{align*}
     \begin{align*}
     & \prftree[l]{Step}
     { \prfStackPremises
        {\varphi \Rightarrow^\exists \varphi^\prime \in S}
-       {\mathcal{T} \vDash_\ML \varphi_i \leftrightarrow \varphi \land P^\prime}
+       {\mathcal{T} \modelsML \varphi_i \leftrightarrow \varphi \land P^\prime}
        {P^\prime \mbox{ is a FOL formula}}
-       {  (\mathcal{T}, S) \vdash_\CRL [\varphi_1, \ldots, \varphi_{i-1}, \varphi^\prime \land P^\prime, \varphi_{i+1}, \ldots, \varphi_k]
+       {  (\mathcal{T}, S) \provesCRL [\varphi_1, \ldots, \varphi_{i-1}, \varphi^\prime \land P^\prime, \varphi_{i+1}, \ldots, \varphi_k]
           \land P
           \Downarrow_{\emptyset, (C \cup E)} \Psi^\prime
       }
     }
-    {(\mathcal{T}, S) \vdash_\CRL [\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
+    {(\mathcal{T}, S) \provesCRL [\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
     \end{align*}
     \begin{align*}
     & \prftree[l]{Circularity}
-      { (\mathcal{T}, S) \vdash_\CRL \Psi \Downarrow_{C \cup \{ \Psi \} , E} \Psi^\prime}
-      { (\mathcal{T}, S) \vdash_\CRL \Psi \Downarrow_{C, E} \Psi^\prime}
+      { (\mathcal{T}, S) \provesCRL \Psi \Downarrow_{C \cup \{ \Psi \} , E} \Psi^\prime}
+      { (\mathcal{T}, S) \provesCRL \Psi \Downarrow_{C, E} \Psi^\prime}
     \end{align*}
     \begin{align*}
     & \prftree[l]{Conseq}
       { \prfStackPremises
-        { (\mathcal{T}, S) \vdash_\CRL \Phi^\prime \Downarrow_{C, E} \Psi^\prime}
-        { \mathcal{T}^* \vDash_\ML \mathit{flatten}(\Phi) \rightarrow \mathit{flatten}(\Phi^\prime) }
+        { (\mathcal{T}, S) \provesCRL \Phi^\prime \Downarrow_{C, E} \Psi^\prime}
+        { \mathcal{T}^* \modelsML \mathit{flatten}(\Phi) \rightarrow \mathit{flatten}(\Phi^\prime) }
       }
-      { (\mathcal{T}, S) \vdash_\CRL \Phi \Downarrow_{C, E} \Psi^\prime}
+      { (\mathcal{T}, S) \provesCRL \Phi \Downarrow_{C, E} \Psi^\prime}
     \end{align*}
 %    \begin{align*}
 %    & \prftree[l]{Conseq2}
 %      { \prfStackPremises
-%        { (\mathcal{T}, S) \vdash_\CRL (\varphi_1, \ldots, \varphi_k) \land P \Downarrow_{C, E} \Psi^\prime}
-%        { \mathcal{T} \vDash_\ML \varphi_i \leftrightarrow \psi_i }
+%        { (\mathcal{T}, S) \provesCRL (\varphi_1, \ldots, \varphi_k) \land P \Downarrow_{C, E} \Psi^\prime}
+%        { \mathcal{T} \modelsML \varphi_i \leftrightarrow \psi_i }
 %      }
-%      { (\mathcal{T}, S) \vdash_\CRL (\varphi_1^\prime, \ldots, \varphi_{i-1}, \varphi_{i}, \varphi_{i+1}, \ldots, \varphi_k^\prime) \land P^\prime \Downarrow_{C, E} \Psi^\prime}
+%      { (\mathcal{T}, S) \provesCRL (\varphi_1^\prime, \ldots, \varphi_{i-1}, \varphi_{i}, \varphi_{i+1}, \ldots, \varphi_k^\prime) \land P^\prime \Downarrow_{C, E} \Psi^\prime}
 %    \end{align*}
 
     %\begin{align*}
@@ -372,9 +372,9 @@ The progress requirements resemble the concept of \emph{productivity} of co-recu
       %{ \prfStackPremises
         %{ X \not\in \mathit{FV}(\Psi^\prime, \varphi_1, \ldots, \varphi_{i-1}, \varphi_{i+1}, \ldots,\varphi_k)
         %}
-        %{(\mathcal{T}, S) \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P \Downarrow_{C, E} \Psi^\prime}
+        %{(\mathcal{T}, S) \provesCRL (\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P \Downarrow_{C, E} \Psi^\prime}
       %}
-      %{(\mathcal{T}, S) \vdash_\CRL (\varphi_1, \ldots, \varphi_{i-1}, \exists X.\, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P \Downarrow_{C, E} \Psi^\prime}
+      %{(\mathcal{T}, S) \provesCRL (\varphi_1, \ldots, \varphi_{i-1}, \exists X.\, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P \Downarrow_{C, E} \Psi^\prime}
     %\end{align*}
     
     \begin{align*}
@@ -382,9 +382,9 @@ The progress requirements resemble the concept of \emph{productivity} of co-recu
       { \prfStackPremises
         { X \not\in \mathit{FV}(\Psi^\prime)
         }
-        {(\mathcal{T}, S) \vdash_\CRL \exists \vec{Y}.\, [\varphi_1, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
+        {(\mathcal{T}, S) \provesCRL \exists \vec{Y}.\, [\varphi_1, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
       }
-      {(\mathcal{T}, S) \vdash_\CRL \exists X, \vec{Y}.\, [\varphi_1, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
+      {(\mathcal{T}, S) \provesCRL \exists X, \vec{Y}.\, [\varphi_1, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
     \end{align*}
     \caption{A proof system for CRL}
     \label{fig:CRLproofsystem}
@@ -429,8 +429,8 @@ technical result of this paper.
 
 \begin{theorem}[Proof system soundness]\label{thm:proofsystemSoundness}
 \begin{equation*}
-    (\mathcal{T}, S) \vdash_\CRL \Psi \Downarrow_{\emptyset,\emptyset} \Psi^\prime \implies
-    (\mathcal{T}, S) \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime
+    (\mathcal{T}, S) \provesCRL \Psi \Downarrow_{\emptyset,\emptyset} \Psi^\prime \implies
+    (\mathcal{T}, S) \modelsCRL \Psi \Rightarrow^{c\exists} \Psi^\prime
 \end{equation*}
 \end{theorem}
 
@@ -441,7 +441,7 @@ from a CRL proof. This lemma is the second major component of the soundness
 proof of CRL and its proof can be found in \Cref{app:crlsoundness}.
 \begin{lemma}\label{lem:CRLalmostSoundness}
     \begin{align*}
-        & (\mathcal{T}, S) \vdash_\CRL \Psi \Downarrow_{C,E} \Psi^\prime \implies \\
+        & (\mathcal{T}, S) \provesCRL \Psi \Downarrow_{C,E} \Psi^\prime \implies \\
         &
         (\mathcal{T}^*, S^* \cup \mathit{flatten}^\exists(E, \Psi^\prime)), \mathit{flatten}^\exists(C, \Psi^\prime) \vdash_\RL
           \mathit{flatten}^\exists(\Psi, \Psi^\prime) 
@@ -450,11 +450,11 @@ proof of CRL and its proof can be found in \Cref{app:crlsoundness}.
 
 \noindent With all the technical tools is place, the proof itself is a straightforward affair:
 \begin{proof}[Proof of \Cref{thm:proofsystemSoundness}]
-Assume $(\mathcal{T}, S) \vdash_\CRL \Psi \Downarrow_{\emptyset,\emptyset} \Psi^\prime$.
+Assume $(\mathcal{T}, S) \provesCRL \Psi \Downarrow_{\emptyset,\emptyset} \Psi^\prime$.
 By \Cref{lem:CRLalmostSoundness}, we have $(\mathcal{T}, S) \vdash_\RL \mathit{flatten}^\exists(\Psi, \Psi^\prime)$.
-By soundness of reachability logic, we have $(\mathcal{T}, S) \vDash_\RL \mathit{flatten}^\exists(\Psi, \Psi^\prime)$.
+By soundness of reachability logic, we have $(\mathcal{T}, S) \modelsRL \mathit{flatten}^\exists(\Psi, \Psi^\prime)$.
 By \Cref{thm:CRLandRLcorrespondence}, 
-we have $(\mathcal{T}, S) \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime$ and we are done.
+we have $(\mathcal{T}, S) \modelsCRL \Psi \Rightarrow^{c\exists} \Psi^\prime$ and we are done.
 \end{proof}
 
 % \begin{figure}
@@ -463,30 +463,30 @@ we have $(\mathcal{T}, S) \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime$
 %       { \prfStackPremises
 %         { \vec{X} = \mathit{FV}(\Phi) \setminus \mathit{FV}(\Psi^\prime)
 %         }
-%         {(\mathcal{T}, S) \vdash_\CRL \Phi \Downarrow_{C \cup \{ \exists \vec{X}.\, \Phi  \}, E} \Psi^\prime}
+%         {(\mathcal{T}, S) \provesCRL \Phi \Downarrow_{C \cup \{ \exists \vec{X}.\, \Phi  \}, E} \Psi^\prime}
 %       }
-%       {(\mathcal{T}, S) \vdash_\CRL \Phi \Downarrow_{C, E} \Psi^\prime}
+%       {(\mathcal{T}, S) \provesCRL \Phi \Downarrow_{C, E} \Psi^\prime}
 %   \end{align*}
 
 %   \begin{align*}
 %     & \prftree[l]{ImplConclusion}
-%       {\mathcal{T}^* \vDash_\ML \mathit{flatten}(\Phi) \rightarrow \mathit{flatten}(\Psi^\prime)}
-%       {(\mathcal{T}, S) \vdash_\CRL \Phi \Downarrow_{C, E} \Psi^\prime}
+%       {\mathcal{T}^* \modelsML \mathit{flatten}(\Phi) \rightarrow \mathit{flatten}(\Psi^\prime)}
+%       {(\mathcal{T}, S) \provesCRL \Phi \Downarrow_{C, E} \Psi^\prime}
 %   \end{align*}
 
 %   \begin{align*}
 %     & \prftree[l]{ImplEnabled}
 %       { \prfStackPremises
 %         { \Phi^\prime \in E }
-%         {\mathcal{T}^* \vDash_\ML \mathit{flatten}(\Phi) \rightarrow \mathit{flatten}(\Phi^\prime)}
+%         {\mathcal{T}^* \modelsML \mathit{flatten}(\Phi) \rightarrow \mathit{flatten}(\Phi^\prime)}
 %       }
-%       {(\mathcal{T}, S) \vdash_\CRL \Phi \Downarrow_{C, E} \Psi^\prime}
+%       {(\mathcal{T}, S) \provesCRL \Phi \Downarrow_{C, E} \Psi^\prime}
 %   \end{align*}
 
 %   \begin{align*}
 %     & \prftree[l]{Contradiction}
-%       {\mathcal{T}^* \vDash_\ML \mathit{flatten}(\Phi) \rightarrow \bot }
-%       {(\mathcal{T}, S) \vdash_\CRL \Phi \Downarrow_{C, E} \Psi^\prime}
+%       {\mathcal{T}^* \modelsML \mathit{flatten}(\Phi) \rightarrow \bot }
+%       {(\mathcal{T}, S) \provesCRL \Phi \Downarrow_{C, E} \Psi^\prime}
 %   \end{align*}
 
 %   \caption{Selected derived rules}
@@ -497,16 +497,16 @@ The proof system is also \emph{relatively complete} (with respect to an oracle d
 in the underlying matching logic model $\mathcal{T}$).
 \begin{theorem}[Relative completeness]\label{thm:relativeCompleteness}
   \begin{equation*}
-      (\mathcal{T}, S) \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime \implies
-      (\mathcal{T}, S) \vdash_\CRL \Psi \Downarrow_{\emptyset,\emptyset} \Psi^\prime
+      (\mathcal{T}, S) \modelsCRL \Psi \Rightarrow^{c\exists} \Psi^\prime \implies
+      (\mathcal{T}, S) \provesCRL \Psi \Downarrow_{\emptyset,\emptyset} \Psi^\prime
   \end{equation*}
   \end{theorem}
   \begin{proof}[Proof of \Cref{thm:relativeCompleteness}]
-  Assume $(\mathcal{T}, S) \vDash_{\CRL} \Psi \Rightarrow^{c\exists} \Psi^\prime$.
+  Assume $(\mathcal{T}, S) \modelsCRL \Psi \Rightarrow^{c\exists} \Psi^\prime$.
   By \Cref{thm:CRLandRLcorrespondence}, 
   we obtain
   \begin{equation*}
-    (\mathcal{T}^*, S^*) \vDash_\RL
+    (\mathcal{T}^*, S^*) \modelsRL
     \mathit{flatten}^\exists(\Psi, \Psi^\prime) \, .
   \end{equation*}
   By relative completeness of reachability logic, we obtain
@@ -536,25 +536,25 @@ Consider again the claim $\Omega_{\mathit{mono}}$ from \Cref{sec:CRLsemanticsCom
 Let $\Psi^\prime_{\mathit{mono}}$ denote the right side of the $\Rightarrow^{c\exists}$ above.
 We want to prove
 \begin{align*}
-  \mathcal{S}_{\mathit{imp}} \vdash_\CRL [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2)] \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2
+  \mathcal{S}_{\mathit{imp}} \provesCRL [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2)] \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2
   \Downarrow_{\emptyset, \emptyset} \Psi^\prime_{\mathit{mono}} \, .
 \end{align*}
 To do so, we first want to add the current premise as a synchronization point.
 However, we need to make the synchronization point more general than the current claim, as we will see later in the proof.
 Therefore, we first apply the Conseq rule to change the goal to
 \begin{align*}
-  \mathcal{S}_{\mathit{imp}} \vdash_\CRL \exists X_1,Y_1,X_2,Y_2.\, [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2)] \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2
+  \mathcal{S}_{\mathit{imp}} \provesCRL \exists X_1,Y_1,X_2,Y_2.\, [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2)] \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2
   \Downarrow_{\emptyset, \emptyset} \Psi^\prime_{\mathit{mono}} \, ,
 \end{align*}
 then apply the Circularity rule, followed by application of the Abstract rule, which basically changes the goal
 back, except that now we have a general synchronization point. The goal is now
 \begin{align*}
-  \mathcal{S}_{\mathit{imp}} \vdash_\CRL [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2)] \land X_1 \leq X_2 \land Y_1 \leq Y_2
+  \mathcal{S}_{\mathit{imp}} \provesCRL [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2)] \land X_1 \leq X_2 \land Y_1 \leq Y_2
   \Downarrow_{\Phi_{\mathit{sync}}, \emptyset} \Psi^\prime_{\mathit{mono}} \, ,
 \end{align*}
 where
 \begin{align*}
-  \Phi_{\mathit{sync}} \equiv \mathcal{S}_{\mathit{imp}} \vdash_\CRL \exists X_1,Y_1,X_2,Y_2.\, [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2)] \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2 \, .
+  \Phi_{\mathit{sync}} \equiv \mathcal{S}_{\mathit{imp}} \provesCRL \exists X_1,Y_1,X_2,Y_2.\, [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2)] \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2 \, .
 \end{align*}
 Now we perform symbolic execution on both components, using repeated applications of the Step rule,
 enabling the synchronization points.
@@ -562,7 +562,7 @@ The exact details depend on the exact rules of $\mathcal{S}_{\mathit{imp}}$, but
 the \texttt{while} statement is defined by unrolling into the \texttt{if} statement,
 we end up with a goal like
 \begin{align*}
-  & \mathcal{S}_{\mathit{imp}} \vdash_\CRL
+  & \mathcal{S}_{\mathit{imp}} \provesCRL
   [ \xi(\texttt{if (}X_1 >_{\mathit{Int}} 0 \texttt{)\{y++;x--;\};}P, X_1, Y_1),  
     \xi(\texttt{if (}X_2 >_{\mathit{Int}} 0 \texttt{)\{y++;x--;\};}P, X_2, Y_2) ] \\
   & \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2
@@ -573,7 +573,7 @@ obtain disjunctions of patterns at the respective components, and repeatedly app
 (the differences are shown in {\color{blue}blue}):
 \begin{equation}\label{ex:case1}
 \begin{aligned}
-  & \mathcal{S}_{\mathit{imp}} \vdash_\CRL
+  & \mathcal{S}_{\mathit{imp}} \provesCRL
   [ \xi(\texttt{if (}{\color{blue}\mathit{true}}\texttt{)\{y++;x--;\};}P, X_1, Y_1),  
     \xi(\texttt{if (}{\color{blue}\mathit{true}}\texttt{)\{y++;x--;\};}P, X_2, Y_2) ] \\
   & \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2 \land {\color{blue} X_1 >_{\mathit{Int}} 0 \land X_2 >_{\mathit{Int}} 0 }
@@ -582,7 +582,7 @@ obtain disjunctions of patterns at the respective components, and repeatedly app
 \end{equation}
 \begin{equation}\label{ex:case2}
 \begin{aligned}
-  & \mathcal{S}_{\mathit{imp}} \vdash_\CRL
+  & \mathcal{S}_{\mathit{imp}} \provesCRL
   [ \xi(\texttt{if (}{\color{blue}\mathit{true}}\texttt{)\{y++;x--;\};P}, X_1, Y_1),  
     \xi(\texttt{if (}{\color{blue}\mathit{false}}\texttt{)\{y++;x--;\};P}, X_2, Y_2) ] \\
   & \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2 \land {\color{blue} X_1 >_{\mathit{Int}} 0 \land X_2 \leq_{\mathit{Int}} 0 }
@@ -591,7 +591,7 @@ obtain disjunctions of patterns at the respective components, and repeatedly app
 \end{equation}
 \begin{equation}\label{ex:case3}
 \begin{aligned}
-  & \mathcal{S}_{\mathit{imp}} \vdash_\CRL
+  & \mathcal{S}_{\mathit{imp}} \provesCRL
   [ \xi(\texttt{if (}{\color{blue}\mathit{false}}\texttt{)\{y++;x--;\};P}, X_1, Y_1),  
     \xi(\texttt{if (}{\color{blue}\mathit{true}}\texttt{)\{y++;x--;\};P}, X_2, Y_2) ] \\
   & \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2 \land {\color{blue} X_1 \leq_{\mathit{Int}} 0 \land X_2 >_{\mathit{Int}} 0 }
@@ -600,7 +600,7 @@ obtain disjunctions of patterns at the respective components, and repeatedly app
 \end{equation}
 \begin{equation}\label{ex:case4}
 \begin{aligned}
-  & \mathcal{S}_{\mathit{imp}} \vdash_\CRL
+  & \mathcal{S}_{\mathit{imp}} \provesCRL
   [ \xi(\texttt{if (}{\color{blue}\mathit{false}}\texttt{)\{y++;x--;\};P}, X_1, Y_1) ,  
     \xi(\texttt{if (}{\color{blue}\mathit{false}}\texttt{)\{y++;x--;\};P}, X_2, Y_2) ] \\
   & \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2 \land {\color{blue} X_1 \leq_{\mathit{Int}} 0 \land X_2 \leq_{\mathit{Int}} 0 }
@@ -627,7 +627,7 @@ the Reflexivity rule.
       that is, $P$.
       The goal is now
       \begin{align*}
-        & \mathcal{S}_{\mathit{imp}} \vdash_\CRL
+        & \mathcal{S}_{\mathit{imp}} \provesCRL
         [ \xi(P, X_1 -_{\mathit{Int}} 1, Y_1 +_{\mathit{Int}} 1 ) ,  
           \xi(P, X_2 -_{\mathit{Int}} 1, Y_2 +_{\mathit{Int}} 1) ] \\
         & \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2 \land {X_1 \leq_{\mathit{Int}} 0 \land X_2 \leq_{\mathit{Int}} 0 }

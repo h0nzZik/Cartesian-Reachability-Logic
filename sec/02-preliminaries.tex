@@ -291,8 +291,8 @@ This rule induces (among others) the transition
 % where $\gamma \Rightarrow_{\mathcal{S}} \gamma^\prime$
 % for $\gamma, \gamma^\prime \in \Tcfg$
 % iff there is some rule $\varphi \Rightarrow^\exists \varphi^\prime \in S$
-% and some valuation $\rho : \Var \to \mathcal{T}$ with $(\gamma, \rho) \vDash \varphi$
-% and $(\gamma^\prime , \rho) \vDash \varphi^\prime$.
+% and some valuation $\rho : \Var \to \mathcal{T}$ with $(\gamma, \rho) \modelsML \varphi$
+% and $(\gamma^\prime , \rho) \modelsML \varphi^\prime$.
 % The intuition is that when taking a transition in the resulting transition system,
 % some rule $\varphi \Rightarrow^\exists \varphi^\prime \in S$ is selected,
 % then the current configuration is pattern-matched against the rule's left-side pattern $\varphi$,
