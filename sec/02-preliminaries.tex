@@ -196,7 +196,7 @@ function symbol ``$>_\text{Int}$'' returns the boolean value $\mathit{true}$
 when given $X$ and $1$ as arguments.
 
 The satisfaction relation $(M, \gamma, \rho) \vDash \varphi$ for a model $M$, a model element $\gamma \in M$,
-an $M$-valuation $\rho$, and a pattern $\varphi$, is defined inductively on the structure of $\varphi$.
+an $M$-valuation $\rho : \mathit{Var} \to M$, and a pattern $\varphi$, is defined inductively on the structure of $\varphi$.
 The definition is as in FOL; the main difference is the semantics of
 terms-as-predicates, which is given as
 \begin{equation*}
