@@ -141,6 +141,41 @@ Other cases follow from the induction hypotheses.
     which follows from the initial assumption.
 \end{proof}
 
+
+\begin{lemma}[A semantic property of variable renaming]\label{lem:varrenamesem}
+    For any two variables $X,Y$ of the same sort, and for any two $\mathcal{T}$-valuations $\rho_1, \rho_2$
+    which agree on all variables other than $X,Y$, if $\rho_1(X) = \rho_2(Y)$, then for any matching logic formula
+    $\varphi$ in which $Y$ does not occur free,
+    \begin{equation*}
+        (\mathcal{T}, \gamma, \rho_1) \modelsML \varphi \iff (\mathcal{T}, \gamma, \rho_2) \modelsML \varphi[Y/X] \, .
+    \end{equation*}
+  \end{lemma}
+  \begin{proof}[Proof of \Cref{lem:varrenamesem}]
+      We first prove that for any term $t \in T_{\Sigma, s}(\mathit{Var})$,
+      $\rho_1(t) = \rho_2(t[Y/X])$, by induction in $t$:
+      if $t$ is a variable, then we perform case analysis on whether the variable is $X$ or not, and we are done;
+      if $t$ is a function application, then we use the induction hypothesis and the fact that function application preserves equality.
+      Now we prove the lemma by induction on the size of $\varphi$, generalizing over $\rho_1$ and $\rho_2$.
+      \begin{itemize}
+          \item If $\varphi \equiv t$ for some $t \in T_{\Sigma, s}(\mathit{Var})$, we apply the above property.
+          \item If $\varphi \equiv t_1 = t_2$, we also apply the above property.
+          \item If $\varphi$ is a conjunction or negation, the desired property follows directly from the induction hypothesis.
+          \item If $\varphi \equiv \exists Z : s.\, \varphi^\prime$.
+          \begin{itemize}
+              \item If $X = Z$, then we have to prove that $(\mathcal{T}, \gamma, \rho^\prime) \modelsML \varphi^\prime$
+              for some $\rho^\prime$ satisfying $\rho^\prime(y) = \rho_1(y)$ for all $y \in \mathit{Var} \setminus \{ Z \}$, iff $(\mathcal{T}, \gamma, \rho^{\prime\prime}) \modelsML \varphi^\prime$
+              for some $\rho^{\prime\prime}$ satisfying $\rho^{\prime\prime}(y) = \rho_2(y)$ for all $y \in \mathit{Var} \setminus \{ Z \}$ - which is easy.
+              \item If $X \not = Z$, then we have to prove that
+              $(\mathcal{T}, \gamma, \rho^\prime) \modelsML \varphi^\prime$
+              for some $\rho^\prime$ satisfying $\rho^\prime(y) = \rho_1(y)$ for all $y \in \mathit{Var} \setminus \{ Z \}$, iff $(\mathcal{T}, \gamma, \rho^{\prime\prime}) \modelsML \varphi^\prime[Y/X]$ for some $\rho^{\prime\prime}$ satisfying $\rho^{\prime\prime}(y) = \rho_2(y)$ for all $y \in \mathit{Var} \setminus \{ Z \}$.
+              Since the size of $\varphi^\prime$ is smaller then the size of $\varphi$,
+              and since $\rho^{\prime}(X) = \rho_1(X) = \rho_2(Y) = \rho^{\prime\prime}(Y)$,
+              we can use the induction hypothesis and finish the proof using firstorder reasoning.
+          \end{itemize}
+      \end{itemize}
+\end{proof}
+ 
+
 \begin{definition}[\cite{StefanescuCMMSR19}]
     Given a  matching logic $(\Sigma, \mathit{Var})$-formula $\varphi$ of sort $\mathit{Cfg}$,
     and a fresh (with respect to $\varphi$) variable $\square$ of sort $\mathit{Cfg}$,
@@ -160,22 +195,30 @@ Other cases follow from the induction hypotheses.
     \end{equation*}    
 \end{lemma}
 
+\begin{lemma}[On implication and FOL translation]\label{lem:implFOLtransl}
+    Let $\varphi_1, \varphi_2$ be two matching logic formulas such that $\modelsML \varphi_1 \rightarrow \varphi_2$.
+    Then $\modelsML (\varphi_1^\square)[X/\square] \rightarrow (\varphi_2^\square)[X/\square]$.
+\end{lemma}
+\begin{proof}
+    Let $M$ be any matching logic model, $\gamma$ an element of $M$, and $\rho$ an $M$-valuation.
+    We have to prove that $(M, \gamma, \rho) \modelsML (\varphi_1^\square)[X/\square] \rightarrow (\varphi_2^\square)[X/\square]$,
+    which is (by definition of the squaring function and substitution) equivalent to
+    $(M, \gamma, \rho) \modelsML ((\varphi_1 \rightarrow \varphi_2)^\square)[X/\square]$,
+    which is
+    (by \Cref{lem:varrenamesem}, because $\rho(X) = \rho[\square := \rho(X)](\square)$)
+    equivalent to
+    $(M, \gamma, \rho[\square := \rho(X)]) \modelsML (\varphi_1 \rightarrow \varphi_2)^\square$,
+    which is  (by \Cref{lem:patternToFOLSemantics}, because $\rho[\square := \rho(X)] = \rho^{\rho(X)}$) equivalent to
+    $(M, \rho(X), \rho) \modelsML \varphi_1 \rightarrow \varphi_2$,
+    which holds by the assumption.
+\end{proof}
+
 \begin{lemma}[On equivalence and FOL translation]\label{lem:equivFOLtransl}
     Let $\varphi_1, \varphi_2$ be two matching logic formulas such that $\modelsML \varphi_1 \leftrightarrow \varphi_2$.
     Then $\modelsML (\varphi_1^\square)[X/\square] \leftrightarrow (\varphi_2^\square)[X/\square]$.
 \end{lemma}
 \begin{proof}
-    Let $M$ be any matching logic model, $\gamma$ an element of $M$, and $\rho$ an $M$-valuation.
-    We have to prove that $(M, \gamma, \rho) \modelsML (\varphi_1^\square)[X/\square] \leftrightarrow (\varphi_2^\square)[X/\square]$,
-    which is (by definition of the squaring function and substitution) equivalent to
-    $(M, \gamma, \rho) \modelsML ((\varphi_1 \leftrightarrow \varphi_2)^\square)[X/\square]$,
-    which is
-    (by \Cref{lem:varrenamesem}, because $\rho(X) = \rho[\square := \rho(X)](\square)$)
-    equivalent to
-    $(M, \gamma, \rho[\square := \rho(X)]) \modelsML (\varphi_1 \leftrightarrow \varphi_2)^\square$,
-    which is  (by \Cref{lem:patternToFOLSemantics}, because $\rho[\square := \rho(X)] = \rho^{\rho(X)}$) equivalent to
-    $(M, \rho(X), \rho) \modelsML \varphi_1 \leftrightarrow \varphi_2$,
-    which holds by the assumption.
+    Apply \Cref{lem:implFOLtransl} twice.
 \end{proof}
 
 \begin{definition}[\cite{StefanescuCMMSR19,RosuS12oopsla}]\label{def:basics}
@@ -1034,41 +1077,6 @@ We prove each implication separately.
 \end{itemize}
 \end{proof}
 
-\begin{lemma}[A semantic property of variable renaming]\label{lem:varrenamesem}
-  For any two variables $X,Y$ of the same sort, and for any two $\mathcal{T}$-valuations $\rho_1, \rho_2$
-  which agree on all variables other than $X,Y$, if $\rho_1(X) = \rho_2(Y)$, then for any matching logic formula
-  $\varphi$ in which $Y$ does not occur free,
-  \begin{equation*}
-      (\mathcal{T}, \gamma, \rho_1) \modelsML \varphi \iff (\mathcal{T}, \gamma, \rho_2) \modelsML \varphi[Y/X] \, .
-  \end{equation*}
-\end{lemma}
-\begin{proof}[Proof of \Cref{lem:varrenamesem}]
-    We first prove that for any term $t \in T_{\Sigma, s}(\mathit{Var})$,
-    $\rho_1(t) = \rho_2(t[Y/X])$, by induction in $t$:
-    if $t$ is a variable, then we perform case analysis on whether the variable is $X$ or not, and we are done;
-    if $t$ is a function application, then we use the induction hypothesis and the fact that function application preserves equality.
-    Now we prove the lemma by induction on the size of $\varphi$, generalizing over $\rho_1$ and $\rho_2$.
-    \begin{itemize}
-        \item If $\varphi \equiv t$ for some $t \in T_{\Sigma, s}(\mathit{Var})$, we apply the above property.
-        \item If $\varphi \equiv t_1 = t_2$, we also apply the above property.
-        \item If $\varphi$ is a conjunction or negation, the desired property follows directly from the induction hypothesis.
-        \item If $\varphi \equiv \exists Z : s.\, \varphi^\prime$.
-        \begin{itemize}
-            \item If $X = Z$, then we have to prove that $(\mathcal{T}, \gamma, \rho^\prime) \modelsML \varphi^\prime$
-            for some $\rho^\prime$ satisfying $\rho^\prime(y) = \rho_1(y)$ for all $y \in \mathit{Var} \setminus \{ Z \}$, iff $(\mathcal{T}, \gamma, \rho^{\prime\prime}) \modelsML \varphi^\prime$
-            for some $\rho^{\prime\prime}$ satisfying $\rho^{\prime\prime}(y) = \rho_2(y)$ for all $y \in \mathit{Var} \setminus \{ Z \}$ - which is easy.
-            \item If $X \not = Z$, then we have to prove that
-            $(\mathcal{T}, \gamma, \rho^\prime) \modelsML \varphi^\prime$
-            for some $\rho^\prime$ satisfying $\rho^\prime(y) = \rho_1(y)$ for all $y \in \mathit{Var} \setminus \{ Z \}$, iff $(\mathcal{T}, \gamma, \rho^{\prime\prime}) \modelsML \varphi^\prime[Y/X]$ for some $\rho^{\prime\prime}$ satisfying $\rho^{\prime\prime}(y) = \rho_2(y)$ for all $y \in \mathit{Var} \setminus \{ Z \}$.
-            Since the size of $\varphi^\prime$ is smaller then the size of $\varphi$,
-            and since $\rho^{\prime}(X) = \rho_1(X) = \rho_2(Y) = \rho^{\prime\prime}(Y)$,
-            we can use the induction hypothesis and finish the proof using firstorder reasoning.
-        \end{itemize}
-    \end{itemize}
-\end{proof}
-
-
-
 \begin{definition}\label{def:mkList}
 We define $\mathit{mkList}$ by letting
 \begin{itemize}
@@ -1886,6 +1894,19 @@ Finally, we define $\mathit{red}(\varphi) = \mathit{tr}(\varphi_c)$; the desired
 properties of the Godel $\beta$ predicate and properties lists in the extended model $\mathcal{T}^*$.
 
 \end{proof}
+
+% \subsection{Derived Rules}\label{app:derivedRules}
+
+% \begin{lemma}
+% The rules of \Cref{fig:CRLderivedRules} can be derived from the rules of \Cref{fig:CRLproofsystem}.
+% \end{lemma}
+% \begin{proof}
+%     We prove them one by one.
+%     \begin{itemize}
+%         \item ConseqLocal 
+%     \end{itemize}
+% \end{proof}
+
 
 \subsection{Relation to CHL}\label{app:reltoCHL}
 
