@@ -177,7 +177,7 @@ Other cases follow from the induction hypotheses.
  
 
 \begin{definition}[\cite{StefanescuCMMSR19}]
-    Given a  matching logic $(\Sigma, \mathit{Var})$-formula $\varphi$ of sort $\mathit{Cfg}$,
+    Given a matching logic $(\Sigma, \mathit{Var})$-formula $\varphi$ of sort $\mathit{Cfg}$,
     and a fresh (with respect to $\varphi$) variable $\square$ of sort $\mathit{Cfg}$,
     we let $\varphi^\square$ denote the $\FOLeq$ formula formed from $\varphi$ by replacing
     nullary predicate symbols $\phi \in T_{\Sigma, \mathit{Cfg}}(\mathit{Var})$
@@ -194,6 +194,13 @@ Other cases follow from the induction hypotheses.
         (\mathcal{T}, \gamma, \rho) \modelsML \varphi \iff (\mathcal{T}, \rho^\gamma) \modelsML \varphi^\square
     \end{equation*}    
 \end{lemma}
+
+\begin{lemma}\label{lem:structurelessFOLtranslation}
+    $P^\square \equiv P$ for any structureless pattern $P$
+\end{lemma}
+\begin{proof}
+    By induction.
+\end{proof}
 
 \begin{lemma}[On implication and FOL translation]\label{lem:implFOLtransl}
     Let $\varphi_1, \varphi_2$ be two matching logic formulas such that $\modelsML \varphi_1 \rightarrow \varphi_2$.
@@ -1917,7 +1924,8 @@ properties of the Godel $\beta$ predicate and properties lists in the extended m
                 \mathcal{T}^* \modelsML \mathit{flatten}(\exists \vec{X}.\, [\varphi_1, \ldots, \varphi_k] \land P)
                 \rightarrow \mathit{flatten}(\exists \vec{X}.\, [\varphi_1, \ldots, \varphi_k] \land P^\prime)
               \end{equation*}
-              which follows immediatelly after unfolding $\mathit{flatten}$.              
+              which follows immediatelly after unfolding $\mathit{flatten}$.
+        \item PropIn, PropOut - follows from Conseq after unfolding $\mathit{flatten}$ and using \Cref{lem:structurelessFOLtranslation}.
     \end{itemize}
 \end{proof}
 
