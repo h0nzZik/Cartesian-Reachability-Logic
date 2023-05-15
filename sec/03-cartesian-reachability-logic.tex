@@ -530,8 +530,8 @@ if the user has to worry about the star-extended model anyway. We answer this ob
 First, the Conseq rule refers only to the star-extended matching logic model, and not to a star-extended reachability system.
 Second, in practice one often does not need the full power of the Conseq rule; this rule is typically used to either
 propagate a structureless constraint out of or into a component, weaken a component, or weaken the global constraint.
-For these use-cases we can provide a collection of rules derived from Conseq that operate on the level of the original matching logic model,
-as in \Cref{fig:CRLderivedRules}, and use these instead of Conseq.
+For these use-cases we can provide a collection of rules derived from rules of \Cref{fig:CRLproofsystem} that operate on the level of the original matching logic model,
+as in \Cref{fig:CRLderivedRules}, and use these instead of Conseq (and possibly Reduce).
 
 \begin{figure}
   \begin{align*}
@@ -568,6 +568,11 @@ as in \Cref{fig:CRLderivedRules}, and use these instead of Conseq.
       }
       { (\mathcal{T}, S) \provesCRL [\varphi_1, \ldots, \varphi_{i-1}, \varphi, \varphi_{i+1}, \ldots, \varphi_k] \land (P \land P^\prime) \Downarrow_{C, E} \Psi^\prime}
   \end{align*}
+  \begin{align*}
+    & \prftree[l]{ExFalso}
+      { (\mathcal{T}, S) \provesCRL [\varphi_1, \ldots, \ldots, \varphi_k] \land \mathit{false} \Downarrow_{C, E} \Psi^\prime}
+  \end{align*}
+
 
   \caption{Selected derived rules}
   \label{fig:CRLderivedRules}
@@ -669,7 +674,7 @@ by generalizing the premise (using the Conseq rule) to be exactly the conclusion
 the Reflexivity rule.
 \item The case in \Cref{ex:case2} represents the situation when the first loop continues execution and the second is finished.
       This can never happen - we see that the side condition is contradictory.
-      We finish this case using the Conseq rule followed by the Reflexivity rule (since a contradiction implies anything).
+      We finish this case using the ExFalso rule.
 \item The case in \Cref{ex:case3} represents the complementary situation - the first loop has finished its execution,
       while the second loop continues.
       This requires inventing an invariant capturing the idea that the execution of the second loop can only increase
