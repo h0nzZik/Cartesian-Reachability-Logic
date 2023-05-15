@@ -537,19 +537,19 @@ as in \Cref{fig:CRLderivedRules}, and use these instead of Conseq.
   \begin{align*}
     & \prftree[l]{ConseqLocal}
       { \prfStackPremises
-        { \mathcal{T} \modelsML \varphi \rightarrow \varphi^\prime }
-        { (\mathcal{T}, S) \provesCRL [\varphi_1, \ldots, \varphi_{i-1}, \varphi^\prime, \varphi_{i+1}, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
+        { \mathcal{T} \modelsML \varphi_i \rightarrow \varphi_i^\prime }
+        { (\mathcal{T}, S) \provesCRL \exists \vec{X}.\, [\varphi_1, \ldots, \varphi_{i-1}, \varphi_i^\prime, \varphi_{i+1}, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
       }
-      { (\mathcal{T}, S) \provesCRL [\varphi_1, \ldots, \varphi_{i-1}, \varphi, \varphi_{i+1}, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
+      { (\mathcal{T}, S) \provesCRL \exists \vec{X}.\, [\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
   \end{align*}
 
   \begin{align*}
     & \prftree[l]{ConseqGlobal}
       { \prfStackPremises
         { \mathcal{T} \modelsML P \rightarrow P^\prime }
-        { (\mathcal{T}, S) \provesCRL [\varphi_1, \ldots, \varphi_{i-1}, \varphi, \varphi_{i+1}, \ldots, \varphi_k] \land P^\prime \Downarrow_{C, E} \Psi^\prime}
+        { (\mathcal{T}, S) \provesCRL \exists \vec{X}.\, [\varphi_1, \ldots, \varphi_{i-1}, \varphi, \varphi_{i+1}, \ldots, \varphi_k] \land P^\prime \Downarrow_{C, E} \Psi^\prime}
       }
-      { (\mathcal{T}, S) \provesCRL [\varphi_1, \ldots, \varphi_{i-1}, \varphi, \varphi_{i+1}, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
+      { (\mathcal{T}, S) \provesCRL \exists \vec{X}.\, [\varphi_1, \ldots, \varphi_{i-1}, \varphi, \varphi_{i+1}, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
   \end{align*}
 
   \begin{align*}

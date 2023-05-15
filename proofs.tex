@@ -1895,17 +1895,31 @@ properties of the Godel $\beta$ predicate and properties lists in the extended m
 
 \end{proof}
 
-% \subsection{Derived Rules}\label{app:derivedRules}
+ \subsection{Derived Rules}\label{app:derivedRules}
 
-% \begin{lemma}
-% The rules of \Cref{fig:CRLderivedRules} can be derived from the rules of \Cref{fig:CRLproofsystem}.
-% \end{lemma}
-% \begin{proof}
-%     We prove them one by one.
-%     \begin{itemize}
-%         \item ConseqLocal 
-%     \end{itemize}
-% \end{proof}
+ \begin{lemma}
+ The rules of \Cref{fig:CRLderivedRules} can be derived from the rules of \Cref{fig:CRLproofsystem}.
+ \end{lemma}
+ \begin{proof}
+    We prove them one by one.
+    \begin{itemize}
+        \item ConseqLocal - follows from Conseq. We need to prove that $\mathcal{T} \modelsML \varphi_i \rightarrow \varphi_i^\prime$
+              implies
+              \begin{align*}
+                \mathcal{T}^* \modelsML & \mathit{flatten}(\exists \vec{X}.\, [\varphi_1,\ldots,\varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k] \land P) \\
+                \rightarrow & \mathit{flatten}(\exists \vec{X}.\, [\varphi_1,\ldots,\varphi_{i-1}, \varphi_i^\prime, \varphi_{i+1}, \ldots, \varphi_k] \land P)
+              \end{align*}
+              which, after unfolding $\mathit{flatten}$, follows from \Cref{lem:implFOLtransl}.
+        \item ConseqGlobal - follows from Conseq.
+              We need to prove that $\mathcal{T} \modelsML P \rightarrow P^\prime$
+              implies
+              \begin{equation*}
+                \mathcal{T}^* \modelsML \mathit{flatten}(\exists \vec{X}.\, [\varphi_1, \ldots, \varphi_k] \land P)
+                \rightarrow \mathit{flatten}(\exists \vec{X}.\, [\varphi_1, \ldots, \varphi_k] \land P^\prime)
+              \end{equation*}
+              which follows immediatelly after unfolding $\mathit{flatten}$.              
+    \end{itemize}
+\end{proof}
 
 
 \subsection{Relation to CHL}\label{app:reltoCHL}
