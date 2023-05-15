@@ -614,19 +614,22 @@ the \texttt{while} statement is defined by unrolling into the \texttt{if} statem
 we end up with a goal like
 \begin{align*}
   & \mathcal{S}_{\mathit{imp}} \provesCRL
-  [ \xi(\texttt{if (}X_1 >_{\mathit{Int}} 0 \texttt{)\{y++;x--;\};}P, X_1, Y_1),  
-    \xi(\texttt{if (}X_2 >_{\mathit{Int}} 0 \texttt{)\{y++;x--;\};}P, X_2, Y_2) ] \\
+  [ \xi(\texttt{if (}X_1 >_{\mathit{Int}} 0 \texttt{)\{y++;x--;P\}}, X_1, Y_1),  
+    \xi(\texttt{if (}X_2 >_{\mathit{Int}} 0 \texttt{)\{y++;x--;P\}}, X_2, Y_2) ] \\
   & \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2
   \Downarrow_{\emptyset, \Phi_{\mathit{sync}}} \Psi^\prime_{\mathit{mono}} \, ,
 \end{align*}
-Now we want to perform case analysis. To do so, we first use the Consequence rule to
-obtain disjunctions of patterns at the respective components, and repeatedly apply the Case rule, leading to four goals
+Now we want to perform case analysis. To do so, we first use the ConseqLocal rule twice to
+obtain disjunctions of patterns at the respective components;
+then we repeatedly apply the Case rule, leading to four goals;
+finally, we use the PropOut rule to propagate the constraints from the components to the global constraint.
+Then, the four goals will be as follows
 (the differences are shown in {\color{blue}blue}):
 \begin{equation}\label{ex:case1}
 \begin{aligned}
   & \mathcal{S}_{\mathit{imp}} \provesCRL
-  [ \xi(\texttt{if (}{\color{blue}\mathit{true}}\texttt{)\{y++;x--;\};}P, X_1, Y_1),  
-    \xi(\texttt{if (}{\color{blue}\mathit{true}}\texttt{)\{y++;x--;\};}P, X_2, Y_2) ] \\
+  [ \xi(\texttt{if (}{\color{blue}\mathit{true}}\texttt{)\{y++;x--;P\}}, X_1, Y_1),  
+    \xi(\texttt{if (}{\color{blue}\mathit{true}}\texttt{)\{y++;x--;P\}}, X_2, Y_2) ] \\
   & \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2 \land {\color{blue} X_1 >_{\mathit{Int}} 0 \land X_2 >_{\mathit{Int}} 0 }
   \Downarrow_{\emptyset, \Phi_{\mathit{sync}}} \Psi^\prime_{\mathit{mono}} \, ,
 \end{aligned}
@@ -634,8 +637,8 @@ obtain disjunctions of patterns at the respective components, and repeatedly app
 \begin{equation}\label{ex:case2}
 \begin{aligned}
   & \mathcal{S}_{\mathit{imp}} \provesCRL
-  [ \xi(\texttt{if (}{\color{blue}\mathit{true}}\texttt{)\{y++;x--;\};P}, X_1, Y_1),  
-    \xi(\texttt{if (}{\color{blue}\mathit{false}}\texttt{)\{y++;x--;\};P}, X_2, Y_2) ] \\
+  [ \xi(\texttt{if (}{\color{blue}\mathit{true}}\texttt{)\{y++;x--;P\}}, X_1, Y_1),  
+    \xi(\texttt{if (}{\color{blue}\mathit{false}}\texttt{)\{y++;x--;P\}}, X_2, Y_2) ] \\
   & \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2 \land {\color{blue} X_1 >_{\mathit{Int}} 0 \land X_2 \leq_{\mathit{Int}} 0 }
   \Downarrow_{\emptyset, \Phi_{\mathit{sync}}} \Psi^\prime_{\mathit{mono}} \, ,
 \end{aligned}
@@ -643,8 +646,8 @@ obtain disjunctions of patterns at the respective components, and repeatedly app
 \begin{equation}\label{ex:case3}
 \begin{aligned}
   & \mathcal{S}_{\mathit{imp}} \provesCRL
-  [ \xi(\texttt{if (}{\color{blue}\mathit{false}}\texttt{)\{y++;x--;\};P}, X_1, Y_1),  
-    \xi(\texttt{if (}{\color{blue}\mathit{true}}\texttt{)\{y++;x--;\};P}, X_2, Y_2) ] \\
+  [ \xi(\texttt{if (}{\color{blue}\mathit{false}}\texttt{)\{y++;x--;P\}}, X_1, Y_1),  
+    \xi(\texttt{if (}{\color{blue}\mathit{true}}\texttt{)\{y++;x--;P\}}, X_2, Y_2) ] \\
   & \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2 \land {\color{blue} X_1 \leq_{\mathit{Int}} 0 \land X_2 >_{\mathit{Int}} 0 }
   \Downarrow_{\emptyset, \Phi_{\mathit{sync}}} \Psi^\prime_{\mathit{mono}} \, ,
 \end{aligned}
@@ -652,8 +655,8 @@ obtain disjunctions of patterns at the respective components, and repeatedly app
 \begin{equation}\label{ex:case4}
 \begin{aligned}
   & \mathcal{S}_{\mathit{imp}} \provesCRL
-  [ \xi(\texttt{if (}{\color{blue}\mathit{false}}\texttt{)\{y++;x--;\};P}, X_1, Y_1) ,  
-    \xi(\texttt{if (}{\color{blue}\mathit{false}}\texttt{)\{y++;x--;\};P}, X_2, Y_2) ] \\
+  [ \xi(\texttt{if (}{\color{blue}\mathit{false}}\texttt{)\{y++;x--;P\}}, X_1, Y_1) ,  
+    \xi(\texttt{if (}{\color{blue}\mathit{false}}\texttt{)\{y++;x--;P\}}, X_2, Y_2) ] \\
   & \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2 \land {\color{blue} X_1 \leq_{\mathit{Int}} 0 \land X_2 \leq_{\mathit{Int}} 0 }
   \Downarrow_{\emptyset, \Phi_{\mathit{sync}}} \Psi^\prime_{\mathit{mono}} \, .
 \end{aligned}
