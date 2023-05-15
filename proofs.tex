@@ -1904,6 +1904,64 @@ properties of the Godel $\beta$ predicate and properties lists in the extended m
 
  \subsection{Derived Rules}\label{app:derivedRules}
 
+
+ \begin{figure}
+    \begin{align*}
+      & \prftree[l]{ConseqLocal}
+        { \prfStackPremises
+          { \mathcal{T} \modelsML \varphi_i \rightarrow \varphi_i^\prime }
+          { (\mathcal{T}, S) \provesCRL \exists \vec{X}.\, [\varphi_1, \ldots, \varphi_{i-1}, \varphi_i^\prime, \varphi_{i+1}, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
+        }
+        { (\mathcal{T}, S) \provesCRL \exists \vec{X}.\, [\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
+    \end{align*}
+  
+    \begin{align*}
+      & \prftree[l]{ConseqGlobal}
+        { \prfStackPremises
+          { \mathcal{T} \modelsML P \rightarrow P^\prime }
+          { (\mathcal{T}, S) \provesCRL \exists \vec{X}.\, [\varphi_1, \ldots, \varphi_{i-1}, \varphi, \varphi_{i+1}, \ldots, \varphi_k] \land P^\prime \Downarrow_{C, E} \Psi^\prime}
+        }
+        { (\mathcal{T}, S) \provesCRL \exists \vec{X}.\, [\varphi_1, \ldots, \varphi_{i-1}, \varphi, \varphi_{i+1}, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
+    \end{align*}
+  
+    \begin{align*}
+      & \prftree[l]{PropOut}
+        { \prfStackPremises
+          { (\mathcal{T}, S) \provesCRL [\varphi_1, \ldots, \varphi_{i-1}, \varphi, \varphi_{i+1}, \ldots, \varphi_k] \land (P \land P^\prime) \Downarrow_{C, E} \Psi^\prime}
+        }
+        { (\mathcal{T}, S) \provesCRL [\varphi_1, \ldots, \varphi_{i-1}, \varphi \land P^\prime, \varphi_{i+1}, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
+    \end{align*}
+  
+  
+    \begin{align*}
+      & \prftree[l]{PropIn}
+        { \prfStackPremises
+          { (\mathcal{T}, S) \provesCRL [\varphi_1, \ldots, \varphi_{i-1}, \varphi \land P^\prime, \varphi_{i+1}, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
+        }
+        { (\mathcal{T}, S) \provesCRL [\varphi_1, \ldots, \varphi_{i-1}, \varphi, \varphi_{i+1}, \ldots, \varphi_k] \land (P \land P^\prime) \Downarrow_{C, E} \Psi^\prime}
+    \end{align*}
+    \begin{align*}
+      & \prftree[l]{ExFalso}
+        { (\mathcal{T}, S) \provesCRL [\varphi_1, \ldots, \ldots, \varphi_k] \land \mathit{false} \Downarrow_{C, E} \Psi^\prime}
+    \end{align*}
+  
+
+    \begin{align*}
+    & \prftree[l]{GenWithCirc}
+      { \prfStackPremises
+        { \vec{X} = \mathit{FV}(\Phi) \setminus \mathit{FV}(\Psi^\prime)
+        }
+        {(\mathcal{T}, S) \provesCRL \Phi \Downarrow_{C \cup \{ \exists \vec{X}.\, \Phi  \}, E} \Psi^\prime}
+      }
+      {(\mathcal{T}, S) \provesCRL \Phi \Downarrow_{C, E} \Psi^\prime}
+    \end{align*}
+
+  
+    \caption{Selected derived rules of CRL.}
+    \label{fig:CRLderivedRules}
+  \end{figure}
+ 
+
  \begin{lemma}
  The rules of \Cref{fig:CRLderivedRules} can be derived from the rules of \Cref{fig:CRLproofsystem}.
  \end{lemma}
@@ -1926,7 +1984,8 @@ properties of the Godel $\beta$ predicate and properties lists in the extended m
               \end{equation*}
               which follows immediatelly after unfolding $\mathit{flatten}$.
         \item PropIn, PropOut - follows from Conseq after unfolding $\mathit{flatten}$ and using \Cref{lem:structurelessFOLtranslation}.
-        \item ExFalso - follows from Reduce
+        \item ExFalso - follows from Reduce.
+        \item GenWithCirc - follows from Conseq, followed by Circularity, followed by Abstract.
     \end{itemize}
 \end{proof}
 

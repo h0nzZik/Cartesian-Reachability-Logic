@@ -239,24 +239,6 @@ We use the star extension for the same purpose.
 \subsection{Proof System for CRL}
 \label{sec:proof-system}
 
-%We give Cartesian Reachability Logic a proof system to faciliate mechanical reasoning.
-%One may ask the question, ``why give CRL a new proof system if one can perform the same reasoning
-%by means of \Cref{thm:CRLandRLcorrespondence} and the existing proof system of reachability logic?''.
-%The answer is the following.
-%When one reduces a CRL goal into RL using \Cref{thm:CRLandRLcorrespondence},
-%the function $\mathit{flatten}$ appears in the goal.
-%To perform reasoning using the RL proof system, one then has to either simplify the goal
-%by unfolding the definition of $\mathit{flatten}$,
-%or use (and prove) some helper lemmas about the effect of applying RL proof rules
-%%and other frequently used steps
-%on RL goals containing $\mathit{flatten}$.
-%In the first case one lowers the abstraction level and have to reason about matching logic formulas
-%containing translations of other matching logic formulas into FOL, which then makes RL reasoning more complex.
-%In the second case, however, one may end up proving lemmas which, when combined, result in a proof system for CRL.
-%Indeed, the soundness of our proof system (\Cref{fig:CRLproofsystem})
-%is established by a (meta-)proof which constructs a RL proof from a CRL one (\Cref{lem:CRLalmostSoundness}).
-
-
 We are now ready to give Cartesian Reachability Logic a proof system to
 facilitate mechanical reasoning.  While the intuition behind the semantics of
 CRL is similar to that of CHL, with only a few minor differences, coming up
@@ -458,15 +440,6 @@ we have $(\mathcal{T}, S) \modelsCRL \Psi \Rightarrow^{c\exists} \Psi^\prime$ an
 \end{proof}
 
 % \begin{figure}
-%   \begin{align*}
-%     & \prftree[l]{GenWithCirc}
-%       { \prfStackPremises
-%         { \vec{X} = \mathit{FV}(\Phi) \setminus \mathit{FV}(\Psi^\prime)
-%         }
-%         {(\mathcal{T}, S) \provesCRL \Phi \Downarrow_{C \cup \{ \exists \vec{X}.\, \Phi  \}, E} \Psi^\prime}
-%       }
-%       {(\mathcal{T}, S) \provesCRL \Phi \Downarrow_{C, E} \Psi^\prime}
-%   \end{align*}
 
 %   \begin{align*}
 %     & \prftree[l]{ImplConclusion}
@@ -520,64 +493,26 @@ in the underlying matching logic model $\mathcal{T}$).
   \end{proof}
 Our completeness result is similar to the completeness result of CHL in the sense that the completeness
 does not involve features used for lockstep reasoning.
-It would be interesting to investigate whether a proof system without the Reduce rule would still be complete;
+It would be interesting to investigate whether we can have some complete proof system without the Reduce rule;
 we leave this for future work.
 
 
-One aspect of the proof system from \Cref{fig:CRLproofsystem} that might be considered suboptimal is that the Conseq rule
-refers to the star-extended model. Someone might say that the abstraction provided by the proof system is somewhat ``leaky'',
-if the user has to worry about the star-extended model anyway. We answer this objection as follows.
-First, the Conseq rule refers only to the star-extended matching logic model, and not to a star-extended reachability system.
-Second, in practice one often does not need the full power of the Conseq rule; this rule is typically used to either
-propagate a structureless constraint out of or into a component, weaken a component, or weaken the global constraint.
-For these use-cases we can provide a collection of rules derived from rules of \Cref{fig:CRLproofsystem} that operate on the level of the original matching logic model,
-as in \Cref{fig:CRLderivedRules}, and use these instead of Conseq (and possibly Reduce).
-
-\begin{figure}
-  \begin{align*}
-    & \prftree[l]{ConseqLocal}
-      { \prfStackPremises
-        { \mathcal{T} \modelsML \varphi_i \rightarrow \varphi_i^\prime }
-        { (\mathcal{T}, S) \provesCRL \exists \vec{X}.\, [\varphi_1, \ldots, \varphi_{i-1}, \varphi_i^\prime, \varphi_{i+1}, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
-      }
-      { (\mathcal{T}, S) \provesCRL \exists \vec{X}.\, [\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
-  \end{align*}
-
-  \begin{align*}
-    & \prftree[l]{ConseqGlobal}
-      { \prfStackPremises
-        { \mathcal{T} \modelsML P \rightarrow P^\prime }
-        { (\mathcal{T}, S) \provesCRL \exists \vec{X}.\, [\varphi_1, \ldots, \varphi_{i-1}, \varphi, \varphi_{i+1}, \ldots, \varphi_k] \land P^\prime \Downarrow_{C, E} \Psi^\prime}
-      }
-      { (\mathcal{T}, S) \provesCRL \exists \vec{X}.\, [\varphi_1, \ldots, \varphi_{i-1}, \varphi, \varphi_{i+1}, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
-  \end{align*}
-
-  \begin{align*}
-    & \prftree[l]{PropOut}
-      { \prfStackPremises
-        { (\mathcal{T}, S) \provesCRL [\varphi_1, \ldots, \varphi_{i-1}, \varphi, \varphi_{i+1}, \ldots, \varphi_k] \land (P \land P^\prime) \Downarrow_{C, E} \Psi^\prime}
-      }
-      { (\mathcal{T}, S) \provesCRL [\varphi_1, \ldots, \varphi_{i-1}, \varphi \land P^\prime, \varphi_{i+1}, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
-  \end{align*}
-
-
-  \begin{align*}
-    & \prftree[l]{PropIn}
-      { \prfStackPremises
-        { (\mathcal{T}, S) \provesCRL [\varphi_1, \ldots, \varphi_{i-1}, \varphi \land P^\prime, \varphi_{i+1}, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
-      }
-      { (\mathcal{T}, S) \provesCRL [\varphi_1, \ldots, \varphi_{i-1}, \varphi, \varphi_{i+1}, \ldots, \varphi_k] \land (P \land P^\prime) \Downarrow_{C, E} \Psi^\prime}
-  \end{align*}
-  \begin{align*}
-    & \prftree[l]{ExFalso}
-      { (\mathcal{T}, S) \provesCRL [\varphi_1, \ldots, \ldots, \varphi_k] \land \mathit{false} \Downarrow_{C, E} \Psi^\prime}
-  \end{align*}
-
-
-  \caption{Selected derived rules}
-  \label{fig:CRLderivedRules}
-\end{figure}
-
+%We give Cartesian Reachability Logic a proof system to faciliate mechanical reasoning.
+One may ask the question, ``why give CRL a new proof system if one can perform the same reasoning
+by means of \Cref{thm:CRLandRLcorrespondence} and the existing proof system of reachability logic?''.
+The answer is the following.
+When one reduces a CRL goal into RL using \Cref{thm:CRLandRLcorrespondence},
+the function $\mathit{flatten}$ appears in the goal.
+To perform reasoning using the RL proof system, one then has to either simplify the goal
+by unfolding the definition of $\mathit{flatten}$,
+or use (and prove) some helper lemmas about the effect of applying RL proof rules
+%and other frequently used steps
+on RL goals containing $\mathit{flatten}$.
+In the first case one lowers the abstraction level and have to reason about matching logic formulas
+containing translations of other matching logic formulas into FOL, which then makes RL reasoning difficult.
+In the second case, however, one may end up proving lemmas which, when combined, result in a proof system for CRL.
+Indeed, the soundness of our proof system
+is established by a (meta-)proof which constructs a RL proof from a CRL one (\Cref{lem:CRLalmostSoundness}).
 
 \section{An example proof involving lockstep reasoning}\label{sec:example}
 
@@ -624,10 +559,10 @@ we end up with a goal like
   & \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2
   \Downarrow_{\emptyset, \Phi_{\mathit{sync}}} \Psi^\prime_{\mathit{mono}} \, ,
 \end{align*}
-Now we want to perform case analysis. To do so, we first use the ConseqLocal rule twice to
+Now we want to perform case analysis. To do so, we first use the Conseq rule to
 obtain disjunctions of patterns at the respective components;
 then we repeatedly apply the Case rule, leading to four goals;
-finally, we use the PropOut rule to propagate the constraints from the components to the global constraint.
+finally, we use the Conseq rule to propagate the constraints from the components to the global constraint.
 Then, the four goals will be as follows
 (the differences are shown in {\color{blue}blue}):
 \begin{equation}\label{ex:case1}
@@ -674,7 +609,7 @@ by generalizing the premise (using the Conseq rule) to be exactly the conclusion
 the Reflexivity rule.
 \item The case in \Cref{ex:case2} represents the situation when the first loop continues execution and the second is finished.
       This can never happen - we see that the side condition is contradictory.
-      We finish this case using the ExFalso rule.
+      We finish this case using the Reduce rule.
 \item The case in \Cref{ex:case3} represents the complementary situation - the first loop has finished its execution,
       while the second loop continues.
       This requires inventing an invariant capturing the idea that the execution of the second loop can only increase
@@ -698,7 +633,8 @@ the Reflexivity rule.
       %become $\xi(P, X_1, Y_1)$ and $\xi(P, X_2, Y_2)$, respectively.
 \end{itemize}
 We observe that the proof is rather low-level.
-On the other hand, the proof system itself is very simple.
+On the other hand, the proof system itself is very simple,
+and one can prove derived rules that raise the abstraction level, as we show in \Cref{app:derivedRules}.
 
 %%% Local Variables:
 %%% mode: latex
