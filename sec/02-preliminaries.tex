@@ -50,7 +50,7 @@ This proof system contains rules\footnote{We have changed the notation
         { \chl{\Phi \land c}{(\texttt{B1; S}) \st R}{\Psi} } \qquad
         { \chl{\Phi \land \neg c}{(\texttt{B2; S}) \st R}{\Psi} }
       }
-      { \chl{\Phi}{(\texttt{if (c) {B1} {B2} ; S}) \st R}{\Psi} }
+      { \chl{\Phi}{((\texttt{if (c) B1 else  B2); S)} \st R}{\Psi} }
 \end{align}
 that replicate standard Hoare-logic reasoning, and is sound and complete. 
 However, what is more interesting, the proof system allows one to perform \emph{lockstep reasoning},
