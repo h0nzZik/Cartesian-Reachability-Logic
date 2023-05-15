@@ -1855,19 +1855,26 @@ By induction on the structure of the CRL proof.
 
 
 \subsection{Completeness}\label{app:completeness}
+In order to have relative (with respect to an oracle for deciding matching logic validity) completeness of our proof system, we need to
+be able to construct an oracle for deciding validity in the star-extended matching logic model;
+the constructed oracle is then used by the relative completeness proof of reachability logic.
+Our oracle for deciding validity in the star-extended matching logic model reduces the problem of validity of a matching logic formula
+over the extended signature to the problem of matching logic validity of a formula over the original signature in the original model,
+for which we have assumed to have an oracle.
+In other words, we lift the given oracle for a model $\mathcal{T}$ into an oracle for the model $\mathcal{T}^*$ by means of a reduction function $\Theta$.
 
-For completeness of our proof system, we assume a framework similar to that of \cite{StefanescuCMMSR19}.
+We assume a framework similar to that of \cite{StefanescuCMMSR19}.
 Specifically, we assume that the model $\mathcal{T}$ interprets
 \begin{itemize}
     \item the symbol $\alpha$ as an injective function from configurations into integers;
     \item the symbol $<$ as the usual ordering on integers.
 \end{itemize}
-\begin{theorem}\label{thm:oracleLifting}
+\begin{theorem}[Oracle lifting]\label{thm:oracleLifting}
 For every $\Sigma$-model $\mathcal{T}$
 satisfying the conditions above
-there exists a function $\mathit{red}$ from matching logic patterns over $\Sigma^*$
+there exists a function $\Theta$ from matching logic patterns over $\Sigma^*$
 to matching logic patterns over $\Sigma$ such that
-$\mathcal{T} \modelsML \mathit{red}(\varphi) \iff \mathcal{T^*} \modelsML \varphi$.
+$\mathcal{T} \modelsML \Theta(\varphi) \iff \mathcal{T^*} \modelsML \varphi$.
 \end{theorem}
 \begin{proof}
 Intuitively, we perform Gödelization of the formula $\varphi^\square$, using Gödel's $\beta$ predicate.
@@ -1906,8 +1913,8 @@ except that quantification over lists and equality of lists is handled as follow
 \end{itemize}
 
 Let use consider the universal closure $\varphi_c$ of $\varphi^\square$.
-Finally, we define $\mathit{red}(\varphi) = \mathit{tr}(\varphi_c)$; the desired equivalence holds by
-properties of the Godel $\beta$ predicate and properties lists in the extended model $\mathcal{T}^*$.
+Finally, we define $\Theta(\varphi) = \mathit{tr}(\varphi_c)$; the desired equivalence holds by
+properties of the Godel $\beta$ predicate and properties of lists in the extended model $\mathcal{T}^*$.
 
 \end{proof}
 
