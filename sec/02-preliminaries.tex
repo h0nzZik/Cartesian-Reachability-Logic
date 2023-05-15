@@ -45,7 +45,7 @@ This proof system contains rules\footnote{We have changed the notation
     %     { \langle \Phi \land \neg c \rangle (\texttt{B2; S}) * R \langle \Psi \rangle }
     %   }
     %   { \langle \Phi \rangle (\texttt{if (c) {B1} {B2} ; S}) * R \langle \Psi \rangle }
-    & \prftree[l]{If}
+    & \prftree[l]{}%{If}
       { % \prfStackPremises
         { \chl{\Phi \land c}{(\texttt{B1; S}) \st R}{\Psi} } \qquad
         { \chl{\Phi \land \neg c}{(\texttt{B2; S}) \st R}{\Psi} }
@@ -56,8 +56,8 @@ that replicate standard Hoare-logic reasoning, and is sound and complete.
 However, what is more interesting, the proof system allows one to perform \emph{lockstep reasoning},
 even for loops. This is achieved by means of the following rule (version for two executions):
 \begin{align*}
-  & \prftree[l]{Fusion}
-    {
+  & \prftree[l]{}%{Fusion}
+    {\Phi\Rightarrow I \quad
     \chl{I \land c_1 \land c_2}{\texttt{B1} \st \texttt{B2}}{I} \quad
     \chl{I \land \neg c_2}{\texttt{while (}c_1\texttt{) {B1}}}{\Psi} \quad
     \chl{I \land \neg c_1}{\texttt{while (}c_2\texttt{) {B2}}}{\Psi}    
