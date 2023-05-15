@@ -295,50 +295,59 @@ The progress requirements resemble the concept of \emph{productivity} of co-recu
 \begin{figure}
     \centering
     \begin{align*}
+      & \prftree[l]{Circularity}
+        { (\mathcal{T}, S) \provesCRL \Psi \Downarrow_{C \cup \{ \Psi \} , E} \Psi^\prime}
+        { (\mathcal{T}, S) \provesCRL \Psi \Downarrow_{C, E} \Psi^\prime}
+    \end{align*}
+    \begin{align*}
+      & \prftree[l]{Step}
+      { \prfStackPremises
+         {\varphi \Rightarrow^\exists \varphi^\prime \in S}
+         {\mathcal{T} \modelsML \varphi_i \leftrightarrow \varphi \land P^\prime}
+         {P^\prime \mbox{ is a FOL formula}}
+         {  (\mathcal{T}, S) \provesCRL [\varphi_1, \ldots, \varphi_{i-1}, \varphi^\prime \land P^\prime, \varphi_{i+1}, \ldots, \varphi_k]
+            \land P
+            \Downarrow_{\emptyset, (C \cup E)} \Psi^\prime
+        }
+      }
+      {(\mathcal{T}, S) \provesCRL [\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
+    \end{align*}
+    \begin{align*}
+      & \prftree[l]{Axiom}{\Psi \in E}{(\mathcal{T}, S) \provesCRL \Psi \Downarrow_{C,E} \Psi^\prime}
+    \end{align*}
+    \begin{align*}
     & \prftree[l]{Reflexivity}{(\mathcal{T}, S) \provesCRL \Psi \Downarrow_{\emptyset,E} \Psi}
     \end{align*}
     \begin{align*}
-    & \prftree[l]{Axiom}{\Psi \in E}{(\mathcal{T}, S) \provesCRL \Psi \Downarrow_{C,E} \Psi^\prime}
+      & \prftree[l]{Case}
+      { \prfStackPremises
+        {(\mathcal{T}, S) \provesCRL [\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k] \land P^\prime \Downarrow_{C, E} \Psi^\prime }
+        {(\mathcal{T}, S) \provesCRL [\varphi_1, \ldots, \varphi_{i-1}, \psi_i, \varphi_{i+1}, \ldots, \varphi_k] \land P^\prime \Downarrow_{C, E} \Psi^\prime }
+      }
+      {(\mathcal{T}, S) \provesCRL [\varphi_1, \ldots, \varphi_{i-1}, (\varphi_i \lor \psi_i), \varphi_{i+1}, \ldots, \varphi_k] \land P^\prime \Downarrow_{C, E} \Psi^\prime}
+    \end{align*}
+    \begin{align*}
+      & \prftree[l]{Conseq}
+        { %\prfStackPremises
+          { (\mathcal{T}, S) \provesCRL \Phi^\prime \Downarrow_{C, E} \Psi^\prime} \quad
+          { \mathcal{T}^* \modelsML \mathit{flatten}(\Phi) \rightarrow \mathit{flatten}(\Phi^\prime) }
+        }
+        { (\mathcal{T}, S) \provesCRL \Phi \Downarrow_{C, E} \Psi^\prime}
+    \end{align*}
+    \begin{align*}
+      & \prftree[l]{Abstract}
+        { %\prfStackPremises
+          { X \not\in \mathit{FV}(\Psi^\prime)
+          }\quad
+          {(\mathcal{T}, S) \provesCRL \exists \vec{Y}.\, [\varphi_1, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
+        }
+        {(\mathcal{T}, S) \provesCRL \exists X, \vec{Y}.\, [\varphi_1, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
     \end{align*}
     \begin{align*}
     & \prftree[l]{Reduce}
       {(\mathcal{T}^*, S^* \cup \mathit{flatten}^\exists(E, \Psi^\prime)), \emptyset \vdash_\RL
         \mathit{flatten}^\exists(\Psi, \Psi^\prime) }
       {(\mathcal{T}, S) \provesCRL \Psi \Downarrow_{C,E} \Psi^\prime}
-    \end{align*}
-    \begin{align*}
-    & \prftree[l]{Case}
-    { \prfStackPremises
-      {(\mathcal{T}, S) \provesCRL [\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k] \land P^\prime \Downarrow_{C, E} \Psi^\prime }
-      {(\mathcal{T}, S) \provesCRL [\varphi_1, \ldots, \varphi_{i-1}, \psi_i, \varphi_{i+1}, \ldots, \varphi_k] \land P^\prime \Downarrow_{C, E} \Psi^\prime }
-    }
-    {(\mathcal{T}, S) \provesCRL [\varphi_1, \ldots, \varphi_{i-1}, (\varphi_i \lor \psi_i), \varphi_{i+1}, \ldots, \varphi_k] \land P^\prime \Downarrow_{C, E} \Psi^\prime}
-    \end{align*}
-    \begin{align*}
-    & \prftree[l]{Step}
-    { \prfStackPremises
-       {\varphi \Rightarrow^\exists \varphi^\prime \in S}
-       {\mathcal{T} \modelsML \varphi_i \leftrightarrow \varphi \land P^\prime}
-       {P^\prime \mbox{ is a FOL formula}}
-       {  (\mathcal{T}, S) \provesCRL [\varphi_1, \ldots, \varphi_{i-1}, \varphi^\prime \land P^\prime, \varphi_{i+1}, \ldots, \varphi_k]
-          \land P
-          \Downarrow_{\emptyset, (C \cup E)} \Psi^\prime
-      }
-    }
-    {(\mathcal{T}, S) \provesCRL [\varphi_1, \ldots, \varphi_{i-1}, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
-    \end{align*}
-    \begin{align*}
-    & \prftree[l]{Circularity}
-      { (\mathcal{T}, S) \provesCRL \Psi \Downarrow_{C \cup \{ \Psi \} , E} \Psi^\prime}
-      { (\mathcal{T}, S) \provesCRL \Psi \Downarrow_{C, E} \Psi^\prime}
-    \end{align*}
-    \begin{align*}
-    & \prftree[l]{Conseq}
-      { \prfStackPremises
-        { (\mathcal{T}, S) \provesCRL \Phi^\prime \Downarrow_{C, E} \Psi^\prime}
-        { \mathcal{T}^* \modelsML \mathit{flatten}(\Phi) \rightarrow \mathit{flatten}(\Phi^\prime) }
-      }
-      { (\mathcal{T}, S) \provesCRL \Phi \Downarrow_{C, E} \Psi^\prime}
     \end{align*}
 %    \begin{align*}
 %    & \prftree[l]{Conseq2}
@@ -358,16 +367,6 @@ The progress requirements resemble the concept of \emph{productivity} of co-recu
       %}
       %{(\mathcal{T}, S) \provesCRL (\varphi_1, \ldots, \varphi_{i-1}, \exists X.\, \varphi_i, \varphi_{i+1}, \ldots, \varphi_k) \land P \Downarrow_{C, E} \Psi^\prime}
     %\end{align*}
-    
-    \begin{align*}
-    & \prftree[l]{Abstract}
-      { \prfStackPremises
-        { X \not\in \mathit{FV}(\Psi^\prime)
-        }
-        {(\mathcal{T}, S) \provesCRL \exists \vec{Y}.\, [\varphi_1, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
-      }
-      {(\mathcal{T}, S) \provesCRL \exists X, \vec{Y}.\, [\varphi_1, \ldots, \varphi_k] \land P \Downarrow_{C, E} \Psi^\prime}
-    \end{align*}
     \caption{A proof system for CRL}
     \label{fig:CRLproofsystem}
 \end{figure}
