@@ -371,25 +371,6 @@ again.  We refer the interested reader to~\cite{RosuS12oopsla} for more
 details.
 
 
-%For illustration purposes, we show one rule of the RL proof system:
-%\begin{align*}
-%    & \prftree[l]{Case Analysis}
-%      %{ \prfStackPremises
-%        { A, C \vdash_\RL \varphi_1 \Rightarrow^\exists \varphi }
-%        { A, C \vdash_\RL \varphi_2 \Rightarrow^\exists \varphi }
-%      %}
-%      { A, C \vdash_\RL \varphi_1 \lor \varphi_2 \Rightarrow^\exists \varphi }
-%\end{align*}
-
-
-\begin{remark}\label{rem:noEmptySteps}
-  We work only with $\epsilon$-free reachability systems.
-  A reachability system $(\mathcal{T}, S)$ is \emph{$\epsilon$-free}
-  iff for any two configurations $\sigma, \sigma^\prime \in \mathcal{T}_{\mathit{Cfg}}$, if
-  $\sigma \Rightarrow_{\mathcal{S}} \sigma^\prime$, then $\sigma \not = \sigma^\prime$.
-  (We are not aware of any practical reachability system that would use these $\epsilon$ steps.)
-  \end{remark}
-
 \begin{remark}\label{rem:shapeOfReachabilityRules}
   Following the original reachability logic literature (\cite{RosuS12oopsla,StefanescuCMMSR19}),
   we restrict the class of reachability systems we work with to those whose reachability rules
@@ -400,7 +381,7 @@ have the shape
 where $\phi,\phi^\prime$ are terms-as-predicates, and $P,P^\prime$ contain no terms-as-predicate.
   As argued in these papers, such rules can support various styles of operational semantics,
   including evaluation contexts \cite{PLTRedex}, the chemical abstract machine \cite{CHAM}, and \K{} \cite{KVision}.
-  We thus support all the $\epsilon$-free reachability systems supported by reachability logic.
+  We thus support all reachability systems supported by reachability logic.
 \end{remark}
 
 %%% Local Variables:

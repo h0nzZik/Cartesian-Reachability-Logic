@@ -310,6 +310,15 @@ We define reachability-logic signatures, rules, and systems as follows.
 
 \end{definition}
 
+\begin{remark}\label{rem:noEmptySteps}
+    We work only with $\epsilon$-free reachability systems.
+    A reachability system $(\mathcal{T}, S)$ is \emph{$\epsilon$-free}
+    iff for any two configurations $\sigma, \sigma^\prime \in \mathcal{T}_{\mathit{Cfg}}$, if
+    $\sigma \Rightarrow_{\mathcal{S}} \sigma^\prime$, then $\sigma \not = \sigma^\prime$.
+    (We are not aware of any practical reachability system that would use these $\epsilon$ steps.)
+\end{remark}
+  
+
 \section{Cartesian Reachability logic}\label{app:CRL}
 
 \begin{definition}[CRL Syntax]\label{def:opCRLSyntax}
