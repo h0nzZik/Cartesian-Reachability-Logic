@@ -351,7 +351,10 @@ We define reachability-logic signatures, rules, and systems as follows.
 We translate a language semantics into a semantics for lists of configurations as follows.
 \begin{enumerate}
     \item Let $((\Sigma, \mathit{Var}), \mathit{Cfg})$ be a reachability-logic signature.
-          Then $((\Sigma, \mathit{Var}^*), \mathit{Cfg})^*$ = $((\Sigma^*, \mathit{Var}^*), \mathit{Cfg}^*)$,
+          Then
+          \begin{equation*}
+            ((\Sigma, \mathit{Var}^*), \mathit{Cfg})^* = ((\Sigma^*, \mathit{Var}^*), \mathit{Cfg}^*)
+          \end{equation*}
           where
           \begin{enumerate}
               \item $\Sigma^* = \Sigma \cup \{ \mathit{cfgitem}, \mathit{cfgconcat}, \mathit{cfgheat}, \mathit{cfgnil} \}$
@@ -909,7 +912,10 @@ By induction on $k$.
         $c_2 = \rho^\prime(\phi_1)$ and \ldots and $c_{k^\prime+1} = \rho^\prime(\phi_k)$
         \end{proofenv}
         by setting $c_i := c_i$
-        (and again noting that $\mathit{FV}(\mathit{mkList}(\phi_2,\ldots,\phi_{k^\prime+1})) \subseteq \mathit{FV}(\mathit{mkList}(\phi_1,\ldots,\phi_{k^\prime+1}))$).
+        and again noting that
+        \begin{equation*}
+            \mathit{FV}(\mathit{mkList}(\phi_2,\ldots,\phi_{k^\prime+1})) \subseteq \mathit{FV}(\mathit{mkList}(\phi_1,\ldots,\phi_{k^\prime+1})) \, .
+        \end{equation*}
     \end{itemize}
 \end{itemize}
 \end{proof}
@@ -997,8 +1003,11 @@ We prove both implications separately, by contraposition.
     \item Suppose some $c_j$ is not terminating in $(\Tcfg, \Rightarrow_S)$.
     In other words, there exists some infinite $\Rightarrow_{\mathcal{S}}$-sequence
     $c_j = d(0) \Rightarrow_{\mathcal{S}} d(1) \Rightarrow_{\mathcal{S}} d(2) \Rightarrow_{\mathcal{S}} \ldots$.
-    Then $C = [c_1,\ldots,c_{j-1}, d(0), c_{j+1}, \ldots, c_k] \Rightarrow_{\mathcal{S}^*}
-    [c_1,\ldots,c_{j-1}, d(1), c_{j+1}, \ldots, c_k] \Rightarrow_{\mathcal{S}^*} \ldots$
+    Then
+    \begin{equation*}
+        C = [c_1,\ldots,c_{j-1}, d(0), c_{j+1}, \ldots, c_k] \Rightarrow_{\mathcal{S}^*}
+        [c_1,\ldots,c_{j-1}, d(1), c_{j+1}, \ldots, c_k] \Rightarrow_{\mathcal{S}^*} \ldots
+    \end{equation*}
     is (by \Cref{lem:compositeStep}) an infinite $\Rightarrow_{\mathcal{S}^*}$-sequence.
     Therefore, $C$ is not terminating in $(\mathcal{T}^*_{\mathit{Cfg}^*}, \Rightarrow_{S^*})$.
     \item Suppose $C$ is not terminating in $(\mathcal{T}^*_{\mathit{Cfg}^*}, \Rightarrow_{S^*})$.
@@ -1050,7 +1059,11 @@ We prove both implications separately, by contraposition.
 
 \begin{lemma}\label{lem:reachComposite}
     For any reachability system $\mathcal{S} = (\mathcal{T}, S)$, any $C,C^\prime \in \mathcal{T}^*_{\mathit{Cfg}^*}$,
-    and any $c_1,\ldots,c_k,c_1^\prime,\ldots,c_k^\prime \in \Tcfg$ such that
+    and any
+    \begin{equation*}
+        c_1,\ldots,c_k,c_1^\prime,\ldots,c_k^\prime \in \Tcfg
+    \end{equation*}
+    such that
     $C = [c_1,\ldots,c_k]$ and $C^\prime = [c_1^\prime,\ldots,c_k^\prime]$,
     $C \Rightarrow^*_{\mathcal{S}^*} C^\prime$ iff for every $i \in \{ 1, \ldots, k \}$,
     $c_i \Rightarrow^*_{\mathcal{S}} c_i^\prime$.
@@ -1363,7 +1376,10 @@ We prove each implication separately.
     and the rest follows from the assumption (iii) by \Cref{lem:unusedVariables}.
     This concludes the proof of the first implication.
     \item For the opposite implication, 
-    we again assume that $\Psi \equiv (\varphi_1,\ldots,\varphi_k) \land P$,
+    we again assume that
+    \begin{equation*}
+        \Psi \equiv (\varphi_1,\ldots,\varphi_k) \land P \, ,
+    \end{equation*}
     $\Psi^\prime \equiv \exists \vec{Y}.\, (\varphi_1^\prime,\ldots,\varphi_k^\prime) \land P^\prime$,
     $\varphi_j = \phi_j \land P_j$ and $\varphi^\prime_j = \phi^\prime_j \land P^\prime_j$ for any $j \in \{ 1, \ldots, k \}$,
     and assume that
