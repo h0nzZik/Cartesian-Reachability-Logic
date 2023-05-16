@@ -1861,9 +1861,17 @@ We assume a framework similar to that of \cite{StefanescuCMMSR19}.
 Specifically, we assume that the model $\mathcal{T}$ interprets
 \begin{itemize}
     \item the symbol $\alpha$ as an injective function from configurations into natural numbers;
-    \item the symbols $<$,$+$,$-$,$*$,$\%$ as the usual ordering, addition, subtraction, multiplication, remainder on natural numbers.
+    \item the symbols $<$,$+$,$-$,$*$ as the usual ordering, addition, subtraction, multiplication on natural numbers.
 \end{itemize}
-We represent Gödel's $\beta$ function as e.g., in \cite{mendelson1997introduction} - as a formula $\beta_t(a,b,c,d)$.
+We represent Gödel's $\beta$ function, defined by
+\begin{equation*}
+ \beta(x_1, x_2, x_3) = x_1 \bmod (1 + (x_3 + 1) \cdot x_2) \, ,
+\end{equation*}
+as e.g., in \cite{mendelson1997introduction} - as a formula
+\begin{equation*}
+    \beta_t(x_1, x_2, x_3, y) \equiv \exists w : \mathit{Nat}.\, x_1 = (1 + (x_3 + 1) * x_2) * w + y \land y \land 1 + (x_3 + 1) * x_2 \, .
+\end{equation*}
+
 
 
 \begin{theorem}[Oracle lifting]\label{thm:oracleLifting}
@@ -1923,6 +1931,9 @@ except that quantification over lists and equality of lists is handled as follow
 where $\mathit{valid}(a,b) = \exists l:\mathit{Nat}.\, \forall i:\mathit{Nat}.\, i < l \leftrightarrow \exists y:\mathit{Nat}.\, \beta_p(a,b,i,y+1)$.
 Intuitively, the $\mathit{valid}$ formula used as a guard in the universal quantification case ensures that we consider only those $a_l,b_l$ pairs
 which $\beta$-encode some sequence of natural numbers.
+Also, the definition of $\beta$ guarantees that for fixed $a,b$, for large enough indices $i$, $\beta(a,b,i)$ is always zero;
+the implementation of $\mathit{valid}$ uses this property to guess the length $l$ of the sequence being represented by $a,b$,
+and considers sequences containing zeroes in the middle as invalid.
 
 Let use consider the universal closure $\varphi_c$ of $\varphi^\square$.
 Finally, we define $\Theta(\varphi) = \mathit{tr}(\varphi_c)$; the desired equivalence holds by
