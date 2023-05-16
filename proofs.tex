@@ -1863,7 +1863,7 @@ Specifically, we assume that the model $\mathcal{T}$ interprets
     \item the symbol $\alpha$ as an injective function from configurations into natural numbers;
     \item the symbols $<$,$+$,$-$,$*$,$\%$ as the usual ordering, addition, subtraction, multiplication, remainder on natural numbers.
 \end{itemize}
-We represent Gödel's $\beta$ function as e.g., in \cite{mendelson1997introduction} - as a formula $\beta_P(a,b,c,d)$.
+We represent Gödel's $\beta$ function as e.g., in \cite{mendelson1997introduction} - as a formula $\beta_t(a,b,c,d)$.
 
 
 \begin{theorem}[Oracle lifting]\label{thm:oracleLifting}
@@ -1874,7 +1874,7 @@ to matching logic patterns over $\Sigma$ such that
 $\mathcal{T} \modelsML \Theta(\varphi) \iff \mathcal{T^*} \modelsML \varphi$.
 \end{theorem}
 \begin{proof}
-Intuitively, we perform Gödelization of the formula $\varphi^\square$, using Gödel's $\beta_P$ predicate.
+Intuitively, we perform Gödelization of the formula $\varphi^\square$, using Gödel's $\beta_t$ predicate.
 The idea is that the only construct appearing in FOL formulas over $\Sigma^*$ and not in FOL formulas over $\Sigma$
 is comparison of lists of configuration for equality, and we reduce this construct to equality of the corresponding
 elements of the list.
@@ -1885,7 +1885,7 @@ The predicate $\mathit{length}(M, l, n)$ holds if the lenght of $l$ is exactly $
 
 We define functions $\mathit{lookup}$ and $\mathit{length}$ by mutual structural recursion on their second parameter:
 \begin{itemize}
-    \item $\mathit{lookup}(M, l, n, y) = \beta_P(a_{l}, b_{l}, n, \alpha(y))$ if $l$ is a variable of sort $\mathit{Cfg}^*$ and $(l, a_{l}, b_{l}) \in M$;
+    \item $\mathit{lookup}(M, l, n, y) = \beta_t(a_{l}, b_{l}, n, \alpha(y)+1)$ if $l$ is a variable of sort $\mathit{Cfg}^*$ and $(l, a_{l}, b_{l}) \in M$;
     \item $\mathit{lookup}(\_, \mathit{cfgnil}, \_, \_) = \bot$.
     \item $\mathit{lookup}(M, \mathit{cfgconcat}(t_1, t_2), n, y) =$ \\
     $\forall l:\mathit{Nat}. \, \mathit{length}(M, t_1, l) \rightarrow \mathit{ite}(n < l, \mathit{lookup}(M, t_1, n, y), \mathit{lookup}(M, t_2, n-l, y))$
@@ -1920,10 +1920,13 @@ except that quantification over lists and equality of lists is handled as follow
     for some fresh $a_l,b_l$;
     \item $\mathit{tr}(M, l_1 = l_2) = \forall c : \mathit{Nat}, d:\mathit{Cfg}.\, ( \mathit{lookup}(M, l_1, c, d) \leftrightarrow \mathit{lookup}(M, l_2, c, d))$
 \end{itemize}
-where $\mathit{valid}(a,b) = \exists l:\mathit{Nat}.\, \forall i:\mathit{Nat}.\, i < l \leftrightarrow \exists y:\mathit{Nat}.\, \beta_p(a,b,i,y)$.
+where $\mathit{valid}(a,b) = \exists l:\mathit{Nat}.\, \forall i:\mathit{Nat}.\, i < l \leftrightarrow \exists y:\mathit{Nat}.\, \beta_p(a,b,i,y+1)$.
+Intuitively, the $\mathit{valid}$ formula used as a guard in the universal quantification case ensures that we consider only those $a_l,b_l$ pairs
+which $\beta$-encode some sequence of natural numbers.
+
 Let use consider the universal closure $\varphi_c$ of $\varphi^\square$.
 Finally, we define $\Theta(\varphi) = \mathit{tr}(\varphi_c)$; the desired equivalence holds by
-properties of the Godel $\beta_P$ predicate and properties of lists in the extended model $\mathcal{T}^*$.
+properties of the Godel $\beta_t$ predicate and properties of lists in the extended model $\mathcal{T}^*$.
 
 \end{proof}
 
