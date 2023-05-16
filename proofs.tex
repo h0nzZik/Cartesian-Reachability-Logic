@@ -1885,7 +1885,7 @@ The predicate $\mathit{length}(M, l, n)$ holds if the lenght of $l$ is exactly $
 
 We define functions $\mathit{lookup}$ and $\mathit{length}$ by mutual structural recursion on their second parameter:
 \begin{itemize}
-    \item $\mathit{lookup}(M, l, n, y) = \beta_P(a_{l}, b_{l}, n, \alpha(y))$ whenever $(l, a_{l}, b_{l}) \in M$;
+    \item $\mathit{lookup}(M, l, n, y) = \beta_P(a_{l}, b_{l}, n, \alpha(y))$ if $l$ is a variable of sort $\mathit{Cfg}^*$ and $(l, a_{l}, b_{l}) \in M$;
     \item $\mathit{lookup}(\_, \mathit{cfgnil}, \_, \_) = \bot$.
     \item $\mathit{lookup}(M, \mathit{cfgconcat}(t_1, t_2), n, y) =$ \\
     $\forall l:\mathit{Nat}. \, \mathit{length}(M, t_1, l) \rightarrow \mathit{ite}(n < l, \mathit{lookup}(M, t_1, n, y), \mathit{lookup}(M, t_2, n-l, y))$
@@ -1896,6 +1896,22 @@ We define functions $\mathit{lookup}$ and $\mathit{length}$ by mutual structural
     \end{align*}    
     \item $\mathit{length}(M, l, n) = \forall i:\mathit{Nat}.\, (0 \leq i < n) \leftrightarrow (\exists v : \mathit{Cfg}. \mathit{lookup}(M, l, i, v))$
 \end{itemize}
+
+The two functions have the following property.
+\begin{lemma}
+  Let $t$ be a term of sort $\mathit{Cfg}^*$ and $\rho$ a $\mathcal{T}$-valuation.
+  Let $M$ be a relation such that for every free variable $l$ of sort $\mathit{Cfg}^*$ of $t$, there exist unique variables $a_l,b_l$ of sort $\mathit{Nat}$
+  such that $(l,a_l,b_l) \in M$ and $\rho(a_l),\rho(b_l)$ $\beta$-encodes $\rho(l)$.
+  Then for any natural numer $n$,
+  a configuration $\gamma$, a variable $c$ of sort $\mathit{Cfg}$, and a variable $i$ of sort $\mathit{Nat}$,
+  if $\rho(c) = \gamma$, then $\rho(t)[n] = \gamma \iff M,\rho \modelsML \mathit{lookup}(M, t, i, c)$.
+  Also, for every natural numer $n$ and a variable $i$ of sort $\mathit{Nat}$,
+  if $\rho(i) = n$, then
+  we have that the length of $\rho(t)$ is exactly $n$ iff $\mathcal{T}, \rho \modelsML \mathit{length}(M, t, i)$.
+\end{lemma}
+\begin{proof}
+By mutual structural induction on $t$.
+\end{proof}
 
 Next, we define a function $\mathit{tr}$ which performs basic recursion on a given FOL $\Sigma^*$ formula,
 except that quantification over lists and equality of lists is handled as follows:
