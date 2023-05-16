@@ -489,6 +489,8 @@ in the underlying matching logic model $\mathcal{T}$).
   and we conclude the proof using the Inherit rule.
   Note that to apply relative completeness of RL, we need to have an oracle for deciding validity in the extended model.
   A construction of such oracle from the oracle for deciding validity in $\mathcal{T}$ is in \Cref{app:completeness}.
+  The main idea is to reduce reasoning about list of configurations to reasoning about single natural numbers,
+  using Gödel's $\beta$ function for representation if sequences of natural numbers.
   \end{proof}
 Our completeness result is similar to the completeness result of CHL in the sense that the completeness
 does not involve features used for lockstep reasoning.
