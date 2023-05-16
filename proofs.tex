@@ -1866,9 +1866,12 @@ In other words, we lift the given oracle for a model $\mathcal{T}$ into an oracl
 We assume a framework similar to that of \cite{StefanescuCMMSR19}.
 Specifically, we assume that the model $\mathcal{T}$ interprets
 \begin{itemize}
-    \item the symbol $\alpha$ as an injective function from configurations into integers;
-    \item the symbol $<$ as the usual ordering on integers.
+    \item the symbol $\alpha$ as an injective function from configurations into natural numbers;
+    \item the symbols $<$,$+$,$-$,$*$,$\%$ as the usual ordering, addition, subtraction, multiplication, remainder on natural numbers.
 \end{itemize}
+We represent Gödel's $\beta$ function as e.g., in \Cref{mendelson1997introduction} - as a formula $\beta_P(a,b,c,d)$.
+
+
 \begin{theorem}[Oracle lifting]\label{thm:oracleLifting}
 For every $\Sigma$-model $\mathcal{T}$
 satisfying the conditions above
@@ -1877,40 +1880,40 @@ to matching logic patterns over $\Sigma$ such that
 $\mathcal{T} \modelsML \Theta(\varphi) \iff \mathcal{T^*} \modelsML \varphi$.
 \end{theorem}
 \begin{proof}
-Intuitively, we perform Gödelization of the formula $\varphi^\square$, using Gödel's $\beta$ predicate.
+Intuitively, we perform Gödelization of the formula $\varphi^\square$, using Gödel's $\beta_P$ predicate.
 The idea is that the only construct appearing in FOL formulas over $\Sigma^*$ and not in FOL formulas over $\Sigma$
 is comparison of lists of configuration for equality, and we reduce this construct to equality of the corresponding
 elements of the list.
-For this purpose, we introduce a function $\mathit{val}(M, l, n, y)$ representing a predicate saying that
+For this purpose, we introduce a function $\mathit{lookup}(M, l, n, y)$ representing a predicate saying that
 the term $l$ representing a list of configurations that has at position $n$ the configuration $y$,
 where $M$ is a mapping from list variables into the two variables representing a list in the Godel encoding.
 The predicate $\mathit{length}(M, l, n)$ holds if the lenght of $l$ is exactly $n$.
 
-We define functions $\mathit{val}$ and $\mathit{length}$ by mutual structural recursion on its second parameter:
+We define functions $\mathit{lookup}$ and $\mathit{length}$ by mutual structural recursion on their second parameter:
 \begin{itemize}
-    \item $\mathit{val}(M, l, n, y) = \beta(a_{l}, b_{l}, n, \alpha(y))$ whenever $(l, a_{l}, b_{l}) \in M$;
-    \item $\mathit{val}(\_, \mathit{cfgnil}, \_, \_) = \bot$.
-    \item $\mathit{val}(M, \mathit{cfgconcat}(t_1, t_2), n, y) =$ \\
-    $\forall i:\mathit{Int}. \, \mathit{length}(M, t_1, i) \rightarrow \mathit{ite}(n < i, \mathit{val}(M, t_1, n, y), \mathit{val}(M, t_2, n-i, y))$
-    \item $\mathit{val}(M, \mathit{cfgheat}(l_1, c, l_2), n, y) =$
+    \item $\mathit{lookup}(M, l, n, y) = \beta_P(a_{l}, b_{l}, n, \alpha(y))$ whenever $(l, a_{l}, b_{l}) \in M$;
+    \item $\mathit{lookup}(\_, \mathit{cfgnil}, \_, \_) = \bot$.
+    \item $\mathit{lookup}(M, \mathit{cfgconcat}(t_1, t_2), n, y) =$ \\
+    $\forall l:\mathit{Nat}. \, \mathit{length}(M, t_1, l) \rightarrow \mathit{ite}(n < l, \mathit{lookup}(M, t_1, n, y), \mathit{lookup}(M, t_2, n-l, y))$
+    \item $\mathit{lookup}(M, \mathit{cfgheat}(l_1, c, l_2), n, y) =$
     \begin{align*}
-        & \forall i:\mathit{Int}. \, \mathit{length}(M, t_1, i) \rightarrow \\
-        & \mathit{ite}(n < i, \mathit{val}(M, t_1, n, y), \mathit{ite}(n = i, y = c, \mathit{val}(M, t_2, n-i-1, y)))
+        & \forall l:\mathit{Nat}. \, \mathit{length}(M, t_1, l) \rightarrow \\
+        & \mathit{ite}(n < l, \mathit{lookup}(M, t_1, n, y), \mathit{ite}(n = l, y = c, \mathit{lookup}(M, t_2, n-l-1, y)))
     \end{align*}    
-    \item $\mathit{length}(M, l, n) = \forall i:\mathit{Int}.\, (0 \leq i < n) \leftrightarrow (\exists v : \mathit{Cfg}. \mathit{val}(M, l, i, v))$
+    \item $\mathit{length}(M, l, n) = \forall i:\mathit{Nat}.\, (0 \leq i < n) \leftrightarrow (\exists v : \mathit{Cfg}. \mathit{lookup}(M, l, i, v))$
 \end{itemize}
 
 Next, we define a function $\mathit{tr}$ which performs basic recursion on a given FOL $\Sigma^*$ formula,
 except that quantification over lists and equality of lists is handled as follows:
 \begin{itemize}
-    \item $\mathit{tr}(M, \forall (l : \mathit{Cfg}^*).\, \varphi) = \forall a_l : \mathit{Int}, b_l : \mathit{Int}.\, \mathit{tr}(M \cup \{ (l, a_l, b_l) \}, \varphi)$
+    \item $\mathit{tr}(M, \forall (l : \mathit{Cfg}^*).\, \varphi) = \forall a_l : \mathit{Nat}, b_l : \mathit{Nat}.\, \mathit{valid}(a_l,b_l) \rightarrow \mathit{tr}(M \cup \{ (l, a_l, b_l) \}, \varphi)$
     for some fresh $a_l,b_l$;
-    \item $\mathit{tr}(M, l_1 = l_2) = \forall c : \mathit{Int}, d:\mathit{Cfg}.\, ( \mathit{val}(M, l_1, c, d) \leftrightarrow \mathit{val}(M, l_2, c, d))$
+    \item $\mathit{tr}(M, l_1 = l_2) = \forall c : \mathit{Nat}, d:\mathit{Cfg}.\, ( \mathit{lookup}(M, l_1, c, d) \leftrightarrow \mathit{lookup}(M, l_2, c, d))$
 \end{itemize}
-
+where $\mathit{valid}(a,b) = \exists l:\mathit{Nat}.\, \forall i:\mathit{Nat}.\, i < l \leftrightarrow \exists y:\mathit{Nat}.\, \beta_p(a,b,i,y)$.
 Let use consider the universal closure $\varphi_c$ of $\varphi^\square$.
 Finally, we define $\Theta(\varphi) = \mathit{tr}(\varphi_c)$; the desired equivalence holds by
-properties of the Godel $\beta$ predicate and properties of lists in the extended model $\mathcal{T}^*$.
+properties of the Godel $\beta_P$ predicate and properties of lists in the extended model $\mathcal{T}^*$.
 
 \end{proof}
 
