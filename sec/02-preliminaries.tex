@@ -255,7 +255,7 @@ whenever the condition is $\mathit{true}$. (Typically, there would be additional
 governing the evaluation of the condition.)
 %
 This rule induces (among others) the transition
-\begin{equation}\label{eqn:ruleIfTrue}
+\begin{equation}%\label{eqn:ruleIfTrue}
   \tap{if ($true$) then x++ else x--}{\mathtt{x}\mapsto 3}\
   \Rightarrow_{\mathcal{S}}\  \tap{x++}{\mathtt{x}\mapsto 3} \,.
 \end{equation}
