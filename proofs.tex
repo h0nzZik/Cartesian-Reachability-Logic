@@ -1876,12 +1876,12 @@ $\mathcal{T} \modelsML \Theta(\varphi) \iff \mathcal{T^*} \modelsML \varphi$.
 \begin{proof}
 Intuitively, we perform Gödelization of the formula $\varphi^\square$, using Gödel's $\beta_P$ predicate.
 The idea is that the only construct appearing in FOL formulas over $\Sigma^*$ and not in FOL formulas over $\Sigma$
-is comparison of lists of configuration for equality, and we reduce this construct to equality of the corresponding
+is comparison of lists of configurations for equality, and we reduce this construct to equality of the corresponding
 elements of the list.
 For this purpose, we introduce a function $\mathit{lookup}(M, l, n, y)$ representing a predicate saying that
 the term $l$ representing a list of configurations that has at position $n$ the configuration $y$,
 where $M$ is a mapping from list variables into the two variables representing a list in the Godel encoding.
-The predicate $\mathit{length}(M, l, n)$ holds if the lenght of $l$ is exactly $n$.
+The predicate $\mathit{length}(M, l, n)$ holds if the length of $l$ is exactly $n$.
 
 We define functions $\mathit{lookup}$ and $\mathit{length}$ by mutual structural recursion on their second parameter:
 \begin{itemize}
