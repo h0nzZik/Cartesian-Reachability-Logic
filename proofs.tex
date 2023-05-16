@@ -1855,21 +1855,15 @@ By induction on the structure of the CRL proof.
 
 
 \subsection{Completeness}\label{app:completeness}
-In order to have relative (with respect to an oracle for deciding matching logic validity) completeness of our proof system, we need to
-be able to construct an oracle for deciding validity in the star-extended matching logic model;
-the constructed oracle is then used by the relative completeness proof of reachability logic.
-Our oracle for deciding validity in the star-extended matching logic model reduces the problem of validity of a matching logic formula
-over the extended signature to the problem of matching logic validity of a formula over the original signature in the original model,
-for which we have assumed to have an oracle.
-In other words, we lift the given oracle for a model $\mathcal{T}$ into an oracle for the model $\mathcal{T}^*$ by means of a reduction function $\Theta$.
-
+To finish the proof of completeness, we lift the given oracle for a model $\mathcal{T}$
+into an oracle for the model $\mathcal{T}^*$ by means of a reduction function $\Theta$.
 We assume a framework similar to that of \cite{StefanescuCMMSR19}.
 Specifically, we assume that the model $\mathcal{T}$ interprets
 \begin{itemize}
     \item the symbol $\alpha$ as an injective function from configurations into natural numbers;
     \item the symbols $<$,$+$,$-$,$*$,$\%$ as the usual ordering, addition, subtraction, multiplication, remainder on natural numbers.
 \end{itemize}
-We represent Gödel's $\beta$ function as e.g., in \Cref{mendelson1997introduction} - as a formula $\beta_P(a,b,c,d)$.
+We represent Gödel's $\beta$ function as e.g., in \cite{mendelson1997introduction} - as a formula $\beta_P(a,b,c,d)$.
 
 
 \begin{theorem}[Oracle lifting]\label{thm:oracleLifting}
