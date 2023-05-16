@@ -59,10 +59,10 @@ even for loops. This is achieved by means of the following rule (version for two
   & \prftree[l]{}%{Fusion}
     {\Phi\Rightarrow I \quad
     \chl{I \land c_1 \land c_2}{\texttt{B1} \st \texttt{B2}}{I} \quad
-    \chl{I \land \neg c_2}{\texttt{while (}c_1\texttt{) {B1}}}{\Psi} \quad
-    \chl{I \land \neg c_1}{\texttt{while (}c_2\texttt{) {B2}}}{\Psi}    
+    \chl{I \land \neg c_2}{\texttt{while(}c_1\texttt{){B1}}}{\Psi} \quad
+    \chl{I \land \neg c_1}{\texttt{while(}c_2\texttt{){B2}}}{\Psi}    
   }
-  { \chl{\Phi}{(\texttt{while (}c_1\texttt{) {B1}}) \st (\texttt{while (}c_2\texttt{) {B2}})} {\Psi}}
+  { \chl{\Phi}{(\texttt{while (}c_1\texttt{) {B1}}) \st (\texttt{while(}c_2\texttt{) {B2}})} {\Psi}}
 \end{align*}
 %(which we present here in a simplified form, for Cartesian claims of arity 2 only).
 Note that the invariant $I$, assumed by this rule, can relate variables from \emph{both} executions.
