@@ -522,8 +522,8 @@ To ease the notation, we write simply $t_b$ instead of $t_b = \mathit{true}$ for
 boolean-sorted side conditions $t_b$.
 Consider again the claim $\Omega_{\mathit{mono}}$ from \Cref{sec:CRLsemanticsComparisonToCHL}:
 \begin{align*}
-  [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2)] \land X_1 \leq_{\mathit{Int}} X_2 \land Y_1 \leq_{\mathit{Int}} Y_2
-   \Rightarrow^{c\exists} [\xi(\epsilon, ?\_, ?Y_1), \xi(\epsilon, ?\_, ?Y_2)] \land ?Y_1 \leq_{\mathit{Int}} ?Y_2 \, .
+  [\xi(P, X_1, Y_1),\xi(P, X_2, Y_2)] \land X_1 \leq X_2 \land Y_1 \leq Y_2
+   \Rightarrow^{c\exists} [\xi(\epsilon, ?\_, ?Y_1), \xi(\epsilon, ?\_, ?Y_2)] \land ?Y_1 \leq ?Y_2 \, .
 \end{align*}
 Let $\Psi^\prime_{\mathit{mono}}$ denote the right side of the $\Rightarrow^{c\exists}$ above.
 We want to prove
